@@ -333,57 +333,8 @@ func Sfm_LibTest() {
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_LibFindAreaMatch(p *Sfm_Lib_t, pTruth *word, nFanins int32, piObj *int32) int32 {
-    var pObj *Sfm_Fun_t  = nil;
-    var iFunc int32  = *Vec_MemHashLookup( p.vTtMem,  pTruth );
-    if iFunc == -1 {
-        return -1; }
-    // inlining of macro Sfm_LibForEachSuper
-    for  pObj = Sfm_LibFun(p, Vec_IntEntry(&p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {
-        break;
-    }
-    if piObj != nil {
-        *piObj = pObj - p.pObjs; }
-    return pObj.Area;
-}
-func Sfm_LibFindDelayMatches(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins int32, vGates *Vec_Ptr_t, vFans *Vec_Ptr_t) int32 {
-    var pObj *Sfm_Fun_t;
-    var pCellB, pCellT *Mio_Cell2_t;
-    var iFunc int32;
-    if nFanins > 6 {
-        var pCopy [4]word;
-        Abc_TtCopy( pCopy, pTruth, 4, 0 );
-        Dau_DsdPrintFromTruth( pCopy, p.nVars );
-    }
-    Vec_PtrClear( vGates );
-    Vec_PtrClear( vFans );
-    // look for gate
-    assert(!Abc_TtIsConst0(pTruth, p.nWords) && 
-                !Abc_TtIsConst1(pTruth, p.nWords) && 
-                !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) && 
-                !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords), "!Abc_TtIsConst0(pTruth, p.nWords) && \n            !Abc_TtIsConst1(pTruth, p.nWords) && \n            !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) && \n            !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords)");
-    iFunc = *Vec_MemHashLookup( p.vTtMem,  pTruth );
-    if iFunc == -1 {
-        // print functions not found in the library
-        if p.fVerbose || nFanins > 6 {
-            fmt.Printf("Not found in the precomputed library: ");
-            Dau_DsdPrintFromTruth( pTruth, nFanins );
-        }
-        return 0;
-    }
-    Vec_IntAddToEntry( &p.vHits, iFunc, 1 );
-    // collect matches
-    // inlining of macro Sfm_LibForEachSuper
-    for  pObj = Sfm_LibFun(p, Vec_IntEntry(&p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {
-        pCellB = p.pCells + int32(pObj.pFansB[0]);
-        pCellT = p.pCells + int32(pObj.pFansT[0]);
-        Vec_PtrPush( vGates, pCellB.pMioGate );
-        Vec_PtrPush( vGates, pCellT == p.pCells ? nil : pCellT.pMioGate );
-        Vec_PtrPush( vFans, pObj.pFansB + 1 );
-        Vec_PtrPush( vFans, pCellT == p.pCells ? nil : pObj.pFansT + 1 );
-    }
-    return Vec_PtrSize(vGates) / 2;
-}
+
+
 
 /**Function*************************************************************
 
@@ -426,63 +377,8 @@ func Sfm_LibImplementSimple(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins 
     assert(false, "0");
     return -1;
 }
-func Sfm_LibImplementGatesArea(p *Sfm_Lib_t, pFanins *int32, nFanins int32, iObj int32, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();
-    var pObjMin *Sfm_Fun_t  = p.pObjs + iObj;
-    var pCellB, pCellT *Mio_Cell2_t;
-    var pGate *Mio_Gate_t;
-    var vLevel *Vec_Int_t;
-    var i int32;
-    // get the gates
-    pCellB = p.pCells + int32(pObjMin.pFansB[0]);
-    pCellT = p.pCells + int32(pObjMin.pFansT[0]);
-    // create bottom gate
-    pGate = Mio_LibraryReadGateByName( pLib, pCellB.pName, nil );
-    assert(pGate == pCellB.pMioGate, "pGate == pCellB.pMioGate");
-    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );
-    vLevel = Vec_WecPushLevel( vFanins );
-    for  i = 0; i < int32(pCellB.nFanins); i++  {
-        Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansB[i+1])] );
-    }
-    if pCellT == p.pCells {
-        return 1; }
-    // create top gate
-    pGate = Mio_LibraryReadGateByName( pLib, pCellT.pName, nil );
-    assert(pGate == pCellT.pMioGate, "pGate == pCellT.pMioGate");
-    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );
-    vLevel = Vec_WecPushLevel( vFanins );
-    for  i = 0; i < int32(pCellT.nFanins); i++  {
-        if pObjMin.pFansT[i+1] == byte(16) {
-            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );
-        } else {
-            Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansT[i+1])] ); }
-    }
-    return 2;
-}
-func Sfm_LibImplementGatesDelay(p *Sfm_Lib_t, pFanins *int32, pGateB *Mio_Gate_t, pGateT *Mio_Gate_t, pFansB string, pFansT string, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {
-    var vLevel *Vec_Int_t;
-    var i, nFanins int32;
-    // create bottom gate
-    Vec_IntPush( vGates, Mio_GateReadValue(pGateB) );
-    vLevel  = Vec_WecPushLevel( vFanins );
-    nFanins = Mio_GateReadPinNum( pGateB );
-    for  i = 0; i < nFanins; i++  {
-        Vec_IntPush( vLevel, pFanins[int32(pFansB[i])] );
-    }
-    if pGateT == nil {
-        return 1; }
-    // create top gate
-    Vec_IntPush( vGates, Mio_GateReadValue(pGateT) );
-    vLevel  = Vec_WecPushLevel( vFanins );
-    nFanins = Mio_GateReadPinNum( pGateT );
-    for  i = 0; i < nFanins; i++  {
-        if pFansT[i] == byte(16) {
-            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );
-        } else {
-            Vec_IntPush( vLevel, pFanins[int32(pFansT[i])] ); }
-    }
-    return 2;
-}
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
