@@ -101,3 +101,11 @@ func TestDecimalExtremeReciprocal(t *testing.T) {
 		t.Fatal(a)
 	}
 }
+
+func TestDecimalNormalizeSubnormal(t *testing.T) {
+	p := EpDouble{Value: math.SmallestNonzeroFloat64}
+	EpdNormalizeDecimal(&p)
+	if math.IsInf(p.Value, 0) || math.IsNaN(p.Value) || math.Abs(p.Value-4.940656458412465) > 1e-14 || p.Exponent != -324 {
+		t.Fatal(p)
+	}
+}

@@ -32,7 +32,13 @@ func EpdNormalizeDecimal(p *EpDouble) {
 		return
 	}
 	e := EpdGetExponentDecimal(p.Value)
-	p.Value /= math.Pow10(e)
+	// 10^-324 is smaller than the least subnormal double. Split scaling
+	// to avoid dividing a finite subnormal by an underflowed zero.
+	if e < -308 {
+		p.Value = (p.Value * 1e308) / math.Pow10(e+308)
+	} else {
+		p.Value /= math.Pow10(e)
+	}
 	p.Exponent += e
 }
 func EpdMultiply(p *EpDouble, v float64) { var q EpDouble; EpdConvert(v, &q); EpdMultiply2(p, &q) }
