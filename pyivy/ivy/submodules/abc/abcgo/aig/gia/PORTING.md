@@ -333,3 +333,11 @@ Readability review shares the collector while keeping gate-specific boundaries
 explicit. Bug review retained references as caller-owned scratch and tests
 rebuild them only after clearing, consistent with Gia_ManCreateRefs ownership.
 Remaining balance/DAM extraction is still visible and unported in giaBalAig.go.
+
+Latest checkpoint supersedes the earlier balancing-DAM pending note above:
+BalAig/DAM, Hash, Muxes, BalMap window core, Bidec, CSat and CSat2 are native.
+Detailed compactness/bug reviews and test evidence are in BALANCE_HASH_REVIEW.md
+and BIDEC_CSAT_REVIEW.md. misc_tim's BalLut and aighop's CSatOld are independent
+completed native families. CCof integration remains unverified. The last
+ordinary `go -C abcgo test ./aig/gia` reaches giaCTas.go parser errors; the GIA
+package is still incomplete. Work stopped at the user's requested pause.

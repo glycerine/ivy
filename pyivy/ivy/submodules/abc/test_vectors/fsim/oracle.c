@@ -1,0 +1,3 @@
+#include "opt/fsim/fsimSim.c"
+#include "opt/fsim/fsimTsim.c"
+int main(void){char mode;int n,a,b;while(scanf(" %c%d%d%d",&mode,&n,&a,&b)==4){if(mode=='W'){Fsim_Man_t p={0};p.nWords=n;p.nFront=4;p.pDataSim=calloc(4*n,sizeof(unsigned));for(int i=0;i<n;i++)scanf("%x",p.pDataSim+n+i);for(int i=0;i<n;i++)scanf("%x",p.pDataSim+2*n+i);Fsim_ManSimulateNode(&p,3,2+a,4+b);for(int i=0;i<n;i++)printf("%x ",p.pDataSim[3*n+i]);puts("");free(p.pDataSim);}else if(mode=='H'){unsigned words[128];for(int i=0;i<n;i++)scanf("%x",words+i);printf("%d\n",Fsim_ManTerStateHash(words,n,a));}else if(mode=='P'){unsigned words[8]={0};Fsim_ManTerSimInfoSet(words,a,b);printf("%x %d\n",words[a>>4],Fsim_ManTerSimInfoGet(words,a));}else return 3;}return 0;}

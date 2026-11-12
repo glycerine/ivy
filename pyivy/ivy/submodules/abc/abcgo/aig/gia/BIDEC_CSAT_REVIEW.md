@@ -41,3 +41,27 @@ rejected by this ordinary-AND engine rather than misinterpreted.
 
 These are actual selected-source checks. The full GIA package still contains
 visible unported source families; no package-level completion is implied.
+
+## CBS2 checkpoint before requested pause
+
+The full giaCSat2.go family is now native, including the distinct integer-ID
+assignment encoding, learned clause/cube records, two-watch lists, clause reason
+expansion, forward-cone fanouts and both source propagation/frontier modes.
+It does not alias the earlier CBS solver or a generic CDCL backend.
+Readability pass uses slices and logical queue positions without cached capacity;
+watched-list links are reacquired by record index rather than retained across
+backing-store growth. Bug pass checks copied clause spans during reason expansion,
+watch cleanup, repeated/opposite root handling, partial models and complete
+assignment/reason/fanout restoration on solver reuse.
+
+2,400 single/pair queries over 20 random graphs and both propagation modes match
+exhaustive 32-assignment evaluation; partial witnesses independently replay.
+The combined real-native AIG suite, now including CBS2, passes `-race` in 18.986s.
+The earlier CBS source differential compared SAT/UNSAT/unknown counts on twelve
+actual original ABC runs and passed. CBS2 has no original-C differential yet.
+
+CCof is native syntax and uses the actual BSAT facade plus the Frames lifecycle
+being ported independently. Its whole-family integration/race tests have not yet
+run. It must not be described as validated or complete from parser progress.
+No whole-package completion is claimed: the last ordinary GIA test stops in the
+still-visible giaCTas.go draft (first parser errors 141,142,212,214,...).
