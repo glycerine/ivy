@@ -26,3 +26,24 @@ func TestDecompositionPatternCosts(t *testing.T) {
 		t.Fatalf("complement cost %d", got)
 	}
 }
+
+func TestDecompositionSimulationPatterns(t *testing.T) {
+	p := sfmDecPatterns{}
+	values := []uint64{0b11010110, 0b01010101}
+	p.setupSimulation(0xff, 0b11110000, values, true)
+	if p.counts != [2]int{4, 4} || p.words != [2]int{1, 1} {
+		t.Fatalf("counts %v words %v", p.counts, p.words)
+	}
+	if p.divisor(0, 0)[0] != 0xd || p.divisor(1, 0)[0] != 6 || p.divisor(0, 1)[0] != 5 {
+		t.Fatalf("sets %x %x %x", p.divisor(0, 0)[0], p.divisor(1, 0)[0], p.divisor(0, 1)[0])
+	}
+	out := []uint64{0xffffffffffffffff, 0xffffffffffffffff}
+	p.setdownSimulation(out, true)
+	if out[0]&15 != 0xd || (out[0]>>32)&15 != 6 || out[1]&15 != 5 {
+		t.Fatalf("setdown %x", out)
+	}
+	p.setupSimulation(0, ^uint64(0), values, true)
+	if p.words != [2]int{} || p.counts != [2]int{} {
+		t.Fatal("empty care should reset patterns")
+	}
+}
