@@ -18,7 +18,7 @@ import "os"
   Synopsis    [Various utilities.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -38,7 +38,6 @@ import "os"
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -52,460 +51,422 @@ import "os"
   Synopsis    [Frees one attribute manager.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Order CI/COs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of cubes of the node.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of cubes of the node.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of literals in the SOPs of the nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of literals in the factored forms.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of nodes with more than 1 reference.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of BDD nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of BDD nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the number of BDD nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Computes the area of the mapped circuit.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of exors.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of exors.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of exors.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of exors.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if it is an AIG with choice nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the maximum number of fanins.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Reads the total number of all fanins.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Counts the number of nodes having non-trivial copies.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Saves copy field of the objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Loads copy field of the objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Cleans the copy field of all objects.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns the index of the given fanin.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks if the internal node has CO fanout.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks if the internal node has CO fanout.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks if the internal node has CO drivers with the same name.]
 
-  Description [Checks if the internal node can borrow its name from CO fanouts. 
-  This is possible if all COs with non-complemented fanin edge pointing to this 
+  Description [Checks if the internal node can borrow its name from CO fanouts.
+  This is possible if all COs with non-complemented fanin edge pointing to this
   node have the same name.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Fixes the CO driver problem.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
@@ -515,13 +476,12 @@ import "os"
   (1) The edge from CO to its driver is not complemented.
   (2) If CI is a driver of a CO, they have the same name.]
   (3) If two COs share the same driver, they have the same name.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
@@ -533,395 +493,389 @@ import "os"
   (3) If two COs share the same driver, they have the same name.
   In some cases, such as FPGA mapping, we prevent the increase in delay
   by duplicating the driver nodes, rather than adding invs/bufs.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Transforms the network to have simple COs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Transforms the network to have simple COs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Inserts a new node in the order by levels.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if the node is the root of EXOR/NEXOR.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if the node is the control type of the MUX.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]
 
   Description [If the node is a MUX, returns the control variable C.
-  Assigns nodes T and E to be the then and else variables of the MUX. 
+  Assigns nodes T and E to be the then and else variables of the MUX.
   Node C is never complemented. Nodes T and E can be complemented.
   This function also recognizes EXOR/NEXOR gates as MUXes.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Prepares two network for a two-argument command similar to "verify".]
 
-  Synopsis    [Prepares two network for a two-argument command similar to "verify".]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NtkPrepareTwoNtks(pErr *os.File, pNtk *Abc_Ntk_t, argv *string, argc int32, ppNtk1 **Abc_Ntk_t, ppNtk2 **Abc_Ntk_t, pfDelete1 *int32, pfDelete2 *int32, fCheck int32) int32 {
-    var pFile *os.File;
-    var pNtk1, pNtk2, pNtkTemp *Abc_Ntk_t;
-    var util_optind int32;
+	var pFile *os.File
+	var pNtk1, pNtk2, pNtkTemp *Abc_Ntk_t
+	var util_optind int32
 
-    *pfDelete1 = 0;
-    *pfDelete2 = 0;
-    if argc == util_optind { // use the spec
-        if pNtk == nil {
-            fmt.Fprintf(pErr, "Empty current network.\n");
-            return 0;
-        }
-        if pNtk.pSpec == nil {
-            fmt.Fprintf(pErr, "The external spec is not given.\n");
-            return 0;
-        }
-        pFile = os.Open(pNtk.pSpec);
-        if pFile == nil {
-            fmt.Fprintf(pErr, "Cannot open the external spec file \"%s\".\n", pNtk.pSpec);
-            return 0;
-        
-        } else {
-            _ = (pFile).Close(); }
-        pNtk1 = Abc_NtkDup(pNtk);
-        pNtk2 = Io_Read( pNtk.pSpec, Io_ReadFileType(pNtk.pSpec), fCheck, 0 );
-        if pNtk2 == nil {
-            return 0; }
-        *pfDelete1 = 1;
-        *pfDelete2 = 1;
-    
-    } else if argc == util_optind + 1 {
-        if pNtk == nil {
-            fmt.Fprintf(pErr, "Empty current network.\n");
-            return 0;
-        }
-        pNtk1 = Abc_NtkDup(pNtk);
-        pNtk2 = Io_Read( argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0 );
-        if pNtk2 == nil {
-            return 0; }
-        *pfDelete1 = 1;
-        *pfDelete2 = 1;
-    
-    } else if argc == util_optind + 2 {
-        pNtk1 = Io_Read( argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0 );
-        if pNtk1 == nil {
-            return 0; }
-        pNtk2 = Io_Read( argv[util_optind+1], Io_ReadFileType(argv[util_optind+1]), fCheck, 0 );
-        if pNtk2 == nil {
-            Abc_NtkDelete( pNtk1 );
-            return 0;
-        }
-        *pfDelete1 = 1;
-        *pfDelete2 = 1;
-    
-    } else {
-        fmt.Fprintf(pErr, "Wrong number of arguments.\n");
-        return 0;
-    }
+	*pfDelete1 = 0
+	*pfDelete2 = 0
+	if argc == util_optind { // use the spec
+		if pNtk == nil {
+			fmt.Fprintf(pErr, "Empty current network.\n")
+			return 0
+		}
+		if pNtk.pSpec == nil {
+			fmt.Fprintf(pErr, "The external spec is not given.\n")
+			return 0
+		}
+		pFile = os.Open(pNtk.pSpec)
+		if pFile == nil {
+			fmt.Fprintf(pErr, "Cannot open the external spec file \"%s\".\n", pNtk.pSpec)
+			return 0
 
-    // make sure the networks are strashed
-    if !Abc_NtkIsStrash(pNtk1) {
-        pNtkTemp = Abc_NtkStrash( pNtk1, 0, 1, 0 );
-        if *pfDelete1 {
-            Abc_NtkDelete( pNtk1 ); }
-        pNtk1 = pNtkTemp;
-        *pfDelete1 = 1;
-    }
-    if !Abc_NtkIsStrash(pNtk2) {
-        pNtkTemp = Abc_NtkStrash( pNtk2, 0, 1, 0 );
-        if *pfDelete2 {
-            Abc_NtkDelete( pNtk2 ); }
-        pNtk2 = pNtkTemp;
-        *pfDelete2 = 1;
-    }
+		} else {
+			_ = (pFile).Close()
+		}
+		pNtk1 = Abc_NtkDup(pNtk)
+		pNtk2 = Io_Read(pNtk.pSpec, Io_ReadFileType(pNtk.pSpec), fCheck, 0)
+		if pNtk2 == nil {
+			return 0
+		}
+		*pfDelete1 = 1
+		*pfDelete2 = 1
 
-    *ppNtk1 = pNtk1;
-    *ppNtk2 = pNtk2;
-    return 1;
+	} else if argc == util_optind+1 {
+		if pNtk == nil {
+			fmt.Fprintf(pErr, "Empty current network.\n")
+			return 0
+		}
+		pNtk1 = Abc_NtkDup(pNtk)
+		pNtk2 = Io_Read(argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0)
+		if pNtk2 == nil {
+			return 0
+		}
+		*pfDelete1 = 1
+		*pfDelete2 = 1
+
+	} else if argc == util_optind+2 {
+		pNtk1 = Io_Read(argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0)
+		if pNtk1 == nil {
+			return 0
+		}
+		pNtk2 = Io_Read(argv[util_optind+1], Io_ReadFileType(argv[util_optind+1]), fCheck, 0)
+		if pNtk2 == nil {
+			Abc_NtkDelete(pNtk1)
+			return 0
+		}
+		*pfDelete1 = 1
+		*pfDelete2 = 1
+
+	} else {
+		fmt.Fprintf(pErr, "Wrong number of arguments.\n")
+		return 0
+	}
+
+	// make sure the networks are strashed
+	if !Abc_NtkIsStrash(pNtk1) {
+		pNtkTemp = Abc_NtkStrash(pNtk1, 0, 1, 0)
+		if *pfDelete1 {
+			Abc_NtkDelete(pNtk1)
+		}
+		pNtk1 = pNtkTemp
+		*pfDelete1 = 1
+	}
+	if !Abc_NtkIsStrash(pNtk2) {
+		pNtkTemp = Abc_NtkStrash(pNtk2, 0, 1, 0)
+		if *pfDelete2 {
+			Abc_NtkDelete(pNtk2)
+		}
+		pNtk2 = pNtkTemp
+		*pfDelete2 = 1
+	}
+
+	*ppNtk1 = pNtk1
+	*ppNtk2 = pNtk2
+	return 1
 }
 
-
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if it is an AIG with choice nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if it is an AIG with choice nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Collects all latches in the network.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Procedure used for sorting the nodes in increasing order of levels.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Procedure used for sorting the nodes in decreasing order of levels.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Creates the array of fanout counters.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Collects all objects into one array.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Returns the array of CI IDs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Puts the nodes into the DFS order and reassign their IDs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
-/**Function*************************************************************
-
-  Synopsis    [Detect cases when non-trivial FF matching is possible.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDetectMatching(pNtk *Abc_Ntk_t) {
 /*
-    Abc_Obj_t * pLatch, * pFanin;
-    int i, nTFFs, nJKFFs;
-    nTFFs = nJKFFs = 0;
-    Abc_NtkForEachLatch( pNtk, pLatch, i )
-    {
-        pFanin = Abc_ObjFanin0(pLatch);
-        if ( Abc_ObjFaninNum(pFanin) != 2 )
-            continue;
-        if ( Abc_NodeIsExorType(pLatch) )
-        {
-            if ( Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
-                 Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch )
-                 nTFFs++;
-        }
-        if ( Abc_ObjFaninNum( Abc_ObjFanin0(pFanin) ) != 2 || 
-             Abc_ObjFaninNum( Abc_ObjFanin1(pFanin) ) != 2 )
-            continue;
+*Function*************************************************************
 
-        if ( (Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
-              Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch) && 
-             (Abc_ObjFanin0(Abc_ObjFanin1(pFanin)) == pLatch ||
-              Abc_ObjFanin1(Abc_ObjFanin1(pFanin)) == pLatch) )
-        {
-            nJKFFs++;
-        }
-    }
-    printf( "D = %6d.   T = %6d.   JK = %6d.  (%6.2f %%)\n", 
-        Abc_NtkLatchNum(pNtk), nTFFs, nJKFFs, 100.0 * nJKFFs / Abc_NtkLatchNum(pNtk) );
+	Synopsis    [Detect cases when non-trivial FF matching is possible.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
 */
+func Abc_NtkDetectMatching(pNtk *Abc_Ntk_t) {
+	/*
+	   Abc_Obj_t * pLatch, * pFanin;
+	   int i, nTFFs, nJKFFs;
+	   nTFFs = nJKFFs = 0;
+	   Abc_NtkForEachLatch( pNtk, pLatch, i )
+
+	   	{
+	   	    pFanin = Abc_ObjFanin0(pLatch);
+	   	    if ( Abc_ObjFaninNum(pFanin) != 2 )
+	   	        continue;
+	   	    if ( Abc_NodeIsExorType(pLatch) )
+	   	    {
+	   	        if ( Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
+	   	             Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch )
+	   	             nTFFs++;
+	   	    }
+	   	    if ( Abc_ObjFaninNum( Abc_ObjFanin0(pFanin) ) != 2 ||
+	   	         Abc_ObjFaninNum( Abc_ObjFanin1(pFanin) ) != 2 )
+	   	        continue;
+
+	   	    if ( (Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
+	   	          Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch) &&
+	   	         (Abc_ObjFanin0(Abc_ObjFanin1(pFanin)) == pLatch ||
+	   	          Abc_ObjFanin1(Abc_ObjFanin1(pFanin)) == pLatch) )
+	   	    {
+	   	        nJKFFs++;
+	   	    }
+	   	}
+
+	   printf( "D = %6d.   T = %6d.   JK = %6d.  (%6.2f %%)\n",
+
+	   	Abc_NtkLatchNum(pNtk), nTFFs, nJKFFs, 100.0 * nJKFFs / Abc_NtkLatchNum(pNtk) );
+	*/
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Compares the pointers.]
 
-  Synopsis    [Compares the pointers.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_ObjPointerCompare(pp1 *any, pp2 *any) int32 {
-    if *pp1 < *pp2 {
-        return -1; }
-    if *pp1 > *pp2 { 
-        return 1; }
-    return 0; 
+	if *pp1 < *pp2 {
+		return -1
+	}
+	if *pp1 > *pp2 {
+		return 1
+	}
+	return 0
 }
 
 /**Function*************************************************************
@@ -932,143 +886,127 @@ func Abc_ObjPointerCompare(pp1 *any, pp2 *any) int32 {
   into another network, which was in turn transformed into yet another
   network. It makes the pCopy pointers of the original network point to
   the objects of the yet another network.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Increaments the cut counter.]
 
   Description [Returns 1 if it becomes equal to the ref counter.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Computes cross-cut of the circuit.]
 
   Description [Returns 1 if it is the last visit to the node.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Computes cross-cut of the circuit.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Prints all 3-var functions.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Compares the supergates by their level.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Analyze choice node support.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Analyze choice node support.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Complements the constraint outputs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
-
 /**Function*************************************************************
 
   Synopsis    [Returns 1 if all other fanouts of pFanin are below pNode.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -1080,92 +1018,72 @@ func Abc_ObjPointerCompare(pp1 *any, pp2 *any) int32 {
   Synopsis    [Returns 1 if there exist a fanout of pFanin higher than pNode.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Computes max delay using log(n) delay model.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
-
 
 /**Function*************************************************************
 
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Creates precomputed reverse topological order for each node.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
 /**Function*************************************************************
 
   Synopsis    [Converts multi-output PLA into an AIG with logic sharing.]
 
   Description [The first argument is an array of char*-strings representing
-  individual output of a multi-output PLA. The number of inputs (nInputs) 
-  and the number of outputs (nOutputs) are the second and third arguments. 
-  This procedure returns the AIG manager with the given number of inputs 
+  individual output of a multi-output PLA. The number of inputs (nInputs)
+  and the number of outputs (nOutputs) are the second and third arguments.
+  This procedure returns the AIG manager with the given number of inputs
   and outputs representing the PLA as a logic network with sharing.
-  
-  For example, if the original PLA is 
+
+  For example, if the original PLA is
     1000 10
     0110 01
     0011 01
@@ -1176,144 +1094,142 @@ func Abc_ObjPointerCompare(pp1 *any, pp2 *any) int32 {
     0011 1
 
   Reprsentation in terms of two char*-strings will be:
-    char * pPlas[2] = { "1000 1\n", "0110 1\n0011 1\n" };              
+    char * pPlas[2] = { "1000 1\n", "0110 1\n0011 1\n" };
   The call to the procedure may look as follows:
     Abc_Ntk_t * pNtkAig = Abc_NtkFromPla( pPlas, 4, 2 );]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks if the logic network is in the topological order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks if the logic network is in the topological order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Transfers phase information to the new network.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Starts a new network using existing network as a model.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Derives the AIG representing a property.]
 
-  Synopsis    [Derives the AIG representing a property.]
+	Description [Given is a sequential logic network (Abc_Ntk_t) and
+	an array of nodes (vector of object IDs) and their values (vector of 0s or 1s).
+	This procedure creates a sequential AIG (Abc_Ntk_t), which can be given to a
+	sequential model checker (in particular "pdr") to prove that the given
+	combination of values never appears at the intenal nodes of the network,
+	or produce a counter-example showing that it can appear.]
 
-  Description [Given is a sequential logic network (Abc_Ntk_t) and 
-  an array of nodes (vector of object IDs) and their values (vector of 0s or 1s).
-  This procedure creates a sequential AIG (Abc_Ntk_t), which can be given to a 
-  sequential model checker (in particular "pdr") to prove that the given 
-  combination of values never appears at the intenal nodes of the network, 
-  or produce a counter-example showing that it can appear.]
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NtkCreatePropertyMonitor(p *Abc_Ntk_t, vNodeIds *Vec_Int_t, vNodeValues *Vec_Int_t) *Abc_Ntk_t {
-    var pMonitor, pStrashed, pResult *Abc_Ntk_t;
-    // sequential cleanup parameters
-    var fLatchConst int32   =   1;
-    var fLatchEqual int32   =   1;
-    var fSaveNames int32    =   1;
-    var fUseMvSweep int32;
-    var nFramesSymb int32   =   1;
-    var nFramesSatur int32  = 512;
-    var fVerbose int32;
-    var fVeryVerbose int32;
-    // expecting sequential logic network
-    assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)");
-    assert(Abc_NtkLatchNum(p) > 0, "Abc_NtkLatchNum(p) > 0");
-    assert(Vec_IntSize(vNodeIds) > 0, "Vec_IntSize(vNodeIds) > 0");
-    assert(Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues), "Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues)");
-    // derive ABC network whose only output is 1 iff the given nodes have the given values
-    pMonitor = Abc_NtkDeriveWithOnePo( p, vNodeIds, vNodeValues );
-    // perform structural hashing
-    pStrashed = Abc_NtkStrash( pMonitor, 0, 1, 0 );
-    Abc_NtkDelete( pMonitor );
-    // it is a good idea to run sequential cleanup before giving the network to PDR
-    pResult = Abc_NtkDarLatchSweep( pStrashed, fLatchConst, fLatchEqual, fSaveNames, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose );
-    Abc_NtkDelete( pStrashed );
-    return pResult;
+	var pMonitor, pStrashed, pResult *Abc_Ntk_t
+	// sequential cleanup parameters
+	var fLatchConst int32 = 1
+	var fLatchEqual int32 = 1
+	var fSaveNames int32 = 1
+	var fUseMvSweep int32
+	var nFramesSymb int32 = 1
+	var nFramesSatur int32 = 512
+	var fVerbose int32
+	var fVeryVerbose int32
+	// expecting sequential logic network
+	assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)")
+	assert(Abc_NtkLatchNum(p) > 0, "Abc_NtkLatchNum(p) > 0")
+	assert(Vec_IntSize(vNodeIds) > 0, "Vec_IntSize(vNodeIds) > 0")
+	assert(Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues), "Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues)")
+	// derive ABC network whose only output is 1 iff the given nodes have the given values
+	pMonitor = Abc_NtkDeriveWithOnePo(p, vNodeIds, vNodeValues)
+	// perform structural hashing
+	pStrashed = Abc_NtkStrash(pMonitor, 0, 1, 0)
+	Abc_NtkDelete(pMonitor)
+	// it is a good idea to run sequential cleanup before giving the network to PDR
+	pResult = Abc_NtkDarLatchSweep(pStrashed, fLatchConst, fLatchEqual, fSaveNames, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose)
+	Abc_NtkDelete(pStrashed)
+	return pResult
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Testbench.]
+	Synopsis    [Testbench.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkCreatePropertyMonitorTest(p *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtk *Abc_Ntk_t;
-    var vNodeIds *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vNodeValues *Vec_Int_t  = Vec_IntAlloc( 100 );
+	var pNtk *Abc_Ntk_t
+	var vNodeIds *Vec_Int_t = Vec_IntAlloc(100)
+	var vNodeValues *Vec_Int_t = Vec_IntAlloc(100)
 
-    // this test will only work for the network, which has nodes with internal IDs such as these
-    Vec_IntPush( vNodeIds, 90 );
-    Vec_IntPush( vNodeIds, 80 );
-    Vec_IntPush( vNodeIds, 100 );
+	// this test will only work for the network, which has nodes with internal IDs such as these
+	Vec_IntPush(vNodeIds, 90)
+	Vec_IntPush(vNodeIds, 80)
+	Vec_IntPush(vNodeIds, 100)
 
-    Vec_IntPush( vNodeValues, 1 );
-    Vec_IntPush( vNodeValues, 0 );
-    Vec_IntPush( vNodeValues, 1 );
+	Vec_IntPush(vNodeValues, 1)
+	Vec_IntPush(vNodeValues, 0)
+	Vec_IntPush(vNodeValues, 1)
 
-    pNtk = Abc_NtkCreatePropertyMonitor( p, vNodeIds, vNodeValues );
+	pNtk = Abc_NtkCreatePropertyMonitor(p, vNodeIds, vNodeValues)
 
-    Vec_IntFree( vNodeIds );
-    Vec_IntFree( vNodeValues );
+	Vec_IntFree(vNodeIds)
+	Vec_IntFree(vNodeValues)
 
-    return pNtk;
+	return pNtk
 }
 
 /**Function*************************************************************
@@ -1321,7 +1237,7 @@ func Abc_NtkCreatePropertyMonitorTest(p *Abc_Ntk_t) *Abc_Ntk_t {
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -1329,155 +1245,165 @@ func Abc_NtkCreatePropertyMonitorTest(p *Abc_Ntk_t) *Abc_Ntk_t {
 ***********************************************************************/
 
 func Abc_SopSynthesize(vSops *Vec_Ptr_t) *Vec_Wec_t {
-    var vRes *Vec_Wec_t  = nil;
-    var pNtk *Abc_Ntk_t  = Abc_NtkCreateFromSops( "top", vSops );
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, iNode int32;
-    Abc_FrameReplaceCurrentNetwork( Abc_FrameReadGlobalFrame(), pNtk );
-    //Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2; map -a" );
-    Abc_FrameSetBatchMode( 1 );
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "st; collapse; sop; fx; strash; &get; &ps; &deepsyn -I 4 -J 50 -T 5 -S 111 -t; &ps; &put; map -a" );
-    Abc_FrameSetBatchMode( 0 );
-    pNtkNew = Abc_FrameReadNtk( Abc_FrameReadGlobalFrame() );
-    vRes = Vec_WecStart( Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew) );
-    Abc_NtkForEachPi( pNtkNew, pObj, i )
-        pObj.iTemp = iNode++;
-    Abc_NtkForEachNode( pNtkNew, pObj, i )
-    {
-        var vNode *Vec_Int_t  = Vec_WecEntry(vRes, iNode);
-        Vec_IntPush( vNode, Abc_GateToType(pObj) );
-        Vec_IntPush( vNode, iNode );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vNode, pFanin.iTemp );
-        pObj.iTemp = iNode++;
-    }
-    Abc_NtkForEachPo( pNtkNew, pObj, i )
-        Vec_IntPushTwo( Vec_WecEntry(vRes, iNode++), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp );
-    assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode");
-    return vRes;
+	var vRes *Vec_Wec_t = nil
+	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromSops("top", vSops)
+	var pNtkNew *Abc_Ntk_t
+	var pObj, pFanin *Abc_Obj_t
+	var i, k, iNode int32
+	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
+	//Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2; map -a" );
+	Abc_FrameSetBatchMode(1)
+	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "st; collapse; sop; fx; strash; &get; &ps; &deepsyn -I 4 -J 50 -T 5 -S 111 -t; &ps; &put; map -a")
+	Abc_FrameSetBatchMode(0)
+	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
+	vRes = Vec_WecStart(Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew))
+	Abc_NtkForEachPi(pNtkNew, pObj, i)
+	pObj.iTemp = iNode
+	iNode++
+	Abc_NtkForEachNode(pNtkNew, pObj, i)
+	{
+		var vNode *Vec_Int_t = Vec_WecEntry(vRes, iNode)
+		Vec_IntPush(vNode, Abc_GateToType(pObj))
+		Vec_IntPush(vNode, iNode)
+		Abc_ObjForEachFanin(pObj, pFanin, k)
+		Vec_IntPush(vNode, pFanin.iTemp)
+		pObj.iTemp = iNode
+		iNode++
+	}
+	Abc_NtkForEachPo(pNtkNew, pObj, i)
+	Vec_IntPushTwo(Vec_WecEntry(vRes, iNode), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp)
+	iNode++
+	assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode")
+	return vRes
 }
 func Abc_GiaSynthesize(vGias *Vec_Ptr_t, pMulti *Gia_Man_t) *Vec_Wec_t {
-    var vRes *Vec_Wec_t  = nil;
-    var pNtk *Abc_Ntk_t  = Abc_NtkCreateFromGias( "top", vGias, pMulti );
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, iNode int32;
-    Abc_FrameReplaceCurrentNetwork( Abc_FrameReadGlobalFrame(), pNtk );
-    Abc_FrameSetBatchMode( 1 );
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "compress2rs; dch; map -a;  strash; compress2rs; dch; map -a;  strash; compress2rs; dch; map -a" );
-    Abc_FrameSetBatchMode( 0 );
-    pNtkNew = Abc_FrameReadNtk( Abc_FrameReadGlobalFrame() );
-    vRes = Vec_WecStart( Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew) );
-    Abc_NtkForEachPi( pNtkNew, pObj, i )
-        pObj.iTemp = iNode++;
-    Abc_NtkForEachNode( pNtkNew, pObj, i )
-    {
-        var vNode *Vec_Int_t  = Vec_WecEntry(vRes, iNode);
-        Vec_IntPush( vNode, Abc_GateToType(pObj) );
-        Vec_IntPush( vNode, iNode );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vNode, pFanin.iTemp );
-        pObj.iTemp = iNode++;
-    }
-    Abc_NtkForEachPo( pNtkNew, pObj, i )
-        Vec_IntPushTwo( Vec_WecEntry(vRes, iNode++), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp );
-    assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode");
-    return vRes;
+	var vRes *Vec_Wec_t = nil
+	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromGias("top", vGias, pMulti)
+	var pNtkNew *Abc_Ntk_t
+	var pObj, pFanin *Abc_Obj_t
+	var i, k, iNode int32
+	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
+	Abc_FrameSetBatchMode(1)
+	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "compress2rs; dch; map -a;  strash; compress2rs; dch; map -a;  strash; compress2rs; dch; map -a")
+	Abc_FrameSetBatchMode(0)
+	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
+	vRes = Vec_WecStart(Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew))
+	Abc_NtkForEachPi(pNtkNew, pObj, i)
+	pObj.iTemp = iNode
+	iNode++
+	Abc_NtkForEachNode(pNtkNew, pObj, i)
+	{
+		var vNode *Vec_Int_t = Vec_WecEntry(vRes, iNode)
+		Vec_IntPush(vNode, Abc_GateToType(pObj))
+		Vec_IntPush(vNode, iNode)
+		Abc_ObjForEachFanin(pObj, pFanin, k)
+		Vec_IntPush(vNode, pFanin.iTemp)
+		pObj.iTemp = iNode
+		iNode++
+	}
+	Abc_NtkForEachPo(pNtkNew, pObj, i)
+	Vec_IntPushTwo(Vec_WecEntry(vRes, iNode), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp)
+	iNode++
+	assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode")
+	return vRes
 }
 func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
-    var pNtkNew, pNtk *Abc_Ntk_t;
-    var vGias *Vec_Ptr_t  = Vec_PtrAlloc( 1 );
-    Vec_PtrPush( vGias, p );
-    pNtk = Abc_NtkCreateFromGias( "top", vGias, nil );
-    Vec_PtrFree( vGias );
-    Abc_FrameReplaceCurrentNetwork( Abc_FrameReadGlobalFrame(), pNtk );
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "balance; collapse; muxes; strash; dc2" );
-    pNtkNew = Abc_FrameReadNtk( Abc_FrameReadGlobalFrame() );
-    return Abc_NtkClpGia( pNtkNew );
+	var pNtkNew, pNtk *Abc_Ntk_t
+	var vGias *Vec_Ptr_t = Vec_PtrAlloc(1)
+	Vec_PtrPush(vGias, p)
+	pNtk = Abc_NtkCreateFromGias("top", vGias, nil)
+	Vec_PtrFree(vGias)
+	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
+	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "balance; collapse; muxes; strash; dc2")
+	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
+	return Abc_NtkClpGia(pNtkNew)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkClpOneGia_rec(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {
-    var iLit0, iLit1 int32;
-    if Abc_NodeIsTravIdCurrent(pNode) || Abc_ObjFaninNum(pNode) == 0 || Abc_ObjIsCi(pNode) {
-        return pNode.iTemp; }
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    Abc_NodeSetTravIdCurrent( pNode );
-    iLit0 = Abc_NtkClpOneGia_rec( pNew, Abc_ObjFanin0(pNode) );
-    iLit1 = Abc_NtkClpOneGia_rec( pNew, Abc_ObjFanin1(pNode) );
-    iLit0 = Abc_LitNotCond( iLit0, Abc_ObjFaninC0(pNode) );
-    iLit1 = Abc_LitNotCond( iLit1, Abc_ObjFaninC1(pNode) );
-    return (pNode.iTemp = Gia_ManHashAnd(pNew, iLit0, iLit1));
+	var iLit0, iLit1 int32
+	if Abc_NodeIsTravIdCurrent(pNode) || Abc_ObjFaninNum(pNode) == 0 || Abc_ObjIsCi(pNode) {
+		return pNode.iTemp
+	}
+	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode( pNode )")
+	Abc_NodeSetTravIdCurrent(pNode)
+	iLit0 = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin0(pNode))
+	iLit1 = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin1(pNode))
+	iLit0 = Abc_LitNotCond(iLit0, Abc_ObjFaninC0(pNode))
+	iLit1 = Abc_LitNotCond(iLit1, Abc_ObjFaninC1(pNode))
+	pNode.iTemp = Gia_ManHashAnd(pNew, iLit0, iLit1)
+	return pNode.iTemp
 }
 func Abc_NtkStrashToGia(pNtk *Abc_Ntk_t) *Gia_Man_t {
-    var i, iLit int32;
-    var pNode *Abc_Obj_t;
-    var pNew, pTemp *Gia_Man_t;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    Abc_NtkForEachObj( pNtk, pNode, i )
-        pNode.iTemp = -1;
-    // start new manager
-    pNew = Gia_ManStart( Abc_NtkObjNum(pNtk) );
-    pNew.pName = Abc_UtilStrsav( pNtk.pName );
-    pNew.pSpec = Abc_UtilStrsav( pNtk.pSpec );
-    Gia_ManHashStart( pNew );
-    // primary inputs
-    Abc_AigConst1(pNtk).iTemp = 1;
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        pNode.iTemp = Gia_ManAppendCi(pNew);
-    // create the first cone
-    Abc_NtkIncrementTravId( pNtk );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        iLit = Abc_NtkClpOneGia_rec( pNew, Abc_ObjFanin0(pNode) );
-        iLit = Abc_LitNotCond( iLit, Abc_ObjFaninC0(pNode) );
-        Gia_ManAppendCo( pNew, iLit );
-    }
-    // perform cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
+	var i, iLit int32
+	var pNode *Abc_Obj_t
+	var pNew, pTemp *Gia_Man_t
+	assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)")
+	Abc_NtkForEachObj(pNtk, pNode, i)
+	pNode.iTemp = -1
+	// start new manager
+	pNew = Gia_ManStart(Abc_NtkObjNum(pNtk))
+	pNew.pName = Abc_UtilStrsav(pNtk.pName)
+	pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec)
+	Gia_ManHashStart(pNew)
+	// primary inputs
+	Abc_AigConst1(pNtk).iTemp = 1
+	Abc_NtkForEachCi(pNtk, pNode, i)
+	pNode.iTemp = Gia_ManAppendCi(pNew)
+	// create the first cone
+	Abc_NtkIncrementTravId(pNtk)
+	Abc_NtkForEachCo(pNtk, pNode, i)
+	{
+		iLit = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin0(pNode))
+		iLit = Abc_LitNotCond(iLit, Abc_ObjFaninC0(pNode))
+		Gia_ManAppendCo(pNew, iLit)
+	}
+	// perform cleanup
+	pTemp = pNew
+	pNew = Gia_ManCleanup(pTemp)
+	Gia_ManStop(pTemp)
+	return pNew
 }
 func Abc_SopSynthesizeOne(pSop string, fClp int32) *Gia_Man_t {
-    var pNtkNew, pNtk *Abc_Ntk_t;
-    var vSops *Vec_Ptr_t;
-    if len(pSop) == 3 {
-        var pNew *Gia_Man_t  = Gia_ManStart( 1 );
-        pNew.pName = Abc_UtilStrsav( "top" );
-        //Gia_ManAppendCi( pNew );
-        assert(pSop[1] == '0' || pSop[1] == '1', "pSop[1] == '0' || pSop[1] == '1'");
-        Gia_ManAppendCo( pNew, pSop[1] == '1' );
-        return pNew;
-    }
-    vSops = Vec_PtrAlloc( 1 );
-    Vec_PtrPush( vSops, pSop );
-    pNtk = Abc_NtkCreateFromSops( "top", vSops );
-    Vec_PtrFree( vSops );
-    Abc_FrameReplaceCurrentNetwork( Abc_FrameReadGlobalFrame(), pNtk );
-    Abc_FrameSetBatchMode( 1 );
-    if fClp != 0 { 
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "clp; sop" ); }
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2" );
-    Abc_FrameSetBatchMode( 0 );
-    pNtkNew = Abc_FrameReadNtk( Abc_FrameReadGlobalFrame() );
-    return Abc_NtkStrashToGia( pNtkNew );
+	var pNtkNew, pNtk *Abc_Ntk_t
+	var vSops *Vec_Ptr_t
+	if len(pSop) == 3 {
+		var pNew *Gia_Man_t = Gia_ManStart(1)
+		pNew.pName = Abc_UtilStrsav("top")
+		//Gia_ManAppendCi( pNew );
+		assert(pSop[1] == '0' || pSop[1] == '1', "pSop[1] == '0' || pSop[1] == '1'")
+		Gia_ManAppendCo(pNew, pSop[1] == '1')
+		return pNew
+	}
+	vSops = Vec_PtrAlloc(1)
+	Vec_PtrPush(vSops, pSop)
+	pNtk = Abc_NtkCreateFromSops("top", vSops)
+	Vec_PtrFree(vSops)
+	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
+	Abc_FrameSetBatchMode(1)
+	if fClp != 0 {
+		Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "clp; sop")
+	}
+	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2")
+	Abc_FrameSetBatchMode(0)
+	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
+	return Abc_NtkStrashToGia(pNtkNew)
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-
