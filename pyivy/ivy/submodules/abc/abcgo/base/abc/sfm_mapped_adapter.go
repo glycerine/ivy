@@ -73,3 +73,83 @@ func Abc_NtkExtractSfm(n *Network) (*sfm.Sfm_Ntk_t, []*Object, error) {
 	copy(result.Mapping, gates)
 	return result, objects, nil
 }
+
+// Abc_NtkApplySfm applies an optimized copy back to its original network.
+// Existing live nodes and terminals retain their identities; new mapped nodes
+// are added and removed nodes are deleted after all replacement edges exist.
+func Abc_NtkApplySfm(n *Network, p *sfm.Sfm_Ntk_t, original []*Object) error {
+	if n == nil || p == nil || Abc_NtkIsMappedLogic(n) == 0 || p.Pis != len(n.Inputs()) || p.Pos != len(n.Outputs()) || len(original) < p.Pis+p.Pos || len(p.Mapping) != len(p.Fanins) {
+		return fmt.Errorf("sfm: incompatible mapped network")
+	}
+	if err := n.Check(); err != nil {
+		return err
+	}
+	if err := p.Check(); err != nil {
+		return err
+	}
+	oldInternalEnd := len(original) - p.Pos
+	newInternalEnd := len(p.Fanins) - p.Pos
+	if newInternalEnd < oldInternalEnd {
+		return fmt.Errorf("sfm: original IDs are missing")
+	}
+	for i, obj := range original {
+		if !n.contains(obj) {
+			return fmt.Errorf("sfm: original object %d is missing", i)
+		}
+		if i < p.Pis && n.Inputs()[i] != obj || i >= oldInternalEnd && n.Outputs()[i-oldInternalEnd] != obj || i >= p.Pis && i < oldInternalEnd && obj.Kind != ObjectNode {
+			return fmt.Errorf("sfm: original object order changed")
+		}
+	}
+	for id := p.Pis; id < newInternalEnd; id++ {
+		if p.Deleted[id] {
+			continue
+		}
+		gate := p.Mapping[id]
+		if gate == nil || gate.Cell == nil || gate.Inputs != len(p.Fanins[id]) || int(mio.Mio_GateReadPinNum(gate.Cell)) != len(p.Fanins[id]) || len(gate.Truth) != 1 || gate.Truth[0] != mio.Mio_GateReadTruth(gate.Cell) {
+			return fmt.Errorf("sfm: invalid mapped gate at %d", id)
+		}
+	}
+	objects := make([]*Object, len(p.Fanins))
+	copy(objects[:oldInternalEnd], original[:oldInternalEnd])
+	copy(objects[newInternalEnd:], original[oldInternalEnd:])
+	for id := oldInternalEnd; id < newInternalEnd; id++ {
+		if !p.Deleted[id] {
+			objects[id] = n.NewObject(ObjectNode)
+		}
+	}
+	for id := p.Pis; id < len(objects); id++ {
+		obj := objects[id]
+		if obj == nil {
+			continue
+		}
+		for len(obj.fanins) > 0 {
+			if err := n.DeleteFanin(obj, len(obj.fanins)-1); err != nil {
+				panic(err)
+			}
+		}
+	}
+	for id := p.Pis; id < len(objects); id++ {
+		if p.Deleted[id] {
+			continue
+		}
+		obj := objects[id]
+		if id < newInternalEnd {
+			obj.Data = p.Mapping[id].Cell
+		}
+		for _, f := range p.Fanins[id] {
+			if err := n.AddFanin(obj, objects[f].Signal()); err != nil {
+				panic(err)
+			}
+		}
+	}
+	for id := p.Pis; id < oldInternalEnd; id++ {
+		if p.Deleted[id] {
+			if err := n.DeleteObject(objects[id]); err != nil {
+				panic(err)
+			}
+		}
+	}
+	n.timingMapping = nil
+	Abc_NtkLevel(n)
+	return n.Check()
+}
