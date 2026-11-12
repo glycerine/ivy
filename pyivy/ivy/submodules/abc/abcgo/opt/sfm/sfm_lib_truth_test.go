@@ -20,3 +20,12 @@ func TestFindComplementInputGate(t *testing.T) {
 		t.Fatalf("missing %d pin %d", got, pin)
 	}
 }
+
+func TestSfmProfileDominance(t *testing.T) {
+	if !Sfm_LibNewIsContained(3, []int32{1, 2}, 4, []int32{2, 2}) || Sfm_LibNewIsContained(3, []int32{1, 2}, 2, []int32{2, 2}) {
+		t.Fatal("incorrect containment")
+	}
+	if !Sfm_LibNewContains(3, []int32{1, 2}, 2, []int32{1, 1}) || Sfm_LibNewContains(3, []int32{1, 2}, 2, []int32{2, 1}) {
+		t.Fatal("incorrect dominance")
+	}
+}

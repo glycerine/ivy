@@ -194,34 +194,8 @@ func Sfm_LibStop(p *Sfm_Lib_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_LibTruth6Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) word {
-    var uFanins [SFM_SUPP_MAX]word; var i, k int32;
-    var uTruthBot word  = Exp_Truth6( pCellBot.nFanins, pCellBot.vExpr, nil );
-    assert(InTop >= 0 && InTop < int32(pCellTop.nFanins), "InTop >= 0 && InTop < int32(pCellTop.nFanins)");
-    for  i, k = 0, pCellBot.nFanins; i < int32(pCellTop.nFanins); i++  {
-        if i == InTop {
-            uFanins[i] = uTruthBot;
-        } else {
-            uFanins[i] = s_Truths6[k]; k++; }
-    }
-    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, "int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1");
-    uTruthBot = Exp_Truth6( pCellTop.nFanins, pCellTop.vExpr, uFanins );
-    return uTruthBot;
-}
-func Sfm_LibTruth8Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, pRes *word) {
-    var uTruthBot [4]word;
-    var puFanins [SFM_SUPP_MAX]*word; var i, k int32;
-    Exp_Truth8( pCellBot.nFanins, pCellBot.vExpr, nil, uTruthBot );
-    assert(InTop >= 0 && InTop < int32(pCellTop.nFanins), "InTop >= 0 && InTop < int32(pCellTop.nFanins)");
-    for  i, k = 0, pCellBot.nFanins; i < int32(pCellTop.nFanins); i++  {
-        if i == InTop {
-            puFanins[i] = uTruthBot;
-        } else {
-            puFanins[i] = s_Truth8[k]; k++; }
-    }
-    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, "int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1");
-    Exp_Truth8( pCellTop.nFanins, pCellTop.vExpr, puFanins, pRes );
-}
+
+
 
 /**Function*************************************************************
 
@@ -247,43 +221,9 @@ void Sfm_LibCellProfile( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InT
             pProf[i] = pCellTop->iDelays[Perm[i] - (int)pCellBot->nFanins + 1];
 }
 */
-func Sfm_LibCellProfile(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, nFanins int32, Perm *int32, pProf *int32) {
-    var i int32;
-    var DelayAdd int32;
-    if pCellTop != nil {
-        DelayAdd = 1;
-    } else {
-        DelayAdd = 0;
-    }
-    for  i = 0; i < nFanins; i++  {
-        if Perm[i] < int32(pCellBot.nFanins) {
-            pProf[i] = 1 + DelayAdd;
-        } else if Perm[i] < int32(pCellBot.nFanins) + InTop {
-            pProf[i] = 1;
-        } else { // if ( Perm[i] >= (int)pCellBot->nFanins + InTop )
-            pProf[i] = 1; }
-    }
-}
-func Sfm_LibNewIsContained(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {
-    var k int32;
-    if Area < pObj.Area {
-        return 0; }
-    for  k = 0; k < nFanins; k++  {
-        if pProfNew[k] < pProf[k] {
-            return 0; }
-    }
-    return 1;
-}
-func Sfm_LibNewContains(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {
-    var k int32;
-    if Area > pObj.Area {
-        return 0; }
-    for  k = 0; k < nFanins; k++  {
-        if pProfNew[k] > pProf[k] {
-            return 0; }
-    }
-    return 1;
-}
+
+
+
 func Sfm_LibPrepareAdd(p *Sfm_Lib_t, pTruth *word, Perm *int32, nFanins int32, pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) {
     var pObj *Sfm_Fun_t;
     var InvPerm, Profile [SFM_SUPP_MAX]int32;
