@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -167,5 +168,30 @@ int main(int argc,char**argv){int n;unsigned long long t;if(argc>1){if(strcmp(ar
 		if a != Dau_CountSymms(truth, 3) || b != Dau_CountSymms2(truth, 3) || c != Dau_CountCompl(truth, 3) {
 			t.Fatalf("original C symmetry truth%x", i)
 		}
+	}
+}
+
+func TestNPNFileTableAndClassDeduplication(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "table.data")
+	if err := os.WriteFile(path, []byte{1, 2, 3, 4, 5, 6}, 0600); err != nil {
+		t.Fatal(err)
+	}
+	words := Dau_ReadFile(path, 2)
+	if len(words) != 4 || words[0] != 0x04030201 || words[1] != 0x0605 || words[2] != 0 || words[3] != 0 {
+		t.Fatal("short table zero fill", words)
+	}
+	table, _, err := EnumerateNPN(3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	classes, partial := vec.Vec_IntAlloc(4), vec.Vec_IntAlloc(4)
+	truth := uint64(0x8888888888888888)
+	first := Dau_AddFunction(truth, 3, table, classes, partial)
+	if first == 0 || vec.Vec_IntSize(classes) != 1 || vec.Vec_IntSize(partial) != 1 {
+		t.Fatal("new support-deficient class not recorded")
+	}
+	Dau_AddFunction(^truth, 3, table, classes, partial)
+	if vec.Vec_IntSize(classes) != 1 || vec.Vec_IntSize(partial) != 1 {
+		t.Fatal("class duplicate/output phase not suppressed")
 	}
 }

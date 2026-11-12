@@ -72,12 +72,12 @@ func EnumerateNPN(n int32) (table, representatives []uint32, err error) {
 	minterms := 1 << n
 	count := uint64(1) << uint(minterms-1)
 	table = make([]uint32, int(count))
-	seen := make([]bool, int(count))
+	seen := make([]uint64, int((count+63)/64))
 	mask := uint64(1)<<uint(minterms) - 1
 	perm := make([]int, n)
 	used := make([]bool, n)
 	for current := uint64(0); current < count; current++ {
-		if seen[current] {
+		if seen[current/64]>>(current%64)&1 != 0 {
 			continue
 		}
 		representatives = append(representatives, uint32(current))
@@ -106,7 +106,7 @@ func EnumerateNPN(n int32) (table, representatives []uint32, err error) {
 				if transformed >= count {
 					transformed = mask &^ transformed
 				}
-				seen[transformed] = true
+				seen[transformed/64] |= 1 << (transformed % 64)
 				table[transformed] = uint32(current)
 			}
 		}
@@ -183,12 +183,13 @@ func Dau_ExactNpnForClasses(memory *vec.Vec_Mem_t, support *vec.Vec_Int_t, n, nI
 	}
 	result := vec.Vec_WrdStart(vec.Vec_IntSize(support))
 	info := lucky.NewPermInfo(n)
+	aux, minimal := make([]uint64, 1024), make([]uint64, 1024)
 	for i, entry := range vec.Vec_IntArray(support) {
 		if entry&15 > n {
 			continue
 		}
 		truth := []uint64{vec.Vec_MemReadEntry(memory, i)[0]}
-		lucky.SimpleMinimal(truth, make([]uint64, 1024), make([]uint64, 1024), info, n)
+		lucky.SimpleMinimal(truth, aux, minimal, info, n)
 		vec.Vec_WrdWriteEntry(result, i, truth[0])
 	}
 	return result

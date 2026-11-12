@@ -29,6 +29,8 @@ type FunctionEnumeration struct {
 	NodeSupport []int32
 	Frontiers   []int
 	Steps       uint64
+	RoundSteps  []uint64
+	RoundTwo    []int32
 }
 
 func EnumerateFunctions(inputs, n, maxNodes int32, useTwo, reduce bool) (*FunctionEnumeration, error) {
@@ -51,9 +53,11 @@ func EnumerateFunctions(inputs, n, maxNodes int32, useTwo, reduce bool) (*Functi
 	start := time.Now()
 	for nodes := int32(1); nodes <= maxNodes; nodes++ {
 		expand := !(reduce && nodes == maxNodes)
-		offer := func(t uint64, vars int32) {
-			Dau_InsertFunction(manager, []uint64{t}, nodes, inputs, n, vars, memory, support, 0, start)
+		insert := func(t uint64, vars int32) int32 {
+			return Dau_InsertFunction(manager, []uint64{t}, nodes, inputs, n, vars, memory, support, 0, start)
 		}
+		offer := func(t uint64, vars int32) { insert(t, vars) }
+		countTwo := int32(0)
 		for entry := limits[nodes-1]; entry < limits[nodes]; entry++ {
 			truth := vec.Vec_MemReadEntry(memory, entry)[0]
 			vars := vec.Vec_IntEntry(support, entry) & 15
@@ -75,13 +79,15 @@ func EnumerateFunctions(inputs, n, maxNodes int32, useTwo, reduce bool) (*Functi
 						for first := 0; first < 5; first++ {
 							for second := first + 1; second < 5; second++ {
 								a, b := gates[first]&c01|^gates[first]&c00, gates[first]&c11|^gates[first]&c10
-								offer(gates[second]&b|^gates[second]&a, vars)
+								countTwo += insert(gates[second]&b|^gates[second]&a, vars)
 							}
 						}
 					}
 				}
 			}
 		}
+		result.RoundSteps = append(result.RoundSteps, result.Steps)
+		result.RoundTwo = append(result.RoundTwo, countTwo)
 		limits[nodes+1] = vec.Vec_IntSize(support)
 		if Dau_CountFuncs(support, int32(limits[nodes]), int32(limits[nodes+1]), n) == 0 {
 			limits = limits[:nodes+2]
@@ -111,7 +117,12 @@ func Dau_FunctionEnum(inputs, n, maxNodes, useTwo, reduce, verbose int32) {
 		if nodes == 0 {
 			first = 0
 		}
-		Dau_PrintStats(int32(nodes), inputs, n, support, int32(first), int32(result.Frontiers[nodes+1]), result.Steps, 0, start)
+		steps, two := uint64(0), int32(0)
+		if nodes > 0 {
+			steps = result.RoundSteps[nodes-1]
+			two = result.RoundTwo[nodes-1]
+		}
+		Dau_PrintStats(int32(nodes), inputs, n, support, int32(first), int32(result.Frontiers[nodes+1]), steps, two, start)
 	}
 	Dau_TablesSave(inputs, n, memory, support, int32(len(result.Truths)), start)
 }
