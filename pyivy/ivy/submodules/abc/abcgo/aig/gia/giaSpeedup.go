@@ -221,55 +221,7 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, fVerbose int32) float32 {
-    var pLutLib *If_LibLut_t  = (If_LibLut_t *)p.pLutLib;
-    var i int32;
-    var Nodes int32;
-    var pCounters *int32;
-    var tArrival, tDelta, nSteps, Num float32;
-    // get the library
-    if (pLutLib != nil) && pLutLib.LutMax < Gia_ManLutSizeMax(p) {
-        fmt.Printf("The max LUT size (%d) is less than the max fanin count (%d).\n", pLutLib.LutMax, Gia_ManLutSizeMax(p));
-        return -ABC_INFINITY;
-    }
-    // decide how many steps
-    if pLutLib != nil {
-        nSteps = 20;
-    } else {
-        nSteps = Gia_ManLutLevel(p, nil);
-    }
-    // inlining of macro ABC_ALLOC
-    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));
-    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );
-    // perform delay trace
-    tArrival = Gia_ManDelayTraceLut( p );
-    tDelta   = tArrival / nSteps;
-    // count how many nodes have slack in the corresponding intervals
-    // inlining of macro Gia_ManForEachLut
-    for  i = 1; i < Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {
-        if Gia_ObjLutSize(p, i) == 0 {
-            continue; }
-        Num = Gia_ObjTimeSlack(p, i) / tDelta;
-        if Num > nSteps {
-            continue; }
-        assert(Num >=0 && Num <= nSteps, "Num >=0 && Num <= nSteps");
-        pCounters[int32(Num)]++;
-    }
-    }
-    // print the results    
-    if fVerbose != 0 {
-        fmt.Printf("Max delay = %6.2f. Delay trace using %s model:\n", tArrival, pLutLib? "LUT library" : "unit-delay");
-        Nodes = 0;
-        for  i = 0; i < nSteps; i++  {
-            Nodes += pCounters[i];
-            fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", pLutLib? 5*(i+1) : i+1, pLutLib? "%":"lev", Nodes, 100.0*Nodes/Gia_ManLutNum(p));
-        }
-    }
-    // inlining of macro ABC_FREE
-    pCounters = nil;
-    Gia_ManTimeStop( p );
-    return tArrival;
-}
+
 
 /**Function*************************************************************
 
@@ -295,20 +247,7 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, fVerbose int32) float32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSpeedupObj_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) int32 {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return 1; }
-    Gia_ObjSetTravIdCurrent( p, pObj );
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    if !(Gia_ManSpeedupObj_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0) {
-        return 0; }
-    if !(Gia_ManSpeedupObj_rec( p, Gia_ObjFanin1(pObj), vNodes ) != 0) {
-        return 0; }
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -321,64 +260,7 @@ func Gia_ManSpeedupObj_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) int
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSpeedupObj(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, vLeaves *Vec_Int_t, vTimes *Vec_Int_t) {
-    var vNodes *Vec_Int_t;
-    var pTemp *Gia_Obj_t  = nil;
-    var pCofs [32]int32;
-    var nCofs int32;
-    var nSkip int32;
-    var i int32;
-    var k int32;
-    var iResult int32;
-    var iObj int32;
-    // mark the leaves
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {
-        Gia_ObjSetTravIdCurrent( p, pTemp );
-    }
-    // collect the AIG nodes
-    vNodes = Vec_IntAlloc( 100 );
-    if !(Gia_ManSpeedupObj_rec( p, pObj, vNodes ) != 0) {
-        fmt.Printf("Bad node!!!\n");
-        Vec_IntFree( vNodes );
-        return;
-    }
-    // derive cofactors
-    nCofs = (1 << Vec_IntSize(vTimes));
-    for  i = 0; i < nCofs; i++  {
-        // inlining of macro Gia_ManForEachObjVec
-        for  k = 0; (k < Vec_IntSize(vLeaves)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(vLeaves,k))); k++  {
-            pTemp.Value = Abc_Var2Lit( Gia_ObjId(p, pTemp), 0 );
-        }
-        // inlining of macro Gia_ManForEachObjVec
-        for  k = 0; (k < Vec_IntSize(vTimes)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(vTimes,k))); k++  {
-            pTemp.Value = ((i & (1<<k)) != 0);
-        }
-        // inlining of macro Gia_ManForEachObjVec
-        for  k = 0; (k < Vec_IntSize(vNodes)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {
-            pTemp.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pTemp), Gia_ObjFanin1Copy(pTemp) );
-        }
-        pCofs[i] = pTemp.Value;
-    }
-    Vec_IntFree( vNodes );
-    // collect the resulting tree
-    // inlining of macro Gia_ManForEachObjVec
-    for  k = 0; (k < Vec_IntSize(vTimes)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(vTimes,k))); k++  {
-        for  nSkip = (1<<k), i = 0; i < nCofs; i += 2*nSkip  {
-            pCofs[i] = Gia_ManHashMux( pNew, Gia_ObjToLit(p,pTemp), pCofs[i+nSkip], pCofs[i] );
-        }
-    }
-    // create choice node  (pObj is repr and ppCofs[0] is new)
-    iObj    = Gia_ObjId( p, pObj );
-    iResult = Abc_Lit2Var( pCofs[0] );
-    if iResult <= iObj {
-        return; }
-    Gia_ObjSetRepr( pNew, iResult, iObj );
-    Gia_ObjSetNext( pNew, iResult, Gia_ObjNext(pNew, iObj) );
-    Gia_ObjSetNext( pNew, iObj, iResult );
-}
+
 
 /**Function*************************************************************
 

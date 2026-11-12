@@ -1,10 +1,51 @@
 package gia
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
 )
+
+func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, verbose int32) float32 {
+	steps := Gia_ManLutLevel(p, nil)
+	if p.pLutLib != nil {
+		steps = 20
+	}
+	arrival := Gia_ManDelayTraceLut(p)
+	defer Gia_ManTimeStop(p)
+	if steps <= 0 || arrival <= 0 {
+		return arrival
+	}
+	counters := make([]int32, steps+1)
+	delta := arrival / float32(steps)
+	for id := int32(0); id < p.nObjs; id++ {
+		if Gia_ObjIsLut(p, id) == 0 || Gia_ObjLutSize(p, id) == 0 {
+			continue
+		}
+		bucket := int32(Gia_ObjTimeSlack(p, id) / delta)
+		if bucket >= 0 && bucket <= steps {
+			counters[bucket]++
+		}
+	}
+	if verbose != 0 {
+		model, unit := "unit-delay", "lev"
+		if p.pLutLib != nil {
+			model, unit = "LUT library", "%"
+		}
+		fmt.Printf("Max delay = %6.2f. Delay trace using %s model:\n", arrival, model)
+		var count int32
+		for i := int32(0); i < steps; i++ {
+			count += counters[i]
+			level := i + 1
+			if p.pLutLib != nil {
+				level *= 5
+			}
+			fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", level, unit, count, 100*float64(count)/float64(Gia_ManLutNum(p)))
+		}
+	}
+	return arrival
+}
 
 func Gia_ManDelayTraceLut(p *Gia_Man_t) float32 {
 	var timing *tim.Tim_Man_t
