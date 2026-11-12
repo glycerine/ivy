@@ -53,6 +53,7 @@ type Graph struct {
 	editDepth                         int
 	fanouts                           *FanoutIndex
 	Assertions, BarrierBuffers        int32
+	RetimingChanged                   bool
 	FlopNumbers                       []int32
 	Timing, History                   any
 	Name, Spec                        string

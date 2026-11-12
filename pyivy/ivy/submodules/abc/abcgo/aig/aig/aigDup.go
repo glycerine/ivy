@@ -13,6 +13,7 @@ func dupMetadata(dst, src *Graph) {
 	dst.Assertions, dst.BarrierBuffers = src.Assertions, src.BarrierBuffers
 	dst.PartitionInputs = slices.Clone(src.PartitionInputs)
 	dst.PartitionOutputs = slices.Clone(src.PartitionOutputs)
+	dst.RetimingChanged = src.RetimingChanged
 	dst.FlopNumbers = slices.Clone(src.FlopNumbers)
 	dst.FlopReprs = slices.Clone(src.FlopReprs)
 	dst.ClockDomains = slices.Clone(src.ClockDomains)
@@ -207,19 +208,13 @@ func Aig_ManDupSimpleDfsPart(src *Graph, inputs, outputs []Edge) *Graph {
 	return dst
 }
 func Aig_ManDupOrdered(src *Graph) *Graph {
-	dst := NewGraph()
-	dupMetadata(dst, src)
-	src.copies = map[int]Edge{0: 0}
+	dst := dupStart(src)
 	for id, n := range src.nodes {
 		if src.deleted[id] {
 			continue
 		}
 		e := Edge(id) << 1
 		switch n.Kind {
-		case Input:
-			x := dst.NewInput()
-			dst.node(x).Level = n.Level
-			src.copies[id] = x
 		case And, ExclusiveOr, Buffer:
 			dupEdge(dst, src, e)
 		case Output:

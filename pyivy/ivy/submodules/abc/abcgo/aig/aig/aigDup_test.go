@@ -357,3 +357,13 @@ func TestDuplicatePartitionMaps(t *testing.T) {
 		t.Fatal("aliased partition maps")
 	}
 }
+
+func TestDuplicateOrderedForwardInput(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	old := g.AND(a, b)
+	g.AddOutput(old)
+	later := g.NewInput()
+	Aig_ObjReplace(g, old, later, 1)
+	equalDup(t, g, Aig_ManDupOrdered(g))
+}

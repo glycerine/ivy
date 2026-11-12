@@ -1,223 +1,192 @@
+// Forward retiming frontier, ported from ABC aigRetF.c (Alan Mishchenko).
 package aig
 
-/**CFile****************************************************************
-
-  FileName    [aigRetF.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Retiming frontier.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigRetF.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Mark the nodes reachable from the PIs in the reverse order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRetimeMark_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {
-    if pObj.fMarkB {
-        return 1; }
-    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {
-        return 0; }
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return pObj.fMarkB; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ManRetimeMark_rec( p, Aig_ObjFanin0(pObj) ) != 0 {
-        return pObj.fMarkB = 1; }
-    if Aig_ObjIsNode(pObj) && (Aig_ManRetimeMark_rec( p, Aig_ObjFanin1(pObj) ) != 0) {
-        return pObj.fMarkB = 1; }
-    assert(pObj.fMarkB == 0, "pObj.fMarkB == 0");
-    return 0;
+// Aig_ManRetimeMark_rec marks the combinational cone reached by any already
+// marked CI. Inversion does not affect structural reachability.
+func Aig_ManRetimeMark_rec(p *Graph, e Edge) int32 {
+	n := p.node(e)
+	if n.MarkB {
+		return 1
+	}
+	if n.Kind == Input || n.Kind == Constant {
+		return 0
+	}
+	if n.TravID == p.travID {
+		return 0
+	}
+	n.TravID = p.travID
+	for _, fanin := range nodeFanins(*n) {
+		if Aig_ManRetimeMark_rec(p, fanin) != 0 {
+			p.node(e).MarkB = true
+			return 1
+		}
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Mark the nodes reachable from the true PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRetimeMark(p *Aig_Man_t) {
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var fChange, i int32;
-    // mark the PIs
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(pObj.fMarkB == 0, "pObj.fMarkB == 0"); }
-    }
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.fMarkB = 1;
-    }
-    // map registers into each other
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        assert(pObjLo.pNext == nil, "pObjLo.pNext == nil");
-        assert(pObjLi.pNext == nil, "pObjLi.pNext == nil");
-        pObjLo.pNext = pObjLi;
-        pObjLi.pNext = pObjLo;
-    }
-    // iterativively mark the logic reachable from PIs
-    fChange = 1;
-    for  fChange != 0  {
-        fChange = 0;
-        Aig_ManIncrementTravId( p );
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if pObj.fMarkB {
-                continue; }
-            if Aig_ManRetimeMark_rec( p, pObj ) != 0 {
-                if pObj.pNext {
-                    pObj.pNext.fMarkB = 1; }
-                fChange = 1;
-            }
-        }
-    }
-    // clean register mapping
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.pNext = pObjLi.pNext = nil;
-    }
+// Aig_ManRetimeMark computes the fixed point of true-PI reachability across
+// register boundaries. Register correspondence is local data, replacing C's
+// temporary pNext pointer links without disturbing other graph scratch maps.
+func Aig_ManRetimeMark(p *Graph) {
+	registers, pis, pos := sclLayout(p)
+	for id, n := range p.nodes {
+		if !p.deleted[id] && n.MarkB {
+			panic("aig: retiming requires clear MarkB flags")
+		}
+	}
+	for _, input := range p.inputs[:pis] {
+		p.node(input).MarkB = true
+	}
+	registerByOutput := make(map[int]Edge, registers)
+	for i := 0; i < registers; i++ {
+		registerByOutput[p.outputs[pos+i].NodeID()] = p.inputs[pis+i]
+	}
+	for changed := true; changed; {
+		changed = false
+		Aig_ManIncrementTravId(p)
+		for _, output := range p.outputs {
+			if p.node(output).MarkB {
+				continue
+			}
+			if Aig_ManRetimeMark_rec(p, output) != 0 {
+				if input, ok := registerByOutput[output.NodeID()]; ok {
+					p.node(input).MarkB = true
+				}
+				changed = true
+			}
+		}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Performs forward retiming.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRetimeFrontier(p *Aig_Man_t, nStepsMax int32) *Aig_Man_t {
-    var pObj, pObjNew, pObjLo, pObjLo0, pObjLo1, pObjLi, pObjLi0, pObjLi1 *Aig_Obj_t;//, * pObjLi0_, * pObjLi1_, * pObjLi0__, * pObjLi1__;
-    var i, Counter, fCompl, fChange int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    // remove structural hashing table
-    Aig_TableClear( p );
-    // mark the retimable nodes
-    Aig_ManRetimeMark( p );
-    // mark the register outputs
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.fMarkA = 1;
-        pObjLo.pNext = pObjLi;
-        pObjLi.pNext = pObjLo;
-    }
-    // go through the nodes and find retimable ones
-    Counter = 0;
-    fChange = 1;
-    for  fChange != 0  {
-        fChange = 0;
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            if !pObj.fMarkB {
-                continue; }
-            if Aig_ObjIsBuf(pObj) {
-                continue; }
-            // get the real inputs of the node (skipping the buffers)
-            pObjLo0 = Aig_ObjReal_rec( Aig_ObjChild0(pObj) );
-            pObjLo1 = Aig_ObjReal_rec( Aig_ObjChild1(pObj) );
-            if !Aig_Regular(pObjLo0).fMarkA || !Aig_Regular(pObjLo1).fMarkA {
-                continue; }
-            // remember complemented attribute
-            fCompl = Aig_IsComplement(pObjLo0) & Aig_IsComplement(pObjLo1);
-            // get the register inputs
-//            pObjLi0_ = Aig_Regular(pObjLo0)->pNext;
-//            pObjLi1_ = Aig_Regular(pObjLo1)->pNext;
-//            pObjLi0__ = Aig_ObjChild0(Aig_Regular(pObjLo0)->pNext);
-//            pObjLi1__ = Aig_ObjChild0(Aig_Regular(pObjLo1)->pNext);
-            pObjLi0 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo0).pNext), Aig_IsComplement(pObjLo0) );
-            pObjLi1 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo1).pNext), Aig_IsComplement(pObjLo1) );
-            // create new node
-            pObjNew = Aig_And( p, pObjLi0, pObjLi1 );
-            pObjNew.fMarkB = 1;
-            // create new register
-            pObjLo = Aig_ObjCreateCi(p);
-            pObjLo.fMarkA = 1;
-            pObjLi = Aig_ObjCreateCo( p, Aig_NotCond(pObjNew, fCompl) );
-            p.nRegs++;
-            pObjLo.pNext = pObjLi;
-            pObjLi.pNext = pObjLo;
-            // add the buffer
-            Aig_ObjDisconnect( p, pObj );
-            pObj.Type = AIG_OBJ_BUF;
-            p.nObjs[AIG_OBJ_AND]--;
-            p.nObjs[AIG_OBJ_BUF]++;
-            Aig_ObjConnect( p, pObj, Aig_NotCond(pObjLo, fCompl), nil );
-            // create HAIG if defined
-            // mark the change
-            fChange = 1;
-            // check the limit
-            if Counter++; Counter >= nStepsMax {
-                fChange = 0;
-                break;
-            }
-        }
-        }
-    }
-    // clean the markings
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.fMarkA = 0;
-        pObjLo.pNext = pObjLi.pNext = nil;
-    }
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.fMarkB = 0; }
-    }
-    // remove useless registers
-    Aig_ManSeqCleanup( p );
-    // rehash the nodes
-    return Aig_ManDupOrdered( p ); 
+// Retiming combines register state, so original flop-ID correspondence no
+// longer applies after a move. Clock domains remain meaningful and are kept:
+// only register pairs from the same domain may be crossed.
+func retimeFrontierDomains(p *Graph, pis int) map[int]int {
+	domains := make(map[int]int, int(p.nRegs))
+	for _, input := range p.inputs[pis:] {
+		domains[input.NodeID()] = -1
+	}
+	for domain, registers := range p.ClockDomains {
+		for _, register := range registers {
+			input := p.inputs[pis+int(register)]
+			if domains[input.NodeID()] != -1 {
+				panic("aig: register appears in multiple clock domains")
+			}
+			domains[input.NodeID()] = domain
+		}
+	}
+	return domains
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Aig_ManRetimeFrontier moves at most steps gates forward across zero-initialized
+// registers and returns a structurally rehashed copy. The source graph is used
+// as mutable work storage, as in ABC. Zero steps leaves its state untouched.
+func Aig_ManRetimeFrontier(p *Graph, steps int32) *Graph {
+	if p == nil || p.nRegs <= 0 {
+		panic("aig: forward retiming requires registers")
+	}
+	if steps < 0 {
+		panic("aig: negative retiming step limit")
+	}
+	if err := p.Check(); err != nil {
+		panic(err)
+	}
+	registers, pis, pos := sclLayout(p)
+	if steps == 0 {
+		return Aig_ManDupOrdered(p)
+	}
+	domains := retimeFrontierDomains(p, pis)
+	Aig_ManRetimeMark(p)
+	liByLo := make(map[int]Edge, registers)
+	for i := 0; i < registers; i++ {
+		lo := p.inputs[pis+i]
+		p.node(lo).MarkA = true
+		liByLo[lo.NodeID()] = p.outputs[pos+i]
+	}
+	cleanMarks := func() {
+		for id := range liByLo {
+			if !p.deleted[id] {
+				p.nodes[id].MarkA = false
+			}
+		}
+		for id := range p.nodes {
+			if !p.deleted[id] {
+				p.nodes[id].MarkB = false
+			}
+		}
+	}
+	defer cleanMarks()
+	Aig_TableClear(p)
+	var moves int32
+	for changed := true; changed && moves < steps; {
+		changed = false
+		// New gates are eligible later in this same scan, just as ABC's object
+		// iterator observes the growing manager. Never retain node pointers across
+		// append: Graph owns a slice whose backing array can move.
+		for id := 0; id < len(p.nodes) && moves < steps; id++ {
+			if p.deleted[id] {
+				continue
+			}
+			node := p.nodes[id]
+			if !node.MarkB || (node.Kind != And && node.Kind != ExclusiveOr) {
+				continue
+			}
+			first := Aig_ObjReal_rec(p, node.Fanins[0])
+			second := Aig_ObjReal_rec(p, node.Fanins[1])
+			li0, ok0 := liByLo[first.NodeID()]
+			li1, ok1 := liByLo[second.NodeID()]
+			if !ok0 || !ok1 || domains[first.NodeID()] != domains[second.NodeID()] {
+				continue
+			}
+			a, b := p.outputDriver(li0), p.outputDriver(li1)
+			if first.Complemented() {
+				a = a.Not()
+			}
+			if second.Complemented() {
+				b = b.Not()
+			}
+			complemented := first.Complemented() && second.Complemented()
+			var result Edge
+			if node.Kind == ExclusiveOr {
+				result = p.NewXor(a, b)
+				complemented = first.Complemented() != second.Complemented()
+			} else {
+				result = p.AND(a, b)
+			}
+			if p.node(result).Kind != Constant {
+				p.node(result).MarkB = true
+			}
+			lo := Aig_ObjCreateCi(p)
+			p.node(lo).MarkA = true
+			next := result
+			if complemented {
+				next = next.Not()
+			}
+			li := Aig_ObjCreateCo(p, next)
+			domain := domains[first.NodeID()]
+			if domain >= 0 {
+				p.ClockDomains[domain] = append(p.ClockDomains[domain], p.nRegs)
+			}
+			domains[lo.NodeID()] = domain
+			p.nRegs++
+			liByLo[lo.NodeID()] = li
+			p.FlopNumbers = nil
+			p.FlopReprs = nil
+			p.RetimingChanged = true
+			old := Edge(id) << 1
+			Aig_ObjDisconnect(p, old)
+			p.node(old).Kind = Buffer
+			replacement := lo
+			if complemented {
+				replacement = replacement.Not()
+			}
+			p.node(old).Phase = complemented
+			Aig_ObjConnect(p, old, replacement, InvalidEdge)
+			moves++
+			changed = true
+		}
+	}
+	cleanMarks()
+	Aig_ManSeqCleanup(p)
+	return Aig_ManDupOrdered(p)
+}
