@@ -138,3 +138,24 @@ func Gia_ManDupUnnormalize(src *Gia_Man_t) *Gia_Man_t {
 	dst.nConstrs = src.nConstrs
 	return dst
 }
+
+func Gia_ManUpdateTimMan2(p *Gia_Man_t, boxes *Vec_Int_t, diff int32) any {
+	timing := p.pManTime.(*tim.Tim_Man_t)
+	ids := make([]int, 0, vec.Vec_IntSize(boxes))
+	for _, id := range vec.Vec_IntArray(boxes) {
+		ids = append(ids, int(id))
+	}
+	return tim.Tim_ManReduce(timing, ids, int(diff))
+}
+func Gia_ManUpdateExtraAig2(pTime any, p *Gia_Man_t, boxes *Vec_Int_t) *Gia_Man_t {
+	timing := pTime.(*tim.Tim_Man_t)
+	first := tim.Tim_ManPiNum(timing)
+	outputs := vec.Vec_IntAlloc(100)
+	for _, id := range vec.Vec_IntArray(boxes) {
+		start := tim.Tim_ManBoxOutputFirst(timing, int(id)) - first
+		for i := 0; i < tim.Tim_ManBoxOutputNum(timing, int(id)); i++ {
+			vec.Vec_IntPush(outputs, int32(start+i))
+		}
+	}
+	return Gia_ManDupSelectedOutputs(p, outputs)
+}

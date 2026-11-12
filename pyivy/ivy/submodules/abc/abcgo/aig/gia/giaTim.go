@@ -219,12 +219,7 @@ func Gia_ManUpdateTimMan(p *Gia_Man_t, vBoxPres *Vec_Int_t) any {
     assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), "Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)");
     return Tim_ManTrim( pManTime, vBoxPres );
 }
-func Gia_ManUpdateTimMan2(p *Gia_Man_t, vBoxesLeft *Vec_Int_t, nTermsDiff int32) any {
-    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;
-    assert(pManTime != nil, "pManTime != nil");
-    assert(Vec_IntSize(vBoxesLeft) <= Tim_ManBoxNum(pManTime), "Vec_IntSize(vBoxesLeft) <= Tim_ManBoxNum(pManTime)");
-    return Tim_ManReduce( pManTime, vBoxesLeft, nTermsDiff );
-}
+
 
 /**Function*************************************************************
 
@@ -255,25 +250,7 @@ func Gia_ManUpdateExtraAig(pTime any, p *Gia_Man_t, vBoxPres *Vec_Int_t) *Gia_Ma
     Vec_IntFree( vOutPres );
     return pNew;
 }
-func Gia_ManUpdateExtraAig2(pTime any, p *Gia_Man_t, vBoxesLeft *Vec_Int_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;
-    var nRealPis int32  = Tim_ManPiNum(pManTime);
-    var vOutsLeft *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var i, k, iBox, iOutFirst int32;
-    assert(Vec_IntSize(vBoxesLeft) <= Tim_ManBoxNum(pManTime), "Vec_IntSize(vBoxesLeft) <= Tim_ManBoxNum(pManTime)");
-    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis, "Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vBoxesLeft)) && (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {
-        iOutFirst = Tim_ManBoxOutputFirst(pManTime, iBox) - nRealPis;
-        for  k = 0; k < Tim_ManBoxOutputNum(pManTime, iBox); k++  {
-            Vec_IntPush( vOutsLeft, iOutFirst + k );
-        }
-    }
-    pNew = Gia_ManDupSelectedOutputs( p, vOutsLeft );
-    Vec_IntFree( vOutsLeft );
-    return pNew;
-}
+
 
 /**Function*************************************************************
 
