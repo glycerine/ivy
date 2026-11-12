@@ -2,9 +2,10 @@
 package satoko
 
 import (
+	"time"
+
 	"github.com/glycerine/abcgo/sat/satoko/utils"
 	"github.com/glycerine/abcgo/sat/satoko/utils/vec"
-	"time"
 )
 
 type Solver struct {
@@ -15,6 +16,7 @@ type Solver struct {
 	values                    []int8
 	levels, reasons           []int
 	phases                    []uint8
+	decision                  []bool
 	trail, limits             []int
 	qhead                     int
 	assumptions, final, model []int

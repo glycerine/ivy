@@ -204,3 +204,29 @@ func TestConeScope(t *testing.T) {
 		t.Fatal("cone expansion", s.model)
 	}
 }
+
+func TestReductionProtectsBinaryLockedAndFrozen(t *testing.T) {
+	s := New()
+	s.SetVariables(5)
+	binary := s.addStored([]int{0, 2}, true, 2)
+	frozen := s.addStored([]int{0, 2, 4}, true, 30)
+	s.clauses[frozen].protected = true
+	waste := s.addStored([]int{1, 3, 5}, true, 20)
+	locked := s.addStored([]int{0, 6, 8}, true, 10)
+	s.values[0] = 1
+	s.reasons[0] = locked
+	s.addStored([]int{1, 6, 8}, true, 3)
+	s.opts.LearntRatio = 0.8
+	s.reduce()
+	for _, id := range []int{binary, frozen, locked} {
+		if s.clauses[id].deleted {
+			t.Fatal("deleted protected clause", id)
+		}
+	}
+	if !s.clauses[waste].deleted || s.clauses[waste].lits != nil {
+		t.Fatal("unneeded clause not reclaimed")
+	}
+	if s.clauses[frozen].protected {
+		t.Fatal("freeze flag should last one reduction")
+	}
+}

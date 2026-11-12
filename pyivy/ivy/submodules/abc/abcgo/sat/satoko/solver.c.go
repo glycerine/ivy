@@ -18,6 +18,9 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 		if c.learnt && c.lbd > 2 {
 			fresh := s.clauseLBD(c.lits)
 			if fresh+1 < c.lbd {
+				if c.lbd <= s.opts.FreezeLBD {
+					c.protected = true
+				}
 				c.lbd = fresh
 			}
 		}
@@ -74,7 +77,7 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 	}
 	return learnt, back, uint32(len(levels))
 }
-func (s *Solver) reduce() {
+func (s *Solver) reduce() uint32 {
 	locked := make(map[int]bool)
 	for v, r := range s.reasons {
 		if s.values[v] >= 0 && r >= 0 {
@@ -83,21 +86,42 @@ func (s *Solver) reduce() {
 	}
 	var ids []int
 	for id, c := range s.clauses {
-		if c.learnt && !c.deleted && len(c.lits) > 2 && c.lbd > 2 && !locked[id] {
+		if c.learnt && !c.deleted {
 			ids = append(ids, id)
 		}
 	}
-	sort.Slice(ids, func(i, j int) bool { return clause_compare(s.clauses[ids[i]], s.clauses[ids[j]]) })
-	ratio := s.opts.LearntRatio
-	if ratio <= 0 || ratio > 1 {
-		ratio = 0.5
+	if len(ids) == 0 {
+		return 0
 	}
-	for _, id := range ids[:int(float32(len(ids))*ratio)] {
-		s.clauses[id].deleted = true
-		s.stats.LearntLiterals -= int64(len(s.clauses[id].lits))
-		s.clauses[id].lits = nil
+	sort.Slice(ids, func(i, j int) bool { return clause_compare(s.clauses[ids[i]], s.clauses[ids[j]]) })
+	var special uint32
+	if s.clauses[ids[len(ids)/2]].lbd <= 3 {
+		special += s.opts.SpecialReduceIncrement
+	}
+	if s.clauses[ids[len(ids)-1]].lbd <= 6 {
+		special += s.opts.SpecialReduceIncrement
+	}
+	limit := int(float32(len(ids)) * s.opts.LearntRatio)
+	deleted := 0
+	for i, id := range ids {
+		c := s.clauses[id]
+		if !c.protected && c.lbd > 2 && len(c.lits) > 2 && !locked[id] && i < limit {
+			c.deleted = true
+			s.stats.LearntLiterals -= int64(len(c.lits))
+			c.lits = nil
+			deleted++
+		} else {
+			if c.protected {
+				limit++
+			}
+			c.protected = false
+		}
 	}
 	s.stats.Reductions++
+	if float32(deleted) > float32(len(s.clauses))*s.opts.GarbageRatio {
+		s.rebuildWatches()
+	}
+	return special
 }
 func (s *Solver) prepare() bool {
 	s.trail = nil
@@ -153,6 +177,7 @@ func (s *Solver) Solve() int {
 	if reduceAt == 0 {
 		reduceAt = 2000
 	}
+	rc2 := reduceAt
 	s.stats.Starts++
 	for {
 		if s.stopped() || s.opts.ConflictLimit > 0 && s.stats.Conflicts >= s.opts.ConflictLimit || s.opts.PropagationLimit > 0 && s.stats.Propagations >= s.opts.PropagationLimit {
@@ -193,13 +218,10 @@ func (s *Solver) Solve() int {
 			recent = append(recent, lbd)
 			sum += uint64(lbd)
 			totalLBD += uint64(lbd)
-			if uint32(s.stats.Conflicts) >= reduceAt {
-				s.reduce()
-				inc := s.opts.ReduceIncrement
-				if inc == 0 {
-					inc = 300
-				}
-				reduceAt += inc
+			if s.opts.LearntRatio > 0 && s.LearntCount() > 100 && uint32(s.stats.Conflicts) >= reduceAt {
+				rc1 := uint32(s.stats.Conflicts)/rc2 + 1
+				rc2 += s.reduce() + s.opts.ReduceIncrement
+				reduceAt = rc1 * rc2
 			}
 			if uint32(len(recent)) == window && restart >= window && float64(sum)/float64(window)*s.opts.RestartFactor > float64(totalLBD)/float64(s.stats.Conflicts) {
 				s.cancel(0)
@@ -228,7 +250,7 @@ func (s *Solver) Solve() int {
 		if decision < 0 {
 			for s.order.Len() > 0 {
 				v := int(s.order.Pop())
-				if s.values[v] < 0 && (!s.coneActive || s.marks[v]) {
+				if s.values[v] < 0 && s.decision[v] && (!s.coneActive || s.marks[v]) {
 					decision = v*2 + int(s.phases[v])
 					break
 				}

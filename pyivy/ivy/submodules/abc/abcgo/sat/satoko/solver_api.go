@@ -3,7 +3,6 @@ package satoko
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/sat/satoko/utils"
 	"io"
 	"os"
 	"sort"
@@ -20,9 +19,10 @@ func (s *Solver) AddVariable(negative bool) int {
 		phase = 1
 	}
 	s.phases = append(s.phases, phase)
+	s.decision = append(s.decision, true)
 	s.marks = append(s.marks, false)
 	s.watches = append(s.watches, nil, nil)
-	s.activity.Push(utils.SDBL_CONST1)
+	s.activity.Push(0)
 	s.order.Insert(uint32(v))
 	return v
 }
@@ -31,7 +31,7 @@ func (s *Solver) SetVariables(n int) {
 		panic("negative variable count")
 	}
 	for len(s.values) < n {
-		s.AddVariable(true)
+		s.AddVariable(false)
 	}
 }
 func (s *Solver) AddClause(lits []int) bool {
@@ -86,23 +86,21 @@ func (s *Solver) PopAssumption() {
 	s.cancel(0)
 }
 func (s *Solver) SolveAssumptions(lits []int) int {
-	old := s.assumptions
-	s.assumptions = append([]int(nil), lits...)
 	for _, lit := range lits {
 		if lit < 0 || lit>>1 >= len(s.values) {
 			panic("assumption variable out of range")
 		}
 	}
-	result := s.Solve()
-	s.assumptions = old
-	return result
+	old := s.assumptions
+	s.assumptions = append([]int(nil), lits...)
+	defer func() { s.assumptions = old }()
+	return s.Solve()
 }
 func (s *Solver) SolveAssumptionsLimit(lits []int, limit int64) int {
 	old := s.opts.ConflictLimit
 	s.opts.ConflictLimit = limit
-	result := s.SolveAssumptions(lits)
-	s.opts.ConflictLimit = old
-	return result
+	defer func() { s.opts.ConflictLimit = old }()
+	return s.SolveAssumptions(lits)
 }
 func (s *Solver) MinimizeAssumptions(lits []int, limit int64) ([]int, int) {
 	out := append([]int(nil), lits...)
@@ -118,6 +116,10 @@ func (s *Solver) MinimizeAssumptions(lits []int, limit int64) ([]int, int) {
 		} else {
 			i++
 		}
+	}
+	s.final = make([]int, len(out))
+	for i, lit := range out {
+		s.final[i] = lit ^ 1
 	}
 	return out, SATOKO_UNSAT
 }
@@ -160,6 +162,7 @@ func (s *Solver) Rollback() {
 	s.clauses = s.clauses[:b.clauses]
 	s.values = s.values[:b.variables]
 	s.phases = s.phases[:b.variables]
+	s.decision = s.decision[:b.variables]
 	s.levels = s.levels[:b.variables]
 	s.reasons = s.reasons[:b.variables]
 	s.marks = s.marks[:b.variables]
@@ -169,9 +172,27 @@ func (s *Solver) Rollback() {
 	s.model = nil
 	s.final = nil
 	s.rebuildWatches()
+	s.stats.OriginalLiterals = 0
+	s.stats.LearntLiterals = 0
+	for _, c := range s.clauses {
+		if c.deleted {
+			continue
+		}
+		if c.learnt {
+			s.stats.LearntLiterals += int64(len(c.lits))
+		} else {
+			s.stats.OriginalLiterals += int64(len(c.lits))
+		}
+	}
 	s.prepare()
 }
-func (s *Solver) Reset() { opts := s.opts; *s = *New(); s.opts = opts }
+func (s *Solver) Reset() {
+	opts := s.opts
+	stop, stopFunc, runID, deadline := s.stop, s.stopFunc, s.runID, s.deadline
+	*s = *New()
+	s.opts = opts
+	s.stop, s.stopFunc, s.runID, s.deadline = stop, stopFunc, runID, deadline
+}
 func (s *Solver) MarkCone(vars []int, marked bool) {
 	s.coneActive = true
 	for _, v := range vars {
@@ -211,7 +232,11 @@ func (s *Solver) WriteDIMACS(w io.Writer, learnts, zeroBased bool) error {
 				return err
 			}
 		}
-		if _, err := fmt.Fprintln(w, "0"); err != nil {
+		terminator := "0"
+		if zeroBased {
+			terminator = ""
+		}
+		if _, err := fmt.Fprintln(w, terminator); err != nil {
 			return err
 		}
 	}
@@ -258,7 +283,7 @@ func satoko_unmark_cone(s *Solver, vars []int, n int)  { s.MarkCone(vars[:n], fa
 func satoko_varnum(s *Solver) int                      { return s.VariableCount() }
 func satoko_clausenum(s *Solver) int                   { return s.ClauseCount() }
 func satoko_learntnum(s *Solver) int                   { return s.LearntCount() }
-func satoko_conflictnum(s *Solver) int                 { return int(s.stats.Conflicts) }
+func satoko_conflictnum(s *Solver) int                 { return int(s.stats.AllConflicts) }
 func satoko_read_cex_varvalue(s *Solver, v int) int    { return s.ModelValue(v) }
 func satoko_set_stop(s *Solver, stop *int)             { s.stop = stop }
 func satoko_set_stop_func(s *Solver, fn func(int) int) { s.stopFunc = fn }
@@ -315,4 +340,45 @@ func (s *Solver) Simplify() bool {
 		return false
 	}
 	return true
+}
+
+// SetPolarity chooses the saved sign for the next decision on v.
+func (s *Solver) SetPolarity(v int, negative bool) {
+	if v < 0 || v >= len(s.values) {
+		panic("variable out of range")
+	}
+	if negative {
+		s.phases[v] = 1
+	} else {
+		s.phases[v] = 0
+	}
+}
+
+// SetDecisionVariable controls whether v can be chosen as a branch variable;
+// disabling decisions does not suppress implications involving v.
+func (s *Solver) SetDecisionVariable(v int, enabled bool) {
+	if v < 0 || v >= len(s.values) {
+		panic("variable out of range")
+	}
+	s.decision[v] = enabled
+	if enabled {
+		s.order.Update(uint32(v))
+	}
+}
+func (s *Solver) CurrentValue(v int) int {
+	if v < 0 || v >= len(s.values) {
+		return -1
+	}
+	return int(s.values[v])
+}
+func (s *Solver) Okay() bool         { return s.ok }
+func (s *Solver) AssignedCount() int { return len(s.trail) }
+func (s *Solver) FreeVariableCount() int {
+	n := 0
+	for v, value := range s.values {
+		if value < 0 && s.decision[v] {
+			n++
+		}
+	}
+	return n
 }

@@ -7,6 +7,7 @@ import "io"
 type clause struct {
 	lits            []int
 	learnt, deleted bool
+	protected       bool
 	lbd             uint32
 	activity        uint32
 }
