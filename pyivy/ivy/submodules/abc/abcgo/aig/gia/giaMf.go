@@ -719,30 +719,8 @@ func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
 
 
 
-func Mf_CutArea(p *Mf_Man_t, nLeaves int32, iFunc int32) int32 {
-    if nLeaves < 2 {
-        return 0; }
-    if p.pPars.fGenCnf || p.pPars.fGenLit {
-        return Vec_IntEntry(&p.vCnfSizes, Abc_Lit2Var(iFunc)); }
-    if p.pPars.fOptEdge {
-        return nLeaves + p.pPars.nAreaTuner; }
-    return 1;
-}
-func Mf_CutParams(p *Mf_Man_t, pCut *Mf_Cut_t, FlowRefs float32) {
-    var pBest *Mf_Obj_t; 
-    var i int32;
-    var nLeaves int32 = pCut.nLeaves; 
-    assert(nLeaves <= p.pPars.nLutSize, "nLeaves <= p.pPars.nLutSize");
-    pCut.Delay = 0;
-    pCut.Flow  = 0;
-    for  i = 0; i < nLeaves; i++  {
-        pBest = Mf_ManObj(p, pCut.pLeaves[i]);
-        pCut.Delay = Abc_MaxInt( pCut.Delay, pBest.Delay );
-        pCut.Flow += pBest.Flow;
-    }
-    pCut.Delay += int32((nLeaves > 1));
-    pCut.Flow = (pCut.Flow + Mf_CutArea(p, nLeaves, pCut.iFunc)) / FlowRefs;
-}
+
+
 func Mf_ObjMergeOrder(p *Mf_Man_t, iObj int32) {
     var pCuts0 [MF_CUT_MAX]Mf_Cut_t;
     var pCuts1 [MF_CUT_MAX]Mf_Cut_t;
@@ -1285,106 +1263,19 @@ func Mf_ManComputeCuts(p *Mf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_CutRef_rec(p *Mf_Man_t, pCut *int32) int32 {
-    var i int32;
-    var Count int32 = Mf_CutArea(p, Mf_CutSize(pCut), Mf_CutFunc(pCut));
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        if !(Mf_ObjMapRefInc(p, pCut[i]) != 0) && Mf_ManObj(p, pCut[i]).iCutSet {
-            Count += Mf_CutRef_rec( p, Mf_ObjCutBest(p, pCut[i]) ); }
-    }
-    return Count;
-}
-func Mf_CutDeref_rec(p *Mf_Man_t, pCut *int32) int32 {
-    var i int32;
-    var Count int32 = Mf_CutArea(p, Mf_CutSize(pCut), Mf_CutFunc(pCut));
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        if !(Mf_ObjMapRefDec(p, pCut[i]) != 0) && Mf_ManObj(p, pCut[i]).iCutSet {
-            Count += Mf_CutDeref_rec( p, Mf_ObjCutBest(p, pCut[i]) ); }
-    }
-    return Count;
-}
-func Mf_CutAreaRefed(p *Mf_Man_t, pCut *int32) int32 {
-    var Ela1 int32  = Mf_CutDeref_rec( p, pCut );
-    var Ela2 int32  = Mf_CutRef_rec( p, pCut );
-    assert(Ela1 == Ela2, "Ela1 == Ela2");
-    return Ela1;
-}
-func Mf_CutAreaDerefed(p *Mf_Man_t, pCut *int32) int32 {
-    var Ela1 int32  = Mf_CutRef_rec( p, pCut );
-    var Ela2 int32  = Mf_CutDeref_rec( p, pCut );
-    assert(Ela1 == Ela2, "Ela1 == Ela2");
-    return Ela1;
-}
-func Mf_CutAreaMffc(p *Mf_Man_t, iObj int32) int32 {
-    if Mf_ObjMapRefNum(p, iObj) != 0 {
-        return Mf_CutAreaRefed  (p, Mf_ObjCutBest(p, iObj));
-    } else {
-        return Mf_CutAreaDerefed(p, Mf_ObjCutBest(p, iObj));
-    }
-}
 
-func Mf_CutRef2_rec(p *Mf_Man_t, pCut *int32, vTemp *Vec_Int_t, Limit int32) int32 {
-    var i int32;
-    var Count int32 = Mf_CutArea(p, Mf_CutSize(pCut), Mf_CutFunc(pCut));
-    if Limit == 0 { return Count; }
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        Vec_IntPush( vTemp, pCut[i] );
-        if !(Mf_ObjMapRefInc(p, pCut[i]) != 0) && Mf_ManObj(p, pCut[i]).iCutSet {
-            Count += Mf_CutRef2_rec( p, Mf_ObjCutBest(p, pCut[i]), vTemp, Limit-1 ); }
-    }
-    return Count;
-}
-func Mf_CutDeref2_rec(p *Mf_Man_t, pCut *int32, vTemp *Vec_Int_t, Limit int32) int32 {
-    var i int32;
-    var Count int32 = Mf_CutArea(p, Mf_CutSize(pCut), Mf_CutFunc(pCut));
-    if Limit == 0 { return Count; }
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        Vec_IntPush( vTemp, pCut[i] );
-        if !(Mf_ObjMapRefDec(p, pCut[i]) != 0) && Mf_ManObj(p, pCut[i]).iCutSet {
-            Count += Mf_CutDeref2_rec( p, Mf_ObjCutBest(p, pCut[i]), vTemp, Limit-1 ); }
-    }
-    return Count;
-}
-func Mf_CutAreaRefed2(p *Mf_Man_t, pCut *int32) int32 {
-    var Ela1, iObj, i int32;
-    Vec_IntClear( &p.vTemp );
-    Ela1 = Mf_CutDeref2_rec( p, pCut, &p.vTemp, 8 );
-    Vec_IntForEachEntry( &p.vTemp, iObj, i )
-        Mf_ObjMapRefInc( p, iObj );
-    return Ela1;
-}
-func Mf_CutAreaDerefed2(p *Mf_Man_t, pCut *int32) int32 {
-    var Ela1, iObj, i int32;
-    Vec_IntClear( &p.vTemp );
-    Ela1 = Mf_CutRef2_rec( p, pCut, &p.vTemp, 8 );
-    Vec_IntForEachEntry( &p.vTemp, iObj, i )
-        Mf_ObjMapRefDec( p, iObj );
-    return Ela1;
-}
-func Mf_CutAreaRefed2Multi(p *Mf_Man_t, iObj int32, ppCuts **int32, nCuts int32) int32 {
-    var Ela1, iTemp, i int32;
-    Vec_IntClear( &p.vTemp );
-    for  i = 0; i < nCuts; i++  {
-        Ela1 += Mf_CutDeref2_rec( p, ppCuts[i], &p.vTemp, ABC_INFINITY );
-    }
-    assert(Mf_ObjMapRefNum(p, iObj) == 0, "Mf_ObjMapRefNum(p, iObj) == 0");
-    Vec_IntForEachEntry( &p.vTemp, iTemp, i )
-        Mf_ObjMapRefInc( p, iTemp );
-    return Ela1;
-}
 
-func Mf_CutFlow(p *Mf_Man_t, pCut *int32, pTime *int32) float32 {
-    var pObj *Mf_Obj_t;
-    var Flow float32; 
-    var i, Time int32; 
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        pObj = Mf_ManObj( p, pCut[i] );
-        Time = Abc_MaxInt( Time, pObj.Delay );
-        Flow += pObj.Flow;
-    }
-    *pTime = Time + 1;
-    return Flow + Mf_CutArea(p, Mf_CutSize(pCut), Mf_CutFunc(pCut));
-}
+
+
+
+
+
+
+
+
+
+
+
 func Mf_ObjComputeBestCut(p *Mf_Man_t, iObj int32) {
     var pBest *Mf_Obj_t  = Mf_ManObj(p, iObj);
     var pCutSet *int32  = Mf_ObjCutSet( p, iObj );
