@@ -118,65 +118,9 @@ func Abc_ResubPrintDivs(ppDivs *any, nDivs int32) {
         Dau_DsdPrintFromTruth( pDivs[i], 6 );
     }
 }
-func Abc_ResubNodeToTry(vTried *Vec_Int_t, iFirst int32, iLast int32) int32 {
-    var iNode int32;
-    //for ( iNode = iFirst; iNode < iLast; iNode++ )
-    for  iNode = iLast - 1; iNode >= iFirst; iNode--  {
-        if Vec_IntFind(vTried, iNode) == -1 {
-            return iNode; }
-    }
-    return -1;
-}
-func Abc_ResubComputeWindow(pObjs *int32, nObjs int32, nDivsMax int32, nLevelIncrease int32, fUseXor int32, fUseZeroCost int32, fDebug int32, fVerbose int32, ppArray **int32, pnResubs *int32) int32 {
-    var iNode, nChanges, RetValue int32;
-    var p *Gia_Rsb2Man_t  = Gia_Rsb2ManAlloc(); 
-    Gia_Rsb2ManStart( p, pObjs, nObjs, nDivsMax, nLevelIncrease, fUseXor, fUseZeroCost, fDebug, fVerbose );
-    *ppArray = nil;
-    for  (iNode = Abc_ResubNodeToTry(&p.vTried, p.nPis+1, p.iFirstPo)) > 0  {
-        var nDivs int32  = Gia_Rsb2ManDivs( p, iNode );
-        var pResub *int32;
-        var nResub int32 = Abc_ResubComputeFunction( Vec_PtrArray(&p.vpDivs), nDivs, 1, p.nMffc-1, nDivsMax, 0, fUseXor, fDebug, fVerbose, &pResub );
-        if nResub == 0 {
-            Vec_IntPush( &p.vTried, iNode );
-        } else {
-            var i, k, iTried int32;
-            var vResub Vec_Int_t  = Vec_Int_t{ nResub, nResub, pResub };
-            var vRes *Vec_Int_t  = Gia_Rsb2ManInsert( p.nPis, p.nPos, &p.vObjs, iNode, &vResub, &p.vDivs, &p.vCopies );
-            //printf( "\nResubing node %d:\n", iNode );
-            //Gia_Rsb2ManPrint( p );
-            p.nObjs    = Vec_IntSize(vRes)/2;
-            p.iFirstPo = p.nObjs - p.nPos;
-            Vec_IntClear( &p.vObjs );
-            Vec_IntAppend( &p.vObjs, vRes );
-            Vec_IntFree( vRes );
-            // inlining of macro Vec_IntForEachEntry
-            for  i = 0; (i < Vec_IntSize(&p.vTried)) && (((iTried) = Vec_IntEntry(&p.vTried, i)), 1); i++  {
-                if Vec_IntEntry(&p.vCopies, iTried) > Abc_Var2Lit(p.nPis, 0) { // internal node
-                    Vec_IntWriteEntry( &p.vTried, k++, Abc_Lit2Var(Vec_IntEntry(&p.vCopies, iTried)) ); }
-            }
-            Vec_IntShrink( &p.vTried, k );
-            nChanges++;
-            //Gia_Rsb2ManPrint( p );
-        }
-    }
-    if nChanges {
-        RetValue = p.nObjs;
-        *ppArray = p.vObjs.pArray;
-        Vec_IntZero( &p.vObjs );
-    }
-    Gia_Rsb2ManFree( p );
-    if pnResubs != nil {
-        *pnResubs = nChanges; }
-    return RetValue;
-}
-func Abc_ResubComputeWindow2(pObjs *int32, nObjs int32, nDivsMax int32, nLevelIncrease int32, fUseXor int32, fUseZeroCost int32, fDebug int32, fVerbose int32, ppArray **int32, pnResubs *int32) int32 {
-    // inlining of macro ABC_ALLOC
-    *ppArray = ((int *) malloc(sizeof(int) * (size_t)(2*nObjs)));
-    memmove( *ppArray, pObjs, 2*nObjs * sizeof(int) );
-    if pnResubs != nil {
-        *pnResubs = 0; }
-    return nObjs;
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -191,29 +135,7 @@ func Abc_ResubComputeWindow2(pObjs *int32, nObjs int32, nDivsMax int32, nLevelIn
 ***********************************************************************/
 
 
-func Gia_ManResub2Test(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var nResubs int32;
-    var nObjsNew int32;
-    var pObjsNew *int32;
-    var pObjs *int32 = Gia_ManToResub( p );
-//Gia_ManPrint( p );
-    Abc_ResubPrepareManager( 1 );
-    nObjsNew = Abc_ResubComputeWindow( pObjs, Gia_ManObjNum(p), 1000, -1, 0, 0, 0, 0, &pObjsNew, &nResubs );
-    //printf( "Performed resub %d times.  Reduced %d nodes.\n", nResubs, nObjsNew ? Gia_ManObjNum(p) - nObjsNew : 0 );
-    Abc_ResubPrepareManager( 0 );
-    if nObjsNew != 0 {
-        pNew = Gia_ManFromResub( pObjsNew, nObjsNew, Gia_ManCiNum(p) );
-        pNew.pName = Abc_UtilStrsav( p.pName );
-    
-    } else { 
-        pNew = Gia_ManDup( p ); }
-    // inlining of macro ABC_FREE
-    pObjs = nil;
-    // inlining of macro ABC_FREE
-    pObjsNew = nil;
-    return pNew;
-}
+
 
 /**Function*************************************************************
 
