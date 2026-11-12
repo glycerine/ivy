@@ -78,3 +78,13 @@ func TestManyEntries(t *testing.T) {
 		}
 	}
 }
+
+func TestZeroValueManager(t *testing.T) {
+	var p Manager
+	if got := Nm_ManStoreIdName(&p, 7, 2, "zero", ""); got != "zero" {
+		t.Fatal(got)
+	}
+	if name, ok := p.Lookup(7); !ok || name != "zero" {
+		t.Fatal(name, ok)
+	}
+}

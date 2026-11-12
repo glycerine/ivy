@@ -22,6 +22,12 @@ func Nm_ManTableAdd(p *Nm_Man_t, e *Nm_Entry_t) int32 {
 	if p.byID[int32(e.ObjId)] != nil {
 		return 0
 	}
+	if p.byID == nil {
+		p.byID = make(map[int32]*Entry)
+	}
+	if p.byName == nil {
+		p.byName = make(map[string]*Entry)
+	}
 	p.byID[int32(e.ObjId)] = e
 	if other := p.byName[e.Name]; other != nil {
 		e.pNameSake = other.pNameSake

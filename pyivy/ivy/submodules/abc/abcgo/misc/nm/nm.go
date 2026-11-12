@@ -2,7 +2,8 @@
 // object types; an ID has exactly one name. Port of ABC's misc/nm package.
 package nm
 
-// Manager is a name manager. It is not safe for concurrent mutation.
+// Manager is a name manager. Its zero value is usable. It is not safe for
+// concurrent mutation.
 type Manager struct {
 	byID   map[int32]*Entry
 	byName map[string]*Entry
