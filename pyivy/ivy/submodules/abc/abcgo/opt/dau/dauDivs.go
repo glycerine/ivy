@@ -1,118 +1,68 @@
 package dau
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"io"
+	"os"
+)
 
-/**CFile****************************************************************
-
-  FileName    [dauDivs.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware unmapping.]
-
-  Synopsis    [Divisor computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: dauDivs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dauInt.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dau_DsdDivisors(pTruth *word, nVars int32) *Vec_Int_t {
-    var Copy [DAU_MAX_WORD]word;
-    var nWords int32  = Abc_TtWordNum(nVars);
-    var nDigits int32  = Abc_TtHexDigitNum(nVars);
-    var i int32;
-    var j int32;
-    var k int32;
-    var Digit int32;
-    var Counter [5]int32;
-
-    fmt.Printf("     ");
-    fmt.Printf(" !a *!b");
-    fmt.Printf(" !a * b");
-    fmt.Printf("  a *!b");
-    fmt.Printf("  a * b");
-    fmt.Printf("  a + b");
-    fmt.Printf("\n");
-
-    for  i = 0; i < nVars; i++  {
-    for  j = i+1; j < nVars; j++  {
-        Abc_TtCopy( Copy, pTruth, nWords, 0 );
-        Abc_TtSwapVars( Copy, nVars, 0, i );
-        Abc_TtSwapVars( Copy, nVars, 1, j );
-        for  k = 0; k < 5; k++  {
-            Counter[k] = 0;
-        }
-        for  k = 0; k < nDigits; k++  {
-            Digit = Abc_TtGetHex( Copy, k );
-            if Digit == 1 || Digit == 14 {
-                Counter[0]++;
-            } else if Digit == 2 || Digit == 13 {
-                Counter[1]++;
-            } else if Digit == 4 || Digit == 11 {
-                Counter[2]++;
-            } else if Digit == 8 || Digit == 7 {
-                Counter[3]++;
-            } else if Digit == 6 || Digit == 9 {
-                Counter[4]++; }
-        }
-        fmt.Printf("%c %c  ", 'a'+i, 'a'+j);
-        for  k = 0; k < 5; k++  {
-            fmt.Printf("%7d", Counter[k]);
-        }
-        fmt.Printf("\n");
-    }
-    }
-    return nil;
-}
-func Dau_DsdTest000() {
-//    char * pDsd = "!(!(abc)!(def))";
-//    char * pDsd = "[(abc)(def)]";
-    var pDsd string  = "<<abc>d(ef)>";
-    var t word  = Dau_Dsd6ToTruth( pDsd );
-//    word t = 0xCA88CA88CA88CA88;
-//    word t = 0x9ef7a8d9c7193a0f;
-    var nVars int32  = Abc_TtSupportSize( &t, 6 );
-    return;
-//    word t = 0xCACACACACACACACA;
-    Dau_DsdDivisors( &t, nVars );
+type DivisorCounts struct {
+	First, Second int32
+	Counts        [5]int32
 }
 
+func DSDDivisorCounts(truth []uint64, n int32) []DivisorCounts {
+	if n < 0 || n > DAU_MAX_VAR {
+		panic("dau: divisor variable count exceeds source limit")
+	}
+	words := 1 << max(0, n-6)
+	if len(truth) < int(words) {
+		panic("dau: short divisor truth table")
+	}
+	var rows []DivisorCounts
+	for i := int32(0); i < n; i++ {
+		for j := i + 1; j < n; j++ {
+			copyTruth := append([]uint64(nil), truth[:words]...)
+			util.Abc_TtSwapVars(copyTruth, n, 0, i)
+			util.Abc_TtSwapVars(copyTruth, n, 1, j)
+			row := DivisorCounts{First: i, Second: j}
+			digits := int32(1) << max(0, n-2)
+			for k := int32(0); k < digits; k++ {
+				digit := util.Abc_TtGetHex(copyTruth, k)
+				switch digit {
+				case 1, 14:
+					row.Counts[0]++
+				case 2, 13:
+					row.Counts[1]++
+				case 4, 11:
+					row.Counts[2]++
+				case 8, 7:
+					row.Counts[3]++
+				case 6, 9:
+					row.Counts[4]++
+				}
+			}
+			rows = append(rows, row)
+		}
+	}
+	return rows
+}
+func writeDSDDivisors(out io.Writer, truth []uint64, n int32) {
+	fmt.Fprintln(out, "      !a *!b !a * b  a *!b  a * b  a + b")
+	for _, row := range DSDDivisorCounts(truth, n) {
+		fmt.Fprintf(out, "%c %c  ", 'a'+row.First, 'a'+row.Second)
+		for _, count := range row.Counts {
+			fmt.Fprintf(out, "%7d", count)
+		}
+		fmt.Fprintln(out)
+	}
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// The original routine is a diagnostic and intentionally returns NULL.
+func Dau_DsdDivisors(truth []uint64, n int32) *vec.Vec_Int_t {
+	writeDSDDivisors(os.Stdout, truth, n)
+	return nil
+}
+func Dau_DsdTest000() { Dau_Dsd6ToTruth("<<abc>d(ef)>") }

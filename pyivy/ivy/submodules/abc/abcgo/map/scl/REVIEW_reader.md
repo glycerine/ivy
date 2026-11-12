@@ -1,9 +1,9 @@
 # SCL reader/model review
 
 Scope: sclLib.go, sclLiberty.go, sclLibScl.go, sclLibUtil.go, formula.go,
-genlib.go and liberty_write.go. Network sizing/buffering and command files still
-contain original drafts and are outside this completed reader/model increment.
-The full package therefore does not yet compile.
+genlib.go and liberty_write.go. Network sizing/buffering and command files have separate ownership and reviews.
+The complete package now compiles and passes race/vet; this document focuses on
+the reader/model increment.
 
 ## Readability and compactness pass
 
@@ -51,4 +51,12 @@ oracle tests skip only if their external executable/compiler is unavailable.
 Production Go code does not require either. Additional tests cover formula truth,
 Liberty serialization roundtrip, SCL binary roundtrip/truncation, skip rules,
 unit normalization, class rings and actual MIO simple/delay-based conversion.
-This is focused validation, not a claim that the unfinished full package builds.
+The complete package now also passes `go test -race ./map/scl` and
+`go vet ./map/scl`; buffer-specific tests/review are maintained by their owner.
+
+Follow-up independent profile audit: profiled GENLIB derivation must branch before
+evaluating all cells. A red regression with an unselected NAND lacking timing
+exposed eager evaluation; the fixed profile path skips it successfully. Class-size
+threshold normalization still uses the full library, matching the C profile path.
+The original public ProduceGenlibStrProfile wrapper is included. The regression
+is in genlib_test.go and passes in the combined race/vet gate.

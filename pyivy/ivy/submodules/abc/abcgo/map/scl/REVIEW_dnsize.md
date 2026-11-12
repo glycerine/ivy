@@ -38,6 +38,10 @@ An independent original ABC executable oracle reads the generated Liberty and
 GENLIB, downsizes the same chain and selects the same two small cells.
 The reader original-C lookup and byte-for-byte SCL serialization oracles also pass.
 
-Full-package validation remains blocked by visible original buffer/bufsize/upsize
-drafts. Corresponding topo/unbuffer/buffer/upsize command handlers have not yet
-been added; this review does not declare the complete command group finished.
+Full package race tests and vet now pass after the buffer sources landed.
+All21 original registered command handlers plus the unregistered old-buffer entry
+point are wired. Topological clone and buffer mutation are explicit host graph
+interfaces; absent capabilities produce errors. A concrete ABC network adapter is
+owned by base/abc. Buffer algorithms/tests/review have separate ownership.
+Numeric positivity restrictions are command-specific: zero timing gap remains
+valid even though read_lib's explicitly supplied slew/gain must be positive.

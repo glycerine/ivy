@@ -83,3 +83,14 @@ func Gia_ObjCellId(p *Gia_Man_t, lit int32) int32 {
 	offset := Vec_IntEntry(p.vCellMapping, int(lit))
 	return Vec_IntEntry(p.vCellMapping, int(offset+1+Gia_ObjCellSize(p, lit)))
 }
+
+// LUT implements the dependency-neutral mapped-network boundary. Returned
+// leaves/truth are independently owned and include the actual output phase.
+func (p *Gia_Man_t) LUT(id int32) (leaves []int32, truth []uint64, ok bool) {
+	if id < 0 || id >= p.nObjs || p.vMapping == nil || Gia_ObjIsLut(p, id) == 0 {
+		return nil, nil, false
+	}
+	leaves = append([]int32(nil), Gia_ObjLutFanins(p, id)...)
+	truth = giaNewTruthEval(p, int32(len(leaves)), leaves).node(id)
+	return leaves, truth, true
+}

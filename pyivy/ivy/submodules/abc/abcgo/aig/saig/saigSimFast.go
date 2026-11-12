@@ -15,12 +15,13 @@ type fastNode struct {
 	fanins [2]int32
 }
 type Faig_Man_t struct {
-	nPis, nPos, nFfs int32
-	ids              []aig.Edge // canonical compact order -> original graph object
-	nodes            []fastNode
-	outputs          []int32
+	nPis, nFfs int32
+	ids        []aig.Edge // canonical compact order -> original graph object
+	nodes      []fastNode
+	outputs    []int32
 }
 
+func (p *Faig_Man_t) pos() int32                 { return int32(len(p.outputs)) - p.nFfs }
 func (p *Faig_Man_t) cis() int32                 { return p.nPis + p.nFfs }
 func (p *Faig_Man_t) nodeStart() int32           { return 1 + p.cis() }
 func (p *Faig_Man_t) outputStart() int32         { return p.nodeStart() + int32(len(p.nodes)) }
@@ -29,9 +30,9 @@ func Faig_CheckIdPi(p *Faig_Man_t, i int32) bool { return i >= 1 && i <= p.nPis 
 func Faig_CheckIdLo(p *Faig_Man_t, i int32) bool { return i > p.nPis && i <= p.cis() }
 func Faig_CheckIdNo(p *Faig_Man_t, i int32) bool { return i >= p.nodeStart() && i < p.outputStart() }
 func Faig_CheckIdPo(p *Faig_Man_t, i int32) bool {
-	return i >= p.outputStart() && i < p.outputStart()+p.nPos
+	return i >= p.outputStart() && i < p.outputStart()+p.pos()
 }
-func Faig_CheckIdLi(p *Faig_Man_t, i int32) bool  { return i >= p.outputStart()+p.nPos && i < p.size() }
+func Faig_CheckIdLi(p *Faig_Man_t, i int32) bool  { return i >= p.outputStart()+p.pos() && i < p.size() }
 func Faig_CheckIdCo(p *Faig_Man_t, i int32) bool  { return i >= p.outputStart() && i < p.size() }
 func Faig_CheckIdObj(p *Faig_Man_t, i int32) bool { return i >= 0 && i < p.size() }
 func fastRequire(ok bool) {
@@ -54,14 +55,14 @@ func Faig_ObjIdToNumPo(p *Faig_Man_t, i int32) int32 {
 }
 func Faig_ObjIdToNumLi(p *Faig_Man_t, i int32) int32 {
 	fastRequire(Faig_CheckIdLi(p, i))
-	return i - p.outputStart() - p.nPos
+	return i - p.outputStart() - p.pos()
 }
 func Faig_ObjIdToNumCo(p *Faig_Man_t, i int32) int32 {
 	fastRequire(Faig_CheckIdCo(p, i))
 	return i - p.outputStart()
 }
 func Faig_ObjLoToLi(p *Faig_Man_t, i int32) int32 {
-	return p.outputStart() + p.nPos + Faig_ObjIdToNumLo(p, i)
+	return p.outputStart() + p.pos() + Faig_ObjIdToNumLo(p, i)
 }
 func Faig_ObjLiToLo(p *Faig_Man_t, i int32) int32  { return p.nPis + 1 + Faig_ObjIdToNumLi(p, i) }
 func Faig_NodeChild0(p *Faig_Man_t, n int32) int32 { return p.nodes[n].fanins[0] }
@@ -88,7 +89,7 @@ func Faig_ManCreate(graph *aig.Graph) *Faig_Man_t {
 		panic(err)
 	}
 	registers := aig.Aig_ManRegNum(graph)
-	p := &Faig_Man_t{nPis: int32(graph.InputCount()) - registers, nPos: int32(graph.OutputCount()) - registers, nFfs: registers, ids: []aig.Edge{graph.Const1()}}
+	p := &Faig_Man_t{nPis: int32(graph.InputCount()) - registers, nFfs: registers, ids: []aig.Edge{graph.Const1()}}
 	mapping := map[int]int32{0: 0}
 	for _, input := range graph.Inputs() {
 		mapping[input.NodeID()] = int32(len(p.ids)) << 1
@@ -167,6 +168,13 @@ func Faig_ManSimulateFrames(p *Faig_Man_t, frames, prefix, transitions int32) []
 	if frames < 0 || prefix < 0 || prefix > frames {
 		panic("saig: invalid simulation frames")
 	}
+	samplesPerFrame := int64(32)
+	if transitions != 0 {
+		samplesPerFrame = 16
+	}
+	if int64(frames-prefix)*samplesPerFrame > 1<<31-1 {
+		panic("saig: simulation count exceeds int32 range")
+	}
 	counts := make([]int32, p.size())
 	values := make([]uint32, p.size())
 	values[0] = ^uint32(0)
@@ -225,6 +233,12 @@ func Faig_ManComputeProbOne(ones, words int32) float32 {
 func SwitchingProbabilities(graph *aig.Graph, frames, prefix int32, probabilityOne bool) ([]float32, error) {
 	if frames <= prefix || prefix < 0 {
 		return nil, fmt.Errorf("saig: total frames must exceed nonnegative prefix")
+	}
+	if graph == nil {
+		return nil, fmt.Errorf("saig: nil simulation graph")
+	}
+	if err := graph.Check(); err != nil {
+		return nil, err
 	}
 	p := Faig_ManCreate(graph)
 	aig.Aig_ManRandom(1)

@@ -40,6 +40,10 @@ func Scl_Init(f *abcmain.Frame) {
 		{"minsize", Scl_CommandMinsize, true},
 		{"maxsize", Scl_CommandMaxsize, true},
 		{"dnsize", Scl_CommandDnsize, true},
+		{"upsize", Scl_CommandUpsize, true},
+		{"topo", Scl_CommandTopo, true},
+		{"unbuffer", Scl_CommandUnBuffer, true},
+		{"buffer", Scl_CommandBuffer, true},
 		{"print_buf", Scl_CommandPrintBuf, false},
 		{"read_constr", Scl_CommandReadConstr, false},
 		{"write_constr", Scl_CommandWriteConstr, false},
@@ -92,7 +96,7 @@ func parseSclOptions(argv []string, toggles, numeric string) (sclOptions, error)
 				value = argv[i]
 			}
 			v, e := strconv.ParseFloat(value, 32)
-			if e != nil || v < 0 || v != v || v > 3.402823466e38 || strings.IndexByte("SGAB", key) >= 0 && v == 0 {
+			if e != nil || v < 0 || v != v || v > 3.402823466e38 {
 				return o, fmt.Errorf("invalid value for -%c: %s", key, value)
 			}
 			o.numbers[key] = float32(v)
@@ -100,6 +104,14 @@ func parseSclOptions(argv []string, toggles, numeric string) (sclOptions, error)
 		}
 	}
 	return o, nil
+}
+func (o sclOptions) positive(keys string) bool {
+	for i := range keys {
+		if v, ok := o.numbers[keys[i]]; ok && v <= 0 {
+			return false
+		}
+	}
+	return true
 }
 func sclCommandError(f *abcmain.Frame, e error) int32 { fmt.Fprintln(f.Err, e); return 1 }
 func sclLibrary(f *abcmain.Frame) (*SC_Lib, error) {
@@ -129,7 +141,7 @@ func installFrameGenlib(f *abcmain.Frame, p *SC_Lib, slew, gain float32, minimum
 }
 func Scl_CommandReadLib(f *abcmain.Frame, argc int32, argv []string) int32 {
 	o, e := parseSclOptions(argv, "dnvw", "SGM")
-	if e != nil || len(o.args) != 1 {
+	if e != nil || !o.positive("SG") || len(o.args) != 1 {
 		return sclCommandError(f, fmt.Errorf("usage: read_lib [-SG float] [-M num] [-dnvwh] <file>"))
 	}
 	p, e := ReadLiberty(o.args[0])
@@ -202,7 +214,7 @@ func Scl_CommandWriteScl(f *abcmain.Frame, argc int32, argv []string) int32 {
 }
 func Scl_CommandPrintLib(f *abcmain.Frame, argc int32, argv []string) int32 {
 	o, e := parseSclOptions(argv, "is", "SG")
-	if e != nil {
+	if e != nil || !o.positive("SG") {
 		return sclCommandError(f, fmt.Errorf("usage: print_lib [-SG float] [-ish]"))
 	}
 	p, e := sclLibrary(f)
@@ -216,7 +228,7 @@ func Scl_CommandPrintLib(f *abcmain.Frame, argc int32, argv []string) int32 {
 }
 func Scl_CommandLeak2Area(f *abcmain.Frame, argc int32, argv []string) int32 {
 	o, e := parseSclOptions(argv, "v", "AB")
-	if e != nil {
+	if e != nil || !o.positive("AB") {
 		return sclCommandError(f, fmt.Errorf("usage: leak2area [-AB float] [-vh]"))
 	}
 	p, e := sclLibrary(f)
@@ -445,6 +457,36 @@ func Scl_CommandDnsize(f *abcmain.Frame, argc int32, argv []string) int32 {
 	defer Abc_SclManFree(p)
 	p.Output = f.Out
 	if e = DownsizeManager(p, &pars); e != nil {
+		return sclCommandError(f, e)
+	}
+	return 0
+}
+
+func Scl_CommandUpsize(f *abcmain.Frame, argc int32, argv []string) int32 {
+	o, e := parseSclOptions(argv, "csdvw", "IJWRNDGTXB")
+	if e != nil || len(o.args) != 0 {
+		return sclCommandError(f, fmt.Errorf("usage: upsize [-IJWRNDGTXB num] [-csdvwh]"))
+	}
+	pars := SC_SizePars{Iterations: 1000, IterationsNoChange: 50, Window: 1, Ratio: 10, Notches: 1000, UseDepartures: !o.flags['s'], UseWireLoads: o.flags['c'], DumpStats: o.flags['d'], Verbose: o.flags['v'], VeryVerbose: o.flags['w']}
+	for key, dst := range map[byte]*int{'I': &pars.Iterations, 'J': &pars.IterationsNoChange, 'W': &pars.Window, 'R': &pars.Ratio, 'N': &pars.Notches, 'D': &pars.DelayUser, 'G': &pars.DelayGap, 'T': &pars.Timeout, 'X': &pars.BufferTreeEstimate, 'B': &pars.BypassFrequency} {
+		if v, ok := o.numbers[key]; ok {
+			if v != float32(int(v)) {
+				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
+			}
+			*dst = int(v)
+		}
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	p, e := Abc_SclManStart(lib, net, boolInt(pars.UseWireLoads), boolInt(pars.UseDepartures), 0, int32(pars.BufferTreeEstimate))
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	defer Abc_SclManFree(p)
+	p.Output = f.Out
+	if e = UpsizeManager(p, &pars); e != nil {
 		return sclCommandError(f, e)
 	}
 	return 0

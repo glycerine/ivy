@@ -116,3 +116,6 @@ func (p *Gia_Man_t) SetIdentity(name, spec string) { p.pName, p.pSpec = name, sp
 func (p *Gia_Man_t) Data() any                     { return p.pData }
 func (p *Gia_Man_t) SetData(data any)              { p.pData = data }
 func (p *Gia_Man_t) TakeData() any                 { data := p.pData; p.pData = nil; return data }
+
+func (p *Gia_Man_t) NetworkName() string { return p.pName }
+func (p *Gia_Man_t) NetworkSpec() string { return p.pSpec }

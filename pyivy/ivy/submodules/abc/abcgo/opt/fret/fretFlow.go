@@ -16,7 +16,7 @@ import (
   Synopsis    [Max-flow computation.]
 
   Author      [Aaron Hurst]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 1, 2008.]
@@ -29,7 +29,6 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -38,10 +37,8 @@ import (
 
 // static void dfsfast_r_retreat( Abc_Obj_t *pObj );
 
-
 // Original macro:
 // #define FDIST(xn, xe, yn, ye) (FDATA(xn)->xe##_dist == (FDATA(yn)->ye##_dist + 1))
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -55,7 +52,7 @@ import (
                flow paths: this occurs in a small number of cases where
                the flow predecessor points to a non-adjacent node and
                the distance ordering is perturbed.]
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -63,557 +60,507 @@ import (
 ***********************************************************************/
 
 func dfsfast_preorder(pNtk *Abc_Ntk_t) {
-  var pObj, pNext *Abc_Obj_t;
-  var vTimeIn *Vec_Ptr_t;
-  var qn *Vec_Ptr_t = Vec_PtrAlloc(Abc_NtkObjNum(pNtk));
-  var qe *Vec_Int_t  = Vec_IntAlloc(Abc_NtkObjNum(pNtk));
-  var i, j, d, end int32;
-  var qpos int32;
+	nObjs := Abc_NtkObjNumMax(pNtk)
+	queueNodes := Vec_PtrAlloc(int(nObjs))
+	queueEnds := Vec_IntAlloc(int(nObjs))
+	defer Vec_PtrFree(queueNodes)
+	defer Vec_IntFree(queueEnds)
+	Vec_IntFill(pManMR.vSinkDistHist, Vec_IntSize(pManMR.vSinkDistHist), 0)
 
-  // create reverse timing edges for backward traversal
-  if (pManMR->maxDelay) {
-    Abc_NtkForEachObj( pNtk, pObj, i ) {
-      Vec_PtrForEachEntry( Abc_Obj_t *, FTIMEEDGES(pObj), pNext, j ) {
-        vTimeIn = FDATA(pNext)->vNodes;
-        if (!vTimeIn) {
-          vTimeIn = FDATA(pNext)->vNodes = Vec_PtrAlloc(2);
-        }
-        Vec_PtrPush(vTimeIn, pObj);
-      }
-    }
-  }
+	if pManMR.maxDelay != 0 {
+		for id := int32(0); id < nObjs; id++ {
+			obj := Abc_NtkObj(pNtk, id)
+			if obj == nil {
+				continue
+			}
+			outgoing := FTIMEEDGES(obj)
+			for j := 0; j < Vec_PtrSize(outgoing); j++ {
+				next, ok := Vec_PtrEntry(outgoing, j).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				reverse := flowData(next).vNodes
+				if reverse == nil {
+					reverse = Vec_PtrAlloc(2)
+					flowData(next).vNodes = reverse
+				}
+				Vec_PtrPush(reverse, obj)
+			}
+		}
+	}
 
-  // clear histogram
-  assert(pManMR.vSinkDistHist, "pManMR.vSinkDistHist");
-  memset(Vec_IntArray(pManMR.vSinkDistHist), 0, sizeof(int)*Vec_IntSize(pManMR.vSinkDistHist));
+	for id := int32(0); id < nObjs; id++ {
+		obj := Abc_NtkObj(pNtk, id)
+		if obj == nil {
+			continue
+		}
+		blocked := flowData(obj).mark&BLOCK_OR_CONS&pManMR.constraintMask != 0
+		if Abc_ObjIsPo(obj) != 0 || Abc_ObjIsLatch(obj) != 0 || (pManMR.fIsForward != 0 && blocked) {
+			Vec_PtrPush(queueNodes, obj)
+			Vec_IntPush(queueEnds, 'r')
+			flowData(obj).r_dist = 1
+		} else if Abc_ObjIsPi(obj) != 0 || (pManMR.fIsForward == 0 && blocked) {
+			Vec_PtrPush(queueNodes, obj)
+			Vec_IntPush(queueEnds, 'e')
+			flowData(obj).e_dist = 1
+		}
+	}
 
-  // seed queue : latches, PIOs, and blocks
-  Abc_NtkForEachObj( pNtk, pObj, i )
-    if Abc_ObjIsPo(pObj) ||
-        Abc_ObjIsLatch(pObj) || 
-        (pManMR.fIsForward && FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask) {
-      Vec_PtrPush(qn, pObj);
-      Vec_IntPush(qe, 'r');
-      FDATA(pObj).r_dist = 1;
-    } else if Abc_ObjIsPi(pObj) || 
-               (!pManMR.fIsForward && FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask) {
-      Vec_PtrPush(qn, pObj);
-      Vec_IntPush(qe, 'e');
-      FDATA(pObj).e_dist = 1;
-    }
+	for qpos := 0; qpos < Vec_PtrSize(queueNodes); qpos++ {
+		obj, ok := Vec_PtrEntry(queueNodes, qpos).(*Abc_Obj_t)
+		if !ok || obj == nil {
+			panic("retiming flow queue contains a non-object")
+		}
+		end := Vec_IntEntry(queueEnds, qpos)
+		data := flowData(obj)
+		if end == 'r' {
+			d := data.r_dist
+			if pManMR.fIsForward != 0 {
+				for i := int32(0); i < Abc_ObjFaninNum(obj); i++ {
+					next := Abc_ObjFanin(obj, i)
+					if flowData(next).e_dist == 0 {
+						flowData(next).e_dist = d + 1
+						Vec_PtrPush(queueNodes, next)
+						Vec_IntPush(queueEnds, 'e')
+					}
+				}
+			} else {
+				for i := int32(0); i < Abc_ObjFanoutNum(obj); i++ {
+					next := Abc_ObjFanout(obj, i)
+					if flowData(next).e_dist == 0 {
+						flowData(next).e_dist = d + 1
+						Vec_PtrPush(queueNodes, next)
+						Vec_IntPush(queueEnds, 'e')
+					}
+				}
+			}
+			if d == 1 {
+				continue
+			}
+			if pManMR.fIsForward != 0 {
+				for i := int32(0); i < Abc_ObjFanoutNum(obj); i++ {
+					next := Abc_ObjFanout(obj, i)
+					if flowData(next).r_dist == 0 && Abc_ObjIsLatch(next) == 0 {
+						flowData(next).r_dist = d + 1
+						Vec_PtrPush(queueNodes, next)
+						Vec_IntPush(queueEnds, 'r')
+					}
+				}
+				if pManMR.maxDelay != 0 && data.vNodes != nil {
+					for i := 0; i < Vec_PtrSize(data.vNodes); i++ {
+						next, ok := Vec_PtrEntry(data.vNodes, i).(*Abc_Obj_t)
+						if !ok || next == nil {
+							panic("retiming reverse timing edge contains a non-object")
+						}
+						if flowData(next).r_dist == 0 {
+							flowData(next).r_dist = d + 1
+							Vec_PtrPush(queueNodes, next)
+							Vec_IntPush(queueEnds, 'r')
+						}
+					}
+				}
+			}
+			continue
+		}
 
-  // until queue is empty...
-  for qpos < Vec_PtrSize(qn) {
-    pObj = (Abc_Obj_t *)Vec_PtrEntry(qn, qpos);
-    assert((pObj != nil), "pObj");
-    end = Vec_IntEntry(qe, qpos);
-    qpos++;
-    
-    if end == 'r' {
-      d = FDATA(pObj).r_dist;
+		if Abc_ObjIsLatch(obj) != 0 {
+			continue
+		}
+		d := data.e_dist
+		if data.r_dist == 0 {
+			data.r_dist = d + 1
+			Vec_PtrPush(queueNodes, obj)
+			Vec_IntPush(queueEnds, 'r')
+		}
+		if pManMR.fIsForward == 0 {
+			for i := int32(0); i < Abc_ObjFaninNum(obj); i++ {
+				next := Abc_ObjFanin(obj, i)
+				if flowData(next).e_dist == 0 && Abc_ObjIsLatch(next) == 0 {
+					flowData(next).e_dist = d + 1
+					Vec_PtrPush(queueNodes, next)
+					Vec_IntPush(queueEnds, 'e')
+				}
+			}
+			if pManMR.maxDelay != 0 && data.vNodes != nil {
+				for i := 0; i < Vec_PtrSize(data.vNodes); i++ {
+					next, ok := Vec_PtrEntry(data.vNodes, i).(*Abc_Obj_t)
+					if !ok || next == nil {
+						panic("retiming reverse timing edge contains a non-object")
+					}
+					if flowData(next).e_dist == 0 {
+						flowData(next).e_dist = d + 1
+						Vec_PtrPush(queueNodes, next)
+						Vec_IntPush(queueEnds, 'e')
+					}
+				}
+			}
+		}
+	}
 
-      // 1. structural edges
-      if pManMR.fIsForward {
-        Abc_ObjForEachFanin( pObj, pNext, i )
-          if !FDATA(pNext).e_dist {
-            FDATA(pNext).e_dist = d+1;
-            Vec_PtrPush(qn, pNext);
-            Vec_IntPush(qe, 'e');
-          }
-      } else
-        Abc_ObjForEachFanout( pObj, pNext, i )
-          if !FDATA(pNext).e_dist {
-            FDATA(pNext).e_dist = d+1;
-            Vec_PtrPush(qn, pNext);
-            Vec_IntPush(qe, 'e');
-          }
-
-      if d == 1 { continue; }
-
-      // 2. reverse edges (forward retiming only)
-      if pManMR.fIsForward {
-        Abc_ObjForEachFanout( pObj, pNext, i )
-          if !FDATA(pNext).r_dist && !Abc_ObjIsLatch(pNext) {
-            FDATA(pNext).r_dist = d+1;
-            Vec_PtrPush(qn, pNext);
-            Vec_IntPush(qe, 'r');
-          }          
-
-      // 3. timimg edges (forward retiming only)
-        if (pManMR->maxDelay && FDATA(pObj)->vNodes)
-          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)->vNodes, pNext, i ) {
-            if (!FDATA(pNext)->r_dist) {
-              FDATA(pNext)->r_dist = d+1;
-              Vec_PtrPush(qn, pNext);
-              Vec_IntPush(qe, 'r');
-            }
-          }
-      }
-      
-    } else { // if 'e'
-      if Abc_ObjIsLatch(pObj) { continue; }
-
-      d = FDATA(pObj).e_dist;
-
-      // 1. through node
-      if !FDATA(pObj).r_dist {
-        FDATA(pObj).r_dist = d+1;
-        Vec_PtrPush(qn, pObj);
-        Vec_IntPush(qe, 'r');
-      }
-
-      // 2. reverse edges (backward retiming only)
-      if !pManMR.fIsForward {
-        Abc_ObjForEachFanin( pObj, pNext, i )
-          if !FDATA(pNext).e_dist && !Abc_ObjIsLatch(pNext) {
-            FDATA(pNext).e_dist = d+1;
-            Vec_PtrPush(qn, pNext);
-            Vec_IntPush(qe, 'e');
-          }  
-
-      // 3. timimg edges (backward retiming only)
-        if (pManMR->maxDelay && FDATA(pObj)->vNodes)
-          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)->vNodes, pNext, i ) {
-            if (!FDATA(pNext)->e_dist) {
-              FDATA(pNext)->e_dist = d+1;
-              Vec_PtrPush(qn, pNext);
-              Vec_IntPush(qe, 'e');
-            }
-          }
-      }
-    }
-  }
- 
-  // free time edges
-  if (pManMR->maxDelay) {
-    Abc_NtkForEachObj( pNtk, pObj, i ) {
-      vTimeIn = FDATA(pObj)->vNodes;
-      if (vTimeIn) {
-        Vec_PtrFree(vTimeIn);
-        FDATA(pObj)->vNodes = 0;
-      }
-    }
-  }
-
-  Abc_NtkForEachObj( pNtk, pObj, i ) {
-    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).r_dist, 1);
-    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).e_dist, 1);
-
-  }
-
-  // printf("\t\tpre-ordered (max depth=%d)\n", d+1);
-
-  // deallocate
-  Vec_PtrFree( qn );
-  Vec_IntFree( qe );
+	if pManMR.maxDelay != 0 {
+		for id := int32(0); id < nObjs; id++ {
+			if obj := Abc_NtkObj(pNtk, id); obj != nil {
+				flowData(obj).vNodes = nil
+			}
+		}
+	}
+	for id := int32(0); id < nObjs; id++ {
+		obj := Abc_NtkObj(pNtk, id)
+		if obj == nil {
+			continue
+		}
+		data := flowData(obj)
+		Vec_IntAddToEntry(pManMR.vSinkDistHist, int(data.r_dist), 1)
+		Vec_IntAddToEntry(pManMR.vSinkDistHist, int(data.e_dist), 1)
+	}
 }
 
 func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
-  var i int32;
-  var pNext *Abc_Obj_t;
-  
-  if pManMR.fSinkDistTerminate { return 0; }
+	if pManMR.fSinkDistTerminate != 0 {
+		return 0
+	}
+	data := flowData(pObj)
+	if data.mark&BLOCK_OR_CONS&pManMR.constraintMask != 0 || Abc_ObjIsPi(pObj) != 0 {
+		assert(pPred != nil, "pPred")
+		assert(pManMR.fIsForward == 0, "!pManMR.fIsForward")
+		return 1
+	}
 
-  // have we reached the sink?
-  if FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask ||
-     Abc_ObjIsPi(pObj) {
-    assert((pPred != nil), "pPred");
-    assert(!pManMR.fIsForward, "!pManMR.fIsForward");
-    return 1;
-  }
+	FSET(pObj, VISITED_E)
+	found := false
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+			next := Abc_ObjFanout(pObj, i)
+			if FTEST(next, VISITED_R) == 0 &&
+				flowData(pObj).e_dist == flowData(next).r_dist+1 &&
+				dfsfast_r(next, pPred) != 0 {
+				found = true
+				break
+			}
+		}
+	} else {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			next := Abc_ObjFanin(pObj, i)
+			if FTEST(next, VISITED_R) == 0 &&
+				flowData(pObj).e_dist == flowData(next).r_dist+1 &&
+				dfsfast_r(next, pPred) != 0 {
+				found = true
+				break
+			}
+		}
+	}
+	if found {
+		FUNSET(pObj, VISITED_E)
+		return 1
+	}
+	if Abc_ObjIsLatch(pObj) != 0 {
+		FUNSET(pObj, VISITED_E)
+		dfsfast_e_retreat(pObj)
+		return 0
+	}
 
-  FSET(pObj, VISITED_E);
+	if pManMR.fIsForward == 0 {
+		for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+			next := Abc_ObjFanout(pObj, i)
+			if FTEST(next, VISITED_E) == 0 &&
+				flowData(pObj).e_dist == flowData(next).e_dist+1 &&
+				dfsfast_e(next, pPred) != 0 {
+				FUNSET(pObj, VISITED_E)
+				return 1
+			}
+		}
+		if pManMR.maxDelay != 0 {
+			for i := 0; i < Vec_PtrSize(FTIMEEDGES(pObj)); i++ {
+				next, ok := Vec_PtrEntry(FTIMEEDGES(pObj), i).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				if FTEST(next, VISITED_E) == 0 &&
+					flowData(pObj).e_dist == flowData(next).e_dist+1 &&
+					dfsfast_e(next, pPred) != 0 {
+					FUNSET(pObj, VISITED_E)
+					return 1
+				}
+			}
+		}
+	}
 
-
-  // 1. structural edges
-  if (pManMR.fIsForward)
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          FDIST(pObj, e, pNext, r) &&
-          (dfsfast_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-  else
-    Abc_ObjForEachFanin( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          FDIST(pObj, e, pNext, r) &&
-          (dfsfast_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }  
-  
-  if Abc_ObjIsLatch(pObj) {
-    goto not_found; }
-
-  // 2. reverse edges (backward retiming only)
-  if !pManMR.fIsForward { 
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_E) &&
-          FDIST(pObj, e, pNext, e) &&
-          (dfsfast_e(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-
-  // 3. timing edges (backward retiming only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t *, FTIMEEDGES(pObj), pNext, i) {
-        if (!FTEST(pNext, VISITED_E) &&
-            FDIST(pObj, e, pNext, e) &&
-            dfsfast_e(pNext, pPred)) {
-          goto found;
-        }
-      }
-  }
-  
-  // unwind
-  if FTEST(pObj, FLOW) && 
-      !FTEST(pObj, VISITED_R) &&
-      FDIST(pObj, e, pObj, r) &&
-      (dfsfast_r(pObj, FGETPRED(pObj)) != 0) {
-
-    FUNSET(pObj, FLOW);
-    FSETPRED(pObj, nil);
-    goto found;
-  }
-  
- not_found:
-  FUNSET(pObj, VISITED_E);
-  dfsfast_e_retreat(pObj);
-  return 0;
-  
- found:
-  FUNSET(pObj, VISITED_E);
-  return 1;
+	if FTEST(pObj, FLOW) != 0 &&
+		FTEST(pObj, VISITED_R) == 0 &&
+		flowData(pObj).e_dist == flowData(pObj).r_dist+1 &&
+		dfsfast_r(pObj, FGETPRED(pObj)) != 0 {
+		FUNSET(pObj, FLOW)
+		FSETPRED(pObj, nil)
+		found = true
+	}
+	FUNSET(pObj, VISITED_E)
+	if found {
+		return 1
+	}
+	dfsfast_e_retreat(pObj)
+	return 0
 }
 
 func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
-  var i int32;
-  var pNext, pOldPred *Abc_Obj_t;
+	if pManMR.fSinkDistTerminate != 0 {
+		return 0
+	}
+	if Abc_ObjIsLatch(pObj) != 0 ||
+		(pManMR.fIsForward != 0 && Abc_ObjIsPo(pObj) != 0) ||
+		(pManMR.fIsForward != 0 && flowData(pObj).mark&BLOCK_OR_CONS&pManMR.constraintMask != 0) {
+		assert(pPred != nil, "pPred")
+		return 1
+	}
 
-  if pManMR.fSinkDistTerminate { return 0; }
+	FSET(pObj, VISITED_R)
+	if FTEST(pObj, FLOW) != 0 {
+		oldPred := FGETPRED(pObj)
+		if oldPred != nil &&
+			FTEST(oldPred, VISITED_E) == 0 &&
+			flowData(pObj).r_dist == flowData(oldPred).e_dist+1 &&
+			dfsfast_e(oldPred, oldPred) != 0 {
+			FSETPRED(pObj, pPred)
+			FUNSET(pObj, VISITED_R)
+			return 1
+		}
+	} else if FTEST(pObj, VISITED_E) == 0 &&
+		flowData(pObj).r_dist == flowData(pObj).e_dist+1 &&
+		dfsfast_e(pObj, pObj) != 0 {
+		FSET(pObj, FLOW)
+		FSETPRED(pObj, pPred)
+		FUNSET(pObj, VISITED_R)
+		return 1
+	}
 
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			next := Abc_ObjFanin(pObj, i)
+			if FTEST(next, VISITED_R) == 0 &&
+				flowData(pObj).r_dist == flowData(next).r_dist+1 &&
+				Abc_ObjIsLatch(next) == 0 &&
+				dfsfast_r(next, pPred) != 0 {
+				FUNSET(pObj, VISITED_R)
+				return 1
+			}
+		}
+		if pManMR.maxDelay != 0 {
+			edges := FTIMEEDGES(pObj)
+			for i := 0; i < Vec_PtrSize(edges); i++ {
+				next, ok := Vec_PtrEntry(edges, i).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				if FTEST(next, VISITED_R) == 0 &&
+					flowData(pObj).r_dist == flowData(next).r_dist+1 &&
+					dfsfast_r(next, pPred) != 0 {
+					FUNSET(pObj, VISITED_R)
+					return 1
+				}
+			}
+		}
+	}
 
-  // have we reached the sink?
-  if Abc_ObjIsLatch(pObj) ||
-      (pManMR.fIsForward && Abc_ObjIsPo(pObj)) || 
-      (pManMR.fIsForward && FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask) {
-    assert((pPred != nil), "pPred");
-    return 1;
-  }
-
-  FSET(pObj, VISITED_R);
-
-  if FTEST(pObj, FLOW) {
-
-    pOldPred = FGETPRED(pObj);
-    if (pOldPred != nil) && 
-        !FTEST(pOldPred, VISITED_E) &&
-        FDIST(pObj, r, pOldPred, e) &&
-        (dfsfast_e(pOldPred, pOldPred) != 0) {
-
-      FSETPRED(pObj, pPred);
-
-      goto found;
-    }
-    
-  } else {
-
-    if !FTEST(pObj, VISITED_E) &&
-        FDIST(pObj, r, pObj, e) &&
-        (dfsfast_e(pObj, pObj) != 0) {
-
-      FSET(pObj, FLOW);
-      FSETPRED(pObj, pPred);
-
-      goto found;
-    }
-  }
- 
-  // 2. reverse edges (forward retiming only)
-  if pManMR.fIsForward {
-    Abc_ObjForEachFanin( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          FDIST(pObj, r, pNext, r) &&
-          !Abc_ObjIsLatch(pNext) &&
-          (dfsfast_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-  
-  // 3. timing edges (forward retiming only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
-        if (!FTEST(pNext, VISITED_R) &&
-            FDIST(pObj, r, pNext, r) &&
-            dfsfast_r(pNext, pPred)) {
-          goto found;
-        }
-      }
-  }
-  
-  FUNSET(pObj, VISITED_R);
-  dfsfast_r_retreat(pObj);
-  return 0;
-
- found:
-  FUNSET(pObj, VISITED_R);
-  return 1;
+	FUNSET(pObj, VISITED_R)
+	dfsfast_r_retreat(pObj)
+	return 0
 }
 
 func dfsfast_e_retreat(pObj *Abc_Obj_t) {
-  var pNext *Abc_Obj_t;
-  var i int32;
-  var h *int32;
-  var old_dist int32  = FDATA(pObj).e_dist;
-  var adj_dist int32;
-  var min_dist int32 = MAX_DIST;
-  
-  // 1. structural edges
-  if (pManMR.fIsForward)
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      adj_dist = FDATA(pNext).r_dist;
-      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-    }
-  else
-    Abc_ObjForEachFanin( pObj, pNext, i ) {
-      adj_dist = FDATA(pNext).r_dist;
-      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-    }
+	oldDist := flowData(pObj).e_dist
+	minDist := MAX_DIST
+	consider := func(distance int32) {
+		if distance != 0 && distance < minDist {
+			minDist = distance
+		}
+	}
 
-  if Abc_ObjIsLatch(pObj) { goto update; }
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+			consider(flowData(Abc_ObjFanout(pObj, i)).r_dist)
+		}
+	} else {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			consider(flowData(Abc_ObjFanin(pObj, i)).r_dist)
+		}
+	}
 
-  // 2. through
-  if FTEST(pObj, FLOW) {
-    adj_dist = FDATA(pObj).r_dist;
-    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-  }
+	if Abc_ObjIsLatch(pObj) == 0 {
+		if FTEST(pObj, FLOW) != 0 {
+			consider(flowData(pObj).r_dist)
+		}
+		if pManMR.fIsForward == 0 {
+			for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+				consider(flowData(Abc_ObjFanout(pObj, i)).e_dist)
+			}
+			if pManMR.maxDelay != 0 {
+				edges := FTIMEEDGES(pObj)
+				for i := 0; i < Vec_PtrSize(edges); i++ {
+					next, ok := Vec_PtrEntry(edges, i).(*Abc_Obj_t)
+					if !ok || next == nil {
+						panic("retiming timing edge contains a non-object")
+					}
+					consider(flowData(next).e_dist)
+				}
+			}
+		}
+	}
 
-  // 3. reverse edges (backward retiming only)
-  if !pManMR.fIsForward {
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      adj_dist = FDATA(pNext).e_dist;
-      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-    }
-
-  // 4. timing edges (backward retiming only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
-        adj_dist = FDATA(pNext)->e_dist;
-        if (adj_dist) min_dist = MIN(min_dist, adj_dist);
-      }
-  }
-
- update:
-  ++min_dist;
-  if min_dist >= MAX_DIST { min_dist = 0; }
-  // printf("[%de=%d->%d] ", Abc_ObjId(pObj), old_dist, min_dist+1);
-  FDATA(pObj).e_dist = min_dist;
-
-  assert(min_dist < Vec_IntSize(pManMR.vSinkDistHist), "min_dist < Vec_IntSize(pManMR.vSinkDistHist)");
-  h = Vec_IntArray(pManMR.vSinkDistHist);
-  h[old_dist]--;
-  h[min_dist]++;
-  if !h[old_dist] {
-    pManMR.fSinkDistTerminate = 1;
-  }
+	minDist++
+	if minDist >= MAX_DIST {
+		minDist = 0
+	}
+	flowData(pObj).e_dist = minDist
+	updateSinkDistanceHistogram(oldDist, minDist)
 }
 
 func dfsfast_r_retreat(pObj *Abc_Obj_t) {
-  var pNext *Abc_Obj_t;
-  var i int32;
-  var h *int32;
-  var old_dist int32  = FDATA(pObj).r_dist;
-  var adj_dist int32;
-  var min_dist int32 = MAX_DIST;
-  
-  // 1. through or pred
-  if FTEST(pObj, FLOW) {
-    if FGETPRED(pObj) {
-      adj_dist = FDATA(FGETPRED(pObj)).e_dist;
-      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-    }
-  } else {
-    adj_dist = FDATA(pObj).e_dist;
-    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-  }
+	oldDist := flowData(pObj).r_dist
+	minDist := MAX_DIST
+	consider := func(distance int32) {
+		if distance != 0 && distance < minDist {
+			minDist = distance
+		}
+	}
 
-  // 2. reverse edges (forward retiming only)
-  if pManMR.fIsForward {
-    Abc_ObjForEachFanin( pObj, pNext, i )
-      if !Abc_ObjIsLatch(pNext) {
-        adj_dist = FDATA(pNext).r_dist;
-        if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }
-      }
+	if FTEST(pObj, FLOW) != 0 {
+		if pred := FGETPRED(pObj); pred != nil {
+			consider(flowData(pred).e_dist)
+		}
+	} else {
+		consider(flowData(pObj).e_dist)
+	}
 
-  // 3. timing edges (forward retiming only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
-        adj_dist = FDATA(pNext)->r_dist;
-        if (adj_dist) min_dist = MIN(min_dist, adj_dist);
-      }
-  }
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			next := Abc_ObjFanin(pObj, i)
+			if Abc_ObjIsLatch(next) == 0 {
+				consider(flowData(next).r_dist)
+			}
+		}
+		if pManMR.maxDelay != 0 {
+			edges := FTIMEEDGES(pObj)
+			for i := 0; i < Vec_PtrSize(edges); i++ {
+				next, ok := Vec_PtrEntry(edges, i).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				consider(flowData(next).r_dist)
+			}
+		}
+	}
 
-  ++min_dist;
-  if min_dist >= MAX_DIST { min_dist = 0; }
-  //printf("[%dr=%d->%d] ", Abc_ObjId(pObj), old_dist, min_dist+1);
-  FDATA(pObj).r_dist = min_dist;
-
-  assert(min_dist < Vec_IntSize(pManMR.vSinkDistHist), "min_dist < Vec_IntSize(pManMR.vSinkDistHist)");
-  h = Vec_IntArray(pManMR.vSinkDistHist);
-  h[old_dist]--;
-  h[min_dist]++;
-  if !h[old_dist] {
-    pManMR.fSinkDistTerminate = 1;
-  }
+	minDist++
+	if minDist >= MAX_DIST {
+		minDist = 0
+	}
+	flowData(pObj).r_dist = minDist
+	updateSinkDistanceHistogram(oldDist, minDist)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Plain DFS.]
-
-  Description [Does not use sink-distance-histogram heuristic.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
 func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
-  var i int32;
-  var pNext *Abc_Obj_t;
-  
-  if FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask || 
-      Abc_ObjIsPi(pObj) {
-    assert((pPred != nil), "pPred");
-    assert(!pManMR.fIsForward, "!pManMR.fIsForward");
-    return 1;
-  }
+	if flowData(pObj).mark&BLOCK_OR_CONS&pManMR.constraintMask != 0 || Abc_ObjIsPi(pObj) != 0 {
+		assert(pPred != nil, "pPred")
+		assert(pManMR.fIsForward == 0, "!pManMR.fIsForward")
+		return 1
+	}
 
-  FSET(pObj, VISITED_E);
-  
-  // printf(" %de\n", Abc_ObjId(pObj));
-  
-  // 1. structural edges
-  if (pManMR.fIsForward)
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          (dfsplain_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-  else
-    Abc_ObjForEachFanin( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          (dfsplain_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-  
-  if Abc_ObjIsLatch(pObj) {
-    return 0; }
+	FSET(pObj, VISITED_E)
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+			next := Abc_ObjFanout(pObj, i)
+			if FTEST(next, VISITED_R) == 0 && dfsplain_r(next, pPred) != 0 {
+				return 1
+			}
+		}
+	} else {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			next := Abc_ObjFanin(pObj, i)
+			if FTEST(next, VISITED_R) == 0 && dfsplain_r(next, pPred) != 0 {
+				return 1
+			}
+		}
+	}
 
-  // 2. reverse edges (backward retiming only)
-  if !pManMR.fIsForward {
-    Abc_ObjForEachFanout( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_E) &&
-          (dfsplain_e(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
+	if Abc_ObjIsLatch(pObj) != 0 {
+		return 0
+	}
+	if pManMR.fIsForward == 0 {
+		for i := int32(0); i < Abc_ObjFanoutNum(pObj); i++ {
+			next := Abc_ObjFanout(pObj, i)
+			if FTEST(next, VISITED_E) == 0 && dfsplain_e(next, pPred) != 0 {
+				return 1
+			}
+		}
+		if pManMR.maxDelay != 0 {
+			edges := FTIMEEDGES(pObj)
+			for i := 0; i < Vec_PtrSize(edges); i++ {
+				next, ok := Vec_PtrEntry(edges, i).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				if FTEST(next, VISITED_E) == 0 && dfsplain_e(next, pPred) != 0 {
+					return 1
+				}
+			}
+		}
+	}
 
-  // 3. timing edges (backward retiming only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
-        if (!FTEST(pNext, VISITED_E) &&
-            dfsplain_e(pNext, pPred)) {
-          goto found;
-        }
-      }
-  }
-  
-  // unwind
-  if FTEST(pObj, FLOW) && 
-      !FTEST(pObj, VISITED_R) &&
-      (dfsplain_r(pObj, FGETPRED(pObj)) != 0) {
-    FUNSET(pObj, FLOW);
-    FSETPRED(pObj, nil);
-    goto found;
-  }
-  
-  return 0;
-  
- found:
-
-  return 1;
+	if FTEST(pObj, FLOW) != 0 &&
+		FTEST(pObj, VISITED_R) == 0 &&
+		dfsplain_r(pObj, FGETPRED(pObj)) != 0 {
+		FUNSET(pObj, FLOW)
+		FSETPRED(pObj, nil)
+		return 1
+	}
+	return 0
 }
 
 func dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
-  var i int32;
-  var pNext, pOldPred *Abc_Obj_t;
+	if Abc_ObjIsLatch(pObj) != 0 ||
+		(pManMR.fIsForward != 0 && Abc_ObjIsPo(pObj) != 0) ||
+		(pManMR.fIsForward != 0 && flowData(pObj).mark&BLOCK_OR_CONS&pManMR.constraintMask != 0) {
+		assert(pPred != nil, "pPred")
+		return 1
+	}
 
-  // have we reached the sink?
-  if Abc_ObjIsLatch(pObj) || 
-      (pManMR.fIsForward && Abc_ObjIsPo(pObj)) || 
-      (pManMR.fIsForward && FTEST(pObj, BLOCK_OR_CONS) & pManMR.constraintMask) {
-    assert((pPred != nil), "pPred");
-    return 1;
-  }
+	FSET(pObj, VISITED_R)
+	if FTEST(pObj, FLOW) != 0 {
+		oldPred := FGETPRED(pObj)
+		if oldPred != nil &&
+			FTEST(oldPred, VISITED_E) == 0 &&
+			dfsplain_e(oldPred, oldPred) != 0 {
+			FSETPRED(pObj, pPred)
+			return 1
+		}
+	} else if FTEST(pObj, VISITED_E) == 0 && dfsplain_e(pObj, pObj) != 0 {
+		FSET(pObj, FLOW)
+		FSETPRED(pObj, pPred)
+		return 1
+	}
 
-  FSET(pObj, VISITED_R);
-
-  // printf(" %dr\n", Abc_ObjId(pObj));
-
-  if FTEST(pObj, FLOW) {
-
-    pOldPred = FGETPRED(pObj);
-    if (pOldPred != nil) && 
-        !FTEST(pOldPred, VISITED_E) &&
-        (dfsplain_e(pOldPred, pOldPred) != 0) {
-
-      FSETPRED(pObj, pPred);
-
-      goto found;
-    }
-    
-  } else {
-
-    if !FTEST(pObj, VISITED_E) &&
-        (dfsplain_e(pObj, pObj) != 0) {
-
-      FSET(pObj, FLOW);
-      FSETPRED(pObj, pPred);
-
-      goto found;
-    }
-  }
- 
-  // 2. follow reverse edges
-  if pManMR.fIsForward { // forward retiming only
-    Abc_ObjForEachFanin( pObj, pNext, i ) {
-      if !FTEST(pNext, VISITED_R) &&
-          !Abc_ObjIsLatch(pNext) &&
-          (dfsplain_r(pNext, pPred) != 0) {
-        goto found;
-      }
-    }
-  
-  // 3. timing edges (forward only)
-    if (pManMR->maxDelay) 
-      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
-        if (!FTEST(pNext, VISITED_R) &&
-            dfsplain_r(pNext, pPred)) {
-          goto found;
-        }
-      }
-  }
-  
-  return 0;
-
- found:
-  return 1;
+	if pManMR.fIsForward != 0 {
+		for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+			next := Abc_ObjFanin(pObj, i)
+			if FTEST(next, VISITED_R) == 0 &&
+				Abc_ObjIsLatch(next) == 0 &&
+				dfsplain_r(next, pPred) != 0 {
+				return 1
+			}
+		}
+		if pManMR.maxDelay != 0 {
+			edges := FTIMEEDGES(pObj)
+			for i := 0; i < Vec_PtrSize(edges); i++ {
+				next, ok := Vec_PtrEntry(edges, i).(*Abc_Obj_t)
+				if !ok || next == nil {
+					panic("retiming timing edge contains a non-object")
+				}
+				if FTEST(next, VISITED_R) == 0 && dfsplain_r(next, pPred) != 0 {
+					return 1
+				}
+			}
+		}
+	}
+	return 0
 }
-//ABC_NAMESPACE_IMPL_END
 
+//ABC_NAMESPACE_IMPL_END

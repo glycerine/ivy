@@ -1,157 +1,147 @@
 package int2
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [int2Util.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Interpolation engine.]
-
-  Synopsis    [Various utilities.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 1, 2013.]
-
-  Revision    [$Id: int2Util.c,v 1.00 2013/12/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "int2Int.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Int2_ManComputeCoPres returns CO indices needed by the SOP. A nil SOP
+// denotes the initial-state cube, which uses the first register output.
 func Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {
-    var vCoPres, vMap *Vec_Int_t;
-    vCoPres = Vec_IntAlloc( 100 );
-    if vSop == nil {
-        Vec_IntPush( vCoPres, 0 );
-    } else {
-        var i, k, Limit int32;
-        vMap = Vec_IntStart( nRegs );
-        // inlining of macro Vec_IntForEachEntryStart
-        for  i = 1; (i < Vec_IntSize(vSop)) && (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {
-            for  k = 0; k < Limit; k++  {
-                i++;
-                assert(Vec_IntEntry(vSop, i + k) < 2 * nRegs, "Vec_IntEntry(vSop, i + k) < 2 * nRegs");
-                Vec_IntWriteEntry( vMap, Abc_Lit2Var(Vec_IntEntry(vSop, i + k)), 1 );
-            }
-        }
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vMap)) && (((Limit) = Vec_IntEntry(vMap, i)), 1); i++  {
-            if Limit != 0 {
-                Vec_IntPush( vCoPres, i+1 ); }
-        }
-        Vec_IntFree( vMap );
-    }
-    return vCoPres;
+	if nRegs < 0 {
+		panic("int2: negative register count")
+	}
+	out := vec.Vec_IntAlloc(100)
+	if vSop == nil {
+		if nRegs > 0 {
+			vec.Vec_IntPush(out, 0)
+		}
+		return out
+	}
+	used := make([]bool, nRegs)
+	for pos := 1; pos < vec.Vec_IntSize(vSop); {
+		count := int(vec.Vec_IntEntry(vSop, pos))
+		pos++
+		if count < 0 || pos+count > vec.Vec_IntSize(vSop) {
+			vec.Vec_IntFree(out)
+			panic("int2: malformed SOP cube")
+		}
+		for k := 0; k < count; k++ {
+			lit := vec.Vec_IntEntry(vSop, pos+k)
+			reg := lit >> 1
+			if reg < 0 || reg >= nRegs {
+				vec.Vec_IntFree(out)
+				panic("int2: SOP literal is outside register range")
+			}
+			used[reg] = true
+		}
+		pos += count
+	}
+	for reg, yes := range used {
+		if yes {
+			vec.Vec_IntPush(out, int32(reg+1))
+		}
+	}
+	return out
 }
 
-func Int2_ManCollectInternal_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(pObj), vNodes );
-    Int2_ManCollectInternal_rec( p, Gia_ObjFanin1(pObj), vNodes );
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
+func Int2_ManCollectInternal_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t, seen map[int32]bool) {
+	id := gia.Gia_ObjId(p, obj)
+	if seen[id] {
+		return
+	}
+	seen[id] = true
+	if gia.Gia_ObjIsCi(obj) != 0 {
+		return
+	}
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		panic("int2: expected a CI or AND in support cone")
+	}
+	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin0(obj), nodes, seen)
+	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin1(obj), nodes, seen)
+	vec.Vec_IntPush(nodes, id)
 }
+
 func Int2_ManCollectInternal(p *Gia_Man_t, vCoPres *Vec_Int_t) *Vec_Int_t {
-    var vNodes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, Entry int32;
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent(p, Gia_ManConst0(p));
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        Gia_ObjSetTravIdCurrent(p, pObj);
-    }
-    vNodes = Vec_IntAlloc( 1000 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCoPres)) && (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {
-        Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(Gia_ManCo(p, Entry)), vNodes );
-    }
-    return vNodes;
+	if p == nil || vCoPres == nil {
+		panic("int2: nil graph or CO set")
+	}
+	nodes := vec.Vec_IntAlloc(1000)
+	seen := make(map[int32]bool, gia.Gia_ManObjNum(p))
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		seen[gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))] = true
+	}
+	seen[gia.Gia_ObjId(p, gia.Gia_ManConst0(p))] = true
+	for i := 0; i < vec.Vec_IntSize(vCoPres); i++ {
+		coID := vec.Vec_IntEntry(vCoPres, i)
+		if coID < 0 || coID >= gia.Gia_ManCoNum(p) {
+			vec.Vec_IntFree(nodes)
+			panic("int2: CO index outside graph")
+		}
+		co := gia.Gia_ManCo(p, coID)
+		Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin0(co), nodes, seen)
+	}
+	return nodes
 }
+
+// Int2_ManProbToGia builds a single-output graph for a prioritized cube SOP.
 func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
-    var vCoPres, vNodes *Vec_Int_t;
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, k, Entry, Limit int32;
-    var Lit, Cube, Sop int32;
-    assert(Gia_ManPoNum(p) == 1, "Gia_ManPoNum(p) == 1");
-    // collect COs and ANDs
-    vCoPres = Int2_ManComputeCoPres( vSop, Gia_ManRegNum(p) );
-    vNodes = Int2_ManCollectInternal( p, vCoPres );
-    // create new manager
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vNodes)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {
-        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCoPres)) && (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {
-        pObj = Gia_ManCo(p, Entry);
-        pObj.Value = Gia_ObjFanin0Copy( pObj );
-    }
-    // create additional cubes
-    Sop = 0;
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(vSop)) && (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {
-        Cube = 1;
-        for  k = 0; k < Limit; k++  {
-            i++;
-            Lit = Vec_IntEntry( vSop, i + k );
-            pObj = Gia_ManRi( p, Abc_Lit2Var(Lit) );
-            Cube = Gia_ManHashAnd( pNew, Cube, Abc_LitNotCond(pObj.Value, Abc_LitIsCompl(Lit)) );
-        }
-        Sop = Gia_ManHashOr( pNew, Sop, Cube );
-    }
-    Gia_ManAppendCo( pNew, Sop );
-    Gia_ManHashStop( pNew );
-    // cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
+	if p == nil || gia.Gia_ManPoNum(p) != 1 {
+		panic("int2: expected a non-nil single-output graph")
+	}
+	nRegs := gia.Gia_ManRegNum(p)
+	coPres := Int2_ManComputeCoPres(vSop, nRegs)
+	nodes := Int2_ManCollectInternal(p, coPres)
+	defer vec.Vec_IntFree(coPres)
+	defer vec.Vec_IntFree(nodes)
+
+	out := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
+	name, spec := p.Identity()
+	out.SetIdentity(name, spec)
+	gia.Gia_ObjSetValue(gia.Gia_ManConst0(p), 0)
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		gia.Gia_ObjSetValue(gia.Gia_ManCi(p, i), gia.Gia_ManAppendCi(out))
+	}
+	gia.Gia_ManHashAlloc(out)
+	for i := 0; i < vec.Vec_IntSize(nodes); i++ {
+		obj := gia.Gia_ManObj(p, vec.Vec_IntEntry(nodes, i))
+		lit := gia.Gia_ManHashAnd(out, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+		gia.Gia_ObjSetValue(obj, lit)
+	}
+	for i := 0; i < vec.Vec_IntSize(coPres); i++ {
+		co := gia.Gia_ManCo(p, vec.Vec_IntEntry(coPres, i))
+		gia.Gia_ObjSetValue(co, gia.Gia_ObjFanin0Copy(co))
+	}
+	sop := int32(0)
+	if vSop != nil {
+		for pos := 1; pos < vec.Vec_IntSize(vSop); {
+			count := int(vec.Vec_IntEntry(vSop, pos))
+			pos++
+			if count < 0 || pos+count > vec.Vec_IntSize(vSop) {
+				gia.Gia_ManHashStop(out)
+				gia.Gia_ManStop(out)
+				panic("int2: malformed SOP cube")
+			}
+			cube := int32(1)
+			for k := 0; k < count; k++ {
+				lit := vec.Vec_IntEntry(vSop, pos+k)
+				reg := lit >> 1
+				if reg < 0 || reg >= nRegs {
+					gia.Gia_ManHashStop(out)
+					gia.Gia_ManStop(out)
+					panic("int2: SOP literal is outside register range")
+				}
+				ro := gia.Gia_ManRi(p, reg)
+				mapped := gia.Gia_ObjFanin0Copy(ro) ^ (lit & 1)
+				cube = gia.Gia_ManHashAnd(out, cube, mapped)
+			}
+			pos += count
+			sop = gia.Gia_ManHashOr(out, sop, cube)
+		}
+	}
+	gia.Gia_ManAppendCo(out, sop)
+	gia.Gia_ManHashStop(out)
+	clean := gia.Gia_ManCleanup(out)
+	gia.Gia_ManStop(out)
+	return clean
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

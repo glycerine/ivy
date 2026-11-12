@@ -106,9 +106,9 @@ type Gia_ManSim_t struct {
 	vCis2Ids *Vec_Int_t
 	vConsts  *Vec_Int_t
 	// simulation information
-	pDataSim    *uint32 // simulation data
-	pDataSimCis *uint32 // simulation data for CIs
-	pDataSimCos *uint32 // simulation data for COs
+	pDataSim    []uint32 // simulation data
+	pDataSimCis []uint32 // simulation data for CIs
+	pDataSimCos []uint32 // simulation data for COs
 }
 
 type Jf_Par_t struct {
@@ -165,8 +165,8 @@ type Jf_Par_t struct {
 	MapAreaF           float32
 	MapDelayTarget     float32
 	Epsilon            float32
-	pTimesArr          *float32
-	pTimesReq          *float32
+	pTimesArr          []float32
+	pTimesReq          []float32
 }
 
 // AIG construction

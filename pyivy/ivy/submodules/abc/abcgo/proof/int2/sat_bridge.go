@@ -51,6 +51,18 @@ func sat_solver_solve(s *sat_solver, assumptions []int32, conflicts, propagation
 }
 
 func sat_solver_addclause(s *sat_solver, literals []int32) int32 {
+	maxVariable := int32(-1)
+	for _, literal := range literals {
+		if literal < 0 {
+			panic("int2: negative SAT literal")
+		}
+		if variable := literal >> 1; variable > maxVariable {
+			maxVariable = variable
+		}
+	}
+	if maxVariable >= 0 {
+		sat_solver_setnvars(s, maxVariable+1)
+	}
 	clause := make([]bsat.Literal, len(literals))
 	for i, literal := range literals {
 		clause[i] = bsat.Literal(literal)

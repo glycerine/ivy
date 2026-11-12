@@ -125,12 +125,6 @@ func Ivy_Multi_rec(p *Ivy_Man_t, args []*Ivy_Obj_t, n int32, typ Ivy_Type_t) *Iv
 	half := n / 2
 	return Ivy_Oper(p, Ivy_Multi_rec(p, args, half, typ), Ivy_Multi_rec(p, args[half:], n-half, typ), typ)
 }
-func Ivy_Multi(p *Ivy_Man_t, args []*Ivy_Obj_t, n int32, typ Ivy_Type_t) *Ivy_Obj_t {
-	if typ != IVY_AND && typ != IVY_EXOR {
-		panic("invalid multi-input type")
-	}
-	return Ivy_Multi_rec(p, args, n, typ)
-}
 func Ivy_Miter(p *Ivy_Man_t, pairs *[]*Ivy_Obj_t) *Ivy_Obj_t {
 	if pairs == nil || len(*pairs) == 0 || len(*pairs)%2 != 0 {
 		panic("miter requires nonempty pairs")

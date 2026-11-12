@@ -2,1072 +2,662 @@ package scl
 
 import (
 	"fmt"
+	"math"
+	"sort"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [sclUpsize.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Standard-cell library representation.]
-
-  Synopsis    [Selective increase of gate sizes.]
-
-  Author      [Alan Mishchenko, Niklas Een]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - August 24, 2012.]
-
-  Revision    [$Id: sclUpsize.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sclSize.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Collect TFO of nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindTFO_rec(pObj *Abc_Obj_t, vNodes *Vec_Int_t, vCos *Vec_Int_t) {
-    var pNext *Abc_Obj_t;
-    var i int32;
-    if Abc_NodeIsTravIdCurrent( pObj ) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pObj );
-    if Abc_ObjIsCo(pObj) {
-        Vec_IntPush( vCos, Abc_ObjId(pObj) );
-        return;
-    }
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        Abc_SclFindTFO_rec( pNext, vNodes, vCos );
-    }
-    if Abc_ObjFaninNum(pObj) > 0 {
-        Vec_IntPush( vNodes, Abc_ObjId(pObj) ); }
+// MutableTimingNetwork identifies fanins by pin index, retaining duplicate-edge
+// multiplicity when tentative bypass transformations are undone.
+type MutableTimingNetwork interface {
+	TimingNetwork
+	SclPatchFanin(node, pin, newID int) error
+	SclDeleteNode(id int) error
 }
-func Abc_SclFindTFO(p *Abc_Ntk_t, vPath *Vec_Int_t) *Vec_Int_t {
-    var vNodes, vCos *Vec_Int_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Vec_IntSize(vPath) > 0, "Vec_IntSize(vPath) > 0");
-    vCos = Vec_IntAlloc( 100 );
-    vNodes = Vec_IntAlloc( 100 );
-    // collect nodes in the TFO
-    Abc_NtkIncrementTravId( p ); 
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPath) && (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vPath,i))), 1); i++  {         if (pObj) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            if Abc_ObjIsNode(pFanin) {
-                Abc_SclFindTFO_rec( pFanin, vNodes, vCos ); }
-        } }
-    }
-    // reverse order
-    Vec_IntReverseOrder( vNodes );
-//    Vec_IntSort( vNodes, 0 );
-//Vec_IntPrint( vNodes );
-//Vec_IntPrint( vCos );
-    Vec_IntAppend( vNodes, vCos );
-    Vec_IntFree( vCos );
-    return vNodes;
+type PhasedTimingNetwork interface {
+	SclHasPhases() bool
+	SclToggleFaninPhase(node, pin int) error
+}
+type BypassEdit struct {
+	Fanout, Pin, Driver, Buffer int
+	Inverted                    bool
+}
+type UpsizeState struct {
+	Edits    []BypassEdit
+	Critical map[int]bool
+}
+type upsizeCandidate struct {
+	id, cell, fanout, driver, pin int
+	gain                          float32
+	invert                        bool
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect near-critical COs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindCriticalCoWindow(p *SC_Man, Window int32) *Vec_Int_t {
-    var fMaxArr float32  = Abc_SclReadMaxDelay( p ) * (100.0 - Window) / 100.0;
-    var vPivots *Vec_Int_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    vPivots = Vec_IntAlloc( 100 );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(p.pNtk)) && (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {
-        if Abc_SclObjTimeMax(p, pObj) >= fMaxArr {
-            Vec_IntPush( vPivots, Abc_ObjId(pObj) ); }
-    }
-    assert(Vec_IntSize(vPivots) > 0, "Vec_IntSize(vPivots) > 0");
-    return vPivots;
+func Abc_SclFindTFO_rec(net TimingNetwork, id int, nodes, outputs *[]int, seen map[int]bool) {
+	if seen[id] {
+		return
+	}
+	seen[id] = true
+	for _, out := range net.SclOutputs() {
+		if out == id {
+			*outputs = append(*outputs, id)
+			return
+		}
+	}
+	for _, fan := range net.SclFanouts(id) {
+		Abc_SclFindTFO_rec(net, fan, nodes, outputs, seen)
+	}
+	if len(net.SclFanins(id)) > 0 {
+		*nodes = append(*nodes, id)
+	}
+}
+func Abc_SclFindTFO(net TimingNetwork, path []int) []int {
+	var nodes, outputs []int
+	seen := map[int]bool{}
+	for _, id := range path {
+		// A path node driven only by a CI must still start its own TFO; otherwise
+		// the no-departure driver never observes its improved output arrival.
+		Abc_SclFindTFO_rec(net, id, &nodes, &outputs, seen)
+		for _, fanin := range net.SclFanins(id) {
+			if net.SclIsNode(fanin) {
+				Abc_SclFindTFO_rec(net, fanin, &nodes, &outputs, seen)
+			}
+		}
+	}
+	for i, j := 0, len(nodes)-1; i < j; i, j = i+1, j-1 {
+		nodes[i], nodes[j] = nodes[j], nodes[i]
+	}
+	return append(nodes, outputs...)
+}
+func Abc_SclFindCriticalCoWindow(p *SC_Man, window int) []int {
+	threshold := Abc_SclReadMaxDelay(p) * (100 - float32(window)) / 100
+	var ids []int
+	for _, id := range p.Network.SclOutputs() {
+		if Abc_SclObjTimeMax(p, id) >= threshold {
+			ids = append(ids, id)
+		}
+	}
+	return ids
+}
+func Abc_SclFindCriticalNodeWindow_rec(p *SC_Man, id int, path *[]int, slack float32, departure bool, seen map[int]bool) {
+	if seen[id] || !p.Network.SclIsNode(id) {
+		return
+	}
+	seen[id] = true
+	arrival := Abc_SclGetMaxDelayNodeFanins(p, id)
+	if departure {
+		arrival = Abc_SclObjGetSlack(p, id, p.MaxDelay)
+	}
+	arrival = max(arrival, 0)
+	for _, fanin := range p.Network.SclFanins(id) {
+		if !p.Network.SclIsNode(fanin) || len(p.Network.SclFanins(fanin)) == 0 {
+			continue
+		}
+		remaining := slack - (arrival - Abc_SclObjTimeMax(p, fanin))
+		if departure {
+			remaining = slack - (Abc_SclObjGetSlack(p, fanin, p.MaxDelay) - arrival)
+		}
+		if remaining >= 0 {
+			Abc_SclFindCriticalNodeWindow_rec(p, fanin, path, remaining, departure, seen)
+		}
+	}
+	if len(p.Network.SclFanins(id)) > 0 && !p.Network.SclIsBarrier(id) {
+		*path = append(*path, id)
+	}
+}
+func Abc_SclFindCriticalNodeWindow(p *SC_Man, outputs []int, window int, departure bool) ([]int, map[int]bool) {
+	delay := Abc_SclReadMaxDelay(p)
+	slack := delay * float32(window) / 100
+	seen, critical := map[int]bool{}, map[int]bool{}
+	var path []int
+	for _, id := range outputs {
+		remaining := slack - (delay - Abc_SclObjTimeMax(p, id))
+		if remaining >= 0 {
+			fanin := p.Network.SclFanins(id)
+			if len(fanin) > 0 {
+				Abc_SclFindCriticalNodeWindow_rec(p, fanin[0], &path, remaining, departure, seen)
+			}
+		}
+		critical[id] = true
+	}
+	for id := range seen {
+		critical[id] = true
+	}
+	return path, critical
+}
+func Abc_SclUnmarkCriticalNodeWindow(critical map[int]bool, path []int) {
+	for _, id := range path {
+		delete(critical, id)
+	}
+}
+func Abc_SclCountNearCriticalNodes(p *SC_Man) int {
+	path, _ := Abc_SclFindCriticalNodeWindow(p, Abc_SclFindCriticalCoWindow(p, 5), 5, false)
+	return len(path)
+}
+func Abc_SclFindNodesToUpdate(net TimingNetwork, pivot int, critical map[int]bool, extra int) (nodes, evals []int, err error) {
+	if !net.SclIsNode(pivot) || !critical[pivot] {
+		return nil, nil, fmt.Errorf("upsizing pivot %d is not critical", pivot)
+	}
+	inputs := map[int]bool{}
+	for _, id := range net.SclInputs() {
+		inputs[id] = true
+	}
+	set := map[int]bool{pivot: true}
+	if extra >= 0 {
+		set[extra] = true
+	}
+	for _, id := range net.SclFanins(pivot) {
+		if inputs[id] || len(net.SclFanins(id)) > 0 {
+			set[id] = true
+		}
+	}
+	for _, id := range net.SclFanouts(pivot) {
+		if !net.SclIsNode(id) || !critical[id] {
+			continue
+		}
+		set[id] = true
+		for _, next := range net.SclFanouts(id) {
+			if net.SclIsNode(next) && critical[next] {
+				set[next] = true
+			}
+		}
+	}
+	for id := range set {
+		nodes = append(nodes, id)
+	}
+	sort.Ints(nodes)
+	for _, id := range nodes {
+		for _, fan := range net.SclFanouts(id) {
+			if critical[fan] && !set[fan] {
+				evals = append(evals, id)
+				break
+			}
+		}
+	}
+	if len(evals) == 0 {
+		return nil, nil, fmt.Errorf("upsizing window has no critical boundary at %d", pivot)
+	}
+	return nodes, evals, nil
+}
+func Abc_SclFindBestCell(p *SC_Man, id int, recalculate, evals []int, notches, gap int, gainBest *float32) (int, error) {
+	old := Abc_SclObjCell(p, id)
+	Abc_SclConeStore(p, recalculate)
+	Abc_SclEvalStore(p, evals)
+	Abc_SclLoadStore(p, id)
+	restore := func() { Abc_SclObjSetCell(p, id, old); Abc_SclLoadRestore(p, id); Abc_SclConeRestore(p, recalculate) }
+	best := -1
+	gain := -float32(gap)
+	noChange := 0
+	for c, k := old, 0; ; k++ {
+		if c != old {
+			if k > notches {
+				break
+			}
+			Abc_SclObjSetCell(p, id, c)
+			if e := Abc_SclUpdateLoad(p, id, old, c); e != nil {
+				restore()
+				return -1, e
+			}
+			if e := Abc_SclTimeCone(p, recalculate); e != nil {
+				restore()
+				return -1, e
+			}
+			Abc_SclObjSetCell(p, id, old)
+			Abc_SclLoadRestore(p, id)
+			g := Abc_SclEvalPerform(p, evals)
+			if g > gain {
+				gain = g
+				best = c.ID
+				noChange = 1
+			} else if noChange > 0 {
+				noChange++
+			}
+			if noChange == 4 {
+				break
+			}
+		}
+		c = c.Next
+		if c == nil || c == old {
+			break
+		}
+	}
+	restore()
+	*gainBest = gain
+	return best, nil
+}
+func Abc_SclObjCheckMarkedFanFans(net TimingNetwork, id int, marked map[int]bool) bool {
+	if marked[id] {
+		return true
+	}
+	for _, n := range net.SclFanins(id) {
+		if marked[n] {
+			return true
+		}
+	}
+	for _, n := range net.SclFanouts(id) {
+		if marked[n] {
+			return true
+		}
+	}
+	return false
+}
+func Abc_SclObjMarkFanFans(id int, marked map[int]bool) { marked[id] = true }
+func Abc_SclFindUpsizes(p *SC_Man, path []int, state *UpsizeState, ratio, notches, iteration, gap int, conservative bool) (int, error) {
+	if state == nil {
+		return 0, fmt.Errorf("upsizing requires path state")
+	}
+	var candidates []upsizeCandidate
+	for _, id := range path {
+		if last := p.NodeIteration[id]; last >= 0 && int(last)+5 > iteration {
+			continue
+		}
+		nodes, evals, e := Abc_SclFindNodesToUpdate(p.Network, id, state.Critical, -1)
+		if e != nil {
+			return 0, e
+		}
+		var gain float32
+		cell, e := Abc_SclFindBestCell(p, id, nodes, evals, notches, gap, &gain)
+		if e != nil {
+			return 0, e
+		}
+		if cell >= 0 {
+			if gain <= 0 {
+				return 0, fmt.Errorf("upsizing candidate %d has nonpositive gain %g", id, gain)
+			}
+			candidates = append(candidates, upsizeCandidate{id: id, cell: cell, gain: gain})
+		}
+	}
+	sort.SliceStable(candidates, func(i, j int) bool { return candidates[i].gain > candidates[j].gain })
+	limit := min(len(candidates), max(int(.01*float64(ratio)*float64(len(path))), 1))
+	count := 0
+	marked := map[int]bool{}
+	for _, c := range candidates {
+		if Abc_SclObjCheckMarkedFanFans(p.Network, c.id, marked) {
+			continue
+		}
+		Abc_SclObjMarkFanFans(c.id, marked)
+		old, next := Abc_SclObjCell(p, c.id), p.Lib.Cells[c.cell]
+		if e := Abc_SclUpdateLoad(p, c.id, old, next); e != nil {
+			return count, e
+		}
+		Abc_SclObjSetCell(p, c.id, next)
+		p.SumArea += next.Area - old.Area
+		p.Updates = append(p.Updates, int32(c.id), int32(c.cell))
+		Abc_SclTimeIncInsert(p, c.id)
+		p.NodeIteration[c.id] = int32(iteration)
+		count++
+		if count == limit {
+			break
+		}
+	}
+	return count, nil
+}
+func Abc_SclApplyUpdateToBest(best, gates []int32, updates *[]int32) error {
+	if len(*updates)%2 != 0 {
+		return fmt.Errorf("invalid cell update pairs")
+	}
+	for i := 0; i < len(*updates); i += 2 {
+		id := int((*updates)[i])
+		if id < 0 || id >= len(best) {
+			return fmt.Errorf("cell update ID out of range")
+		}
+		best[id] = (*updates)[i+1]
+	}
+	*updates = nil
+	for i, v := range best {
+		if i >= len(gates) || gates[i] != v {
+			return fmt.Errorf("best mapping inconsistent at %d", i)
+		}
+	}
+	return nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect near-critical internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindCriticalNodeWindow_rec(p *SC_Man, pObj *Abc_Obj_t, vPath *Vec_Int_t, fSlack float32, fDept int32) {
-    var pNext *Abc_Obj_t;
-    var fArrMax, fSlackFan float32;
-    var i int32;
-    if Abc_ObjIsCi(pObj) {
-        return; }
-    if Abc_NodeIsTravIdCurrent( pObj ) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pObj );
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    // compute the max arrival time of the fanins
-    if fDept != 0 {
-//        fArrMax = p->pSlack[Abc_ObjId(pObj)];
-        fArrMax = Abc_SclObjGetSlack(p, pObj, p.MaxDelay);
-    } else {
-        fArrMax = Abc_SclGetMaxDelayNodeFanins( p, pObj ); }
-//    assert( fArrMax >= -1 );
-    fArrMax = Abc_MaxFloat( fArrMax, 0 );
-    // traverse all fanins whose arrival times are within a window
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        if Abc_ObjIsCi(pNext) || Abc_ObjFaninNum(pNext) == 0 {
-            continue; }
-        assert(Abc_ObjIsNode(pNext), "Abc_ObjIsNode(pNext)");
-        if fDept != 0 {
-//            fSlackFan = fSlack - (p->pSlack[Abc_ObjId(pNext)] - fArrMax);
-            fSlackFan = fSlack - (Abc_SclObjGetSlack(p, pNext, p.MaxDelay) - fArrMax);
-        } else {
-            fSlackFan = fSlack - (fArrMax - Abc_SclObjTimeMax(p, pNext)); }
-        if fSlackFan >= 0 {
-            Abc_SclFindCriticalNodeWindow_rec( p, pNext, vPath, fSlackFan, fDept ); }
-    }
-    if Abc_ObjFaninNum(pObj) > 0 {
-        Vec_IntPush( vPath, Abc_ObjId(pObj) ); }
+func cellIsInverter(p *SC_Man, id int) bool {
+	c := Abc_SclObjCell(p, id)
+	return c != nil && c.Inputs == 1 && c.Outputs == 1 && len(SC_CellFunc(c)) == 1 && SC_CellFunc(c)[0] == 0x5555555555555555
 }
-func Abc_SclFindCriticalNodeWindow(p *SC_Man, vPathCos *Vec_Int_t, Window int32, fDept int32) *Vec_Int_t {
-    var fMaxArr float32  = Abc_SclReadMaxDelay( p );
-    var fSlackMax float32  = fMaxArr * Window / 100.0;
-    var vPath *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pObj *Abc_Obj_t;
-    var i int32;
-    Abc_NtkIncrementTravId( p.pNtk ); 
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPathCos) && (((pObj) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPathCos,i))), 1); i++  {         if (pObj) == nil {} else {
-        var fSlackThis float32  = fSlackMax - (fMaxArr - Abc_SclObjTimeMax(p, pObj));
-        if fSlackThis >= 0 {
-            Abc_SclFindCriticalNodeWindow_rec( p, Abc_ObjFanin0(pObj), vPath, fSlackThis, fDept ); }
-    }
-    }
-    // label critical nodes
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPathCos) && (((pObj) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPathCos,i))), 1); i++  {         if (pObj) == nil {} else {
-        pObj.fMarkA = 1; }
-    }
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPath) && (((pObj) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPath,i))), 1); i++  {         if (pObj) == nil {} else {
-        pObj.fMarkA = 1; }
-    }
-    return vPath;  
+func hasPhases(net TimingNetwork) bool {
+	p, ok := net.(PhasedTimingNetwork)
+	return ok && p.SclHasPhases()
 }
-func Abc_SclUnmarkCriticalNodeWindow(p *SC_Man, vPath *Vec_Int_t) {
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPath) && (((pObj) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPath,i))), 1); i++  {         if (pObj) == nil {} else {
-        pObj.fMarkA = 0; }
-    }
+func Abc_SclFindBypasses(p *SC_Man, path []int, state *UpsizeState, ratio, notches, iteration, gap int, verbose bool) (int, error) {
+	if state == nil {
+		return 0, fmt.Errorf("bypass requires path state")
+	}
+	net, ok := p.Network.(MutableTimingNetwork)
+	if !ok {
+		return 0, fmt.Errorf("buffer bypass requires mutable standard-cell topology")
+	}
+	var candidates []upsizeCandidate
+	for _, buffer := range path {
+		fans := net.SclFanins(buffer)
+		if len(fans) != 1 || !net.SclIsNode(fans[0]) {
+			continue
+		}
+		driver := fans[0]
+		extra := -1
+		invert := hasPhases(net) && cellIsInverter(p, buffer)
+		if !hasPhases(net) && cellIsInverter(p, buffer) {
+			if !cellIsInverter(p, driver) {
+				continue
+			}
+			parents := net.SclFanins(driver)
+			if len(parents) != 1 || !net.SclIsNode(parents[0]) {
+				continue
+			}
+			driver = parents[0]
+			extra = buffer
+		}
+		nodes, evals, e := Abc_SclFindNodesToUpdate(net, driver, state.Critical, extra)
+		if e != nil {
+			return 0, e
+		}
+		best := upsizeCandidate{id: buffer, cell: -1, gain: 0, driver: driver, invert: invert}
+		for _, fanout := range append([]int(nil), net.SclFanouts(buffer)...) {
+			if !net.SclIsNode(fanout) || !state.Critical[fanout] {
+				continue
+			}
+			pin := -1
+			duplicate := false
+			for i, fanin := range net.SclFanins(fanout) {
+				if fanin == driver || extra >= 0 && fanin == extra {
+					duplicate = true
+				}
+				if fanin == buffer {
+					pin = i
+				}
+			}
+			if duplicate || pin < 0 {
+				continue
+			}
+			Abc_SclLoadStore3(p, buffer)
+			if e = Abc_SclUpdateLoadSplit(p, buffer, fanout); e != nil {
+				return 0, e
+			}
+			if e = net.SclPatchFanin(fanout, pin, driver); e != nil {
+				Abc_SclLoadRestore3(p, buffer)
+				return 0, e
+			}
+			var gain float32
+			cell, trialErr := Abc_SclFindBestCell(p, driver, nodes, evals, notches, gap, &gain)
+			Abc_SclLoadRestore3(p, buffer)
+			undoErr := net.SclPatchFanin(fanout, pin, buffer)
+			if trialErr != nil {
+				return 0, trialErr
+			}
+			if undoErr != nil {
+				return 0, undoErr
+			}
+			if cell >= 0 && gain > best.gain {
+				best.cell = cell
+				best.gain = gain
+				best.fanout = fanout
+				best.pin = pin
+			}
+		}
+		if best.cell >= 0 {
+			candidates = append(candidates, best)
+		}
+	}
+	sort.SliceStable(candidates, func(i, j int) bool { return candidates[i].gain > candidates[j].gain })
+	marked := map[int]bool{}
+	count := 0
+	for _, c := range candidates {
+		if marked[c.id] || marked[c.fanout] || marked[c.driver] {
+			continue
+		}
+		marked[c.id], marked[c.fanout], marked[c.driver] = true, true, true
+		if e := Abc_SclUpdateLoadSplit(p, c.id, c.fanout); e != nil {
+			return count, e
+		}
+		Abc_SclAddWireLoad(p, c.id, 1)
+		Abc_SclAddWireLoad(p, c.driver, 1)
+		if e := net.SclPatchFanin(c.fanout, c.pin, c.driver); e != nil {
+			return count, e
+		}
+		Abc_SclAddWireLoad(p, c.id, 0)
+		Abc_SclAddWireLoad(p, c.driver, 0)
+		if c.invert {
+			if e := net.(PhasedTimingNetwork).SclToggleFaninPhase(c.fanout, c.pin); e != nil {
+				_ = net.SclPatchFanin(c.fanout, c.pin, c.id)
+				return count, e
+			}
+		}
+		state.Edits = append(state.Edits, BypassEdit{Fanout: c.fanout, Pin: c.pin, Driver: c.driver, Buffer: c.id, Inverted: c.invert})
+		if e := Abc_SclTimeIncUpdateLevel(p, c.fanout); e != nil {
+			return count, e
+		}
+		old, next := Abc_SclObjCell(p, c.driver), p.Lib.Cells[c.cell]
+		if e := Abc_SclUpdateLoad(p, c.driver, old, next); e != nil {
+			return count, e
+		}
+		Abc_SclObjSetCell(p, c.driver, next)
+		p.SumArea += next.Area - old.Area
+		p.Updates = append(p.Updates, int32(c.driver), int32(c.cell))
+		for _, id := range []int{c.id, c.fanout, c.driver} {
+			Abc_SclTimeIncInsert(p, id)
+			p.NodeIteration[id] = -1
+		}
+		if verbose {
+			fmt.Fprintf(p.Output, "Node %d redirect fanout %d to driver %d; gain %.1f ps, gate %s -> %s\n", c.id, c.fanout, c.driver, c.gain, old.Name, next.Name)
+		}
+		count++
+	}
+	return count, nil
 }
-func Abc_SclCountNearCriticalNodes(p *SC_Man) int32 {
-    var RetValue int32;
-    var vPathPos, vPathNodes *Vec_Int_t;
-    vPathPos   = Abc_SclFindCriticalCoWindow( p, 5 );
-    vPathNodes = Abc_SclFindCriticalNodeWindow( p, vPathPos, 5, 0 );
-    RetValue   = Vec_IntSize(vPathNodes);
-    Abc_SclUnmarkCriticalNodeWindow( p, vPathNodes );
-    Abc_SclUnmarkCriticalNodeWindow( p, vPathPos );
-    Vec_IntFree( vPathPos );
-    Vec_IntFree( vPathNodes );
-    return RetValue;
+func Abc_SclUndoRecentChanges(p *SC_Man, edits []BypassEdit) error {
+	if len(edits) == 0 {
+		return nil
+	}
+	net, ok := p.Network.(MutableTimingNetwork)
+	if !ok {
+		return fmt.Errorf("undo bypass requires mutable topology")
+	}
+	for i := len(edits) - 1; i >= 0; i-- {
+		edit := edits[i]
+		if e := net.SclPatchFanin(edit.Fanout, edit.Pin, edit.Buffer); e != nil {
+			return e
+		}
+		if edit.Inverted {
+			if e := net.(PhasedTimingNetwork).SclToggleFaninPhase(edit.Fanout, edit.Pin); e != nil {
+				return e
+			}
+		}
+	}
+	return p.rebuildOrder()
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Find the array of nodes to be updated.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindNodesToUpdate(pPivot *Abc_Obj_t, pvNodes **Vec_Int_t, pvEvals **Vec_Int_t, pExtra *Abc_Obj_t) {
-    var p *Abc_Ntk_t  = Abc_ObjNtk(pPivot);
-    var pObj, pNext, pNext2 *Abc_Obj_t;
-    var vNodes *Vec_Int_t  = *pvNodes;
-    var vEvals *Vec_Int_t  = *pvEvals;
-    var i, k int32;
-    assert(Abc_ObjIsNode(pPivot), "Abc_ObjIsNode(pPivot)");
-    assert(pPivot.fMarkA, "pPivot.fMarkA");
-    // collect fanins, node, and fanouts
-    Vec_IntClear( vNodes );
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pPivot)) && (((pNext) = Abc_ObjFanin(pPivot, i)), 1); i++  {
-//        if ( Abc_ObjIsNode(pNext) && Abc_ObjFaninNum(pNext) > 0 )
-        if Abc_ObjIsCi(pNext) || Abc_ObjFaninNum(pNext) > 0 {
-            Vec_IntPush( vNodes, Abc_ObjId(pNext) ); }
-    }
-    Vec_IntPush( vNodes, Abc_ObjId(pPivot) );
-    if pExtra != nil {
-        Vec_IntPush( vNodes, Abc_ObjId(pExtra) ); }
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pPivot)) && (((pNext) = Abc_ObjFanout(pPivot, i)), 1); i++  {
-        if Abc_ObjIsNode(pNext) && pNext.fMarkA {
-            Vec_IntPush( vNodes, Abc_ObjId(pNext) );
-            // inlining of macro Abc_ObjForEachFanout
-            for  k = 0; (k < Abc_ObjFanoutNum(pNext)) && (((pNext2) = Abc_ObjFanout(pNext, k)), 1); k++  {
-                if Abc_ObjIsNode(pNext2) && pNext2.fMarkA {
-                    Vec_IntPush( vNodes, Abc_ObjId(pNext2) ); }
-            }
-        }
-    }
-    Vec_IntUniqify( vNodes );
-    // label nodes
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        assert(pObj.fMarkB == 0, "pObj.fMarkB == 0");
-        pObj.fMarkB = 1;
-    }
-    }
-    // collect nodes visible from the critical paths
-    Vec_IntClear( vEvals );
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            if pNext.fMarkA && !pNext.fMarkB {
-//            if ( !pNext->fMarkB )
-            
-                assert(pObj.fMarkB, "pObj.fMarkB");
-                Vec_IntPush( vEvals, Abc_ObjId(pObj) );
-                break;
-            }
-        } }
-    }
-    assert(Vec_IntSize(vEvals) > 0, "Vec_IntSize(vEvals) > 0");
-    // label nodes
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        pObj.fMarkB = 0; }
-    }
+func Abc_SclUpsizeRemoveDangling(p *SC_Man, net TimingNetwork) error {
+	mutable, ok := net.(MutableTimingNetwork)
+	if !ok {
+		return fmt.Errorf("dangling-node cleanup requires mutable topology")
+	}
+	for {
+		changed := false
+		for _, id := range append([]int(nil), net.SclObjectIDs()...) {
+			if net.SclIsNode(id) && !net.SclIsBarrier(id) && len(net.SclFanouts(id)) == 0 {
+				cell := Abc_SclObjCell(p, id)
+				if cell != nil {
+					p.SumArea -= cell.Area
+				}
+				if e := mutable.SclDeleteNode(id); e != nil {
+					return e
+				}
+				p.Mapping.GateIDs[id] = -1
+				changed = true
+			}
+		}
+		if !changed {
+			break
+		}
+	}
+	return p.rebuildOrder()
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindBestCell(p *SC_Man, pObj *Abc_Obj_t, vRecalcs *Vec_Int_t, vEvals *Vec_Int_t, Notches int32, DelayGap int32, pGainBest *float32) int32 {
-    var pCellOld, pCellNew *SC_Cell;
-    var dGain, dGainBest float32;
-    var k, gateBest, NoChange int32;
-    // save old gate, timing, fanin load
-    pCellOld = Abc_SclObjCell( pObj );
-    Abc_SclConeStore( p, vRecalcs );
-    Abc_SclEvalStore( p, vEvals );
-    Abc_SclLoadStore( p, pObj );
-    // try different gate sizes for this node
-    gateBest = -1;
-    dGainBest = -DelayGap;
-    // inlining of macro SC_RingForEachCell
-    for  k, pCellNew = 0, pCellOld; k == 0 || pCellNew != pCellOld; pCellNew, k = pCellNew.pNext, k+1  {
-        if pCellNew == pCellOld {
-            continue; }
-        if k > Notches {
-            break; }
-        // set new cell
-        Abc_SclObjSetCell( pObj, pCellNew );
-        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );
-        // recompute timing
-        Abc_SclTimeCone( p, vRecalcs );
-        // set old cell
-        Abc_SclObjSetCell( pObj, pCellOld );
-        Abc_SclLoadRestore( p, pObj );
-        // save best gain
-        dGain = Abc_SclEvalPerform( p, vEvals );
-        if dGainBest < dGain {
-            dGainBest = dGain;
-            gateBest = pCellNew.Id;
-            NoChange = 1;
-        
-        } else if NoChange != 0 {
-            NoChange++; }
-        if NoChange == 4 {
-            break; }
-//        printf( "%.2f ", dGain );
-    }
-//    printf( "Best = %.2f   ", dGainBest );
-//    printf( "\n" );
-    // put back old cell and timing
-    Abc_SclObjSetCell( pObj, pCellOld );
-    Abc_SclConeRestore( p, vRecalcs );
-    *pGainBest = dGainBest;
-    return gateBest;
+func Abc_SclUpsizePrintDiffs(p *SC_Man, lib *SC_Lib, net TimingNetwork) error {
+	times, slews, loads := append([]SC_Pair(nil), p.Times...), append([]SC_Pair(nil), p.Slews...), append([]SC_Pair(nil), p.Loads...)
+	if e := Abc_SclTimeNtkRecompute(p, nil, nil, 0, 0); e != nil {
+		return e
+	}
+	for _, id := range net.SclObjectIDs() {
+		if !net.SclIsNode(id) {
+			continue
+		}
+		for _, entry := range []struct {
+			name string
+			a, b SC_Pair
+		}{{"time", times[id], p.Times[id]}, {"slew", slews[id], p.Slews[id]}, {"load", loads[id], p.Loads[id]}} {
+			if math.Abs(float64(entry.a.Rise-entry.b.Rise)) > .001 || math.Abs(float64(entry.a.Fall-entry.b.Fall)) > .001 {
+				fmt.Fprintf(p.Output, "%d: %s differs old=%v recomputed=%v\n", id, entry.name, entry.a, entry.b)
+			}
+		}
+	}
+	return nil
+}
+func Abc_SclUpsizePrint(p *SC_Man, iteration, window, outputs, nodes, upsizes, cone int, verbose bool) {
+	end := "\r"
+	if verbose {
+		end = "\n"
+	}
+	fmt.Fprintf(p.Output, "%4d Win:%3d. PO:%6d. Path:%7d. Gate:%5d. TFO:%7d. A: %.2f D: %.2f ps B: %.2f ps%s", iteration, window, outputs, nodes, upsizes, cone, p.SumArea, p.MaxDelay, p.BestDelay, end)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes the set of gates to upsize.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindBypasses(p *SC_Man, vPathNodes *Vec_Int_t, Ratio int32, Notches int32, iIter int32, DelayGap int32, fVeryVerbose int32) int32 {
-    var pCellOld, pCellNew *SC_Cell;
-    var vFanouts *Vec_Ptr_t;
-    var vRecalcs, vEvals *Vec_Int_t;
-    var pBuf, pFanin, pFanout, pExtra *Abc_Obj_t;
-    var i, j, iNode, gateBest, gateBest2, fanBest, Counter int32;
-    var dGainBest, dGainBest2 float32;
-
-    // compute savings due to bypassing buffers
-    vFanouts = Vec_PtrAlloc( 100 );
-    vRecalcs = Vec_IntAlloc( 100 );
-    vEvals = Vec_IntAlloc( 100 );
-    Vec_QueClear( p.vNodeByGain );
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPathNodes) && (((pBuf) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPathNodes,i))), 1); i++  {         if (pBuf) == nil {} else {
-        assert(pBuf.fMarkB == 0, "pBuf.fMarkB == 0");
-        if Abc_ObjFaninNum(pBuf) != 1 {
-            continue; }
-        pFanin = Abc_ObjFanin0(pBuf);
-        if !Abc_ObjIsNode(pFanin) {
-            continue; }
-        pExtra = nil;
-        if p.pNtk.vPhases == nil {
-            if Abc_SclIsInv(pBuf) {
-                if !Abc_SclIsInv(pFanin) {
-                    continue; }
-                pFanin = Abc_ObjFanin0(pFanin);
-                if !Abc_ObjIsNode(pFanin) {
-                    continue; }
-                pExtra = pBuf;
-                // we make pBuf and pFanin are in the same phase and pFanin is a node
-            }
-        }
-        // here we have pBuf and its fanin pFanin, which is a logic node
-        // compute nodes to recalculate timing and nodes to evaluate afterwards
-        Abc_SclFindNodesToUpdate( pFanin, &vRecalcs, &vEvals, pExtra );
-        assert(Vec_IntSize(vEvals) > 0, "Vec_IntSize(vEvals) > 0");
-        // consider fanouts of this node
-        fanBest    = -1;
-        gateBest2  = -1;
-        dGainBest2 =  0;
-        Abc_NodeCollectFanouts( pBuf, vFanouts );
-        // inlining of macro Vec_PtrForEachEntry
-        for  j = 0; (j < Vec_PtrSize(vFanouts)) && (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, j)), 1); j++  {
-            // skip COs
-            if Abc_ObjIsCo(pFanout) {
-                continue; }
-            // skip non-critical fanouts
-            if !pFanout.fMarkA {
-                continue; }
-            // skip if fanin already has fanout as a fanout
-            if Abc_NodeFindFanin(pFanout, pFanin) >= 0 {
-                continue; }
-            // skip if fanin already has fanout as a fanout
-            if (pExtra != nil) && Abc_NodeFindFanin(pFanout, pExtra) >= 0 {
-                continue; }
-            // prepare
-            Abc_SclLoadStore3( p, pBuf );
-            Abc_SclUpdateLoadSplit( p, pBuf, pFanout );
-            Abc_ObjPatchFanin( pFanout, pBuf, pFanin );
-            // size the fanin
-            gateBest = Abc_SclFindBestCell( p, pFanin, vRecalcs, vEvals, Notches, DelayGap, &dGainBest );
-            // unprepare
-            Abc_SclLoadRestore3( p, pBuf );
-            Abc_ObjPatchFanin( pFanout, pFanin, pBuf );
-            if gateBest == -1 {
-                continue; }
-            // compare gain
-            if dGainBest2 < dGainBest {
-                dGainBest2 = dGainBest;
-                gateBest2 = gateBest;
-                fanBest = Abc_ObjId(pFanout);
-            }
-        }
-        // remember savings
-        if gateBest2 >= 0 {
-            assert(dGainBest2 > 0.0, "dGainBest2 > 0.0");
-            Vec_FltWriteEntry( p.vNode2Gain, Abc_ObjId(pBuf), dGainBest2 );
-            Vec_IntWriteEntry( p.vNode2Gate, Abc_ObjId(pBuf), gateBest2 );
-            Vec_QuePush( p.vNodeByGain, Abc_ObjId(pBuf) );
-            Vec_IntWriteEntry( p.vBestFans, Abc_ObjId(pBuf), fanBest );
-        }
-//        if ( ++Counter == 17 )
-//            break;
-    }
-    }
-    Vec_PtrFree( vFanouts );
-    Vec_IntFree( vRecalcs );
-    Vec_IntFree( vEvals );
-    if Vec_QueSize(p.vNodeByGain) == 0 {
-        return 0; }
-    if fVeryVerbose != 0 { 
-        fmt.Printf("\n"); }
-
-    // accept changes for that are half above the average and do not overlap
-    Counter = 0;
-    dGainBest2 = -1;
-    vFanouts = Vec_PtrAlloc( 100 );
-    for  Vec_QueSize(p.vNodeByGain)  {
-        iNode   = Vec_QuePop(p.vNodeByGain);
-        pFanout = Abc_NtkObj( p.pNtk, Vec_IntEntry(p.vBestFans, iNode) );
-        pBuf    = Abc_NtkObj( p.pNtk, iNode );
-        pFanin  = Abc_ObjFanin0(pBuf);
-        if pFanout.fMarkB || pBuf.fMarkB {
-            continue; }
-        if p.pNtk.vPhases == nil {
-            // update fanin
-            if Abc_SclIsInv(pBuf) {
-                if !Abc_SclIsInv(pFanin) {
-                    assert(false, "0");
-                    continue;
-                }
-                pFanin = Abc_ObjFanin0(pFanin);
-                if !Abc_ObjIsNode(pFanin) {
-                    assert(false, "0");
-                    continue;
-                }
-            }
-        }
-        if pFanin.fMarkB {
-            continue; }
-        pFanout.fMarkB = 1;
-        pBuf.fMarkB = 1;
-        pFanin.fMarkB = 1;
-        Vec_PtrPush( vFanouts, pFanout );
-        Vec_PtrPush( vFanouts, pBuf );
-        Vec_PtrPush( vFanouts, pFanin );
-        // remember gain
-        if dGainBest2 == -1 {
-            dGainBest2 = Vec_FltEntry(p.vNode2Gain, iNode); }
-//        else if ( dGainBest2 > 2*Vec_FltEntry(p->vNode2Gain, iNode) )
-//            break;
-        // redirect
-        Abc_SclUpdateLoadSplit( p, pBuf, pFanout );
-        Abc_SclAddWireLoad( p, pBuf, 1 );
-        Abc_SclAddWireLoad( p, pFanin, 1 );
-        Abc_ObjPatchFanin( pFanout, pBuf, pFanin );
-        Abc_SclAddWireLoad( p, pBuf, 0 );
-        Abc_SclAddWireLoad( p, pFanin, 0 );
-        Abc_SclTimeIncUpdateLevel( pFanout );
-        // remember
-        Vec_IntPush( p.vUpdates2, Abc_ObjId(pFanout) );
-        Vec_IntPush( p.vUpdates2, Abc_ObjId(pFanin) );
-        Vec_IntPush( p.vUpdates2, Abc_ObjId(pBuf) );
-        // update cell
-        pCellOld = Abc_SclObjCell( pFanin );
-        pCellNew = SC_LibCell( p.pLib, Vec_IntEntry(p.vNode2Gate, iNode) );
-        p.SumArea += pCellNew.area - pCellOld.area;
-        Abc_SclObjSetCell( pFanin, pCellNew );
-        Abc_SclUpdateLoad( p, pFanin, pCellOld, pCellNew );
-        // record the update
-        Vec_IntPush( p.vUpdates, Abc_ObjId(pFanin) );
-        Vec_IntPush( p.vUpdates, pCellNew.Id );
-        Abc_SclTimeIncInsert( p, pFanout );
-        Abc_SclTimeIncInsert( p, pBuf );
-        Abc_SclTimeIncInsert( p, pFanin );
-        // remember when this node was upsized
-        Vec_IntWriteEntry( p.vNodeIter, Abc_ObjId(pFanout), -1 );
-        Vec_IntWriteEntry( p.vNodeIter, Abc_ObjId(pBuf), -1 );
-        Vec_IntWriteEntry( p.vNodeIter, Abc_ObjId(pFanin), -1 );
-        // update polarity
-        if p.pNtk.vPhases && Abc_SclIsInv(pBuf) {
-            Abc_NodeInvUpdateObjFanoutPolarity( pFanin, pFanout ); }
-        // report
-        if fVeryVerbose != 0 {
-            fmt.Printf("Node %6d  Redir fanout %6d to fanin %6d.  Gain = %7.1f ps. ", Abc_ObjId(pBuf), Abc_ObjId(pFanout), Abc_ObjId(pFanin), Vec_FltEntry(p.vNode2Gain, iNode));
-            fmt.Printf("Gate %12s (%2d/%2d)  -> %12s (%2d/%2d) \n", pCellOld.pName, pCellOld.Order, pCellOld.nGates, pCellNew.pName, pCellNew.Order, pCellNew.nGates);
-        }
-/*
-        // check if the node became useless
-        if ( Abc_ObjFanoutNum(pBuf) == 0 )
-        {
-            pCellOld = Abc_SclObjCell( pBuf );
-            p->SumArea -= pCellOld->area;
-            Abc_NtkDeleteObj_rec( pBuf, 1 );
-            printf( "Removed node %d.\n", iNode );
-        }
-*/
-        Counter++;
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  j = 0; (j < Vec_PtrSize(vFanouts)) && (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, j)), 1); j++  {
-        pFanout.fMarkB = 0;
-    }
-    Vec_PtrFree( vFanouts );
-    return Counter;
+func UpsizeManager(p *SC_Man, pars *SC_SizePars) error {
+	if p == nil || pars == nil {
+		return fmt.Errorf("upsizing requires manager and parameters")
+	}
+	if pars.Window <= 0 || pars.Window > 100 {
+		return fmt.Errorf("upsizing window must be in 1..100")
+	}
+	if pars.BypassFrequency > 0 {
+		if _, ok := p.Network.(MutableTimingNetwork); !ok {
+			return fmt.Errorf("requested bypass optimization requires mutable topology")
+		}
+	}
+	start := time.Now()
+	var deadline time.Time
+	if pars.Timeout > 0 {
+		deadline = start.Add(time.Duration(pars.Timeout) * time.Second)
+	}
+	expired := func() bool { return !deadline.IsZero() && time.Now().After(deadline) }
+	p.BestGates = append([]int32(nil), p.Mapping.GateIDs...)
+	p.BestDelay = p.InitialDelay
+	state := &UpsizeState{}
+	noChange := 0
+	window := pars.Window
+	if window == 1 && len(sclMappedNodes(p.Network)) > 40000 {
+		window++
+	}
+	if pars.Verbose {
+		fmt.Fprintf(p.Output, "Parameters: Iters=%d Window=%d Ratio=%d UseDept=%t UseWL=%t Target=%d DelayGap=%d Timeout=%d\n", pars.Iterations, window, pars.Ratio, pars.UseDepartures, pars.UseWireLoads, pars.DelayUser, pars.DelayGap, pars.Timeout)
+	}
+	if p.BestDelay <= float32(pars.DelayUser) {
+		fmt.Fprintf(p.Output, "Current delay (%.2f ps) does not exceed target delay (%.2f ps). Upsizing is not performed.\n", p.BestDelay, float32(pars.DelayUser))
+	} else {
+		for iteration := 0; iteration < pars.Iterations; iteration++ {
+			count := 0
+			var outputs, path []int
+			win := window
+			if iteration%7 == 6 {
+				win++
+			}
+			bypass := pars.BypassFrequency > 0 && iteration > 0 && iteration%pars.BypassFrequency == 0
+			for ; win <= 100; win *= 2 {
+				coneStart := time.Now()
+				outputs = Abc_SclFindCriticalCoWindow(p, win)
+				path, state.Critical = Abc_SclFindCriticalNodeWindow(p, outputs, win, pars.UseDepartures)
+				p.TimeCone += time.Since(coneStart)
+				sizeStart := time.Now()
+				var e error
+				if bypass {
+					count, e = Abc_SclFindBypasses(p, path, state, pars.Ratio, pars.Notches, iteration, pars.DelayGap, pars.VeryVerbose)
+				} else {
+					count, e = Abc_SclFindUpsizes(p, path, state, pars.Ratio, pars.Notches, iteration, pars.DelayGap, pars.BypassFrequency > 0)
+				}
+				p.TimeSize += time.Since(sizeStart)
+				if e != nil {
+					return e
+				}
+				Abc_SclUnmarkCriticalNodeWindow(state.Critical, path)
+				Abc_SclUnmarkCriticalNodeWindow(state.Critical, outputs)
+				if count > 0 {
+					break
+				}
+			}
+			if count == 0 {
+				break
+			}
+			timingStart := time.Now()
+			coneSize := 0
+			if pars.UseDepartures {
+				if len(p.Changed) > 0 && !bypass {
+					var e error
+					coneSize, e = Abc_SclTimeIncUpdate(p)
+					if e != nil {
+						return e
+					}
+				} else {
+					if e := Abc_SclTimeNtkRecompute(p, nil, nil, 1, 0); e != nil {
+						return e
+					}
+				}
+			} else {
+				cone := Abc_SclFindTFO(p.Network, path)
+				if e := Abc_SclTimeCone(p, cone); e != nil {
+					return e
+				}
+				coneSize = len(cone)
+			}
+			p.TimeTiming += time.Since(timingStart)
+			p.MaxDelay = Abc_SclReadMaxDelay(p)
+			if p.BestDelay > p.MaxDelay {
+				p.BestDelay = p.MaxDelay
+				if e := Abc_SclApplyUpdateToBest(p.BestGates, p.Mapping.GateIDs, &p.Updates); e != nil {
+					return e
+				}
+				state.Edits = nil
+				noChange = 0
+			} else {
+				noChange++
+			}
+			Abc_SclUpsizePrint(p, iteration, win, len(outputs), len(path), count, coneSize, pars.VeryVerbose || pars.Verbose && noChange == 0)
+			if expired() || noChange > pars.IterationsNoChange || p.BestDelay <= float32(pars.DelayUser) {
+				break
+			}
+		}
+	}
+	p.Mapping.GateIDs = append(p.Mapping.GateIDs[:0], p.BestGates...)
+	if pars.BypassFrequency > 0 {
+		if e := Abc_SclUndoRecentChanges(p, state.Edits); e != nil {
+			return e
+		}
+		if e := Abc_SclUpsizeRemoveDangling(p, p.Network); e != nil {
+			return e
+		}
+	}
+	if e := Abc_SclTimeNtkRecompute(p, &p.SumArea, &p.MaxDelay, 0, 0); e != nil {
+		return e
+	}
+	p.TimeTotal = time.Since(start)
+	p.TimeOther = p.TimeTotal - p.TimeCone - p.TimeSize - p.TimeTiming
+	if pars.DumpStats {
+		if e := Abc_SclDumpStats(p, "stats2.txt", p.TimeTotal); e != nil {
+			return e
+		}
+	}
+	if expired() {
+		fmt.Fprintf(p.Output, "Gate sizing timed out at %d seconds.\n", pars.Timeout)
+	}
+	return Abc_SclSclGates2MioGates(p.Lib, p.Network)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Check marked fanin/fanouts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
- 
-***********************************************************************/
-func Abc_SclObjCheckMarkedFanFans(pObj *Abc_Obj_t) int32 {
-    var pNext *Abc_Obj_t;
-    var i int32;
-    if pObj.fMarkB {
-        return 1; }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        if pNext.fMarkB {
-            return 1; }
-    }
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        if pNext.fMarkB {
-            return 1; }
-    }
-    return 0;
+func Abc_SclUpsizePerformInt(lib *SC_Lib, net TimingNetwork, pars *SC_SizePars) error {
+	if pars == nil {
+		return fmt.Errorf("upsizing parameters are nil")
+	}
+	p, e := Abc_SclManStart(lib, net, boolInt(pars.UseWireLoads), boolInt(pars.UseDepartures), 0, int32(pars.BufferTreeEstimate))
+	if e != nil {
+		return e
+	}
+	defer Abc_SclManFree(p)
+	return UpsizeManager(p, pars)
 }
-func Abc_SclObjMarkFanFans(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {
-//    Abc_Obj_t * pNext;
-//    int i;
-    if pObj.fMarkB == 0 {
-        Vec_PtrPush( vNodes, pObj );
-        pObj.fMarkB = 1;
-    }
-/*
-    Abc_ObjForEachFanin( pObj, pNext, i )
-        if ( pNext->fMarkB == 0 )
-        {
-            Vec_PtrPush( vNodes, pNext );
-            pNext->fMarkB = 1;
-        }
-    Abc_ObjForEachFanout( pObj, pNext, i )
-        if ( pNext->fMarkB == 0 )
-        {
-            Vec_PtrPush( vNodes, pNext );
-            pNext->fMarkB = 1;
-        }
-*/
+func Abc_SclUpsizePerform(lib *SC_Lib, net TimingNetwork, pars *SC_SizePars) error {
+	return Abc_SclUpsizePerformInt(lib, net, pars)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the set of gates to upsize.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindUpsizes(p *SC_Man, vPathNodes *Vec_Int_t, Ratio int32, Notches int32, iIter int32, DelayGap int32, fMoreConserf int32) int32 {
-    var pCellOld, pCellNew *SC_Cell;
-    var vRecalcs, vEvals *Vec_Int_t;
-    var vFanouts *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var dGainBest, dGainBest2 float32;
-    var i, gateBest, Limit, Counter, iIterLast int32;
-
-    // compute savings due to upsizing each node
-    vRecalcs = Vec_IntAlloc( 100 );
-    vEvals = Vec_IntAlloc( 100 );
-    Vec_QueClear( p.vNodeByGain );
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPathNodes) && (((pObj) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vPathNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        assert(pObj.fMarkB == 0, "pObj.fMarkB == 0");
-        iIterLast = Vec_IntEntry(p.vNodeIter, Abc_ObjId(pObj));
-        if iIterLast >= 0 && iIterLast + 5 > iIter {
-            continue; }
-        // compute nodes to recalculate timing and nodes to evaluate afterwards
-        Abc_SclFindNodesToUpdate( pObj, &vRecalcs, &vEvals, nil );
-        assert(Vec_IntSize(vEvals) > 0, "Vec_IntSize(vEvals) > 0");
-        //printf( "%d -> %d\n", Vec_IntSize(vRecalcs), Vec_IntSize(vEvals) );
-        gateBest = Abc_SclFindBestCell( p, pObj, vRecalcs, vEvals, Notches, DelayGap, &dGainBest );
-        // remember savings
-        if gateBest >= 0 {
-            assert(dGainBest > 0.0, "dGainBest > 0.0");
-            Vec_FltWriteEntry( p.vNode2Gain, Abc_ObjId(pObj), dGainBest );
-            Vec_IntWriteEntry( p.vNode2Gate, Abc_ObjId(pObj), gateBest );
-            Vec_QuePush( p.vNodeByGain, Abc_ObjId(pObj) );
-        }
-    }
-    }
-    Vec_IntFree( vRecalcs );
-    Vec_IntFree( vEvals );
-    if Vec_QueSize(p.vNodeByGain) == 0 {
-        return 0; }
-/*
-    Limit = Abc_MinInt( Vec_QueSize(p->vNodeByGain), Abc_MaxInt((int)(0.01 * Ratio * Vec_IntSize(vPathNodes)), 1) ); 
-    //printf( "\nSelecting %d out of %d\n", Limit, Vec_QueSize(p->vNodeByGain) );
-    for ( i = 0; i < Limit; i++ )
-    {
-        // get the object
-        pObj = Abc_NtkObj( p->pNtk, Vec_QuePop(p->vNodeByGain) );
-        assert( pObj->fMarkA );
-        // find old and new gates
-        pCellOld = Abc_SclObjCell( pObj );
-        pCellNew = SC_LibCell( p->pLib, Vec_IntEntry(p->vNode2Gate, Abc_ObjId(pObj)) );
-        assert( pCellNew != NULL );
-        //printf( "%6d  %20s -> %20s  ", Abc_ObjId(pObj), pCellOld->pName, pCellNew->pName );
-        //printf( "gain is %f\n", Vec_FltEntry(p->vNode2Gain, Abc_ObjId(pObj)) );
-        // update gate
-        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );
-        p->SumArea += pCellNew->area - pCellOld->area;
-        Abc_SclObjSetCell( pObj, pCellNew );
-        // record the update
-        Vec_IntPush( p->vUpdates, Abc_ObjId(pObj) );
-        Vec_IntPush( p->vUpdates, pCellNew->Id );
-        Abc_SclTimeIncInsert( p, pObj );
-        // remember when this node was upsized
-        Vec_IntWriteEntry( p->vNodeIter, Abc_ObjId(pObj), iIter );
-    }
-return Limit;
-*/
-
-    Limit = Abc_MinInt( Vec_QueSize(p.vNodeByGain), Abc_MaxInt(int32((0.01 * Ratio * Vec_IntSize(vPathNodes))), 1) ); 
-    dGainBest2 = -1;
-    Counter = 0;
-    vFanouts = Vec_PtrAlloc( 100 );
-    for  Vec_QueSize(p.vNodeByGain)  {
-        var iNode int32  = Vec_QuePop(p.vNodeByGain);
-        var pObj *Abc_Obj_t  = Abc_NtkObj( p.pNtk, iNode );
-        assert(pObj.fMarkA, "pObj.fMarkA");
-        if Abc_SclObjCheckMarkedFanFans( pObj ) != 0 {
-            continue; }
-        Abc_SclObjMarkFanFans( pObj, vFanouts );
-        // remember gain
-        if dGainBest2 == -1 {
-            dGainBest2 = Vec_FltEntry(p.vNode2Gain, iNode); }
-//        else if ( dGainBest2 > 3*Vec_FltEntry(p->vNode2Gain, iNode) )
-//            break;
-//        printf( "%.1f ", Vec_FltEntry(p->vNode2Gain, iNode) );
-
-        // find old and new gates
-        pCellOld = Abc_SclObjCell( pObj );
-        pCellNew = SC_LibCell( p.pLib, Vec_IntEntry(p.vNode2Gate, Abc_ObjId(pObj)) );
-        assert(pCellNew != nil, "pCellNew != nil");
-        //printf( "%6d  %20s -> %20s  ", Abc_ObjId(pObj), pCellOld->pName, pCellNew->pName );
-        //printf( "gain is %f\n", Vec_FltEntry(p->vNode2Gain, Abc_ObjId(pObj)) );
-//        if ( pCellOld->Order > 0 )
-//            printf( "%.2f  %d -> %d(%d)   ", Vec_FltEntry(p->vNode2Gain, iNode), pCellOld->Order, pCellNew->Order, pCellNew->nGates );
-        // update gate
-        p.SumArea += pCellNew.area - pCellOld.area;
-        Abc_SclObjSetCell( pObj, pCellNew );
-        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );
-        // record the update
-        Vec_IntPush( p.vUpdates, Abc_ObjId(pObj) );
-        Vec_IntPush( p.vUpdates, pCellNew.Id );
-        Abc_SclTimeIncInsert( p, pObj );
-        // remember when this node was upsized
-        Vec_IntWriteEntry( p.vNodeIter, Abc_ObjId(pObj), iIter );
-        Counter++;
-        if Counter == Limit {
-            break; }
-    }
-//    printf( "\n" );
-
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanouts)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {
-        pObj.fMarkB = 0;
-    }
-    Vec_PtrFree( vFanouts );
-    return Counter;
-}
-func Abc_SclApplyUpdateToBest(vGatesBest *Vec_Int_t, vGates *Vec_Int_t, vUpdate *Vec_Int_t) {
-    var i, ObjId, GateId, GateId2 int32; 
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(vUpdate)) && (((ObjId) = Vec_IntEntry(vUpdate, i)), 1) && (((GateId) = Vec_IntEntry(vUpdate, i+1)), 1); i += 2  {
-        Vec_IntWriteEntry( vGatesBest, ObjId, GateId );
-    }
-    Vec_IntClear( vUpdate );
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  i = 0; (i < Vec_IntSize(vGatesBest)) && (((GateId) = Vec_IntEntry(vGatesBest, i)), 1) && (((GateId2) = Vec_IntEntry(vGates, i)), 1); i++  {
-        assert(GateId == GateId2, "GateId == GateId2");
-    }
-//    Vec_IntClear( vGatesBest );
-//    Vec_IntAppend( vGatesBest, vGates );
-}
-func Abc_SclUndoRecentChanges(pNtk *Abc_Ntk_t, vTrans *Vec_Int_t) {
-    var i int32;
-    assert(Vec_IntSize(vTrans) % 3 == 0, "Vec_IntSize(vTrans) % 3 == 0");
-    for  i = Vec_IntSize(vTrans)/3 - 1; i >= 0; i--  {
-        var pFanout *Abc_Obj_t  = Abc_NtkObj( pNtk, Vec_IntEntry(vTrans, 3*i+0) );
-        var pFanin *Abc_Obj_t   = Abc_NtkObj( pNtk, Vec_IntEntry(vTrans, 3*i+1) );
-        var pObj *Abc_Obj_t     = Abc_NtkObj( pNtk, Vec_IntEntry(vTrans, 3*i+2) );
-        // we do not update load here because times will be recomputed
-        Abc_ObjPatchFanin( pFanout, pFanin, pObj );
-        Abc_SclTimeIncUpdateLevel( pFanout );
-//        printf( "Node %6d  Redir fanout %6d from fanin %6d. \n", 
-//            Abc_ObjId(pObj), Abc_ObjId(pFanout), Abc_ObjId(pFanin) );
-        // update polarity
-        if pNtk.vPhases && Abc_SclIsInv(pObj) {
-            Abc_NodeInvUpdateObjFanoutPolarity( pObj, pFanout ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclUpsizePrintDiffs(p *SC_Man, pLib *SC_Lib, pNtk *Abc_Ntk_t) {
-    var fDiff float32  = float32(0.001);
-    var k int32;
-    var pObj *Abc_Obj_t;
-
-    // inlining of macro ABC_ALLOC
-    var pTimes *SC_Pair  = ((SC_Pair *) malloc(sizeof(SC_Pair) * (size_t)(p.nObjs)));
-    // inlining of macro ABC_ALLOC
-    var pSlews *SC_Pair  = ((SC_Pair *) malloc(sizeof(SC_Pair) * (size_t)(p.nObjs)));
-    // inlining of macro ABC_ALLOC
-    var pLoads *SC_Pair  = ((SC_Pair *) malloc(sizeof(SC_Pair) * (size_t)(p.nObjs)));
-
-    memcpy( pTimes, p.pTimes, sizeof(SC_Pair) * p.nObjs );
-    memcpy( pSlews, p.pSlews, sizeof(SC_Pair) * p.nObjs );
-    memcpy( pLoads, p.pLoads, sizeof(SC_Pair) * p.nObjs );
-
-    Abc_SclTimeNtkRecompute( p, nil, nil, 0, 0 );
-
-    // inlining of macro Abc_NtkForEachNode
-    for  k = 0; (k < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        if Abc_AbsFloat(p.pLoads[k].rise - pLoads[k].rise) > fDiff {
-            fmt.Printf("%6d : load rise differs %12.6f   %f %f\n", k, p.pLoads[k].rise-pLoads[k].rise, p.pLoads[k].rise, pLoads[k].rise); }
-        if Abc_AbsFloat(p.pLoads[k].fall - pLoads[k].fall) > fDiff {
-            fmt.Printf("%6d : load fall differs %12.6f   %f %f\n", k, p.pLoads[k].fall-pLoads[k].fall, p.pLoads[k].fall, pLoads[k].fall); }
-
-        if Abc_AbsFloat(p.pSlews[k].rise - pSlews[k].rise) > fDiff {
-            fmt.Printf("%6d : slew rise differs %12.6f   %f %f\n", k, p.pSlews[k].rise-pSlews[k].rise, p.pSlews[k].rise, pSlews[k].rise); }
-        if Abc_AbsFloat(p.pSlews[k].fall - pSlews[k].fall) > fDiff {
-            fmt.Printf("%6d : slew fall differs %12.6f   %f %f\n", k, p.pSlews[k].fall-pSlews[k].fall, p.pSlews[k].fall, pSlews[k].fall); }
-
-        if Abc_AbsFloat(p.pTimes[k].rise - pTimes[k].rise) > fDiff {
-            fmt.Printf("%6d : time rise differs %12.6f   %f %f\n", k, p.pTimes[k].rise-pTimes[k].rise, p.pTimes[k].rise, pTimes[k].rise); }
-        if Abc_AbsFloat(p.pTimes[k].fall - pTimes[k].fall) > fDiff {
-            fmt.Printf("%6d : time fall differs %12.6f   %f %f\n", k, p.pTimes[k].fall-pTimes[k].fall, p.pTimes[k].fall, pTimes[k].fall); }
-    }
-    }
-
-/*
-if ( memcmp( pTimes, p->pTimes, sizeof(SC_Pair) * p->nObjs ) )
-    printf( "Times differ!\n" );
-if ( memcmp( pSlews, p->pSlews, sizeof(SC_Pair) * p->nObjs ) )
-    printf( "Slews differ!\n" );
-if ( memcmp( pLoads, p->pLoads, sizeof(SC_Pair) * p->nObjs ) )
-    printf( "Loads differ!\n" );
-*/
-
-    pTimes = nil;
-    pSlews = nil;
-    pLoads = nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Print cumulative statistics.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclUpsizePrint(p *SC_Man, Iter int32, win int32, nPathPos int32, nPathNodes int32, nUpsizes int32, nTFOs int32, fVerbose int32) {
-    fmt.Printf("%4d ", Iter);
-    fmt.Printf("Win:%3d. ", win);
-    fmt.Printf("PO:%6d. ", nPathPos);
-    fmt.Printf("Path:%7d. ", nPathNodes);
-    fmt.Printf("Gate:%5d. ", nUpsizes);
-    fmt.Printf("TFO:%7d. ", nTFOs);
-    fmt.Printf("A: ");
-    fmt.Printf("%.2f ", p.SumArea);
-    fmt.Printf("(%+5.1f %%)  ", 100.0 * (p.SumArea - p.SumArea0)/ p.SumArea0);
-    fmt.Printf("D: ");
-    fmt.Printf("%.2f ps ", p.MaxDelay);
-    fmt.Printf("(%+5.1f %%)  ", 100.0 * (p.MaxDelay - p.MaxDelay0)/ p.MaxDelay0);
-    fmt.Printf("B: ");
-    fmt.Printf("%.2f ps ", p.BestDelay);
-    fmt.Printf("(%+5.1f %%)", 100.0 * (p.BestDelay - p.MaxDelay0)/ p.MaxDelay0);
-    fmt.Printf("%8.2f sec    ", 1.0*(Abc_Clock() - p.timeTotal)/(int64(time.Second)));
-    fmt.Printf("%c", fVerbose ? '\n' : '\r');
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclUpsizeRemoveDangling(p *SC_Man, pNtk *Abc_Ntk_t) {
-    var pCell *SC_Cell;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachNodeNotBarBuf
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || Abc_ObjIsBarBuf(pObj) {} else
-        if Abc_ObjFanoutNum(pObj) == 0 {
-            pCell = Abc_SclObjCell( pObj );
-            p.SumArea -= pCell.area;
-            Abc_NtkDeleteObj_rec( pObj, 1 );
-//            printf( "Removed node %d.\n", i );
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclUpsizePerformInt(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {
-    var p *SC_Man;
-    var vPathPos *Vec_Int_t  = nil;    // critical POs
-    var vPathNodes *Vec_Int_t  = nil;  // critical nodes and PIs
-    var clk abctime;
-    var nRuntimeLimit abctime;
-    if pPars.TimeOut {
-        nRuntimeLimit = pPars.TimeOut * int64(time.Second) + Abc_Clock();
-    } else {
-        nRuntimeLimit = 0;
-    }
-    var i int32;
-    var win int32;
-    var nUpsizes int32 = -1;
-    var nFramesNoChange int32;
-    var nConeSize int32;
-    var nAllPos, nAllNodes, nAllTfos, nAllUpsizes int32;
-    if pPars.fVerbose {
-        fmt.Printf("Parameters: ");
-        fmt.Printf("Iters =%5d.  ", pPars.nIters);
-        fmt.Printf("Time win =%3d %%. ", pPars.Window);
-        fmt.Printf("Update ratio =%3d %%. ", pPars.Ratio);
-        fmt.Printf("UseDept =%2d. ", pPars.fUseDept);
-        fmt.Printf("UseWL =%2d. ", pPars.fUseWireLoads);
-        fmt.Printf("Target =%5d ps. ", pPars.DelayUser);
-        fmt.Printf("DelayGap =%3d ps. ", pPars.DelayGap);
-        fmt.Printf("Timeout =%4d sec", pPars.TimeOut);
-        fmt.Printf("\n");
-    }
-    // increase window for larger networks
-    if pPars.Window == 1 {
-        pPars.Window += (Abc_NtkNodeNum(pNtk) > 40000); }
-    // prepare the manager; collect init stats
-    p = Abc_SclManStart( pLib, pNtk, pPars.fUseWireLoads, pPars.fUseDept, 0, pPars.BuffTreeEst );
-    p.timeTotal  = Abc_Clock();
-    assert(p.vGatesBest == nil, "p.vGatesBest == nil");
-    p.vGatesBest = Vec_IntDup( p.pNtk.vGates );
-    p.BestDelay  = p.MaxDelay0;
-    // perform upsizing
-    nAllPos = nAllNodes = nAllTfos = nAllUpsizes = 0;
-    if p.BestDelay <= pPars.DelayUser {
-        fmt.Printf("Current delay (%.2f ps) does not exceed the target delay (%.2f ps). Upsizing is not performed.\n", p.BestDelay, float32(pPars.DelayUser));
-    } else {
-    for  i = 0; i < pPars.nIters; i++  {
-        for  win = pPars.Window + ((i % 7) == 6); win <= 100;  win *= 2  {
-            // detect critical path
-            clk = Abc_Clock();
-            vPathPos   = Abc_SclFindCriticalCoWindow( p, win );
-            vPathNodes = Abc_SclFindCriticalNodeWindow( p, vPathPos, win, pPars.fUseDept );
-            p.timeCone += Abc_Clock() - clk;
-
-            // selectively upsize the nodes
-            clk = Abc_Clock();
-            if pPars.BypassFreq && (i != 0) && (i % pPars.BypassFreq) == 0 {
-                nUpsizes = Abc_SclFindBypasses( p, vPathNodes, pPars.Ratio, pPars.Notches, i, pPars.DelayGap, pPars.fVeryVerbose );
-            } else {
-                nUpsizes = Abc_SclFindUpsizes( p, vPathNodes, pPars.Ratio, pPars.Notches, i, pPars.DelayGap, (pPars.BypassFreq > 0) ); }
-            p.timeSize += Abc_Clock() - clk;
-
-            // unmark critical path
-            clk = Abc_Clock();
-            Abc_SclUnmarkCriticalNodeWindow( p, vPathNodes );
-            Abc_SclUnmarkCriticalNodeWindow( p, vPathPos );
-            p.timeCone += Abc_Clock() - clk;
-            if nUpsizes > 0 {
-                break; }
-            Vec_IntFree( vPathPos );
-            Vec_IntFree( vPathNodes );
-        }
-        if nUpsizes == 0 {
-            break; }
-
-        // update timing information
-        clk = Abc_Clock();
-        if pPars.fUseDept {
-            if Vec_IntSize(p.vChanged) && !(pPars.BypassFreq && (i != 0) && (i % pPars.BypassFreq) == 0) {
-                nConeSize = Abc_SclTimeIncUpdate( p );
-            } else {
-                Abc_SclTimeNtkRecompute( p, nil, nil, pPars.fUseDept, 0 ); }
-        
-        } else {
-            var vTFO *Vec_Int_t  = Abc_SclFindTFO( p.pNtk, vPathNodes );
-            Abc_SclTimeCone( p, vTFO );
-            nConeSize = Vec_IntSize( vTFO );
-            Vec_IntFree( vTFO );
-        }
-        p.timeTime += Abc_Clock() - clk;
-//        Abc_SclUpsizePrintDiffs( p, pLib, pNtk );
-
-        // save the best network
-        p.MaxDelay = Abc_SclReadMaxDelay( p );
-        if p.BestDelay > p.MaxDelay {
-            p.BestDelay = p.MaxDelay;
-            Abc_SclApplyUpdateToBest( p.vGatesBest, p.pNtk.vGates, p.vUpdates );
-            Vec_IntClear( p.vUpdates2 );
-            nFramesNoChange = 0;
-        
-        } else {
-            nFramesNoChange++; }
-
-        // report and cleanup
-        Abc_SclUpsizePrint( p, i, win, Vec_IntSize(vPathPos), Vec_IntSize(vPathNodes), nUpsizes, nConeSize, pPars.fVeryVerbose || (pPars.fVerbose && nFramesNoChange == 0) ); //|| (i == nIters-1) );
-        nAllPos     += Vec_IntSize(vPathPos);
-        nAllNodes   += Vec_IntSize(vPathNodes);
-        nAllTfos    += nConeSize;
-        nAllUpsizes += nUpsizes;
-        Vec_IntFree( vPathPos );
-        Vec_IntFree( vPathNodes );
-        // check timeout
-        if nRuntimeLimit && Abc_Clock() > nRuntimeLimit {
-            break; }
-        // check no change
-        if nFramesNoChange > pPars.nIterNoChange {
-            break; }
-        // check best delay
-        if p.BestDelay <= pPars.DelayUser {
-            break; }
-    } }
-    // update for best gates and recompute timing
-    // inlining of macro ABC_SWAP
-    { var t *Vec_Int_t  = p.vGatesBest; p.vGatesBest = p.pNtk.vGates; p.pNtk.vGates = t; };
-    if pPars.BypassFreq != 0 {
-        Abc_SclUndoRecentChanges( p.pNtk, p.vUpdates2 ); }
-    if pPars.BypassFreq != 0 {
-        Abc_SclUpsizeRemoveDangling( p, pNtk ); }
-    Abc_SclTimeNtkRecompute( p, &p.SumArea, &p.MaxDelay, 0, 0 );
-    if pPars.fVerbose {
-        Abc_SclUpsizePrint( p, i, pPars.Window, nAllPos/(i?i:1), nAllNodes/(i?i:1), nAllUpsizes/(i?i:1), nAllTfos/(i?i:1), 1 );
-    } else {
-        fmt.Printf("                                                                                                                                                  \r"); }
-    // report runtime
-    p.timeTotal = Abc_Clock() - p.timeTotal;
-    if pPars.fVerbose {
-        p.timeOther = p.timeTotal - p.timeCone - p.timeSize - p.timeTime;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Runtime: Critical path"));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeCone)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCone)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Runtime: Sizing eval  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSize)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSize)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Runtime: Timing update"));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTime)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTime)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Runtime: Other        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Runtime: TOTAL        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;
-    }
-    if pPars.fDumpStats {
-        Abc_SclDumpStats( p, "stats2.txt", p.timeTotal ); }
-    if nRuntimeLimit && Abc_Clock() > nRuntimeLimit {
-        fmt.Printf("Gate sizing timed out at %d seconds.\n", pPars.TimeOut); }
-
-    // save the result and quit
-    Abc_SclSclGates2MioGates( pLib, pNtk ); // updates gate pointers
-    Abc_SclManFree( p );
-//    Abc_NtkCleanMarkAB( pNtk );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclUpsizePerform(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {
-    var pNtkNew *Abc_Ntk_t  = pNtk;
-    if pNtk.nBarBufs2 > 0 {
-        pNtkNew = Abc_NtkDupDfsNoBarBufs( pNtk ); }
-    Abc_SclUpsizePerformInt( pLib, pNtkNew, pPars );
-    if pNtk.nBarBufs2 > 0 {
-        Abc_SclTransferGates( pNtk, pNtkNew ); }
-    if pNtk.nBarBufs2 > 0 {
-        Abc_NtkDelete( pNtkNew ); }
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

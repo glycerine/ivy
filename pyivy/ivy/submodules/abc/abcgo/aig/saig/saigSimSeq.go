@@ -17,16 +17,17 @@ type randomObject struct {
 	refs   int32
 }
 type Raig_Man_t struct {
-	pAig                      *aig.Graph
-	nWords                    int32
-	objects                   []randomObject // 0 unused, 1 constant one
-	mapping                   map[int]int32
-	inputs, outputs, los, lis []int32
-	vCis2Ids                  *vec.Vec_Int_t
-	slots                     []int
-	blocks                    [][]uint32
-	free                      []int
-	live, maxLive             int
+	pAig              *aig.Graph
+	nWords            int32
+	objects           []randomObject // 0 unused, 1 constant one
+	mapping           map[int]int32
+	outputs, los, lis []int32
+	nPis              int
+	vCis2Ids          *vec.Vec_Int_t
+	slots             []int
+	blocks            [][]uint32
+	free              []int
+	maxLive           int
 }
 
 func Raig_Var2Lit(variable, complement int32) int32 { return variable<<1 | complement }
@@ -106,9 +107,7 @@ func Raig_ManCreate(graph *aig.Graph) *Raig_Man_t {
 			Raig_ManCreate_rec(p, input)
 		}
 	}
-	for _, input := range graph.Inputs() {
-		p.inputs = append(p.inputs, p.mapping[input.NodeID()])
-	}
+
 	for id := 2; id < len(p.objects); id++ {
 		obj := p.objects[id]
 		switch obj.kind {
@@ -120,7 +119,10 @@ func Raig_ManCreate(graph *aig.Graph) *Raig_Man_t {
 		}
 	}
 	registers := int(aig.Aig_ManRegNum(graph))
-	p.los = append(p.los, p.inputs[len(p.inputs)-registers:]...)
+	for _, input := range graph.Inputs()[graph.InputCount()-registers:] {
+		p.los = append(p.los, p.mapping[input.NodeID()])
+	}
+	p.nPis = graph.InputCount() - registers
 	p.lis = append(p.lis, p.outputs[len(p.outputs)-registers:]...)
 	for _, id := range p.lis {
 		p.objects[id].refs++
@@ -152,7 +154,6 @@ func (p *Raig_Man_t) initialize() {
 		constant[i] = ^uint32(0)
 	}
 	p.blocks = [][]uint32{constant}
-	p.live = 1
 	p.maxLive = 1
 }
 func Raig_ManSimRef(p *Raig_Man_t, id int32) []uint32 {
@@ -171,8 +172,7 @@ func Raig_ManSimRef(p *Raig_Man_t, id int32) []uint32 {
 	p.slots[id] = slot
 	block := p.blocks[slot]
 	block[0] = uint32(p.objects[id].refs)
-	p.live++
-	p.maxLive = max(p.maxLive, p.live)
+	p.maxLive = max(p.maxLive, len(p.blocks)-len(p.free))
 	return block
 }
 func Raig_ManSimDeref(p *Raig_Man_t, id int32) []uint32 {
@@ -192,7 +192,6 @@ func Raig_ManSimDeref(p *Raig_Man_t, id int32) []uint32 {
 	if block[0] == 0 {
 		p.slots[id] = 0
 		p.free = append(p.free, slot)
-		p.live--
 	}
 	return block
 }
@@ -214,7 +213,7 @@ func Raig_ManSimulateRound(p *Raig_Man_t, miter, first int32, pattern *int32) in
 		}
 		p.releaseUnused(id, block)
 	}
-	primaryInputs := len(p.inputs) - len(p.los)
+	primaryInputs := p.nPis
 	primaryOutputs := len(p.outputs) - len(p.lis)
 	outputNumber := make(map[int32]int, len(p.outputs))
 	for i, id := range p.outputs {
@@ -271,7 +270,7 @@ func Raig_ManSimulateRound(p *Raig_Man_t, miter, first int32, pattern *int32) in
 		}
 		p.releaseUnused(id, result)
 	}
-	if p.live != 1+len(p.lis) {
+	if len(p.blocks)-len(p.free) != 1+len(p.lis) {
 		panic("saig: leaked simulation blocks")
 	}
 	return 0
@@ -306,6 +305,7 @@ func Raig_ManSimulate(graph *aig.Graph, words, iterations, timeLimit, miter, ver
 	if words <= 0 || iterations < 0 || timeLimit < 0 || aig.Aig_ManRegNum(graph) <= 0 {
 		panic("saig: invalid sequential simulation parameters")
 	}
+	graph.ClearSequentialCounterexample()
 	p := Raig_ManCreate(graph)
 	defer Raig_ManDelete(p)
 	p.nWords = words

@@ -82,18 +82,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-var spStatic_Gia_TimeStamp_Buffer [100]byte;
-func Gia_TimeStamp() string {
-    
-    var TimeStamp string;
-    var ltime int64;
-    // get the current time
-    time( &ltime );
-    TimeStamp = asctime( localtime( &ltime ) );
-    TimeStamp[ len(TimeStamp) - 1 ] = 0;
-    strcpy( spStatic_Gia_TimeStamp_Buffer, TimeStamp );
-    return spStatic_Gia_TimeStamp_Buffer;
-}
+
 
 /**Function*************************************************************
 
@@ -106,18 +95,7 @@ func Gia_TimeStamp() string {
   SeeAlso     []
 
 ***********************************************************************/
-var spStatic_Gia_FileNameGenericAppend_Buffer [1000]byte;
-func Gia_FileNameGenericAppend(pBase string, pSuffix string) string {
-    
-    var pDot string;
-    strcpy( spStatic_Gia_FileNameGenericAppend_Buffer, pBase );
-    if pDot = strrchr( spStatic_Gia_FileNameGenericAppend_Buffer, '.' ) {
-        *pDot = 0; }
-    strcat( spStatic_Gia_FileNameGenericAppend_Buffer, pSuffix );
-    if (pDot = strrchr( spStatic_Gia_FileNameGenericAppend_Buffer, '\\' )) || (pDot = strrchr( spStatic_Gia_FileNameGenericAppend_Buffer, '/' )) {
-        return pDot+1; }
-    return spStatic_Gia_FileNameGenericAppend_Buffer;
-}
+
 
 /**Function*************************************************************
 
@@ -156,12 +134,20 @@ func Gia_FileNameGenericAppend(pBase string, pSuffix string) string {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSetMark0(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark0 = 1;
-}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Sets phases of the internal nodes.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+
 
 /**Function*************************************************************
 
@@ -187,30 +173,7 @@ func Gia_ManSetMark0(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckMark0(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        assert(pObj.fMark0 == 0, "pObj.fMark0 == 0");
-}
 
-/**Function*************************************************************
-
-  Synopsis    [Sets phases of the internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManSetMark1(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark1 = 1;
-}
 
 /**Function*************************************************************
 
@@ -236,12 +199,7 @@ func Gia_ManSetMark1(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckMark1(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        assert(pObj.fMark1 == 0, "pObj.fMark1 == 0");
-}
+
 
 /**Function*************************************************************
 
@@ -333,13 +291,7 @@ func Gia_ManCheckMark1(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckCoPhase(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32;
-    Gia_ManForEachCo( p, pObj, i )
-        Counter += pObj.fPhase;
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -364,11 +316,7 @@ func Gia_ManCheckCoPhase(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanTruth(p *Gia_Man_t) {
-    if p.vTruths == nil {
-        p.vTruths = Vec_IntAlloc( Gia_ManObjNum(p) ); }
-    Vec_IntFill( p.vTruths, Gia_ManObjNum(p), -1 );
-}
+
 
 /**Function*************************************************************
 
@@ -449,21 +397,7 @@ func Gia_ManCleanTruth(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCreateValueRefs(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        pObj.Value = 0;
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjFanin0(pObj).Value++;
-            if !Gia_ObjIsBuf(pObj) {
-                Gia_ObjFanin1(pObj).Value++; }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjFanin0(pObj).Value++; }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -489,22 +423,7 @@ func Gia_ManCreateValueRefs(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCreateMuxRefs(p *Gia_Man_t) *int32 {
-    var pObj, pCtrl, pFan0, pFan1 *Gia_Obj_t;
-    var i int32;
-    var pMuxRefs *int32;
-    pMuxRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        if Gia_ObjRecognizeExor( pObj, &pFan0, &pFan1 ) != 0 {
-            continue; }
-        if !(Gia_ObjIsMuxType(pObj) != 0) {
-            continue; }
-        pCtrl = Gia_ObjRecognizeMux( pObj, &pFan0, &pFan1 );
-        pMuxRefs[ Gia_ObjId(p, Gia_Regular(pCtrl)) ]++;
-    }
-    return pMuxRefs;
-}
+
 
 /**Function*************************************************************
 
@@ -611,14 +530,7 @@ func Gia_ManCrossCut(p *Gia_Man_t, fReverse int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCollectPoIds(p *Gia_Man_t) *Vec_Int_t {
-    var vStart *Vec_Int_t;
-    var Entry, i int32;
-    vStart = Vec_IntAlloc( Gia_ManPoNum(p) );
-    Vec_IntForEachEntryStop( p.vCos, Entry, i, Gia_ManPoNum(p) )
-        Vec_IntPush( vStart, Entry );
-    return vStart;
-}
+
 
 
 /**Function*************************************************************
@@ -632,28 +544,7 @@ func Gia_ManCollectPoIds(p *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjIsMuxType(pNode *Gia_Obj_t) int32 {
-    var pNode0, pNode1 *Gia_Obj_t;
-    // check that the node is regular
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    // if the node is not AND, this is not MUX
-    if !Gia_ObjIsAnd(pNode) || Gia_ObjIsBuf(pNode) {
-        return 0; }
-    // if the children are not complemented, this is not MUX
-    if !Gia_ObjFaninC0(pNode) || !Gia_ObjFaninC1(pNode) {
-        return 0; }
-    // get children
-    pNode0 = Gia_ObjFanin0(pNode);
-    pNode1 = Gia_ObjFanin1(pNode);
-    // if the children are not ANDs, this is not MUX
-    if !Gia_ObjIsAnd(pNode0) || !Gia_ObjIsAnd(pNode1) {
-        return 0; }
-    // otherwise the node is MUX iff it has a pair of equal grandchildren
-    return (Gia_ObjFanin0(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC0(pNode1))) || 
-           (Gia_ObjFanin0(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC1(pNode1))) ||
-           (Gia_ObjFanin1(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC0(pNode1))) ||
-           (Gia_ObjFanin1(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC1(pNode1)));
-}
+
 
 
 /**Function*************************************************************
@@ -667,28 +558,7 @@ func Gia_ObjIsMuxType(pNode *Gia_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjRecognizeExor(pObj *Gia_Obj_t, ppFan0 **Gia_Obj_t, ppFan1 **Gia_Obj_t) int32 {
-    var p0, p1 *Gia_Obj_t;
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    if !Gia_ObjIsAnd(pObj) || Gia_ObjIsBuf(pObj) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    p0 = Gia_ObjChild0(pObj);
-    p1 = Gia_ObjChild1(pObj);
-    if !Gia_IsComplement(p0) || !Gia_IsComplement(p1) {
-        return 0; }
-    p0 = Gia_Regular(p0);
-    p1 = Gia_Regular(p1);
-    if !Gia_ObjIsAnd(p0) || !Gia_ObjIsAnd(p1) {
-        return 0; }
-    if Gia_ObjFanin0(p0) != Gia_ObjFanin0(p1) || Gia_ObjFanin1(p0) != Gia_ObjFanin1(p1) {
-        return 0; }
-    if Gia_ObjFaninC0(p0) == Gia_ObjFaninC0(p1) || Gia_ObjFaninC1(p0) == Gia_ObjFaninC1(p1) {
-        return 0; }
-    if ppFan0 { *ppFan0 = Gia_ObjChild0(p0); }
-    if ppFan1 { *ppFan1 = Gia_ObjChild1(p0); }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -704,78 +574,8 @@ func Gia_ObjRecognizeExor(pObj *Gia_Obj_t, ppFan0 **Gia_Obj_t, ppFan1 **Gia_Obj_
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjRecognizeMux(pNode *Gia_Obj_t, ppNodeT **Gia_Obj_t, ppNodeE **Gia_Obj_t) *Gia_Obj_t {
-    var pNode0, pNode1 *Gia_Obj_t;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert((Gia_ObjIsMuxType(pNode) != 0), "Gia_ObjIsMuxType(pNode)");
-    // get children
-    pNode0 = Gia_ObjFanin0(pNode);
-    pNode1 = Gia_ObjFanin1(pNode);
 
-    // find the control variable
-    if Gia_ObjFanin1(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC1(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p2) )
-        if Gia_ObjFaninC1(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            return Gia_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            return Gia_ObjChild1(pNode0);//pNode1->p2;
-        }
-    
-    } else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC0(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p1) )
-        if Gia_ObjFaninC0(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            return Gia_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            return Gia_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-    } else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC1(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p1) )
-        if Gia_ObjFaninC0(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            return Gia_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            return Gia_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-    } else if Gia_ObjFanin1(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC0(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p2) )
-        if Gia_ObjFaninC1(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            return Gia_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            return Gia_ObjChild1(pNode0);//pNode1->p2;
-        }
-    }
-    assert(false, "0"); // this is not MUX
-    return nil;
-}
-func Gia_ObjRecognizeMuxLits(p *Gia_Man_t, pNode *Gia_Obj_t, iLitT *int32, iLitE *int32) int32 {
-    var pNodeT, pNodeE *Gia_Obj_t;
-    var pCtrl *Gia_Obj_t  = Gia_ObjRecognizeMux( pNode, &pNodeT, &pNodeE );
-    assert(pCtrl != nil, "pCtrl != nil");
-    *iLitT = Gia_Obj2Lit( p, pNodeT );
-    *iLitE = Gia_Obj2Lit( p, pNodeE );
-    return Gia_Obj2Lit( p, pCtrl );
-}
+
 
 
 /**Function*************************************************************
@@ -789,49 +589,6 @@ func Gia_ObjRecognizeMuxLits(p *Gia_Man_t, pNode *Gia_Obj_t, iLitT *int32, iLitE
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_NodeDeref_rec(p *Gia_Man_t, pNode *Gia_Obj_t) int32 {
-    var pFanin *Gia_Obj_t;
-    var Counter int32;
-    if Gia_ObjIsCi(pNode) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pNode), "Gia_ObjIsAnd(pNode)");
-    pFanin = Gia_ObjFanin0(pNode);
-    assert(Gia_ObjRefNum(p, pFanin) > 0, "Gia_ObjRefNum(p, pFanin) > 0");
-    if Gia_ObjRefDec(p, pFanin) == 0 {
-        Counter += Gia_NodeDeref_rec( p, pFanin ); }
-    pFanin = Gia_ObjFanin1(pNode);
-    assert(Gia_ObjRefNum(p, pFanin) > 0, "Gia_ObjRefNum(p, pFanin) > 0");
-    if Gia_ObjRefDec(p, pFanin) == 0 {
-        Counter += Gia_NodeDeref_rec( p, pFanin ); }
-    return Counter + 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [References the node's MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_NodeRef_rec(p *Gia_Man_t, pNode *Gia_Obj_t, fMark int32) int32 {
-    var pFanin *Gia_Obj_t;
-    var Counter int32;
-    if Gia_ObjIsCi(pNode) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pNode), "Gia_ObjIsAnd(pNode)");
-    if fMark != 0 { Gia_ObjSetTravIdCurrent(p, pNode); }
-    pFanin = Gia_ObjFanin0(pNode);
-    if Gia_ObjRefInc(p, pFanin) == 0 {
-        Counter += Gia_NodeRef_rec( p, pFanin, fMark ); }
-    pFanin = Gia_ObjFanin1(pNode);
-    if Gia_ObjRefInc(p, pFanin) == 0 {
-        Counter += Gia_NodeRef_rec( p, pFanin, fMark ); }
-    return Counter + 1;
-}
 
 
 /**Function*************************************************************
@@ -845,10 +602,21 @@ func Gia_NodeRef_rec(p *Gia_Man_t, pNode *Gia_Obj_t, fMark int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPoMffcSize(p *Gia_Man_t) int32 {
-    Gia_ManCreateRefs( p );
-    return Gia_NodeDeref_rec( p, Gia_ObjFanin0(Gia_ManPo(p, 0)) );
-}
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [References the node's MFFC.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+
 
 /**Function*************************************************************
 
@@ -861,27 +629,8 @@ func Gia_ManPoMffcSize(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_NodeMffcSize(p *Gia_Man_t, pNode *Gia_Obj_t) int32 {
-    var ConeSize1, ConeSize2 int32;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert(Gia_ObjIsCand(pNode), "Gia_ObjIsCand(pNode)");
-    ConeSize1 = Gia_NodeDeref_rec( p, pNode );
-    ConeSize2 = Gia_NodeRef_rec( p, pNode, 0 );
-    assert(ConeSize1 == ConeSize2, "ConeSize1 == ConeSize2");
-    assert(ConeSize1 >= 0, "ConeSize1 >= 0");
-    return ConeSize1;
-}
-func Gia_NodeMffcSizeMark(p *Gia_Man_t, pNode *Gia_Obj_t) int32 {
-    var ConeSize1, ConeSize2 int32;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert(Gia_ObjIsCand(pNode), "Gia_ObjIsCand(pNode)");
-    ConeSize1 = Gia_NodeDeref_rec( p, pNode );
-    Gia_ManIncrementTravId( p );
-    ConeSize2 = Gia_NodeRef_rec( p, pNode, 1 );
-    assert(ConeSize1 == ConeSize2, "ConeSize1 == ConeSize2");
-    assert(ConeSize1 >= 0, "ConeSize1 >= 0");
-    return ConeSize1;
-}
+
+
 
 /**Function*************************************************************
 
@@ -894,32 +643,8 @@ func Gia_NodeMffcSizeMark(p *Gia_Man_t, pNode *Gia_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_NodeCollect_rec(p *Gia_Man_t, pNode *Gia_Obj_t, vSupp *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pNode) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pNode);
-    if Gia_ObjRefNum(p, pNode) || Gia_ObjIsCi(pNode) {
-        Vec_IntPush( vSupp, Gia_ObjId(p, pNode) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pNode), "Gia_ObjIsAnd(pNode)");
-    Gia_NodeCollect_rec( p, Gia_ObjFanin0(pNode), vSupp );
-    Gia_NodeCollect_rec( p, Gia_ObjFanin1(pNode), vSupp );
-}
-func Gia_NodeMffcSizeSupp(p *Gia_Man_t, pNode *Gia_Obj_t, vSupp *Vec_Int_t) int32 {
-    var ConeSize1, ConeSize2 int32;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert(Gia_ObjIsAnd(pNode), "Gia_ObjIsAnd(pNode)");
-    Vec_IntClear( vSupp );
-    Gia_ManIncrementTravId( p );
-    ConeSize1 = Gia_NodeDeref_rec( p, pNode );
-    Gia_NodeCollect_rec( p, Gia_ObjFanin0(pNode), vSupp );
-    Gia_NodeCollect_rec( p, Gia_ObjFanin1(pNode), vSupp );
-    ConeSize2 = Gia_NodeRef_rec( p, pNode, 0 );
-    assert(ConeSize1 == ConeSize2, "ConeSize1 == ConeSize2");
-    assert(ConeSize1 >= 0, "ConeSize1 >= 0");
-    return ConeSize1;
-}
+
+
 
 /**Function*************************************************************
 
@@ -932,42 +657,8 @@ func Gia_NodeMffcSizeSupp(p *Gia_Man_t, pNode *Gia_Obj_t, vSupp *Vec_Int_t) int3
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_NodeMffcMapping_rec(p *Gia_Man_t, iObj int32, vMapping *Vec_Int_t, vSupp *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t; var i int32;
-var iNode int32;
-var Count int32 = 1;
-    if !(iObj != 0) || Vec_IntEntry(vMapping, iObj) {
-        return 0; }
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    Gia_NodeMffcSizeSupp( p, pObj, vSupp );
-    Vec_IntSort( vSupp, 0 );
-    Vec_IntWriteEntry( vMapping, iObj, Vec_IntSize(vMapping) );
-    Vec_IntPush( vMapping, Vec_IntSize(vSupp) );
-    Vec_IntAppend( vMapping, vSupp );
-    Vec_IntPush( vMapping, iObj );
-    Vec_IntForEachEntry( vSupp, iNode, i )
-        Count += Gia_NodeMffcMapping_rec( p, iNode, vMapping, vSupp );
-    return Count;
-}
-func Gia_NodeMffcMapping(p *Gia_Man_t) int32 {
-    var i, Id, Count int32;
-    var pRefsOld *int32;
-    var vMapping *Vec_Int_t;
-    var vSupp *Vec_Int_t = Vec_IntAlloc( 100 );
-    vMapping = Vec_IntAlloc( 2 * Gia_ManObjNum(p) );
-    Vec_IntFill( vMapping, Gia_ManObjNum(p), 0 );
-    pRefsOld = p.Refs; p.Refs = nil;
-    Gia_ManCreateRefs( p ); 
-    Gia_ManForEachCoDriverId( p, Id, i )
-        Count += Gia_NodeMffcMapping_rec( p, Id, vMapping, vSupp );
-    p.Refs = pRefsOld;
-    Vec_IntFree( vSupp );
-    p.vMapping = vMapping;
-    //printf( "Mapping is %.2fx larger than AIG manager.\n", 1.0*Vec_IntSize(vMapping)/Gia_ManObjNum(p) );
-    return Count;
-}
+
+
 
 /**Function*************************************************************
 
@@ -980,29 +671,7 @@ func Gia_NodeMffcMapping(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManHasDangling(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        pObj.fMark0 = 0;
-        if Gia_ObjIsCo(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-        } else if Gia_ObjIsMux(p, pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-            Gia_ObjFanin1(pObj).fMark0 = 1;
-            Gia_ObjFanin2(p, pObj).fMark0 = 1;
-        
-        } else if Gia_ObjIsAnd(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-            Gia_ObjFanin1(pObj).fMark0 = 1;
-        }
-    }
-    Gia_ManForEachAnd( p, pObj, i )
-        Counter += !pObj.fMark0;
-    Gia_ManCleanMark0( p );
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -1015,23 +684,7 @@ func Gia_ManHasDangling(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManMarkDangling(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        pObj.fMark0 = 0;
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-            Gia_ObjFanin1(pObj).fMark0 = 1;
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1; }
-    }
-    Gia_ManForEachAnd( p, pObj, i )
-        Counter += !pObj.fMark0;
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -1044,27 +697,7 @@ func Gia_ManMarkDangling(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManGetDangling(p *Gia_Man_t) *Vec_Int_t {
-    var vDangles *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        pObj.fMark0 = 0;
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-            Gia_ObjFanin1(pObj).fMark0 = 1;
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1; }
-    }
-    vDangles = Vec_IntAlloc( 100 );
-    Gia_ManForEachAnd( p, pObj, i )
-        if ( !pObj.fMark0 )
-            Vec_IntPush( vDangles, i );
-    Gia_ManCleanMark0( p );
-    return vDangles;
-}
+
 /**Function*************************************************************
 
   Synopsis    [Verbose printing of the AIG node.]
@@ -1240,21 +873,8 @@ func Gia_ManPrintCone2(p *Gia_Man_t, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManInvertConstraints(pAig *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    if Gia_ManConstrNum(pAig) == 0 {
-        return; }
-    Gia_ManForEachPo( pAig, pObj, i )
-        if ( i >= Gia_ManPoNum(pAig) - Gia_ManConstrNum(pAig) )
-            Gia_ObjFlipFaninC0( pObj );
-}
-func Gia_ManInvertPos(pAig *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachPo( pAig, pObj, i )
-        Gia_ObjFlipFaninC0( pObj );
-}
+
+
 
 /**Function*************************************************************
 
@@ -1367,20 +987,7 @@ func Gia_ManCompare(p1 *Gia_Man_t, p2 *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManMarkFanoutDrivers(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        pObj.fMark0 = 0;
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1;
-            Gia_ObjFanin1(pObj).fMark0 = 1;
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjFanin0(pObj).fMark0 = 1; }
-    }
-}
+
 
 
 /**Function*************************************************************
@@ -1394,16 +1001,7 @@ func Gia_ManMarkFanoutDrivers(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSwapPos(p *Gia_Man_t, i int32) {
-    var Lit0, LitI int32;
-    assert(i >= 0 && i < Gia_ManPoNum(p), "i >= 0 && i < Gia_ManPoNum(p)");
-    if i == 0 {
-        return; }
-    Lit0 = Gia_ObjFaninLit0p( p, Gia_ManPo(p, 0) );
-    LitI = Gia_ObjFaninLit0p( p, Gia_ManPo(p, i) );
-    Gia_ManPatchCoDriver( p, 0, LitI );
-    Gia_ManPatchCoDriver( p, i, Lit0 );
-}
+
 
 /**Function*************************************************************
 
@@ -1416,21 +1014,8 @@ func Gia_ManSwapPos(p *Gia_Man_t, i int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSaveValue(p *Gia_Man_t) *Vec_Int_t {
-    var vValues *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    vValues = Vec_IntAlloc( Gia_ManObjNum(p) );
-    Gia_ManForEachObj( p, pObj, i )
-        Vec_IntPush( vValues, pObj.Value );
-    return vValues;
-}
-func Gia_ManLoadValue(p *Gia_Man_t, vValues *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.Value = Vec_IntEntry(vValues, i);
-}
+
+
 
 
 /**Function*************************************************************
@@ -1444,27 +1029,7 @@ func Gia_ManLoadValue(p *Gia_Man_t, vValues *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFirstFanouts(p *Gia_Man_t) *Vec_Int_t {
-    var vFans *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        if Gia_ObjIsAnd(pObj) {
-            if Vec_IntEntry(vFans, Gia_ObjFaninId0p(p, pObj)) == 0 {
-                Vec_IntWriteEntry(vFans, Gia_ObjFaninId0p(p, pObj), i); }
-            if Vec_IntEntry(vFans, Gia_ObjFaninId1p(p, pObj)) == 0 {
-                Vec_IntWriteEntry(vFans, Gia_ObjFaninId1p(p, pObj), i); }
-            if Gia_ObjIsMuxId(p, i) && Vec_IntEntry(vFans, Gia_ObjFaninId2p(p, pObj)) == 0 {
-                Vec_IntWriteEntry(vFans, Gia_ObjFaninId2p(p, pObj), i); }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            if Vec_IntEntry(vFans, Gia_ObjFaninId0p(p, pObj)) == 0 {
-                Vec_IntWriteEntry(vFans, Gia_ObjFaninId0p(p, pObj), i); }
-        }
-    }
-    return vFans;
-}
+
 
 /**Function*************************************************************
 
@@ -1816,42 +1381,10 @@ func Gia_DumpLutSizeDistrib(p *Gia_Man_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckSuppMark_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if pObj.fMark0 {
-        return; }
-    pObj.fMark0 = 1;
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    Gia_ManCheckSuppMark_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ManCheckSuppMark_rec( p, Gia_ObjFanin1(pObj) );
-}
-func Gia_ManCheckSuppUnmark_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if !pObj.fMark0 {
-        return; }
-    pObj.fMark0 = 0;
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    Gia_ManCheckSuppUnmark_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ManCheckSuppUnmark_rec( p, Gia_ObjFanin1(pObj) );
-}
-func Gia_ManCheckSupp_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    if pObj.fMark0 {
-        return 1; }
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    if Gia_ManCheckSupp_rec( p, Gia_ObjFanin0(pObj) ) != 0 {
-        return 1; }
-    return Gia_ManCheckSupp_rec( p, Gia_ObjFanin1(pObj) );
-}
-func Gia_ManCheckSuppOverlap(p *Gia_Man_t, iNode1 int32, iNode2 int32) int32 {
-    var Result int32;
-    if iNode1 == 0 || iNode2 == 0 {
-        return 0; }
-    Gia_ManCheckSuppMark_rec( p, Gia_ManObj(p, iNode1) );
-    Result = Gia_ManCheckSupp_rec( p, Gia_ManObj(p, iNode2) );
-    Gia_ManCheckSuppUnmark_rec( p, Gia_ManObj(p, iNode1) );
-    return Result;
-}
+
+
+
+
 
 
 /**Function*************************************************************
@@ -1865,24 +1398,7 @@ func Gia_ManCheckSuppOverlap(p *Gia_Man_t, iNode1 int32, iNode2 int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCountPisWithFanout(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t; 
-    var i, Count int32;
-    Gia_ManForEachCi( p, pObj, i )
-        pObj.fMark0 = 0;
-    Gia_ManForEachAnd( p, pObj, i )
-    {
-        Gia_ObjFanin0(pObj).fMark0 = 1;
-        Gia_ObjFanin1(pObj).fMark0 = 1;
-    }
-    Gia_ManForEachCo( p, pObj, i )
-        Gia_ObjFanin0(pObj).fMark0 = 1;
-    Gia_ManForEachCi( p, pObj, i )
-        Count += pObj.fMark0;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark0 = 0;
-    return Count;
-}
+
 
 /**Function*************************************************************
 
@@ -1895,13 +1411,7 @@ func Gia_ManCountPisWithFanout(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCountPosWithNonZeroDrivers(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t; 
-    var i, Count int32;
-    Gia_ManForEachCo( p, pObj, i )
-        Count += Gia_ObjFaninLit0(pObj, Gia_ObjId(p, pObj)) != 0;
-    return Count;
-}
+
 
 /**Function*************************************************************
 
@@ -1914,20 +1424,7 @@ func Gia_ManCountPosWithNonZeroDrivers(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManUpdateCopy(vCopy *Vec_Int_t, p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i, iLit int32;
-    Vec_IntForEachEntry( vCopy, iLit, i )
-    {
-        if iLit == -1 {
-            continue; }
-        pObj = Gia_ManObj( p, Abc_Lit2Var(iLit) );
-        if !~pObj.Value {
-            Vec_IntWriteEntry( vCopy, i, -1 );
-        } else {
-            Vec_IntWriteEntry( vCopy, i, Abc_LitNotCond(pObj.Value, Abc_LitIsCompl(iLit)) ); }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -2004,72 +1501,10 @@ func Gia_ManDupWithMuxPos(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManRingAdd(p *Gia_Man_t, iObj int32, vRes *Vec_Int_t, vDists *Vec_Int_t, Dist int32) {
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    Vec_IntWriteEntry( vDists, iObj, Dist );
-    Vec_IntPush( vRes, iObj );
-}
-func Gia_ManCollectRing(p *Gia_Man_t, vStart *Vec_Int_t, vRes *Vec_Int_t, vDists *Vec_Int_t) {
-    var i, k, iObj, iFan int32;
-    Vec_IntForEachEntry( vStart, iObj, i )
-    {
-        var Weight int32  = Vec_IntEntry( vDists, iObj );
-        var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);
-        assert(Weight > 0, "Weight > 0");
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ManRingAdd( p, Gia_ObjFaninId0(pObj, iObj), vRes, vDists, Weight + 1*!Gia_ObjIsBuf(Gia_ObjFanin0(pObj)) );
-            Gia_ManRingAdd( p, Gia_ObjFaninId1(pObj, iObj), vRes, vDists, Weight + 1*!Gia_ObjIsBuf(Gia_ObjFanin1(pObj)) );
-        }
-        Gia_ObjForEachFanoutStaticId( p, iObj, iFan, k )
-            Gia_ManRingAdd( p, iFan, vRes, vDists, Weight + 1*!Gia_ObjIsBuf(Gia_ManObj(p, iFan)) );
-    }
-}
-func Gia_ManComputeDistanceInt(p *Gia_Man_t, iTarg int32, vObjs *Vec_Int_t, fVerbose int32) *Vec_Int_t {
-    var i, iObj int32;
-    var vDists, vStart, vNexts *Vec_Int_t;
-    vStart = Vec_IntAlloc( 100 );
-    vNexts = Vec_IntAlloc( 100 );
-    vDists = Vec_IntStart( Gia_ManObjNum(p) );
-    Gia_ManIncrementTravId( p );
-    if vObjs {
-        Vec_IntForEachEntry( vObjs, iObj, i )
-        {
-            Gia_ObjSetTravIdCurrentId(p, iObj);
-            Vec_IntWriteEntry( vDists, iObj, 1 );
-            Vec_IntPush( vStart, iObj );
-        }
-    
-    } else {
-        Gia_ObjSetTravIdCurrentId(p, iTarg);
-        Vec_IntWriteEntry( vDists, iTarg, 1 );
-        Vec_IntPush( vStart, iTarg );
-    }
-    for  i = 0; ; i++  {
-        if fVerbose != 0 {
-            fmt.Printf("Ring %2d : %6d\n", i, Vec_IntSize(vDists)-Vec_IntCountZero(vDists)); }        
-        Gia_ManCollectRing( p, vStart, vNexts, vDists );
-        if Vec_IntSize(vNexts) == 0 {
-            break; }
-        Vec_IntClear( vStart );
-        ABC_SWAP( Vec_Int_t, *vStart, *vNexts );
-    }
-    Vec_IntFree( vStart );
-    Vec_IntFree( vNexts );
-    return vDists;
-}
-func Gia_ManComputeDistance(p *Gia_Man_t, iObj int32, vObjs *Vec_Int_t, fVerbose int32) *Vec_Int_t {
-    var vDists *Vec_Int_t;
-    if p.vFanoutNums {
-        vDists = Gia_ManComputeDistanceInt( p, iObj, vObjs, fVerbose );
-    } else {
-        Gia_ManStaticFanoutStart( p );
-        vDists = Gia_ManComputeDistanceInt( p, iObj, vObjs, fVerbose );
-        Gia_ManStaticFanoutStop( p );
-    }
-    return vDists;
-}
+
+
+
+
 
 
 /**Function*************************************************************

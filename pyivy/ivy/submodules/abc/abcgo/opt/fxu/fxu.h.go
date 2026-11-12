@@ -1,101 +1,66 @@
 package fxu
 
-/**CFile****************************************************************
+import "io"
 
-  FileName    [fxu.h]
-
-  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]
-
-  Synopsis    [External declarations of fast extract for unate covers.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - February 1, 2003.]
-
-  Revision    [$Id: fxu.h,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "misc/vec/vec.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-     
-
-// structure for the FX input/output data 
+// Fxu_Data_t carries binary SOP/fanin vectors and original FXU controls. Counts
+// of old/new nodes derive from the vector lengths, rather than cached fields.
 type Fxu_Data_t struct {
-    // user specified parameters
-    fOnlyS               int32;           // set to 1 to have only single-cube divs
-    fOnlyD               int32;           // set to 1 to have only double-cube divs
-    fUse0               int32;            // set to 1 to have 0-weight also extracted
-    fUseCompl               int32;        // set to 1 to have complement taken into account
-    fVerbose               int32;         // set to 1 to have verbose output
-    fVeryVerbose               int32;     // set to 1 to have more verbose output
-    nNodesExt               int32;        // the number of divisors to extract
-    nSingleMax               int32;       // the max number of single-cube divisors to consider
-    nPairsMax               int32;        // the max number of double-cube divisors to consider
-    WeightMin               int32;        // the min weight of a divisor to extract
-    LitCountMax               int32;      // the max literal count of a divisor to consider
-    fCanonDivs               int32;       // use only canonical divisors (AND/XOR/MUX) 
-    // the input information
-    vSops        *Vec_Ptr_t;            // the SOPs for each node in the network
-    vFanins        *Vec_Ptr_t;          // the fanins of each node in the network
-    // output information
-    vSopsNew        *Vec_Ptr_t;         // the SOPs for each node in the network after extraction
-    vFaninsNew        *Vec_Ptr_t;       // the fanins of each node in the network after extraction
-    // the SOP manager
-    pManSop       *Mem_Flex_t;
-    // statistics   
-    nNodesOld               int32;        // the old number of nodes
-    nNodesNew               int32;        // the number of divisors actually extracted
+	OnlyS, OnlyD, Use0, UseCompl, Verbose, VeryVerbose        bool
+	NodesExt, SingleMax, PairsMax, WeightMin, LiteralCountMax int32
+	CanonicalDivisors                                         bool // retained source setting; original FXU does not consult it
+	SOPs                                                      []string
+	Fanins                                                    [][]int32
+	NewSOPs                                                   []string
+	NewFanins                                                 [][]int32
+	Log                                                       io.Writer
+	LastError                                                 error
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
+func Abc_NtkSetDefaultFxParams(p *Fxu_Data_t) {
+	*p = Fxu_Data_t{NodesExt: 1000000, SingleMax: 20000, PairsMax: 30000, LiteralCountMax: 4, UseCompl: true}
+}
+func NewParams() *Fxu_Data_t              { p := new(Fxu_Data_t); Abc_NtkSetDefaultFxParams(p); return p }
+func (p *Fxu_Data_t) OldNodeCount() int32 { return int32(len(p.SOPs)) }
+func (p *Fxu_Data_t) NewNodeCount() int32 {
+	if len(p.NewSOPs) < len(p.SOPs) {
+		return 0
+	}
+	return int32(len(p.NewSOPs) - len(p.SOPs))
+}
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
+// FXUNetwork keeps the algorithm independent of ABC's concrete graph package.
+// A network adapter owns conversion to SCC-free SOPs and graph reconstruction.
+type FXUNetwork interface {
+	FXUCovers() ([]string, [][]int32, error)
+	ReplaceFXUCovers([]string, [][]int32) error
+}
 
-/*===== fxu.c ==========================================================*/
-// extern void   Abc_NtkSetDefaultFxParams( Fxu_Data_t * p );
-
-// extern int    Abc_NtkFastExtract( Abc_Ntk_t * pNtk, Fxu_Data_t * p );
-
-// extern void   Abc_NtkFxuFreeInfo( Fxu_Data_t * p );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func Abc_NtkFxuFreeInfo(p *Fxu_Data_t) {
+	p.SOPs = nil
+	p.Fanins = nil
+	p.NewSOPs = nil
+	p.NewFanins = nil
+	p.LastError = nil
+}
+func Abc_NtkFastExtract(network FXUNetwork, p *Fxu_Data_t) int32 {
+	sops, fans, err := network.FXUCovers()
+	if err != nil {
+		p.LastError = err
+		return 0
+	}
+	p.SOPs = sops
+	p.Fanins = fans
+	count, err := Extract(p)
+	if err != nil {
+		p.LastError = err
+		return 0
+	}
+	if count == 0 {
+		return 0
+	}
+	if err := network.ReplaceFXUCovers(p.NewSOPs, p.NewFanins); err != nil {
+		p.LastError = err
+		return 0
+	}
+	return 1
+}

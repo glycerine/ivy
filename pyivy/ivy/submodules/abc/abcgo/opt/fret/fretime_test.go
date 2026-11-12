@@ -76,6 +76,38 @@ func TestInitToOrigRejectsNegativeID(t *testing.T) {
 	ensureInitToOrig(-1)
 }
 
+func TestInitToOrigLookupReturnsMappedObjectAndLag(t *testing.T) {
+	original := abc.NewNetwork("original")
+	originalObj := abc.Abc_NtkCreatePi(original)
+	initNetwork := abc.NewNetwork("init")
+	initObj := abc.Abc_NtkCreatePi(initNetwork)
+	pManMR = &MinRegMan_t{pNtk: original}
+	t.Cleanup(func() { pManMR = nil })
+	ensureInitToOrig(abc.Abc_ObjId(initObj))
+	pManMR.pInitToOrig[abc.Abc_ObjId(initObj)] = NodeLag_t{id: abc.Abc_ObjId(originalObj), lag: 7}
+
+	var gotObj *Abc_Obj_t
+	var gotLag int32
+	Abc_FlowRetime_GetInitToOrig(initObj, &gotObj, &gotLag)
+	if gotObj != originalObj || gotLag != 7 {
+		t.Fatalf("mapping = (%p, %d), want (%p, 7)", gotObj, gotLag, originalObj)
+	}
+}
+
+func TestClearInitToOrigMarksEntryUnmapped(t *testing.T) {
+	initNetwork := abc.NewNetwork("clear-init-map")
+	initObj := abc.Abc_NtkCreatePi(initNetwork)
+	pManMR = &MinRegMan_t{}
+	t.Cleanup(func() { pManMR = nil })
+	ensureInitToOrig(abc.Abc_ObjId(initObj))
+	pManMR.pInitToOrig[abc.Abc_ObjId(initObj)] = NodeLag_t{id: 3, lag: 8}
+
+	Abc_FlowRetime_ClearInitToOrig(initObj)
+	if got := pManMR.pInitToOrig[abc.Abc_ObjId(initObj)]; got != (NodeLag_t{id: -1}) {
+		t.Fatalf("cleared entry = %+v, want id=-1 and lag=0", got)
+	}
+}
+
 func TestTimingEdgesUsePerObjectStorage(t *testing.T) {
 	network := abc.NewNetwork("flow-time-edges")
 	obj := abc.Abc_NtkCreatePi(network)
@@ -131,5 +163,53 @@ func TestClearFlowsPreservesNonFlowMarksUntilFullReset(t *testing.T) {
 	Abc_FlowRetime_ClearFlows(1)
 	if data = pManMR.pDataArray[0]; data != (Flow_Data_t{}) {
 		t.Fatalf("full flow reset left unexpected state: %+v", data)
+	}
+}
+
+func TestSinkDistanceHistogramMovesOneEntryAndDetectsEmptyBucket(t *testing.T) {
+	histogram := vec.Vec_IntStart(4)
+	vec.Vec_IntWriteEntry(histogram, 1, 1)
+	pManMR = &MinRegMan_t{vSinkDistHist: histogram}
+	t.Cleanup(func() { pManMR = nil })
+
+	updateSinkDistanceHistogram(1, 2)
+	if got := vec.Vec_IntEntry(histogram, 1); got != 0 {
+		t.Fatalf("old bucket count = %d, want 0", got)
+	}
+	if got := vec.Vec_IntEntry(histogram, 2); got != 1 {
+		t.Fatalf("new bucket count = %d, want 1", got)
+	}
+	if pManMR.fSinkDistTerminate == 0 {
+		t.Fatal("empty old bucket did not terminate sink-distance search")
+	}
+}
+
+func TestFastFlowPreorderDistancesOnSimpleAIGPath(t *testing.T) {
+	network := abc.NewNetwork("flow-preorder-path")
+	pi := abc.Abc_NtkCreatePi(network)
+	node := abc.Abc_NtkCreateNode(network)
+	po := abc.Abc_NtkCreatePo(network)
+	abc.Abc_ObjAddFanin(node, pi)
+	abc.Abc_ObjAddFanin(po, node)
+	pManMR = &MinRegMan_t{
+		fIsForward:    1,
+		pNtk:          network,
+		nNodes:        abc.Abc_NtkObjNum(network),
+		pDataArray:    make([]Flow_Data_t, abc.Abc_NtkObjNum(network)),
+		vSinkDistHist: vec.Vec_IntStart(20),
+	}
+	t.Cleanup(func() { pManMR = nil })
+
+	dfsfast_preorder(network)
+	want := map[*abc.Abc_Obj_t]Flow_Data_t{
+		pi:   {e_dist: 1, r_dist: 2},
+		node: {e_dist: 2, r_dist: 3},
+		po:   {r_dist: 1},
+	}
+	for obj, expected := range want {
+		got := pManMR.pDataArray[abc.Abc_ObjId(obj)]
+		if got.e_dist != expected.e_dist || got.r_dist != expected.r_dist {
+			t.Errorf("object %d distances=(%d,%d), want (%d,%d)", abc.Abc_ObjId(obj), got.e_dist, got.r_dist, expected.e_dist, expected.r_dist)
+		}
 	}
 }

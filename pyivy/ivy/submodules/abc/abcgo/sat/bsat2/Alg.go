@@ -20,67 +20,23 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "Vec.h"
-
-namespace Minisat {
-
-//=================================================================================================
-// Useful functions on vector-like types:
-
-//=================================================================================================
-// Removing and searching for elements:
-//
-
-template<class V, class T>
-static inline void remove(V& ts, T& t)
-{
-    int j = 0;
-    for (; j < ts.size() && ts[j] != t; j++);
-    assert(j < ts.size(), "j < ts.size()");
-    for (; j < ts.size()-1; j++) ts[j] = ts[j+1];
-    ts.pop();
+func Find[T comparable](items []T, value T) bool {
+	for _, x := range items {
+		if x == value {
+			return true
+		}
+	}
+	return false
 }
-
-
-template<class V, class T>
-static inline bool find(V& ts, T& t)
-{
-    int j = 0;
-    for (; j < ts.size() && ts[j] != t; j++);
-    return j < ts.size();
+func Remove[T comparable](items []T, value T) []T {
+	for i, x := range items {
+		if x == value {
+			copy(items[i:], items[i+1:])
+			var zero T
+			items[len(items)-1] = zero
+			return items[:len(items)-1]
+		}
+	}
+	panic("removed value missing")
 }
-
-
-//=================================================================================================
-// Copying vectors with support for nested vector types:
-//
-
-// Base case:
-template<class T>
-static inline void copy(T& from, T& to)
-{
-    to = from;
-}
-
-// Recursive case:
-template<class T>
-static inline void copy(vec<T>& from, vec<T>& to, bool append = false)
-{
-    if (!append)
-        to.clear();
-    for int i = 0; i < from.size(); i++{
-        to.push();
-        copy(from[i], to.last());
-    }
-}
-
-template<class T>
-static inline void append(vec<T>& from, vec<T>& to){ copy(from, to, true); }
-
-//=================================================================================================
-}
-
-
+func Copy[T any](items []T) []T { return append([]T(nil), items...) }

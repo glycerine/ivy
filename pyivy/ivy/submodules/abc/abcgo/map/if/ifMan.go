@@ -1,749 +1,444 @@
 package if_
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/misc/tim"
+	abcutil "github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [ifMan.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [FPGA mapping based on priority cuts.]
-
-  Synopsis    [Mapping manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 21, 2006.]
-
-  Revision    [$Id: ifMan.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "if.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static If_Obj_t * If_ManSetupObj( If_Man_t * p );
-
-
-func If_ManCutSetRecycle(p *If_Man_t, pSet *If_Set_t) { pSet.pNext = p.pFreeList; p.pFreeList = pSet;                            }
-func If_ManCutSetFetch(p *If_Man_t) *If_Set_t { var pTemp *If_Set_t  = p.pFreeList; p.pFreeList = p.pFreeList.pNext; return pTemp; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the AIG manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManStart(pPars *If_Par_t) *If_Man_t {
-    var p *If_Man_t; var v int32;
-    assert(!pPars.fUseDsd || !pPars.fUseTtPerm, "!pPars.fUseDsd || !pPars.fUseTtPerm");
-    // start the manager
-    // inlining of macro ABC_ALLOC
-    p = ((If_Man_t *) malloc(sizeof(If_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(If_Man_t) );
-    p.pPars    = pPars;
-    p.fEpsilon = pPars.Epsilon;
-    // allocate arrays for nodes
-    p.vCis     = Vec_PtrAlloc( 100 );
-    p.vCos     = Vec_PtrAlloc( 100 );
-    p.vObjs    = Vec_PtrAlloc( 100 );
-    p.vTemp    = Vec_PtrAlloc( 100 );
-    p.vVisited = Vec_PtrAlloc( 100 );
-    // prepare the memory manager
-    if p.pPars.fTruth {
-        for  v = 0; v <= p.pPars.nLutSize; v++  {
-            p.nTruth6Words[v] = Abc_Truth6WordNum( v );
-        }
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            p.vTtMem[v] = Vec_MemAllocForTT( v, pPars.fUseTtPerm );
-        }
-        for  v = 0; v < 6; v++  {
-            p.vTtMem[v] = p.vTtMem[6];
-        }
-        if p.pPars.fDelayOpt || pPars.nGateSize > 0 {
-            for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-                p.vTtIsops[v] = Vec_WecAlloc( 1000 );
-            }
-            for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-                Vec_WecInit( p.vTtIsops[v], 2 );
-            }
-            for  v = 0; v < 6; v++  {
-                p.vTtIsops[v] = p.vTtIsops[6];
-            }
-        }
-        if pPars.fDelayOpt || pPars.nGateSize > 0 || pPars.fDsdBalance {
-            p.vCover = Vec_IntAlloc( 0 );
-            p.vArray = Vec_IntAlloc( 1000 );
-        }
-    }
-    if p.pPars.fUsePerm {
-        p.nPermWords = If_CutPermWords( p.pPars.nLutSize );
-    } else {
-        p.nPermWords = 0;
-    }
-    p.nObjBytes   = sizeof(If_Obj_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);
-    p.nCutBytes   = sizeof(If_Cut_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);
-    p.nSetBytes   = sizeof(If_Set_t) + (sizeof(If_Cut_t *) + p.nCutBytes) * (p.pPars.nCutsMax + 1);
-    p.pMemObj     = Mem_FixedStart( p.nObjBytes );
-    // report expected memory usage
-    if p.pPars.fVerbose {
-        Abc_Print( 1, "K = %d. Memory (bytes): Truth = %4d. Cut = %4d. Obj = %4d. Set = %4d. CutMin = %s\n", 
-            p.pPars.nLutSize, 8 * p.nTruth6Words[p.pPars.nLutSize], p.nCutBytes, p.nObjBytes, p.nSetBytes, p.pPars.fCutMin? "yes":"no" ); }
-    // room for temporary truth tables
-    // inlining of macro ABC_ALLOC
-    p.puTemp[0] = p.pPars.fTruth? ((unsigned *) malloc(sizeof(unsigned) * (size_t)(8 * p.nTruth6Words[p.pPars.nLutSize]))) : nil;
-    p.puTemp[1] = p.puTemp[0] + p.nTruth6Words[p.pPars.nLutSize]*2;
-    p.puTemp[2] = p.puTemp[1] + p.nTruth6Words[p.pPars.nLutSize]*2;
-    p.puTemp[3] = p.puTemp[2] + p.nTruth6Words[p.pPars.nLutSize]*2;
-    if p.pPars.fTruth {
-        // inlining of macro ABC_ALLOC
-        p.puTempW = ((word *) malloc(sizeof(word) * (size_t)(p.nTruth6Words[p.pPars.nLutSize])));
-    } else {
-        p.puTempW = nil;
-    }
-    if pPars.fUseDsd {
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            p.vTtDsds[v] = Vec_IntAlloc( 1000 );
-            Vec_IntPush( p.vTtDsds[v], 0 );
-            Vec_IntPush( p.vTtDsds[v], 2 );
-            p.vTtPerms[v] = Vec_StrAlloc( 10000 );
-            Vec_StrFill( p.vTtPerms[v], 2 * v, IF_BIG_CHAR );
-            Vec_StrWriteEntry( p.vTtPerms[v], v, 0 );
-        }
-        for  v = 0; v < 6; v++  {
-            p.vTtDsds[v]  = p.vTtDsds[6];
-            p.vTtPerms[v] = p.vTtPerms[6];
-        }
-    }
-    if pPars.fUseTtPerm {
-        p.vPairHash = Hash_IntManStart( 10000 );
-        p.vPairPerms = Vec_StrAlloc( 10000 );
-        Vec_StrFill( p.vPairPerms, p.pPars.nLutSize, 0 );
-        p.vPairRes = Vec_IntAlloc( 1000 );
-        Vec_IntPush( p.vPairRes, -1 );
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            p.vTtOccurs[v] = Vec_IntAlloc( 1000 );
-        }
-        for  v = 0; v < 6; v++  {
-            p.vTtOccurs[v] = p.vTtOccurs[6];
-        }
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            Vec_IntPushTwo( p.vTtOccurs[v], 0, 0 );
-        }
-    }
-    if pPars.fUseCofVars {
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            p.vTtVars[v] = Vec_StrAlloc( 1000 );
-            Vec_StrPush( p.vTtVars[v], 0 );
-            Vec_StrPush( p.vTtVars[v], 0 );
-        }
-        for  v = 0; v < 6; v++  {
-            p.vTtVars[v]  = p.vTtVars[6];
-        }
-    }
-    if pPars.fUseAndVars {
-        for  v = 6; v <= Abc_MaxInt(6,p.pPars.nLutSize); v++  {
-            p.vTtDecs[v] = Vec_IntAlloc( 1000 );
-            Vec_IntPush( p.vTtDecs[v], 0 );
-            Vec_IntPush( p.vTtDecs[v], 0 );
-        }
-        for  v = 0; v < 6; v++  {
-            p.vTtDecs[v]  = p.vTtDecs[6];
-        }
-    }
-    if pPars.fUseBat {
-//        abctime clk = Abc_Clock();
-        extern int Bat_ManCellFuncLookup( void * pMan, unsigned * pTruth, int nVars, int nLeaves, char * pStr );
-        extern void Bat_ManFuncSetupTable();
-        pPars.pFuncCell = (int (*)  (If_Man_t *, unsigned *, int, int, char *))Bat_ManCellFuncLookup;
-        Bat_ManFuncSetupTable();
-//        Abc_PrintTime( 1, "Setup time", Abc_Clock() - clk );
-    }
-    // create the constant node
-    p.pConst1   = If_ManSetupObj( p );
-    p.pConst1.Type   = IF_CONST1;
-    p.pConst1.fPhase = 1;
-    p.nObjs[IF_CONST1]++;
-    return p;
+// If_ManCutSetRecycle returns a no-longer-live cut set to the manager's pool.
+func If_ManCutSetRecycle(p *If_Man_t, set *If_Set_t) {
+	if set == nil {
+		return
+	}
+	set.nCuts = 0
+	set.pNext = p.pFreeList
+	p.pFreeList = set
 }
 
-/**Function*************************************************************
+// If_ManCutSetFetch obtains one cut set from the manager's pool.
+func If_ManCutSetFetch(p *If_Man_t) *If_Set_t {
+	set := p.pFreeList
+	if set == nil {
+		panic("if: cut-set pool exhausted")
+	}
+	p.pFreeList = set.pNext
+	set.pNext = nil
+	return set
+}
 
-  Synopsis    []
+// If_ManStart initializes the graph manager and its enabled truth caches.
+func If_ManStart(pars *If_Par_t) *If_Man_t {
+	assert(pars != nil, "pars != nil")
+	assert(pars.fUseDsd == 0 || pars.fUseTtPerm == 0, "pars.fUseDsd == 0 || pars.fUseTtPerm == 0")
+	assert(pars.nLutSize > 0 && pars.nLutSize <= IF_MAX_LUTSIZE, "valid LUT size")
+	if pars.fTruth != 0 {
+		assert(pars.nLutSize <= IF_MAX_FUNC_LUTSIZE, "truth LUT size is within the supported truth-cache bound")
+	}
+	p := &If_Man_t_{pPars: pars, fEpsilon: pars.Epsilon}
+	p.vCis = vec.Vec_PtrAlloc(100)
+	p.vCos = vec.Vec_PtrAlloc(100)
+	p.vObjs = vec.Vec_PtrAlloc(100)
+	p.vTemp = vec.Vec_PtrAlloc(100)
+	p.vVisited = vec.Vec_PtrAlloc(100)
 
-  Description []
-               
-  SideEffects []
+	if pars.fTruth != 0 {
+		maxVars := int(Abc_MaxInt(6, pars.nLutSize))
+		for v := 0; v <= int(pars.nLutSize); v++ {
+			p.nTruth6Words[v] = abcutil.Abc_Truth6WordNum(int32(v))
+		}
+		for v := 6; v <= maxVars; v++ {
+			p.vTtMem[v] = vec.Vec_MemAllocForTT(v, int(pars.fUseTtPerm))
+		}
+		for v := 0; v < 6; v++ {
+			p.vTtMem[v] = p.vTtMem[6]
+			p.nTruth6Words[v] = p.nTruth6Words[5]
+		}
+		if pars.fDelayOpt != 0 || pars.nGateSize > 0 {
+			for v := 6; v <= maxVars; v++ {
+				p.vTtIsops[v] = vec.Vec_WecAlloc(1000)
+				vec.Vec_WecInit(p.vTtIsops[v], 2)
+			}
+			for v := 0; v < 6; v++ {
+				p.vTtIsops[v] = p.vTtIsops[6]
+			}
+		}
+		if pars.fDelayOpt != 0 || pars.nGateSize > 0 || pars.fDsdBalance != 0 {
+			p.vCover = vec.Vec_IntAlloc(0)
+			p.vArray = vec.Vec_IntAlloc(1000)
+		}
+	}
+	if pars.fUsePerm != 0 {
+		p.nPermWords = If_CutPermWords(pars.nLutSize)
+	}
+	p.nObjBytes = int32(unsafe.Sizeof(If_Obj_t_{}))
+	p.nCutBytes = int32(unsafe.Sizeof(If_Cut_t_{})) + 4*(pars.nLutSize+p.nPermWords)
+	p.nSetBytes = int32(unsafe.Sizeof(If_Set_t_{})) + (int32(unsafe.Sizeof((*If_Cut_t)(nil)))+p.nCutBytes)*(pars.nCutsMax+1)
 
-  SeeAlso     []
+	if pars.fTruth != 0 {
+		wordCount := int(p.nTruth6Words[pars.nLutSize])
+		p.puTemp[0] = make([]uint32, 4*wordCount*2)
+		for i := 1; i < 4; i++ {
+			p.puTemp[i] = p.puTemp[0][i*wordCount*2:]
+		}
+		p.puTempW = make([]uint64, wordCount)
+	}
+	if pars.fUseDsd != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+			p.vTtDsds[v] = vec.Vec_IntAlloc(1000)
+			vec.Vec_IntPush(p.vTtDsds[v], 0)
+			vec.Vec_IntPush(p.vTtDsds[v], 2)
+			p.vTtPerms[v] = vec.Vec_StrAlloc(10000)
+			vec.Vec_StrFill(p.vTtPerms[v], 2*v, IF_BIG_CHAR)
+			vec.Vec_StrWriteEntry(p.vTtPerms[v], v, 0)
+		}
+		for v := 0; v < 6; v++ {
+			p.vTtDsds[v], p.vTtPerms[v] = p.vTtDsds[6], p.vTtPerms[6]
+		}
+	}
+	if pars.fUseTtPerm != 0 {
+		p.vPairHash = vec.Hash_IntManStart(10000)
+		p.vPairPerms = vec.Vec_StrAlloc(10000)
+		vec.Vec_StrFill(p.vPairPerms, int(pars.nLutSize), 0)
+		p.vPairRes = vec.Vec_IntAlloc(1000)
+		vec.Vec_IntPush(p.vPairRes, -1)
+		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+			p.vTtOccurs[v] = vec.Vec_IntAlloc(1000)
+			vec.Vec_IntPushTwo(p.vTtOccurs[v], 0, 0)
+		}
+		for v := 0; v < 6; v++ {
+			p.vTtOccurs[v] = p.vTtOccurs[6]
+		}
+	}
+	if pars.fUseCofVars != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+			p.vTtVars[v] = vec.Vec_StrAlloc(1000)
+			vec.Vec_StrPush(p.vTtVars[v], 0)
+			vec.Vec_StrPush(p.vTtVars[v], 0)
+		}
+		for v := 0; v < 6; v++ {
+			p.vTtVars[v] = p.vTtVars[6]
+		}
+	}
+	if pars.fUseAndVars != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+			p.vTtDecs[v] = vec.Vec_IntAlloc(1000)
+			vec.Vec_IntPushTwo(p.vTtDecs[v], 0, 0)
+		}
+		for v := 0; v < 6; v++ {
+			p.vTtDecs[v] = p.vTtDecs[6]
+		}
+	}
+	if pars.fVerbose != 0 {
+		fmt.Printf("K = %d. Cut record bytes = %d. Object bytes = %d. Set bytes = %d.\n",
+			pars.nLutSize, p.nCutBytes, p.nObjBytes, p.nSetBytes)
+	}
 
-***********************************************************************/
+	p.pConst1 = If_ManSetupObj(p)
+	p.pConst1.Type = IF_CONST1
+	p.pConst1.fPhase = 1
+	p.nObjs[IF_CONST1]++
+	return p
+}
+
+// If_ManRestart clears the graph while retaining reusable manager caches.
 func If_ManRestart(p *If_Man_t) {
-    p.pMemCi = nil;
-    Vec_PtrClear( p.vCis );
-    Vec_PtrClear( p.vCos );
-    Vec_PtrClear( p.vObjs );
-    Vec_PtrClear( p.vTemp );
-    Mem_FixedRestart( p.pMemObj );
-    // create the constant node
-    p.pConst1 = If_ManSetupObj( p );
-    p.pConst1.Type = IF_CONST1;
-    p.pConst1.fPhase = 1;
-    // reset the counter of other nodes
-    p.nObjs[IF_CI] = p.nObjs[IF_CO] = p.nObjs[IF_AND] = 0;
+	assert(p != nil && !p.stopped, "manager is live")
+	vec.Vec_PtrClear(p.vCis)
+	vec.Vec_PtrClear(p.vCos)
+	vec.Vec_PtrClear(p.vObjs)
+	vec.Vec_PtrClear(p.vTemp)
+	vec.Vec_PtrClear(p.vVisited)
+	p.ciCutSets = nil
+	p.ownedCutSets = nil
+	p.pMemCi, p.pMemAnd, p.pFreeList = nil, nil, nil
+	p.nObjs = [IF_VOID + 1]int32{}
+	p.nLevelMax, p.nChoices = 0, 0
+	p.pConst1 = If_ManSetupObj(p)
+	p.pConst1.Type = IF_CONST1
+	p.pConst1.fPhase = 1
+	p.nObjs[IF_CONST1]++
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// If_ManStop releases Go-owned graph and cache references; it is safe to repeat.
 func If_ManStop(p *If_Man_t) {
-    extern void If_ManCacheAnalize( If_Man_t * p );
-    var i int32;
-    if p.pPars.fVerbose && p.vCutData {
-        If_ManCacheAnalize( p ); }
-    if p.pPars.fVerbose && p.pPars.fTruth {
-        var nUnique, nMemTotal int32;
-        for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-            nUnique += Vec_MemEntryNum(p.vTtMem[i]);
-        }
-        for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-            nMemTotal += int32(Vec_MemMemory(p.vTtMem[i]));
-        }
-        fmt.Printf("Unique truth tables = %d   Memory = %.2f MB   ", nUnique, 1.0 * nMemTotal / (1<<20)); 
-        Abc_PrintTime( 1, "Time", p.timeCache[4] );
-        if p.nCacheMisses {
-            fmt.Printf("Cache hits = %d. Cache misses = %d  (%.2f %%)\n", p.nCacheHits, p.nCacheMisses, 100.0 * p.nCacheMisses / (p.nCacheHits + p.nCacheMisses)); 
-            Abc_PrintTime( 1, "Non-DSD   ", p.timeCache[0] );
-            Abc_PrintTime( 1, "DSD hits  ", p.timeCache[1] );
-            Abc_PrintTime( 1, "DSD misses", p.timeCache[2] );
-            Abc_PrintTime( 1, "TOTAL     ", p.timeCache[0] + p.timeCache[1] + p.timeCache[2] );
-            Abc_PrintTime( 1, "Canon     ", p.timeCache[3] );
-        }
-    }
-    if p.pPars.fVerbose && p.nCutsUselessAll {
-        for  i = 0; i <= 16; i++  {
-            if p.nCutsUseless[i] {
-                Abc_Print( 1, "Useless cuts %2d  = %9d  (out of %9d)  (%6.2f %%)\n", i, p.nCutsUseless[i], p.nCutsCount[i], 100.0*p.nCutsUseless[i]/Abc_MaxInt(p.nCutsCount[i],1) ); }
-        }
-        Abc_Print( 1, "Useless cuts all = %9d  (out of %9d)  (%6.2f %%)\n", p.nCutsUselessAll, p.nCutsCountAll, 100.0*p.nCutsUselessAll/Abc_MaxInt(p.nCutsCountAll,1) );
-    }
-//    if ( p->pPars->fVerbose && p->nCuts5 )
-//        Abc_Print( 1, "Statistics about 5-cuts: Total = %d  Non-decomposable = %d (%.2f %%)\n", p->nCuts5, p->nCuts5-p->nCuts5a, 100.0*(p->nCuts5-p->nCuts5a)/p->nCuts5 );
-    if p.pIfDsdMan {
-        p.pIfDsdMan = nil; }
-    if p.pPars.fUseDsd && (p.nCountNonDec[0] || p.nCountNonDec[1]) {
-        fmt.Printf("NonDec0 = %d.  NonDec1 = %d.\n", p.nCountNonDec[0], p.nCountNonDec[1]); }
-    Vec_IntFreeP( &p.vCoAttrs );
-    Vec_PtrFree( p.vCis );
-    Vec_PtrFree( p.vCos );
-    Vec_PtrFree( p.vObjs );
-    Vec_PtrFree( p.vTemp );
-    Vec_IntFreeP( &p.vCover );
-    Vec_IntFreeP( &p.vArray );
-    Vec_WrdFreeP( &p.vAnds );
-    Vec_WrdFreeP( &p.vAndGate );
-    Vec_WrdFreeP( &p.vOrGate );
-    Vec_PtrFreeP( &p.vObjsRev );
-    Vec_PtrFreeP( &p.vLatchOrder );
-    Vec_IntFreeP( &p.vLags );
-    Vec_IntFreeP( &p.vDump );
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_IntFreeP( &p.vTtDsds[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_StrFreeP( &p.vTtPerms[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_StrFreeP( &p.vTtVars[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_IntFreeP( &p.vTtDecs[i] );
-    }
-    Vec_IntFreeP( &p.vCutData );
-    Vec_IntFreeP( &p.vPairRes );
-    Vec_StrFreeP( &p.vPairPerms );
-    Vec_PtrFreeP( &p.vVisited );
-    if p.vPairHash {
-        Hash_IntManStop( p.vPairHash ); }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_MemHashFree( p.vTtMem[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_MemFreeP( &p.vTtMem[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_WecFreeP( &p.vTtIsops[i] );
-    }
-    for  i = 6; i <= Abc_MaxInt(6,p.pPars.nLutSize); i++  {
-        Vec_IntFreeP( &p.vTtOccurs[i] );
-    }
-    Mem_FixedStop( p.pMemObj, 0 );
-    if p.vTtMem6 {
-        Vec_MemHashFree( p.vTtMem6 );
-        Vec_MemFreeP( &p.vTtMem6 );
-    }
-    p.pMemCi = nil;
-    p.pMemAnd = nil;
-    p.puTemp[0] = nil;
-    p.puTempW = nil;
-    // free pars memory
-    p.pPars.pTimesArr = nil;
-    p.pPars.pTimesReq = nil;
-    if p.pManTim {
-        Tim_ManStop( p.pManTim ); }
-    if p.vSwitching {
-        Vec_IntFree( p.vSwitching ); }
-    if p.pPars.fUseBat {
-        extern void Bat_ManFuncSetdownTable();
-        Bat_ManFuncSetdownTable();
-    }
-    // hash table
-//    if ( p->pPars->fVerbose && p->nTableEntries[0] )
-//        printf( "Hash table 2:  Entries = %7d.  Size = %7d.\n", p->nTableEntries[0], p->nTableSize[0] );
-//    if ( p->pPars->fVerbose && p->nTableEntries[1] )
-//        printf( "Hash table 3:  Entries = %7d.  Size = %7d.\n", p->nTableEntries[1], p->nTableSize[1] );
-    p.pHashTable[0] = nil;
-    p.pHashTable[1] = nil;
-    if p.pMemEntries {
-        Mem_FixedStop( p.pMemEntries, 0 ); }
-    p.pName = nil;
-    p = nil;
+	if p == nil || p.stopped {
+		return
+	}
+	p.stopped = true
+	if p.pPars != nil && p.pPars.fVerbose != 0 && p.vCutData != nil {
+		If_ManCacheAnalize(p)
+	}
+	for v := 6; v <= int(Abc_MaxInt(6, p.pPars.nLutSize)); v++ {
+		vec.Vec_MemFree(p.vTtMem[v])
+		vec.Vec_WecFree(p.vTtIsops[v])
+		vec.Vec_IntFree(p.vTtDsds[v])
+		vec.Vec_StrFree(p.vTtPerms[v])
+		vec.Vec_StrFree(p.vTtVars[v])
+		vec.Vec_IntFree(p.vTtDecs[v])
+		vec.Vec_IntFree(p.vTtOccurs[v])
+	}
+	vec.Vec_IntFree(p.vCoAttrs)
+	vec.Vec_PtrFree(p.vCis)
+	vec.Vec_PtrFree(p.vCos)
+	vec.Vec_PtrFree(p.vObjs)
+	vec.Vec_PtrFree(p.vTemp)
+	vec.Vec_IntFree(p.vCover)
+	vec.Vec_IntFree(p.vArray)
+	vec.Vec_WrdFree(p.vAnds)
+	vec.Vec_WrdFree(p.vAndGate)
+	vec.Vec_WrdFree(p.vOrGate)
+	vec.Vec_PtrFree(p.vObjsRev)
+	vec.Vec_PtrFree(p.vLatchOrder)
+	vec.Vec_IntFree(p.vLags)
+	vec.Vec_IntFree(p.vDump)
+	vec.Vec_IntFree(p.vCutData)
+	vec.Vec_IntFree(p.vPairRes)
+	vec.Vec_StrFree(p.vPairPerms)
+	vec.Vec_PtrFree(p.vVisited)
+	if p.vPairHash != nil {
+		vec.Hash_IntManStop(p.vPairHash)
+	}
+	if p.vTtMem6 != nil {
+		vec.Vec_MemFree(p.vTtMem6)
+	}
+	if p.pManTim != nil {
+		tim.Tim_ManStop(p.pManTim)
+	}
+	vec.Vec_IntFree(p.vSwitching)
+	for i := range p.pHashTable {
+		p.pHashTable[i] = nil
+	}
+	p.pMemObj, p.pMemSet, p.pMemEntries = nil, nil, nil
+	p.pMemCi, p.pMemAnd, p.pFreeList = nil, nil, nil
+	p.puTemp, p.puTempW, p.pTruth32 = [4][]uint32{}, nil, nil
+	p.vTtMem, p.vTtIsops = [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Mem_t{}, [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Wec_t{}
+	p.vTtDsds, p.vTtDecs, p.vTtOccurs = [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t{}, [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t{}, [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t{}
+	p.vTtPerms, p.vTtVars = [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Str_t{}, [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Str_t{}
+	p.pPars = nil
+	p.pConst1 = nil
+	p.ciCutSets, p.ownedCutSets = nil, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates primary input.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// If_ManCreateCi appends one primary input.
 func If_ManCreateCi(p *If_Man_t) *If_Obj_t {
-    var pObj *If_Obj_t;
-    pObj = If_ManSetupObj( p );
-    pObj.Type = IF_CI;
-    pObj.IdPio = Vec_PtrSize( p.vCis );
-    Vec_PtrPush( p.vCis, pObj );
-    p.nObjs[IF_CI]++;
-    return pObj;
+	obj := If_ManSetupObj(p)
+	obj.Type = IF_CI
+	obj.IdPio = int32(vec.Vec_PtrSize(p.vCis))
+	vec.Vec_PtrPush(p.vCis, obj)
+	p.nObjs[IF_CI]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates primary output with the given driver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManCreateCo(p *If_Man_t, pDriver *If_Obj_t) *If_Obj_t {
-    var pObj *If_Obj_t;
-    pObj = If_ManSetupObj( p );
-    pObj.IdPio = Vec_PtrSize( p.vCos );
-    Vec_PtrPush( p.vCos, pObj );
-    pObj.Type = IF_CO;
-    pObj.fCompl0 = If_IsComplement(pDriver); pDriver = If_Regular(pDriver);
-    pObj.pFanin0 = pDriver; pDriver.nRefs++; 
-    pObj.fPhase  = (pObj.fCompl0 ^ pDriver.fPhase);
-    pObj.Level   = pDriver.Level;
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    p.nObjs[IF_CO]++;
-    return pObj;
+// If_ManCreateCo appends an output whose driver may be complemented.
+func If_ManCreateCo(p *If_Man_t, driver *If_Obj_t) *If_Obj_t {
+	obj := If_ManSetupObj(p)
+	obj.IdPio = int32(vec.Vec_PtrSize(p.vCos))
+	vec.Vec_PtrPush(p.vCos, obj)
+	obj.Type = IF_CO
+	obj.fCompl0 = uint32(If_IsComplement(driver))
+	driver = If_Regular(driver)
+	obj.pFanin0 = driver
+	driver.nRefs++
+	obj.fPhase = obj.fCompl0 ^ driver.fPhase
+	obj.Level = driver.Level
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	p.nObjs[IF_CO]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManCreateAnd(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {
-    var pObj *If_Obj_t;
-    // perform constant propagation
-    if pFan0 == pFan1 {
-        return pFan0; }
-    if pFan0 == If_Not(pFan1) {
-        return If_Not(p.pConst1); }
-    if If_Regular(pFan0) == p.pConst1 {
-        if pFan0 == p.pConst1 {
-            return pFan1;
-        } else {
-            return If_Not(p.pConst1);
-        } }
-    if If_Regular(pFan1) == p.pConst1 {
-        if pFan1 == p.pConst1 {
-            return pFan0;
-        } else {
-            return If_Not(p.pConst1);
-        } }
-    // get memory for the new object
-    pObj = If_ManSetupObj( p );
-    pObj.Type    = IF_AND;
-    pObj.fCompl0 = If_IsComplement(pFan0); pFan0 = If_Regular(pFan0);
-    pObj.fCompl1 = If_IsComplement(pFan1); pFan1 = If_Regular(pFan1);
-    pObj.pFanin0 = pFan0; pFan0.nRefs++; pFan0.nVisits++; pFan0.nVisitsCopy++;
-    pObj.pFanin1 = pFan1; pFan1.nRefs++; pFan1.nVisits++; pFan1.nVisitsCopy++;
-    pObj.fPhase  = (pObj.fCompl0 ^ pFan0.fPhase) & (pObj.fCompl1 ^ pFan1.fPhase);
-    // inlining of macro IF_MAX
-    pObj.Level   = 1 + (((pFan0.Level) > (pFan1.Level))? (pFan0.Level) : (pFan1.Level));
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    p.nObjs[IF_AND]++;
-    return pObj;
+// If_ManCreateAnd constructs an AND node with constant and duplicate folding.
+func If_ManCreateAnd(p *If_Man_t, fan0, fan1 *If_Obj_t) *If_Obj_t {
+	if fan0 == fan1 {
+		return fan0
+	}
+	if fan0 == If_Not(fan1) {
+		return If_Not(p.pConst1)
+	}
+	if If_Regular(fan0) == p.pConst1 {
+		if fan0 == p.pConst1 {
+			return fan1
+		}
+		return If_Not(p.pConst1)
+	}
+	if If_Regular(fan1) == p.pConst1 {
+		if fan1 == p.pConst1 {
+			return fan0
+		}
+		return If_Not(p.pConst1)
+	}
+	obj := If_ManSetupObj(p)
+	obj.Type = IF_AND
+	obj.fCompl0 = uint32(If_IsComplement(fan0))
+	obj.fCompl1 = uint32(If_IsComplement(fan1))
+	fan0, fan1 = If_Regular(fan0), If_Regular(fan1)
+	obj.pFanin0, obj.pFanin1 = fan0, fan1
+	for _, fanin := range []*If_Obj_t{fan0, fan1} {
+		fanin.nRefs++
+		fanin.nVisits++
+		fanin.nVisitsCopy++
+	}
+	obj.fPhase = (obj.fCompl0 ^ fan0.fPhase) & (obj.fCompl1 ^ fan1.fPhase)
+	obj.Level = 1 + uint32(max(int(fan0.Level), int(fan1.Level)))
+	if int32(obj.Level) > p.nLevelMax {
+		p.nLevelMax = int32(obj.Level)
+	}
+	p.nObjs[IF_AND]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManCreateXor(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {
-    var pRes1, pRes2 *If_Obj_t;
-    pRes1 = If_ManCreateAnd( p, If_Not(pFan0), pFan1 );
-    pRes2 = If_ManCreateAnd( p, pFan0, If_Not(pFan1) );
-    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );
+func If_ManCreateXor(p *If_Man_t, fan0, fan1 *If_Obj_t) *If_Obj_t {
+	a := If_ManCreateAnd(p, If_Not(fan0), fan1)
+	b := If_ManCreateAnd(p, fan0, If_Not(fan1))
+	return If_Not(If_ManCreateAnd(p, If_Not(a), If_Not(b)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManCreateMux(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t, pCtrl *If_Obj_t) *If_Obj_t {
-    var pRes1, pRes2 *If_Obj_t;
-    pRes1 = If_ManCreateAnd( p, pFan0, If_Not(pCtrl) );
-    pRes2 = If_ManCreateAnd( p, pFan1, pCtrl );
-    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );
+func If_ManCreateMux(p *If_Man_t, fan0, fan1, control *If_Obj_t) *If_Obj_t {
+	a := If_ManCreateAnd(p, fan0, If_Not(control))
+	b := If_ManCreateAnd(p, fan1, control)
+	return If_Not(If_ManCreateAnd(p, If_Not(a), If_Not(b)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates the choice node.]
-
-  Description [Should be called after the equivalence class nodes are linked.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManCreateChoice(p *If_Man_t, pObj *If_Obj_t) {
-    var pTemp *If_Obj_t;
-    // mark the node as a representative if its class
-    assert(pObj.fRepr == 0, "pObj.fRepr == 0");
-    pObj.fRepr = 1;
-    // update the level of this node (needed for correct required time computation)
-    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {
-        // inlining of macro IF_MAX
-        
-        if (pObj.Level) > (pTemp.Level) {
-            pObj.Level = (pObj.Level);
-        } else {
-            pObj.Level = (pTemp.Level);
-        }
-        pTemp.nVisits++; pTemp.nVisitsCopy++;
-    }
-    // mark the largest level
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    p.nChoices++;
+// If_ManCreateChoice marks a linked equivalent-node class as one mapping choice.
+func If_ManCreateChoice(p *If_Man_t, obj *If_Obj_t) {
+	assert(obj.fRepr == 0, "obj.fRepr == 0")
+	obj.fRepr = 1
+	for choice := obj; choice != nil; choice = choice.pEquiv {
+		if choice.Level > obj.Level {
+			obj.Level = choice.Level
+		}
+		choice.nVisits++
+		choice.nVisitsCopy++
+	}
+	if int32(obj.Level) > p.nLevelMax {
+		p.nLevelMax = int32(obj.Level)
+	}
+	p.nChoices++
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prepares memory for one cutset.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManSetupSet(p *If_Man_t, pSet *If_Set_t) {
-    var pArray string;
-    var i int32;
-    pSet.nCuts = 0;
-    pSet.nCutsMax = p.pPars.nCutsMax;
-    pSet.ppCuts = (If_Cut_t **)(pSet + 1);
-    pArray = (char *)pSet.ppCuts + sizeof(If_Cut_t *) * (pSet.nCutsMax+1);
-    for  i = 0; i <= pSet.nCutsMax; i++  {
-        pSet.ppCuts[i] = (If_Cut_t *)(pArray + i * p.nCutBytes); 
-        If_CutSetup( p, pSet.ppCuts[i] );
-    }
-//    pArray += (pSet->nCutsMax + 1) * p->nCutBytes;
-//    assert( ((char *)pArray) - ((char *)pSet) == p->nSetBytes );
+func If_ManSetupSet(p *If_Man_t, set *If_Set_t) {
+	set.nCuts = 0
+	set.nCutsMax = int16(p.pPars.nCutsMax)
+	set.ppCuts = make([]*If_Cut_t, int(set.nCutsMax)+1)
+	for i := range set.ppCuts {
+		cut := &If_Cut_t_{}
+		If_CutSetup(p, cut)
+		set.ppCuts[i] = cut
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prepares memory for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManSetupCutTriv(p *If_Man_t, pCut *If_Cut_t, ObjId int32) {
-    pCut.fCompl     = 0;
-    pCut.nLimit     = p.pPars.nLutSize;
-    pCut.nLeaves    = 1;
-    pCut.pLeaves[0] = p.pPars.fLiftLeaves? (ObjId << 8) : ObjId;
-    pCut.uSign      = If_ObjCutSign( pCut.pLeaves[0] );
-    if p.pPars.fUseTtPerm {
-        pCut.iCutFunc = 3;
-    } else {
-        if p.pPars.fTruth {
-            pCut.iCutFunc = 2;
-        } else {
-            pCut.iCutFunc = -1;
-        }
-    }
-    pCut.uMaskFunc  = 0;
-    assert(pCut.pLeaves[0] < p.vObjs.nSize, "pCut.pLeaves[0] < p.vObjs.nSize");
+func If_ManSetupCutTriv(p *If_Man_t, cut *If_Cut_t, objID int32) {
+	cut.fCompl = 0
+	cut.nLimit = uint32(p.pPars.nLutSize)
+	cut.nLeaves = 1
+	if p.pPars.fLiftLeaves != 0 {
+		objID <<= 8
+	}
+	cut.pLeaves = []int32{objID}
+	cut.uSign = If_ObjCutSign(uint32(objID))
+	if p.pPars.fUseTtPerm != 0 {
+		cut.iCutFunc = 3
+	} else if p.pPars.fTruth != 0 {
+		cut.iCutFunc = 2
+	} else {
+		cut.iCutFunc = -1
+	}
+	cut.uMaskFunc = 0
+	assert(objID >= 0 && int(objID) < vec.Vec_PtrSize(p.vObjs), "valid trivial cut object")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prepares memory for the node with cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func If_ManSetupObj(p *If_Man_t) *If_Obj_t {
-    var pObj *If_Obj_t;
-    // get memory for the object
-    pObj = (If_Obj_t *)Mem_FixedEntryFetch( p.pMemObj );
-    memset( pObj, 0, sizeof(If_Obj_t) );
-    If_CutSetup( p, &pObj.CutBest );
-    // assign ID and save 
-    pObj.Id = Vec_PtrSize(p.vObjs);
-    Vec_PtrPush( p.vObjs, pObj );
-    // set the required times
-    pObj.Required = IF_FLOAT_LARGE;
-    return pObj;
+	obj := &If_Obj_t_{}
+	If_CutSetup(p, &obj.CutBest)
+	obj.Id = int32(vec.Vec_PtrSize(p.vObjs))
+	obj.Required = IF_FLOAT_LARGE
+	vec.Vec_PtrPush(p.vObjs, obj)
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prepares memory for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func If_ManSetupCiCutSets(p *If_Man_t) {
-    var pObj *If_Obj_t;
-    var i int32;
-    assert(p.pMemCi == nil, "p.pMemCi == nil");
-    // create elementary cuts for the CIs
-    // inlining of macro If_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        If_ManSetupCutTriv( p, &pObj.CutBest, pObj.Id );
-    }
-    // create elementary cutsets for the CIs
-    // inlining of macro ABC_ALLOC
-    p.pMemCi = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(If_ManCiNum(p) * (sizeof(If_Set_t) + sizeof(void *)))));
-    // inlining of macro If_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pCutSet = (If_Set_t *)((char *)p.pMemCi + i * (sizeof(If_Set_t) + sizeof(void *)));
-        pObj.pCutSet.nCuts = 1;
-        pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;
-        pObj.pCutSet.ppCuts = (If_Cut_t **)(pObj.pCutSet + 1);
-        pObj.pCutSet.ppCuts[0] = &pObj.CutBest;
-    }
+	assert(p.pMemCi == nil, "p.pMemCi == nil")
+	p.ciCutSets = make([]*If_Set_t, vec.Vec_PtrSize(p.vCis))
+	for i, entry := range vec.Vec_PtrArray(p.vCis) {
+		obj := entry.(*If_Obj_t)
+		If_ManSetupCutTriv(p, &obj.CutBest, obj.Id)
+		set := &If_Set_t{nCuts: 1, nCutsMax: int16(p.pPars.nCutsMax)}
+		set.ppCuts = make([]*If_Cut_t, int(set.nCutsMax)+1)
+		set.ppCuts[0] = &obj.CutBest
+		p.ciCutSets[i] = set
+		obj.pCutSet = set
+	}
+	if len(p.ciCutSets) != 0 {
+		p.pMemCi = p.ciCutSets[0]
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prepares cutset of the node.]
-
-  Description [Elementary cutset will be added last.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManSetupNodeCutSet(p *If_Man_t, pObj *If_Obj_t) *If_Set_t {
-    assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)");
-    assert(pObj.pCutSet == nil, "pObj.pCutSet == nil");
-//    pObj->pCutSet = (If_Set_t *)Mem_FixedEntryFetch( p->pMemSet );
-//    If_ManSetupSet( p, pObj->pCutSet );
-    pObj.pCutSet = If_ManCutSetFetch( p );
-    pObj.pCutSet.nCuts = 0;
-    pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;
-    return pObj.pCutSet;
+func If_ManSetupNodeCutSet(p *If_Man_t, obj *If_Obj_t) *If_Set_t {
+	assert(If_ObjIsAnd(obj) != 0 && obj.pCutSet == nil, "AND node has no live cut set")
+	set := If_ManCutSetFetch(p)
+	set.nCuts = 0
+	set.nCutsMax = int16(p.pPars.nCutsMax)
+	obj.pCutSet = set
+	return set
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Dereferences cutset of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManDerefNodeCutSet(p *If_Man_t, pObj *If_Obj_t) {
-    var pFanin *If_Obj_t;
-    assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)");
-    // consider the node
-    assert(pObj.nVisits >= 0, "pObj.nVisits >= 0");
-    if pObj.nVisits == 0 {
-//        Mem_FixedEntryRecycle( p->pMemSet, (char *)pObj->pCutSet );
-        If_ManCutSetRecycle( p, pObj.pCutSet );
-        pObj.pCutSet = nil;
-    }
-    // consider the first fanin
-    pFanin = If_ObjFanin0(pObj);
-    assert(pFanin.nVisits > 0, "pFanin.nVisits > 0");
-    if !If_ObjIsCi(pFanin) && --pFanin.nVisits == 0 {
-//        Mem_FixedEntryRecycle( p->pMemSet, (char *)pFanin->pCutSet );
-        If_ManCutSetRecycle( p, pFanin.pCutSet );
-        pFanin.pCutSet = nil;
-    }
-    // consider the second fanin
-    pFanin = If_ObjFanin1(pObj);
-    assert(pFanin.nVisits > 0, "pFanin.nVisits > 0");
-    if !If_ObjIsCi(pFanin) && --pFanin.nVisits == 0 {
-//        Mem_FixedEntryRecycle( p->pMemSet, (char *)pFanin->pCutSet );
-        If_ManCutSetRecycle( p, pFanin.pCutSet );
-        pFanin.pCutSet = nil;
-    }
+func If_ManDerefNodeCutSet(p *If_Man_t, obj *If_Obj_t) {
+	assert(If_ObjIsAnd(obj) != 0, "If_ObjIsAnd(obj)")
+	assert(obj.nVisits >= 0, "obj.nVisits >= 0")
+	if obj.nVisits == 0 {
+		If_ManCutSetRecycle(p, obj.pCutSet)
+		obj.pCutSet = nil
+	}
+	for _, fanin := range []*If_Obj_t{obj.pFanin0, obj.pFanin1} {
+		assert(fanin.nVisits > 0, "fanin.nVisits > 0")
+		if If_ObjIsCi(fanin) == 0 {
+			fanin.nVisits--
+			if fanin.nVisits == 0 {
+				If_ManCutSetRecycle(p, fanin.pCutSet)
+				fanin.pCutSet = nil
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Dereferences cutset of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManDerefChoiceCutSet(p *If_Man_t, pObj *If_Obj_t) {
-    var pTemp *If_Obj_t;
-    assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)");
-    assert(pObj.fRepr, "pObj.fRepr");
-    assert(pObj.nVisits > 0, "pObj.nVisits > 0");
-    // consider the nodes in the choice class
-    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {
-//        assert( pTemp == pObj || pTemp->nVisits == 1 );
-        if --pTemp.nVisits == 0 {
-//            Mem_FixedEntryRecycle( p->pMemSet, (char *)pTemp->pCutSet );
-            If_ManCutSetRecycle( p, pTemp.pCutSet );
-            pTemp.pCutSet = nil;
-        }
-    }
+func If_ManDerefChoiceCutSet(p *If_Man_t, obj *If_Obj_t) {
+	assert(If_ObjIsAnd(obj) != 0 && obj.fRepr != 0 && obj.nVisits > 0, "valid representative choice node")
+	for choice := obj; choice != nil; choice = choice.pEquiv {
+		choice.nVisits--
+		if choice.nVisits == 0 {
+			If_ManCutSetRecycle(p, choice.pCutSet)
+			choice.pCutSet = nil
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Dereferences cutset of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_ManSetupSetAll(p *If_Man_t, nCrossCut int32) {
-    var pCutSet *If_Set_t;
-    var i, nCutSets int32;
-    nCutSets = 128 + nCrossCut;
-    // inlining of macro ABC_ALLOC
-    p.pFreeList = p.pMemAnd = pCutSet = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(nCutSets * p.nSetBytes)));
-    for  i = 0; i < nCutSets; i++  {
-        If_ManSetupSet( p, pCutSet );
-        if i == nCutSets - 1 {
-            pCutSet.pNext = nil;
-        } else {
-            pCutSet.pNext = (If_Set_t *)( (char *)pCutSet + p.nSetBytes ); }
-        pCutSet = pCutSet.pNext;
-    }
-    assert(pCutSet == nil, "pCutSet == nil");
-
-    if p.pPars.fVerbose {
-        Abc_Print( 1, "Node = %7d.  Ch = %5d.  Total mem = %7.2f MB. Peak cut mem = %7.2f MB.\n", 
-            If_ManAndNum(p), p.nChoices,
-            1.0 * (p.nObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1<<20), 
-            1.0 * p.nSetBytes * nCrossCut / (1<<20) );
-    }
-//    Abc_Print( 1, "Cross cut = %d.\n", nCrossCut );
-
+func If_ManSetupSetAll(p *If_Man_t, crossCut int32) {
+	assert(crossCut >= 0, "crossCut >= 0")
+	n := int64(128) + int64(crossCut)
+	if n > int64(^uint32(0)>>1) {
+		panic("if: cut-set pool size overflows int32")
+	}
+	p.ownedCutSets = make([]*If_Set_t, int(n))
+	for i := range p.ownedCutSets {
+		set := &If_Set_t{}
+		If_ManSetupSet(p, set)
+		if i+1 < len(p.ownedCutSets) {
+			set.pNext = nil
+		}
+		p.ownedCutSets[i] = set
+	}
+	for i := 0; i+1 < len(p.ownedCutSets); i++ {
+		p.ownedCutSets[i].pNext = p.ownedCutSets[i+1]
+	}
+	p.pFreeList = p.ownedCutSets[0]
+	p.pMemAnd = p.pFreeList
+	if p.pPars.fVerbose != 0 {
+		fmt.Printf("Node = %d. Choice nodes = %d. Cut-set pool = %d.\n",
+			If_ManAndNum(p), p.nChoices, len(p.ownedCutSets))
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

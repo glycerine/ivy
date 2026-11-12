@@ -313,3 +313,26 @@ func TestCoarsenDegenerateSimpleAndPreservesFunction(t *testing.T) {
 		}
 	}
 }
+
+type registerTestNetwork struct {
+	testNetwork
+	registers int
+}
+
+func (n *registerTestNetwork) RegisterCount() int { return n.registers }
+func TestCoarsenRetainsRegisterPartition(t *testing.T) {
+	n := &registerTestNetwork{testNetwork: testNetwork{gates: []testGate{{kind: 0}, {kind: 1}, {kind: 1}, {a: 2, b: 4, kind: 2}}, inputs: []int32{2, 4}, outputs: []int32{6, 2}}, registers: 1}
+	out, err := Coarsen(n, 3)
+	if err != nil || out.RegisterCount() != 1 {
+		t.Fatal("lost register partition", err)
+	}
+	if len(out.InputLiterals()) != 2 || len(out.OutputLiterals()) != 2 {
+		t.Fatal("changed interface dimensions")
+	}
+	for _, invalid := range []int{-1, 3} {
+		n.registers = invalid
+		if _, err := Coarsen(n, 3); err == nil {
+			t.Fatal("invalid register count accepted")
+		}
+	}
+}

@@ -117,3 +117,18 @@ int main(void){Abc_TtHieMan_t *m[17][6][2]={0};int n,l,e;word t[1024];char p[16]
 		}
 	}
 }
+
+func TestBalancedWrapPreservesComplementPhase(t *testing.T) {
+	truth := []uint64{0xaaaaaaaaaaaaaaaa}
+	perm := []byte{0}
+	identity := func(_ *Abc_TtHieMan_t, _ []uint64, n int32, perm []byte, _ int32) uint32 {
+		for i := int32(0); i < n; i++ {
+			perm[i] = byte(i)
+		}
+		return 0
+	}
+	phase := Abc_TtCanonicizeWrap(identity, nil, truth, 1, perm, 0)
+	if truth[0] != 0x5555555555555555 || phase != 2 {
+		t.Fatalf("wrapped complement lost output phase: truth%x phase%x", truth[0], phase)
+	}
+}

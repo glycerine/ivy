@@ -62,3 +62,16 @@ func TestSATBridgeLoadsClausesAndDetectsContradiction(t *testing.T) {
 		t.Fatal("contradictory unit clauses should reject solver construction")
 	}
 }
+
+func TestSATBridgeClauseExpandsVariableRange(t *testing.T) {
+	solver := sat_solver_new()
+	if sat_solver_addclause(solver, []int32{sat_literal(4, 0)}) != 1 {
+		t.Fatal("unit clause for a newly introduced variable was rejected")
+	}
+	if got := sat_solver_nvars(solver); got != 5 {
+		t.Fatalf("variable count = %d, want 5", got)
+	}
+	if got := sat_solver_solve(solver, []int32{sat_literal(4, 1)}, 0, 0, 0, 0); got != l_False {
+		t.Fatalf("contradicting assignment status = %d, want unsatisfiable", got)
+	}
+}

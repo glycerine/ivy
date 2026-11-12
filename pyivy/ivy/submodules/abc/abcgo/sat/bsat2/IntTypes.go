@@ -19,31 +19,11 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+// Fixed-width Go integers replace the C portability and printf-format macros.
+type Int32 = int32
+type Int64 = int64
+type Uint32 = uint32
+type Uint64 = uint64
 
-
-
-#ifdef __sun
-    // Not sure if there are newer versions that support C99 headers. The
-    // needed features are implemented in the headers below though:
-
-#   include <sys/int_types.h>
-#   include <sys/int_fmtio.h>
-#   include <sys/int_limits.h>
-
-#elif _WIN32
-
-#   include "pstdint.h"
-
-#else
-
-#   define __STDC_LIMIT_MACROS
-#   include <stdint.h>
-#   include <inttypes.h>
-
-#endif
-
-//#include <limits.h>
-
-//=================================================================================================
-
-
+const Int32Max = int32(1<<31 - 1)
+const Uint32Max = uint32(1<<32 - 1)

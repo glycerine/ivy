@@ -13,6 +13,7 @@ type modelNetwork struct {
 	gates           []modelGate
 	inputs, outputs []int32
 	registers       int
+	name            string
 }
 
 func (n *modelNetwork) ObjectCount() int        { return len(n.gates) }
@@ -42,7 +43,7 @@ func NetworkFromModel(model *ioa.Model) (Network, error) {
 	if err != nil {
 		return nil, err
 	}
-	n := &modelNetwork{gates: []modelGate{{kind: 0}}, registers: len(normalized.Latches)}
+	n := &modelNetwork{gates: []modelGate{{kind: 0}}, registers: len(normalized.Latches), name: normalized.Name}
 	for _, lit := range normalized.Inputs {
 		if int(lit>>1) != len(n.gates) {
 			return nil, fmt.Errorf("mf: inconsistent normalized PI")
@@ -85,3 +86,6 @@ func NetworkFromModel(model *ioa.Model) (Network, error) {
 	}
 	return n, nil
 }
+
+func (n *modelNetwork) NetworkName() string { return n.name }
+func (n *modelNetwork) NetworkSpec() string { return "" }

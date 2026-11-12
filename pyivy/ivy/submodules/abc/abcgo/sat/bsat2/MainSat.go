@@ -1,8 +1,12 @@
 package bsat2
 
-import "fmt"
-
-import "os"
+import (
+	"flag"
+	"fmt"
+	"io"
+	"math"
+	"os"
+)
 
 /*****************************************************************************************[Main.cc]
 Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
@@ -24,195 +28,157 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-//#include <errno.h>
-
-//#include <signal.h>
-//#include "misc/zlib/zlib.h"
-
-//#include "System.h"
-//#include "ParseUtils.h"
-//#include "Options.h"
-//#include "Dimacs.h"
-//#include "Solver.h"
-
-//using namespace Minisat;
-
-
-//=================================================================================================
-
-
-func printStats(solver *Solver) {
-    var cpu_time float64  = cpuTime();
-    var mem_used float64  = memUsedPeak();
-    fmt.Printf("restarts              : %-12.0f\n", float64((int64_t))solver.starts);
-    fmt.Printf("conflicts             : %-12.0f  (%.0f /sec)\n", float64((int64_t))solver.conflicts, float64((int64_t))solver.conflicts / cpu_time);
-    fmt.Printf("decisions             : %-12.0f  (%4.2f %% random) (%.0f /sec)\n", float64((int64_t))solver.decisions, float64((int64_t))solver.rnd_decisions*100 / float64((int64_t))solver.decisions, float64((int64_t))solver.decisions / cpu_time);
-    fmt.Printf("propagations          : %-12.0f  (%.0f /sec)\n", float64((int64_t))solver.propagations, float64((int64_t))solver.propagations / cpu_time);
-    fmt.Printf("conflict literals     : %-12.0f  (%4.2f %% deleted)\n", float64((int64_t))solver.tot_literals, float64((int64_t)(solver.max_literals - solver.tot_literals))*100 / float64((int64_t))solver.max_literals);
-    if mem_used != 0 { fmt.Printf("Memory used           : %.2f MB\n", mem_used); }
-    fmt.Printf("CPU time              : %g s\n", cpu_time);
+// RunSAT provides the original command-line workflow as an embeddable library
+// entry point. SAT/UNSAT exit codes are 10/20; malformed input returns an error.
+func RunSAT(arguments []string, input io.Reader, output, diagnostic io.Writer) (int, error) {
+	return runCommand(arguments, input, output, diagnostic, false)
 }
-
-
-var solver *Solver;
-// Terminate by notifying the solver and back out gracefully. This is mainly to have a test-case
-// for this feature of the Solver as it may take longer than an immediate call to '_exit()'.
-func SIGINT_interrupt(signum int32) { solver.interrupt(); }
-
-// Note that '_exit()' rather than 'exit()' has to be used. The reason is that 'exit()' calls
-// destructors and may cause deadlocks if a malloc/free function happens to be running (these
-// functions are guarded by locks for multithreaded use).
-func SIGINT_exit(signum int32) {
-    fmt.Printf("\n"); fmt.Printf("*** INTERRUPTED ***\n");
-    if solver.verbosity > 0{
-        printStats(*solver);
-        fmt.Printf("\n"); fmt.Printf("*** INTERRUPTED ***\n"); }
-    _exit(1); }
-
-
-//=================================================================================================
-// Main:
-
-
-func MainSat(argc int32, argv *string) int32 {
-    try {
-        setUsageHelp("USAGE: %s [options] <input-file> <result-output-file>\n\n  where input may be either in plain or gzipped DIMACS.\n");
-        // printf("This is MiniSat 2.0 beta\n");
-        
-#if defined(__linux__)
-        fpu_control_t oldcw, newcw;
-        _FPU_GETCW(oldcw); newcw = (oldcw & ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);
-        printf("WARNING: for repeatability, setting FPU to use double precision\n");
-#endif
-        // Extra options:
-        //
-        IntOption    verb   ("MAIN", "verb",   "Verbosity level (0=silent, 1=some, 2=more).", 1, IntRange(0, 2));
-        IntOption    cpu_lim("MAIN", "cpu-lim","Limit on CPU time allowed in seconds.\n", INT32_MAX, IntRange(0, INT32_MAX));
-        IntOption    mem_lim("MAIN", "mem-lim","Limit on memory usage in megabytes.\n", INT32_MAX, IntRange(0, INT32_MAX));
-        
-        if !parseOptions(argc, argv, true) {
-            return 1; }
-
-        var S Solver;
-        var initial_time float64  = cpuTime();
-
-        S.verbosity = verb;
-        
-        solver = &S;
-/*
-        // Use signal handlers that forcibly quit until the solver will be able to respond to
-        // interrupts:
-        signal(SIGINT, SIGINT_exit);
-        signal(SIGXCPU,SIGINT_exit);
-
-        // Set limit on CPU-time:
-        if (cpu_lim != INT32_MAX){
-            rlimit rl;
-            getrlimit(RLIMIT_CPU, &rl);
-            if (rl.rlim_max == RLIM_INFINITY || (rlim_t)cpu_lim < rl.rlim_max){
-                rl.rlim_cur = cpu_lim;
-                if (setrlimit(RLIMIT_CPU, &rl) == -1)
-                    printf("WARNING! Could not set resource limit: CPU-time.\n");
-            } }
-
-        // Set limit on virtual memory:
-        if (mem_lim != INT32_MAX){
-            rlim_t new_mem_lim = (rlim_t)mem_lim * 1024*1024;
-            rlimit rl;
-            getrlimit(RLIMIT_AS, &rl);
-            if (rl.rlim_max == RLIM_INFINITY || new_mem_lim < rl.rlim_max){
-                rl.rlim_cur = new_mem_lim;
-                if (setrlimit(RLIMIT_AS, &rl) == -1)
-                    printf("WARNING! Could not set resource limit: Virtual memory.\n");
-            } }
-*/        
-        if argc == 1 {
-            fmt.Printf("Reading from standard input... Use '--help' for help.\n");
-            return 1;
-        }
-        
-        var in gzFile;
-        if argc == 1 {
-            in = gzdopen(0, "rb");
-        } else {
-            in = gzopen(argv[1], "rb");
-        }
-        if in == nil {
-            fmt.Printf("ERROR! Could not open file: %s\n", argc == 1 ? "<stdin>" : argv[1]);
-os.Exit(int(1)); }
-        
-        if S.verbosity > 0{
-            fmt.Printf("============================[ Problem Statistics ]=============================\n");
-            fmt.Printf("|                                                                             |\n"); }
-        
-        parse_DIMACS(in, S);
-        gzclose(in);
-        var res *os.File  = (argc >= 3) ? os.OpenFile(argv[2], os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : nil;
-        
-        if S.verbosity > 0{
-            fmt.Printf("|  Number of variables:  %12d                                         |\n", S.nVars());
-            fmt.Printf("|  Number of clauses:    %12d                                         |\n", S.nClauses()); }
-        
-        var parsed_time float64  = cpuTime();
-        if S.verbosity > 0{
-            fmt.Printf("|  Parse time:           %12.2f s                                       |\n", parsed_time - initial_time);
-            fmt.Printf("|                                                                             |\n"); }
- 
-        // Change to signal-handlers that will only notify the solver and allow it to terminate
-        // voluntarily:
-//        signal(SIGINT, SIGINT_interrupt);
-//        signal(SIGXCPU,SIGINT_interrupt);
-       
-        if !S.simplify(){
-            if res != nil { fmt.Fprintf(res, "UNSAT\n");
-_ = (res).Close(); }
-            if S.verbosity > 0{
-                fmt.Printf("===============================================================================\n");
-                fmt.Printf("Solved by unit propagation\n");
-                printStats(S);
-                fmt.Printf("\n"); }
-            fmt.Printf("UNSATISFIABLE\n");
-            os.Exit(int(20));
-        }
-        
-        vec<Lit> dummy;
-        var ret lbool  = S.solveLimited(dummy);
-        if S.verbosity > 0{
-            printStats(S);
-            fmt.Printf("\n"); }
-        fmt.Printf(ret == l_True ? "SATISFIABLE\n" : ret == l_False ? "UNSATISFIABLE\n" : "INDETERMINATE\n");
-        if res != nil{
-            if ret == l_True{
-                fmt.Fprintf(res, "SAT\n");
-                for var i int32  = 0; i < S.nVars(); i++ {
-                    if S.model[i] != l_Undef {
-                        fmt.Fprintf(res, "%s%s%d", (i==0)?"":" ", (S.model[i]==l_True)?"":"-", i+1); }
-                }
-                fmt.Fprintf(res, " 0\n");
-            }else if ret == l_False {
-                fmt.Fprintf(res, "UNSAT\n");
-            } else {
-                fmt.Fprintf(res, "INDET\n"); }
-            _ = (res).Close();
-        }
-        
-//#ifdef NDEBUG
-//        exit(ret == l_True ? 10 : ret == l_False ? 20 : 0);     // (faster than "return", which will invoke the destructor for 'Solver')
-//#else
-        if ret == l_True {
-            return 10;
-        } else {
-            if ret == l_False {
-                return 20;
-            } else {
-                return 0;
-            }
-        }
-//#endif
-    }
- catch (OutOfMemoryException&){
-        fmt.Printf("===============================================================================\n");
-        fmt.Printf("INDETERMINATE\n");
-        os.Exit(int(0));
-    }
+func runCommand(arguments []string, input io.Reader, output, diagnostic io.Writer, simplify bool) (int, error) {
+	options := NewOptions("minisat", diagnostic)
+	verbosity := options.Int("verb", 1, 0, 2, "verbosity")
+	varDecay := options.Float64("var-decay", 0.95, 0, 1, "variable activity decay")
+	clauseDecay := options.Float64("cla-decay", 0.999, 0, 1, "clause activity decay")
+	randomFrequency := options.Float64("rnd-freq", 0, 0, 1, "random decision frequency")
+	randomSeed := options.Float64("rnd-seed", 91648253, 0, math.MaxFloat64, "random seed")
+	restartFirst := options.Int("rfirst", 100, 1, math.MaxInt32, "first restart conflict limit")
+	restartInc := options.Float64("rinc", 2, 1, math.MaxFloat64, "restart growth")
+	minimization := options.Int("ccmin-mode", 2, 0, 2, "clause minimization mode")
+	phaseSaving := options.Int("phase-saving", 2, 0, 2, "phase saving mode")
+	lubyRestart := options.Bool("luby", true, "Luby restarts")
+	randomInitial := options.Bool("rnd-init", false, "random initial variable activities")
+	garbageFraction := options.Float64("gc-frac", 0.2, 0, math.MaxFloat64, "garbage collection threshold")
+	simpGarbageFraction := options.Float64("simp-gc-frac", 0.5, 0, math.MaxFloat64, "preprocessing garbage collection threshold")
+	pre := options.Bool("pre", true, "run preprocessing")
+	asymm := options.Bool("asymm", false, "asymmetric branching")
+	elimination := options.Bool("elim", true, "variable elimination")
+	redundancy := options.Bool("rcheck", false, "redundancy checking")
+	grow := options.Int("grow", 0, math.MinInt32, math.MaxInt32, "allowed elimination clause growth")
+	clauseLimit := options.Int("cl-lim", 20, -1, math.MaxInt32, "elimination resolvent length limit")
+	subsumptionLimit := options.Int("sub-lim", 1000, -1, math.MaxInt32, "subsumption length limit")
+	dimacs := options.String("dimacs", "", "write preprocessed DIMACS instead of solving")
+	positional, err := options.Parse(arguments)
+	if err != nil {
+		if err == flag.ErrHelp {
+			return 0, nil
+		}
+		return 1, err
+	}
+	if *varDecay <= 0 || *varDecay >= 1 || *clauseDecay <= 0 || *clauseDecay >= 1 || *randomSeed <= 0 || *restartInc <= 1 || *garbageFraction <= 0 || *simpGarbageFraction <= 0 {
+		return 1, fmt.Errorf("invalid open-bound solver option")
+	}
+	if len(positional) > 2 {
+		return 1, fmt.Errorf("expected input and optional result filename")
+	}
+	var inputFile *os.File
+	if len(positional) > 0 {
+		inputFile, err = os.Open(positional[0])
+		if err != nil {
+			return 1, err
+		}
+		defer inputFile.Close()
+		input = inputFile
+	}
+	if input == nil {
+		return 1, fmt.Errorf("missing input")
+	}
+	core := NewSolver()
+	var simp *SimpSolver
+	var sink ClauseSink = core
+	if simplify {
+		simp = NewSimpSolver()
+		core = simp.Solver
+		sink = simp
+		simp.UseAsymmetric = *asymm
+		simp.UseElimination = *elimination
+		simp.UseRedundancyCheck = *redundancy
+		simp.Grow = *grow
+		simp.ClauseLimit = *clauseLimit
+		simp.SubsumptionLimit = *subsumptionLimit
+		simp.SimplificationGarbageFraction = *simpGarbageFraction
+	}
+	core.Verbosity = *verbosity
+	core.VarDecay = *varDecay
+	core.ClauseDecay = *clauseDecay
+	core.RandomFrequency = *randomFrequency
+	core.RandomSeed = *randomSeed
+	core.RestartFirst = *restartFirst
+	core.RestartIncrease = *restartInc
+	core.Minimization = *minimization
+	core.PhaseSaving = *phaseSaving
+	core.LubyRestart = *lubyRestart
+	core.RandomInitialActivity = *randomInitial
+	core.GarbageFraction = *garbageFraction
+	if err := ParseDIMACS(input, sink); err != nil {
+		return 1, err
+	}
+	if *dimacs != "" {
+		if simp != nil && *pre {
+			simp.Eliminate(true)
+		}
+		file, err := os.Create(*dimacs)
+		if err != nil {
+			return 1, err
+		}
+		err = core.WriteDIMACS(file)
+		if closeErr := file.Close(); err == nil {
+			err = closeErr
+		}
+		return 0, err
+	}
+	status := Undef
+	if simp != nil {
+		simp.BudgetOff()
+		status = simp.SolveSimplified(nil, *pre, false)
+	} else {
+		status = core.Solve()
+	}
+	message, code := "INDETERMINATE", 0
+	if status == True {
+		message, code = "SATISFIABLE", 10
+	} else if status == False {
+		message, code = "UNSATISFIABLE", 20
+	}
+	if _, err := fmt.Fprintln(output, message); err != nil {
+		return 1, err
+	}
+	if len(positional) == 2 {
+		result, err := os.Create(positional[1])
+		if err != nil {
+			return 1, err
+		}
+		label := "INDET"
+		if status == True {
+			label = "SAT"
+		} else if status == False {
+			label = "UNSAT"
+		}
+		_, err = fmt.Fprintln(result, label)
+		if err == nil && status == True {
+			for v, value := range core.Model {
+				if value == Undef {
+					continue
+				}
+				literal := v + 1
+				if value == False {
+					literal = -literal
+				}
+				if _, err = fmt.Fprintf(result, "%d ", literal); err != nil {
+					break
+				}
+			}
+			if err == nil {
+				_, err = fmt.Fprintln(result, "0")
+			}
+		}
+		if closeErr := result.Close(); err == nil {
+			err = closeErr
+		}
+		if err != nil {
+			return 1, err
+		}
+	}
+	if *verbosity > 0 {
+		fmt.Fprintf(diagnostic, "conflicts: %d; decisions: %d; propagations: %d\n", core.Conflicts, core.Decisions, core.Propagations)
+	}
+	return code, nil
 }

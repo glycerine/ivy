@@ -67,3 +67,29 @@ func TestMappingRejectsMalformedInterfaces(t *testing.T) {
 		}
 	}
 }
+
+func TestMappedNetworkOwnershipAndPhase(t *testing.T) {
+	n := &testNetwork{gates: []testGate{{kind: 0}, {kind: 1}, {kind: 1}, {a: 3, b: 5, kind: 2}, {a: 6, kind: 6}}, inputs: []int32{2, 4}, outputs: []int32{6}}
+	mapping, err := GenerateMapping(n, DefaultOptions())
+	if err != nil {
+		t.Fatal(err)
+	}
+	leaves, truth, ok := mapping.LUT(3)
+	if !ok || len(leaves) != 2 || truth[0]&15 != 1 {
+		t.Fatal("actual complemented truth", leaves, truth, ok)
+	}
+	leaves[0] = -1
+	truth[0] = 0
+	again, table, ok := mapping.LUT(3)
+	if !ok || again[0] != 1 || table[0]&15 != 1 {
+		t.Fatal("LUT views alias canonical storage")
+	}
+	inputs := mapping.InputLiterals()
+	inputs[0] = 0
+	if n.inputs[0] != 2 {
+		t.Fatal("forwarded interface aliases source")
+	}
+	if _, _, ok := mapping.LUT(1); ok {
+		t.Fatal("CI exposed as selected LUT")
+	}
+}

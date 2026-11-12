@@ -127,3 +127,30 @@ func (s *sat_solver_t) Compress() bool {
 	}
 	return s.fSolved == 0
 }
+
+// SolveLexicographic updates literals in place to the least ordered satisfying
+// assignment. The first literal is most significant. Begin with all-negative
+// literals; successive calls may reuse the result after blocking that assignment
+// and all earlier ones. Arbitrary mixed-sign lower bounds are not supported by
+// ABC's lex-SAT algorithm. Variables must be distinct and already introduced.
+// Per-call limits cover the entire lexicographic search, including its subsolves.
+func (s *sat_solver_t) SolveLexicographic(literals []Literal) Status {
+	seen := make(map[int32]bool, len(literals))
+	for _, l := range literals {
+		v := lit_var(l)
+		if lit_check(l, s.size) == 0 || seen[v] {
+			panic("invalid lexicographic variable order")
+		}
+		seen[v] = true
+	}
+	if len(literals) == 0 || s.fSolved != 0 {
+		return s.Solve()
+	}
+	if s.root_level != 0 || s.trail_lim.size != 0 {
+		panic("lexicographic search with pending assumptions")
+	}
+	sat_solver_set_resource_limits(s, s.limitConflicts, s.limitPropagations, 0, 0)
+	veci_resize(&s.conf_final, 0)
+	s.lastStatus = Status(sat_solver_solve_lexsat(s, literals, int32(len(literals))))
+	return s.lastStatus
+}

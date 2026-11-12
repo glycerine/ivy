@@ -1,444 +1,157 @@
 package live
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"math/big"
+)
 
-//#include <stdio.h>
-//#include "base/main/main.h"
-//#include "aig/aig/aig.h"
-//#include "aig/saig/saig.h"
-//#include <string.h>
-//#include "base/main/mainInt.h"
-//#include "proof/pdr/pdr.h"
-//#include <time.h>
-
-//ABC_NAMESPACE_IMPL_START
-
-func countCombination(n long, k long) long {
-    assert(n >= k, "n >= k");
-    if n == k { return 1; }
-    if k == 1 { return n; }
-    return countCombination( n-1, k-1 ) + countCombination( n-1, k );
-}    
-
-func listCombination(n int32, t int32) {
-    var vC *Vec_Int_t;
-    var i, j, combCounter int32;
-
-    //Initialization
-    vC = Vec_IntAlloc(t+3);
-    for i=-1; i<t; i++ {
-        Vec_IntPush( vC, i );
-    }
-    Vec_IntPush( vC, n );
-    Vec_IntPush( vC, 0 );
-
-    for {
-        //visit combination
-        fmt.Printf("Comb-%3d : ", ++combCounter);
-        for  i=t; i>0; i-- {
-            fmt.Printf("vC[%d] = %d ", i, Vec_IntEntry(vC, i));
-        }
-        fmt.Printf("\n");
-
-        j = 1;
-        for  Vec_IntEntry( vC, j ) + 1 == Vec_IntEntry( vC, j+1 )  {
-            //printf("\nGochon = %d, %d\n", Vec_IntEntry( vC, j ) + 1, Vec_IntEntry( vC, j+1 ));
-            Vec_IntWriteEntry( vC, j, j-1 );
-            j = j + 1;
-        }
-        if j > t { break; }
-        Vec_IntWriteEntry( vC, j, Vec_IntEntry( vC, j ) + 1 );
-    }
-    
-    Vec_IntFree(vC);    
+func countCombination(n, k int64) int64 {
+	if n < 0 || k < 0 || k > n {
+		panic("live: invalid combination dimensions")
+	}
+	value := new(big.Int).Binomial(n, k)
+	if !value.IsInt64() {
+		panic("live: combination count overflows int64")
+	}
+	return value.Int64()
 }
 
-func generateCombinatorialStabil(pAigNew *Aig_Man_t, pAigOld *Aig_Man_t, vCandidateMonotoneSignals_ *Vec_Int_t, vDisj_nCk_ *Vec_Ptr_t, combN int32, combK int32) int32 {
-    var pObjMonoCand, pObj *Aig_Obj_t;
-    var targetPoIndex int32;
-
-    //Knuth's Data Strcuture
-    var totalCombination_KNUTH int32;
-    var vC_KNUTH *Vec_Int_t;
-    var i_KNUTH, j_KNUTH int32;
-
-    //Knuth's Data Structure Initialization
-    vC_KNUTH = Vec_IntAlloc(combK+3);
-    for i_KNUTH=-1; i_KNUTH<combK; i_KNUTH++ {
-        Vec_IntPush( vC_KNUTH, i_KNUTH );
-    }
-    Vec_IntPush( vC_KNUTH, combN );
-    Vec_IntPush( vC_KNUTH, 0 );
-
-    for {
-        totalCombination_KNUTH++;
-        pObjMonoCand = Aig_Not(Aig_ManConst1(pAigNew));
-        for  i_KNUTH=combK; i_KNUTH>0; i_KNUTH-- {
-            targetPoIndex = Vec_IntEntry( vCandidateMonotoneSignals_, Vec_IntEntry(vC_KNUTH, i_KNUTH));
-            pObj = Aig_ObjChild0Copy(Aig_ManCo( pAigOld, targetPoIndex ));
-            pObjMonoCand = Aig_Or( pAigNew, pObj, pObjMonoCand );
-        }
-        Vec_PtrPush(vDisj_nCk_, pObjMonoCand );
-
-        j_KNUTH = 1;
-        for  Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 == Vec_IntEntry( vC_KNUTH, j_KNUTH+1 )  {
-            Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, j_KNUTH-1 );
-            j_KNUTH = j_KNUTH + 1;
-        }
-        if j_KNUTH > combK { break; }
-        Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 );
-    }
-
-    Vec_IntFree(vC_KNUTH);
-
-    return totalCombination_KNUTH;
+// ForEachCombination streams source colexicographic order. The callback receives
+// borrowed ascending indexes and may stop enumeration by returning false.
+func ForEachCombination(n, k int, visit func([]int) bool) {
+	if n < 0 || k < 0 || k > n {
+		panic("live: invalid combination dimensions")
+	}
+	values := make([]int, k+2)
+	for i := 0; i < k; i++ {
+		values[i] = i
+	}
+	values[k] = n
+	for {
+		if !visit(values[:k]) {
+			return
+		}
+		j := 0
+		for j < k && values[j]+1 == values[j+1] {
+			values[j] = j
+			j++
+		}
+		if j == k {
+			return
+		}
+		values[j]++
+	}
 }
-
-func generateCombinatorialStabilExhaust(pAigNew *Aig_Man_t, pAigOld *Aig_Man_t, vDisj_nCk_ *Vec_Ptr_t, combN int32, combK int32) int32 {
-    var pObjMonoCand, pObj *Aig_Obj_t;
-    var targetPoIndex int32;
-
-    //Knuth's Data Strcuture
-    var totalCombination_KNUTH int32;
-    var vC_KNUTH *Vec_Int_t;
-    var i_KNUTH, j_KNUTH int32;
-
-    //Knuth's Data Structure Initialization
-    vC_KNUTH = Vec_IntAlloc(combK+3);
-    for i_KNUTH=-1; i_KNUTH<combK; i_KNUTH++ {
-        Vec_IntPush( vC_KNUTH, i_KNUTH );
-    }
-    Vec_IntPush( vC_KNUTH, combN );
-    Vec_IntPush( vC_KNUTH, 0 );
-
-    for {
-        totalCombination_KNUTH++;
-        pObjMonoCand = Aig_Not(Aig_ManConst1(pAigNew));
-        for  i_KNUTH=combK; i_KNUTH>0; i_KNUTH-- {
-            //targetPoIndex = Vec_IntEntry( vCandidateMonotoneSignals_, Vec_IntEntry(vC_KNUTH, i_KNUTH));
-            targetPoIndex = Vec_IntEntry(vC_KNUTH, i_KNUTH);
-            pObj = (Aig_Obj_t *)(Aig_ManLo( pAigOld, targetPoIndex ).pData);
-            pObjMonoCand = Aig_Or( pAigNew, pObj, pObjMonoCand );
-        }
-        Vec_PtrPush(vDisj_nCk_, pObjMonoCand );
-
-        j_KNUTH = 1;
-        for  Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 == Vec_IntEntry( vC_KNUTH, j_KNUTH+1 )  {
-            Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, j_KNUTH-1 );
-            j_KNUTH = j_KNUTH + 1;
-        }
-        if j_KNUTH > combK { break; }
-        Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 );
-    }
-
-    Vec_IntFree(vC_KNUTH);
-
-    return totalCombination_KNUTH;
+func Combinations(n, k int) [][]int {
+	result := [][]int{}
+	ForEachCombination(n, k, func(values []int) bool { result = append(result, append([]int(nil), values...)); return true })
+	return result
 }
-
-func generateDisjunctiveTester(pNtk *Abc_Ntk_t, pAig *Aig_Man_t, combN int32, combK int32) *Aig_Man_t {
-    //AIG creation related data structure
-    var pNewAig *Aig_Man_t;
-    var piCopied, loCopied, loCreated, liCopied, liCreated, poCopied int32;
-    //int i, iElem, nRegCount, hintSingalBeginningMarker, hintSingalEndMarker;
-    var i, nRegCount, hintSingalBeginningMarker, hintSingalEndMarker int32;
-    var combN_internal, combK_internal int32; //, targetPoIndex;
-    var longI, lCombinationCount long;
-    //Aig_Obj_t *pObj, *pObjMonoCand, *pObjLO_nCk, *pObjDisj_nCk;
-    var pObj, pObjLO_nCk, pObjDisj_nCk *Aig_Obj_t;
-    var vLO_nCk, vPODriver_nCk, vDisj_nCk *Vec_Ptr_t;
-    var vCandidateMonotoneSignals *Vec_Int_t;
-
-    extern Vec_Int_t *findHintOutputs(Abc_Ntk_t *pNtk);
-    
-    //Knuth's Data Strcuture
-    //Vec_Int_t *vC_KNUTH;
-    //int i_KNUTH, j_KNUTH, combCounter_KNUTH = 0;
-
-    //Collecting target HINT signals
-    vCandidateMonotoneSignals = findHintOutputs(pNtk);
-    if vCandidateMonotoneSignals == nil {
-        fmt.Printf("\nTraget Signal Set is Empty: Duplicating given AIG\n");
-        combN_internal = 0;
-    
-    } else {
-        //Vec_IntForEachEntry( vCandidateMonotoneSignals, iElem, i )
-        //    printf("Po[%d] = %s\n", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );
-        hintSingalBeginningMarker = Vec_IntEntry( vCandidateMonotoneSignals, 0 );
-        hintSingalEndMarker = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntSize(vCandidateMonotoneSignals) - 1 );
-        combN_internal = hintSingalEndMarker - hintSingalBeginningMarker + 1;
-    }
-
-    //combK_internal = combK;
-
-    //Knuth's Data Structure Initialization
-    //vC_KNUTH = Vec_IntAlloc(combK_internal+3);
-    //for(i_KNUTH=-1; i_KNUTH<combK_internal; i_KNUTH++)
-    //    Vec_IntPush( vC_KNUTH, i_KNUTH );
-    //Vec_IntPush( vC_KNUTH, combN_internal );
-    //Vec_IntPush( vC_KNUTH, 0 );
-
-    //Standard AIG duplication begins
-    //Standard AIG Manager Creation
-    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );
-    pNewAig.pName = (char *)malloc( len(pAig.pName) + len("_nCk") + 1 );
-    sprintf(pNewAig.pName, "%s_%s", pAig.pName, "nCk");
-        pNewAig.pSpec = nil;
-
-    //Standard Mapping of Constant Nodes
-    pObj = Aig_ManConst1( pAig );
-        pObj.pData = Aig_ManConst1( pNewAig );
-
-    //Standard AIG PI duplication
-    Saig_ManForEachPi( pAig, pObj, i )
-    {
-        piCopied++;
-        pObj.pData = Aig_ObjCreateCi(pNewAig);
-    }
-
-    //Standard AIG LO duplication
-    Saig_ManForEachLo( pAig, pObj, i )
-        {
-        loCopied++;
-        pObj.pData = Aig_ObjCreateCi(pNewAig);
-        }
-
-    //nCk LO creation
-    lCombinationCount = 0;
-    for combK_internal=1; combK_internal<=combK; combK_internal++ {
-        lCombinationCount += countCombination( combN_internal, combK_internal );
-    }
-    assert(lCombinationCount > 0, "lCombinationCount > 0");
-    vLO_nCk = Vec_PtrAlloc(lCombinationCount);
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        loCreated++;
-        pObj = Aig_ObjCreateCi(pNewAig);
-        Vec_PtrPush( vLO_nCk, pObj );
-    }
-
-    //Standard Node duplication
-    Aig_ManForEachNode( pAig, pObj, i )
-    {
-        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    }
-    
-    //nCk specific logic creation (i.e. nCk number of OR gates)
-    vDisj_nCk = Vec_PtrAlloc(lCombinationCount);
-
-    
-
-    //while(1)
-    //{
-    //    //visit combination
-    //    //printf("Comb-%3d : ", ++combCounter_KNUTH);
-    //    pObjMonoCand = Aig_Not(Aig_ManConst1(pNewAig));
-    //    for( i_KNUTH=combK_internal; i_KNUTH>0; i_KNUTH--)
-    //    {
-    //        //printf("vC[%d] = %d ", i_KNUTH, Vec_IntEntry(vC_KNUTH, i_KNUTH));
-    //        targetPoIndex = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntEntry(vC_KNUTH, i_KNUTH));
-    //        pObj = Aig_ObjChild0Copy(Aig_ManCo( pAig, targetPoIndex ));
-    //        pObjMonoCand = Aig_Or( pNewAig, pObj, pObjMonoCand );
-    //    }
-    //    Vec_PtrPush(vDisj_nCk, pObjMonoCand );
-    //    //printf("\n");
-
-    //    j_KNUTH = 1;
-    //    while( Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 == Vec_IntEntry( vC_KNUTH, j_KNUTH+1 ) )
-    //    {
-    //        Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, j_KNUTH-1 );
-    //        j_KNUTH = j_KNUTH + 1;
-    //    }
-    //    if( j_KNUTH > combK_internal ) break;
-    //    Vec_IntWriteEntry( vC_KNUTH, j_KNUTH, Vec_IntEntry( vC_KNUTH, j_KNUTH ) + 1 );
-    //}
-    for  combK_internal=1; combK_internal<=combK; combK_internal++  {
-        generateCombinatorialStabil( pNewAig, pAig, vCandidateMonotoneSignals,
-                vDisj_nCk, combN_internal, combK_internal );
-    }
-
-
-    //creation of implication logic
-    vPODriver_nCk = Vec_PtrAlloc(lCombinationCount);
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        pObjLO_nCk = (Aig_Obj_t *)(Vec_PtrEntry( vLO_nCk, longI ));
-        pObjDisj_nCk = (Aig_Obj_t *)(Vec_PtrEntry( vDisj_nCk, longI ));
-
-        pObj = Aig_Or( pNewAig, Aig_Not(pObjDisj_nCk), pObjLO_nCk);
-        Vec_PtrPush(vPODriver_nCk, pObj);
-    }
-    
-    //Standard PO duplication
-    Saig_ManForEachPo( pAig, pObj, i )
-    {
-        poCopied++;
-        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); 
-    }
-
-    //nCk specific PO creation
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        Aig_ObjCreateCo( pNewAig, (Aig_Obj_t *)(Vec_PtrEntry( vPODriver_nCk, longI )) );
-    }
-
-    //Standard LI duplication
-    Saig_ManForEachLi( pAig, pObj, i )
-    {
-        liCopied++;
-        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );
-    }
-
-    //nCk specific LI creation
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        liCreated++;
-        Aig_ObjCreateCo( pNewAig, (Aig_Obj_t *)(Vec_PtrEntry( vPODriver_nCk, longI )) );
-    }
-
-    //clean-up, book-keeping
-    assert(liCopied + liCreated == loCopied + loCreated, "liCopied + liCreated == loCopied + loCreated");    
-    nRegCount = loCopied + loCreated;
-
-    Aig_ManSetRegNum( pNewAig, nRegCount );
-    Aig_ManCleanup( pNewAig );
-    assert(Aig_ManCheck( pNewAig ), "Aig_ManCheck( pNewAig )");
-    
-    //Vec_IntFree(vC_KNUTH);    
-    return pNewAig;
+func listCombination(n, k int32) {
+	counter := 0
+	ForEachCombination(int(n), int(k), func(values []int) bool {
+		counter++
+		fmt.Printf("Comb-%3d : ", counter)
+		for i := len(values) - 1; i >= 0; i-- {
+			fmt.Printf("vC[%d] = %d ", i+1, values[i])
+		}
+		fmt.Println()
+		return true
+	})
 }
-
-func generateGeneralDisjunctiveTester(pNtk *Abc_Ntk_t, pAig *Aig_Man_t, combK int32) *Aig_Man_t {
-    //AIG creation related data structure
-    var pNewAig *Aig_Man_t;
-    var piCopied, loCopied, loCreated, liCopied, liCreated, poCopied int32;
-    //int i, iElem, nRegCount, hintSingalBeginningMarker, hintSingalEndMarker;
-    var i, nRegCount int32;
-    var combN_internal, combK_internal int32; //, targetPoIndex;
-    var longI, lCombinationCount long;
-    //Aig_Obj_t *pObj, *pObjMonoCand, *pObjLO_nCk, *pObjDisj_nCk;
-    var pObj, pObjLO_nCk, pObjDisj_nCk *Aig_Obj_t;
-    var vLO_nCk, vPODriver_nCk, vDisj_nCk *Vec_Ptr_t;
-
-    extern Vec_Int_t *findHintOutputs(Abc_Ntk_t *pNtk);
-    
-    //Knuth's Data Strcuture
-    //Vec_Int_t *vC_KNUTH;
-    //int i_KNUTH, j_KNUTH, combCounter_KNUTH = 0;
-
-    //Collecting target HINT signals
-    //vCandidateMonotoneSignals = findHintOutputs(pNtk);
-    //if( vCandidateMonotoneSignals == NULL )
-    //{
-    //    printf("\nTraget Signal Set is Empty: Duplicating given AIG\n");
-    //    combN_internal = 0;
-    //}
-    //else
-    //{
-        //Vec_IntForEachEntry( vCandidateMonotoneSignals, iElem, i )
-        //    printf("Po[%d] = %s\n", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );
-    //    hintSingalBeginningMarker = Vec_IntEntry( vCandidateMonotoneSignals, 0 );
-    //    hintSingalEndMarker = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntSize(vCandidateMonotoneSignals) - 1 );
-    //    combN_internal = hintSingalEndMarker - hintSingalBeginningMarker + 1;
-    //}
-
-    combN_internal = Aig_ManRegNum(pAig);
-
-    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );
-    pNewAig.pName = (char *)malloc( len(pAig.pName) + len("_nCk") + 1 );
-    sprintf(pNewAig.pName, "%s_%s", pAig.pName, "nCk");
-        pNewAig.pSpec = nil;
-
-    //Standard Mapping of Constant Nodes
-    pObj = Aig_ManConst1( pAig );
-        pObj.pData = Aig_ManConst1( pNewAig );
-
-    //Standard AIG PI duplication
-    Saig_ManForEachPi( pAig, pObj, i )
-    {
-        piCopied++;
-        pObj.pData = Aig_ObjCreateCi(pNewAig);
-    }
-
-    //Standard AIG LO duplication
-    Saig_ManForEachLo( pAig, pObj, i )
-        {
-        loCopied++;
-        pObj.pData = Aig_ObjCreateCi(pNewAig);
-        }
-
-    //nCk LO creation
-    lCombinationCount = 0;
-    for combK_internal=1; combK_internal<=combK; combK_internal++ {
-        lCombinationCount += countCombination( combN_internal, combK_internal );
-    }
-    assert(lCombinationCount > 0, "lCombinationCount > 0");
-    vLO_nCk = Vec_PtrAlloc(lCombinationCount);
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        loCreated++;
-        pObj = Aig_ObjCreateCi(pNewAig);
-        Vec_PtrPush( vLO_nCk, pObj );
-    }
-
-    //Standard Node duplication
-    Aig_ManForEachNode( pAig, pObj, i )
-    {
-        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    }
-    
-    //nCk specific logic creation (i.e. nCk number of OR gates)
-    vDisj_nCk = Vec_PtrAlloc(lCombinationCount);
-
-    for  combK_internal=1; combK_internal<=combK; combK_internal++  {
-        generateCombinatorialStabilExhaust( pNewAig, pAig,
-                vDisj_nCk, combN_internal, combK_internal );
-    }
-
-
-    //creation of implication logic
-    vPODriver_nCk = Vec_PtrAlloc(lCombinationCount);
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        pObjLO_nCk = (Aig_Obj_t *)(Vec_PtrEntry( vLO_nCk, longI ));
-        pObjDisj_nCk = (Aig_Obj_t *)(Vec_PtrEntry( vDisj_nCk, longI ));
-
-        pObj = Aig_Or( pNewAig, Aig_Not(pObjDisj_nCk), pObjLO_nCk);
-        Vec_PtrPush(vPODriver_nCk, pObj);
-    }
-    
-    //Standard PO duplication
-    Saig_ManForEachPo( pAig, pObj, i )
-    {
-        poCopied++;
-        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); 
-    }
-
-    //nCk specific PO creation
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        Aig_ObjCreateCo( pNewAig, (Aig_Obj_t *)(Vec_PtrEntry( vPODriver_nCk, longI )) );
-    }
-
-    //Standard LI duplication
-    Saig_ManForEachLi( pAig, pObj, i )
-    {
-        liCopied++;
-        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );
-    }
-
-    //nCk specific LI creation
-    for  longI = 0; longI < lCombinationCount; longI++  {
-        liCreated++;
-        Aig_ObjCreateCo( pNewAig, (Aig_Obj_t *)(Vec_PtrEntry( vPODriver_nCk, longI )) );
-    }
-
-    //clean-up, book-keeping
-    assert(liCopied + liCreated == loCopied + loCreated, "liCopied + liCreated == loCopied + loCreated");    
-    nRegCount = loCopied + loCreated;
-
-    Aig_ManSetRegNum( pNewAig, nRegCount );
-    Aig_ManCleanup( pNewAig );
-    assert(Aig_ManCheck( pNewAig ), "Aig_ManCheck( pNewAig )");
-    
-    Vec_PtrFree(vLO_nCk);
-    Vec_PtrFree(vPODriver_nCk);
-    Vec_PtrFree(vDisj_nCk);
-    //Vec_IntFree(vC_KNUTH);    
-    return pNewAig;
+func generateCombinatorialStabil(new, old *aig.Graph, candidates []int32, disjunctions *[]aig.Edge, n, k int32) int32 {
+	if n < 0 || int(n) > len(candidates) {
+		panic("live: candidate count mismatch")
+	}
+	count := int32(0)
+	ForEachCombination(int(n), int(k), func(values []int) bool {
+		signals := []aig.Edge{}
+		for _, i := range values {
+			signals = append(signals, copiedDriver(old, int(candidates[i])))
+		}
+		*disjunctions = append(*disjunctions, disjoin(new, signals))
+		count++
+		return true
+	})
+	return count
 }
-
-//ABC_NAMESPACE_IMPL_END
+func generateCombinatorialStabilExhaust(new, old *aig.Graph, disjunctions *[]aig.Edge, n, k int32) int32 {
+	if int(n) > registers(old) {
+		panic("live: register candidate count")
+	}
+	count := int32(0)
+	ForEachCombination(int(n), int(k), func(values []int) bool {
+		signals := []aig.Edge{}
+		for _, i := range values {
+			signals = append(signals, aig.Aig_ObjCopy(old, old.Inputs()[trueInputs(old)+i]))
+		}
+		*disjunctions = append(*disjunctions, disjoin(new, signals))
+		count++
+		return true
+	})
+	return count
+}
+func copiedDriver(old *aig.Graph, index int) aig.Edge {
+	driver := outputDriver(old, index)
+	copy := aig.Aig_ObjCopy(old, aig.Aig_Regular(driver))
+	if copy == aig.InvalidEdge {
+		panic("live: output driver has no image")
+	}
+	return copy ^ aig.Edge(driver&1)
+}
+func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph {
+	if k < 0 || int(k) > len(candidates) {
+		panic("live: invalid maximum combination width")
+	}
+	c := newGraphCopy(p, "_nCk")
+	c.copyInputs()
+	groups := [][]int{}
+	for width := 1; width <= int(k); width++ {
+		ForEachCombination(len(candidates), width, func(values []int) bool { groups = append(groups, append([]int(nil), values...)); return true })
+	}
+	states := make([]aig.Edge, len(groups))
+	for i := range states {
+		states[i] = aig.Aig_ObjCreateCi(c.destination)
+	}
+	properties := make([]aig.Edge, len(groups))
+	for i, group := range groups {
+		signals := make([]aig.Edge, len(group))
+		for j, index := range group {
+			signals[j] = c.signal(candidates[index])
+		}
+		properties[i] = aig.Aig_Or(c.destination, disjoin(c.destination, signals).Not(), states[i])
+	}
+	for i := 0; i < trueOutputs(p); i++ {
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+	}
+	for _, e := range properties {
+		aig.Aig_ObjCreateCo(c.destination, e)
+	}
+	for r := 0; r < registers(p); r++ {
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+	}
+	for _, e := range properties {
+		aig.Aig_ObjCreateCo(c.destination, e)
+	}
+	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+len(states)))
+	return c.destination
+}
+func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *aig.Graph {
+	hints := findHintOutputs(n)
+	signals := make([]aig.Edge, len(hints))
+	for i, index := range hints {
+		signals[i] = p.Outputs()[index]
+	}
+	if len(signals) == 0 {
+		c := newGraphCopy(p, "_nCk")
+		c.copyInputs()
+		c.copyOutputs()
+		aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
+		return c.destination
+	}
+	return disjunctiveTester(p, signals, combK)
+}
+func generateGeneralDisjunctiveTester(n *Network, p *aig.Graph, k int32) *aig.Graph {
+	return disjunctiveTester(p, p.Inputs()[trueInputs(p):], k)
+}

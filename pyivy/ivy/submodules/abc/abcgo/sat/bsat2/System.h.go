@@ -1,5 +1,10 @@
 package bsat2
 
+import (
+	"runtime"
+	"runtime/metrics"
+)
+
 /****************************************************************************************[System.h]
 Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
 Copyright (c) 2007-2010, Niklas Sorensson
@@ -20,43 +25,18 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-#if defined(__linux__)
-#include <fpu_control.h>
-#endif
-
-//#include "IntTypes.h"
-
-//-------------------------------------------------------------------------------------------------
-
-namespace Minisat {
-
-static inline double cpuTime(void); // CPU-time in seconds.
-extern double memUsed();            // Memory in mega bytes (returns 0 for unsupported architectures).
-extern double memUsedPeak();        // Peak-memory in mega bytes (returns 0 for unsupported architectures).
-
+// CPUTime reports runtime-accounted CPU seconds excluding idle processor time.
+func CPUTime() float64 {
+	samples := []metrics.Sample{{Name: "/cpu/classes/total:cpu-seconds"}, {Name: "/cpu/classes/idle:cpu-seconds"}}
+	metrics.Read(samples)
+	total, idle := samples[0].Value.Float64(), samples[1].Value.Float64()
+	if total < idle {
+		return 0
+	}
+	return total - idle
 }
-
-//-------------------------------------------------------------------------------------------------
-// Implementation of inline functions:
-
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)
-#include <time.h>
-
-static inline double Minisat::cpuTime(void) { return (double)clock() / CLOCKS_PER_SEC; }
-
-#else
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <unistd.h>
-
-static inline double Minisat::cpuTime(void) {
-    struct rusage ru;
-    getrusage(RUSAGE_SELF, &ru);
-    return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; }
-
-#endif
-
-
+func MemoryUsage() float64 {
+	var stats runtime.MemStats
+	runtime.ReadMemStats(&stats)
+	return float64(stats.HeapAlloc) / (1024 * 1024)
+}

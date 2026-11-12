@@ -457,3 +457,28 @@ func TestMappingRecordViewsAndSimulationBlocks(t *testing.T) {
 		t.Fatal("simulation blocks overlap")
 	}
 }
+
+func TestOppositePhaseSameFaninIsNotBuffer(t *testing.T) {
+	p := Gia_ManStart(4)
+	a := Gia_ManAppendCi(p)
+	p.fGiaSimple = 1
+	literal := Gia_ManAppendAnd(p, a, a^1)
+	obj := Gia_ManObj(p, literal>>1)
+	if Gia_ObjIsBuf(obj) != 0 || Gia_ObjIsAndNotBuf(obj) != 1 {
+		t.Fatal("x AND !x is not a buffer")
+	}
+	p.vMapping = Vec_IntAlloc(8)
+	Vec_IntFill(p.vMapping, int(p.nObjs), 0)
+	Vec_IntWriteEntry(p.vMapping, int(obj.id), int32(Vec_IntSize(p.vMapping)))
+	Vec_IntPush(p.vMapping, 1)
+	Vec_IntPush(p.vMapping, a>>1)
+	Vec_IntPush(p.vMapping, obj.id)
+	leaves, truth, ok := p.LUT(obj.id)
+	if !ok || len(leaves) != 1 || len(truth) != 1 || truth[0] != 0 {
+		t.Fatal("mapped contradiction truth", leaves, truth, ok)
+	}
+	Gia_ManCreateRefs(p)
+	if p.Refs[a>>1] != 2 {
+		t.Fatal("ordinary AND has two arcs to same regular input")
+	}
+}

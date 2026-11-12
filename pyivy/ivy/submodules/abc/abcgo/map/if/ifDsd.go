@@ -91,42 +91,6 @@ type If_DsdObj_t struct {
     pFans [0]uint32;       // fanins
 }
 
-type If_DsdMan_t_ struct {
-    pStore          string;         // input/output file
-    nVars            int32;          // max var number
-    LutSize            int32;        // LUT size
-    nWords            int32;         // word number
-    nBins            int32;          // table size
-    pBins      *uint32;          // hash table
-    pMem    *Mem_Flex_t;           // memory for nodes
-    vObjs      Vec_Ptr_t;          // objects
-    vNexts      Vec_Int_t;         // next pointers
-    vTruths      Vec_Int_t;        // truth IDs of prime nodes
-    vTemp1     *Vec_Int_t;         // temp
-    vTemp2     *Vec_Int_t;         // temp
-    pTtElems         **word;       // elementary TTs
-    Vec_Mem_t *    vTtMem[IF_MAX_FUNC_LUTSIZE+1];  // truth table memory and hash table
-    Vec_Ptr_t *    vTtDecs[IF_MAX_FUNC_LUTSIZE+1]; // truth table decompositions
-    Vec_Wec_t *    vIsops[IF_MAX_FUNC_LUTSIZE+1];  // ISOP for each function
-    pSched [IF_MAX_FUNC_LUTSIZE]*int32;    // grey code schedules
-    nTtBits            int32;        // the number of truth table bits
-    nConfigWords            int32;   // the number of words for config data per node
-    vConfigs     *Vec_Wrd_t;       // permutations
-    pTtGia     *Gia_Man_t;         // GIA to represent truth tables
-    vCover     *Vec_Int_t;         // temporary memory
-    pSat          any;           // SAT solver
-    pCellStr          string;       // symbolic cell description
-    nObjsPrev            int32;      // previous number of objects
-    fNewAsUseless            int32;  // set new as useless
-    nUniqueHits            int32;    // statistics
-    nUniqueMisses            int32;  // statistics
-    timeDsd        abctime;        // statistics
-    timeCanon        abctime;      // statistics
-    timeCheck        abctime;      // statistics
-    timeCheck2        abctime;     // statistics
-    timeVerify        abctime;     // statistics
-}
-
 func If_DsdObjWordNum(nFans int32) int32 { return sizeof(If_DsdObj_t) / 8 + nFans / 2 + ((nFans & 1) > 0);              }
 func If_DsdObjTruthId(p *If_DsdMan_t, pObj *If_DsdObj_t) int32 { if pObj.Type == IF_DSD_PRIME && pObj.nFans > 2 {
     return Vec_IntEntry(&p.vTruths, pObj.Id);

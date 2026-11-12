@@ -19,119 +19,71 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+type Ref uint32
 
+const RefUndef Ref = ^Ref(0)
 
-
-
-//#include "XAlloc.h"
-//#include "Vec.h"
-
-namespace Minisat {
-
-//=================================================================================================
-// Simple Region-based memory allocator:
-
-template<class T>
-class RegionAllocator
-{
-    T*        memory;
-    uint32_t  sz;
-    uint32_t  cap;
-    uint32_t  wasted_;
-
-    void capacity(uint32_t min_cap);
-
- public:
-    // TODO: make this a class for better type-checking?
-    typedef uint32_t Ref;
-    const ( Ref_Undef = UINT32_MAX 
-)
-
-    const ( Unit_Size = sizeof(uint32_t) 
-)
-
-
-    explicit RegionAllocator(uint32_t start_cap = 1024*1024) : memory(NULL), sz(0), cap(0), wasted_(0){ capacity(start_cap); }
-    ~RegionAllocator()
-    {
-        if (memory != NULL)
-            ::free(memory);
-    }
-
-
-    uint32_t size      () { return sz; }
-    uint32_t wasted    () { return wasted_; }
-
-    Ref      alloc     (int size); 
-    void     _free      (int size)    { wasted_ += size; }
-
-    // Deref, Load Effective Address (LEA), Inverse of LEA (AEL):
-    T&       operator[](Ref r)       { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return memory[r]; }
-    T& operator[](Ref r) { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return memory[r]; }
-
-    T*       lea       (Ref r)       { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return &memory[r]; }
-    T* lea       (Ref r) { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return &memory[r]; }
-    Ref      ael       (T* t)  { assert((void*)t >= (void*)&memory[0] && (void*)t < (void*)&memory[sz-1], "(void*)t >= (void*)&memory[0] && (void*)t < (void*)&memory[sz-1]");
-        return  (Ref)(t - &memory[0]); }
-
-    void     moveTo(RegionAllocator& to) {
-        if (to.memory != NULL) ::free(to.memory);
-        to.memory = memory;
-        to.sz = sz;
-        to.cap = cap;
-        to.wasted_ = wasted_;
-
-        memory = NULL;
-        sz = cap = wasted_ = 0;
-    }
-
-
-};
-
-template<class T>
-void RegionAllocator<T>::capacity(uint32_t min_cap)
-{
-    if (cap >= min_cap) return;
-
-    uint32_t prev_cap = cap;
-    while (cap < min_cap){
-        // NOTE: Multiply by a factor (13/8) without causing overflow, then add 2 and make the
-        // result even by clearing the least significant bit. The resulting sequence of capacities
-        // is carefully chosen to hit a maximum capacity that is close to the '2^32-1' limit when
-        // using 'uint32_t' as indices so that as much as possible of this space can be used.
-        uint32_t delta = ((cap >> 1) + (cap >> 3) + 2) & ~1;
-        cap += delta;
-
-        if (cap <= prev_cap)
-            throw OutOfMemoryException();
-    }
-    // printf(" .. (%p) cap = %u\n", this, cap);
-
-    assert(cap > 0, "cap > 0");
-    memory = (T*)xrealloc(memory, sizeof(T)*cap);
+// RegionAllocator keeps stable offset references across backing-slice growth.
+// Freed storage is accounted as waste and reclaimed by moving live objects.
+type RegionAllocator[T any] struct {
+	memory []T
+	wasted uint32
 }
 
-
-template<class T>
-typename RegionAllocator<T>::Ref
-RegionAllocator<T>::alloc(int size)
-{ 
-    // printf("ALLOC called (this = %p, size = %d)\n", this, size); fflush(stdout);
-    assert(size > 0, "size > 0");
-    capacity(sz + size);
-
-    uint32_t prev_sz = sz;
-    sz += size;
-    
-    // Handle overflow:
-    if (sz < prev_sz)
-        throw OutOfMemoryException();
-
-    return prev_sz;
+func NewRegionAllocator[T any](capacity uint32) *RegionAllocator[T] {
+	r := new(RegionAllocator[T])
+	r.Reserve(capacity)
+	return r
 }
-
-
-//=================================================================================================
+func (r *RegionAllocator[T]) Size() uint32   { return uint32(len(r.memory)) }
+func (r *RegionAllocator[T]) Wasted() uint32 { return r.wasted }
+func (r *RegionAllocator[T]) Reserve(minimum uint32) {
+	if uint64(minimum) > uint64(int(^uint(0)>>1)) {
+		panic("region capacity overflow")
+	}
+	capacity := uint32(cap(r.memory))
+	for capacity < minimum {
+		delta := ((capacity >> 1) + (capacity >> 3) + 2) &^ 1
+		next := capacity + delta
+		if next <= capacity {
+			panic("region capacity overflow")
+		}
+		capacity = next
+	}
+	if int(capacity) == cap(r.memory) {
+		return
+	}
+	memory := make([]T, len(r.memory), int(capacity))
+	copy(memory, r.memory)
+	r.memory = memory
 }
-
-
+func (r *RegionAllocator[T]) Alloc(size uint32) Ref {
+	if size == 0 || uint64(size)+uint64(len(r.memory)) >= uint64(RefUndef) {
+		panic("invalid region allocation")
+	}
+	start := len(r.memory)
+	r.Reserve(uint32(start) + size)
+	r.memory = r.memory[:start+int(size)]
+	return Ref(start)
+}
+func (r *RegionAllocator[T]) Free(size uint32) {
+	if uint64(r.wasted)+uint64(size) > uint64(len(r.memory)) {
+		panic("region waste exceeds allocation")
+	}
+	r.wasted += size
+}
+func (r *RegionAllocator[T]) At(ref Ref) *T { return &r.memory[int(ref)] }
+func (r *RegionAllocator[T]) Slice(ref Ref, size uint32) []T {
+	end := uint64(ref) + uint64(size)
+	if end > uint64(len(r.memory)) {
+		panic("region slice outside allocation")
+	}
+	return r.memory[int(ref):int(end)]
+}
+func (r *RegionAllocator[T]) MoveTo(to *RegionAllocator[T]) {
+	if r == to {
+		return
+	}
+	*to = *r
+	*r = RegionAllocator[T]{}
+}

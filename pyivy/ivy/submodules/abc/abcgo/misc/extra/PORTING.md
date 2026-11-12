@@ -380,3 +380,84 @@ Integration checkpoint after Maj/Mult: all completed native group tests pass
 and still fails first at `extraUtilMisc.go:113`; remaining active draft groups
 are Misc, Path, Prime, Supp, and extraZddTrunc. These remain visible product
 sources and have not been excluded from builds. No experiment tests were run.
+
+### Miscellaneous truth/combinatorial helpers (`extraUtilMisc.go`)
+
+Ported the complete original API family: arithmetic/radix/permutations,
+32-bit truth phases/permutations and five canonicalization variants, owned N/NPN
+class tables, support expansion and precomputed tables, Gray/permutation cycles,
+exact and heuristic six-input minimization, hex-file reading, diagnostics, and
+all matrix transpose variants. Original small expansion-permutation arrays are
+retained in `extra_misc_perms.go`: their historical unused-variable order differs
+from the general eight-variable expansion schedule, so a uniform replacement
+would change behavior for non-support-normalized input. Four-input NPN uses the
+already independently tested `npn` package. Matrix vector APIs remain Vec based.
+Native byte-array allocation returns `[][]byte`, 64-bit expansion tables return
+`[][]uint64`, N-class metadata uses tuple returns, file readers return errors.
+
+Readability review: factored permutation validation, phase-class construction,
+truth interning boundaries and support-placement generation; used standard bits,
+stable sorting and native numeric/file operations. Removed all mutable static
+scratch tables; returned tables are caller-owned. Canonicalizers materialize the
+permutation list once per call. Kept original exact six-input cycle traversal and
+ten-round heuristic rather than substituting another canonicalizer.
+
+Bug review: corrected the original high-variable support-expansion loop, which
+examined only five variables for seven/eight-variable words. Transforms clone
+input before output writes and support in-place or partially overlapping slices.
+Fixed signed shift at power 2^31, arithmetic allocation overflow checks, source
+hex-reader bounds/failed opens, and the 64-bit Perm63 table's overlapping 32-bit
+writes by returning explicit uint64 entries. Invalid dimensions/shifts are
+rejected; numeric combinations/factorials report representational overflow.
+Gray width zero is rejected instead of emitting an invalid negative flip index.
+The elementary-support shortcut is preserved: one-bit support denotes the
+positive elementary variable, as in the source API's intended precondition.
+
+Validation: compiled original C differential stream covering every four-input
+expansion case, random five/six-input expansion cases, every three-input
+canonicalizer result, permutation and Gray schedules, and exact/heuristic
+six-input minimization matches SHA256
+`993dc58b00ed816f4e85a17e6edd8af079556c8727d5fa4aa5d3204b823341cd`.
+Independent tests reconstruct all 256/65,536 N-class phase tables; cover all
+support placements at widths 3..8, in-place expansion, all 4096/1024 singleton
+bits in 64/32 transposes, rectangular and pointer-row matrix transposes, stable
+sort, numeric boundaries and file errors. Focused race and vet pass with
+`extraUtilMisc.go extraUtilMisc_test.go extra_misc_perms.go` as explicit files.
+Combined tests for every completed group pass under race in 10.375 seconds.
+The full package was rerun and now first fails at `extraUtilPath.go:74`.
+Remaining active draft groups: Path, Prime, Supp, and extraZddTrunc.
+
+### Prime generation and cube-distance hashing (`extraUtilPrime.go`)
+
+Ported prime sieve/PLA output, Hamming-neighbor diagnostics, all Tab manager,
+packed-cube/divisor/equality helpers and hash-filtered distance-pair collection.
+The fixed original literal hash multipliers live in `extra_prime_hash.go`.
+Unsigned hash sums deliberately sign-extend the original int32 multiplier return
+values before addition, preserving C's signed-to-word conversion. Sparse typed
+bins replace mandatory large bitmap/table allocations while keeping two-pass
+collision filtering, bin order, reverse chain order and pair order unchanged.
+
+Readability review: materialized typed deletion variants make the original two
+bitmap scans' purpose explicit; slot frequency greater than one produces their
+exact collision marks. Cube comparison uses one checked merge walk, without
+fixed scratch arrays. The Eratosthenes sieve begins at p*p and visits only
+required factors; output is unchanged. Native output commands return errors.
+
+Bug review: fixed the source distance-2 variant count (n*n/2 instead of
+n*(n-1)/2 caused its own assertion to fail), last-literal omission equality,
+and empty/duplicate divisor handling. Collection resets hash entry state so a
+second call returns the same result. Owned storage and idempotent Free eliminate
+source intermediate-vector/table leaks. Mask rounding uses wide unsigned shifts;
+input sizes/indices are validated. Distance-2 collection retains the original
+final comparison rule (only VarA is omitted); this API is not advertised as an
+independently corrected distance-2 decomposition algorithm.
+
+Validation: original-C differential stream compares prime vectors, every 64-bit
+cube hash, and full ordered distance-1 pair lists at widths 2..10, SHA256
+`06501e6a91ad7ea34b5f393c2906d4c9fb1dc2451603034a3b9fac3316e7f906`.
+Independent trial division verifies every sieve bit through width 13. Tests cover
+all returned pairs' Hamming distance, repeated collection, divisor extraction,
+duplicate cubes, final omitted literals and distance-2 count/repeatability.
+Focused race and vet pass with explicit files `extraUtilPrime.go`,
+`extraUtilPrime_test.go`, `extra_prime_hash.go`, `extraUtilFile.go`,
+`extraUtilTruth.go`.

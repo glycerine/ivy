@@ -13,7 +13,7 @@ func structuralConstraintFixture() (*aig.Graph, aig.Edge, aig.Edge, aig.Edge) {
 	property := g.AND(g.AND(lo.Not(), x), y)
 	g.AddOutput(property)
 	// The next-state function is !x OR lo. Its complement is an AND
-	// supergate containing the current latch output and constraint x.
+	// supergate containing the current latch output and complemented x term.
 	g.AddOutput(g.AND(lo.Not(), x).Not())
 	aig.Aig_ManSetRegNum(g, 1)
 	return g, x, y, lo
@@ -33,6 +33,23 @@ func TestDetectStructuralConstraintFactors(t *testing.T) {
 	}
 	if split.PropertyNegations[0] == lo || split.ConstraintNegations[0] == lo {
 		t.Fatal("latch factor leaked into returned properties/constraints")
+	}
+}
+
+func TestSourceNameDetectorStatus(t *testing.T) {
+	g, _, _, _ := structuralConstraintFixture()
+	_, _, status := Saig_ManDetectConstr(g, 0)
+	if status != 1 {
+		t.Fatalf("matched constraint count = %d, want 1", status)
+	}
+	plain := aig.NewGraph()
+	plain.NewInput()
+	plain.AddOutput(plain.Const0())
+	plain.AddOutput(plain.Const0())
+	aig.Aig_ManSetRegNum(plain, 1)
+	_, _, status = Saig_ManDetectConstr(plain, 0)
+	if status != -1 {
+		t.Fatalf("constant-false status = %d, want -1", status)
 	}
 }
 

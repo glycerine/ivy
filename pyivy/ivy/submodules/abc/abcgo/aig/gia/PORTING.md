@@ -222,3 +222,43 @@ cover audits match clause order for both function phases. Native parent
 `giaSatoko.go` now provides Init/Create/CallOne/CallOneResult, split/incremental,
 DIMACS and mapped-cone drivers; these use actual MF8 CNF, not CEC gate CNF.
 Core race tests including driver regressions pass (2.703s).
+
+All remaining header accessors are now native: mapping/cell records, secondary
+mapping vectors and borrowed per-object/input simulation blocks. Mapping views
+exclude record trailers and cap their capacity; separate ID/MUX trailer getters
+retain the source layout. Tests verify record boundaries, borrowed mutation and
+simulation strides. The real `gia.h.go` now participates in focused core builds;
+C forward typedef aliases for still-unported solver/support implementation types
+moved beside their actual implementation declarations. No placeholder opaque
+types or source exclusions were introduced. Header simulation/timing array
+fields now use slices. Core races including the whole header pass (2.741s).
+
+Native parent MF generate/dump drivers also expose typed CNF through manager
+Data/TakeData; the source alias points to mf.CNF rather than C clause pointers.
+
+`giaDfs.go` is now fully native: support/internal/postorder collection, cone
+sizes, forward/reverse level buckets, reverse ordering, sequential closure and
+TFI/TFO walks. Readability review consolidated iterative postorder machinery;
+bug review retained shared traversal-epoch behavior and avoids marking CO
+wrappers during support collection. Real MUX controls participate in dependencies
+instead of being silently dropped, and constant roots work. Regressions cover
+shared cones, exact source ordering, traversal reuse, static fanouts, cyclic
+register closure and a 20,000-node deep cone. Core races pass (2.674s).
+
+`mffc.go` ports reference/dereference, marked/support MFFCs and MFFC mapping.
+Readability review uses one iterative reference walk and releases temporary
+reference ownership with restoration. Independent randomized fanout-closure
+checks verify all selected MFFC members, counts and restored references. Bug
+review found that the C mapping recursion reused its support vector while an
+outer loop iterated it; a boundary snapshot prevents losing sibling MFFCs.
+Regression specifically requires both sibling boundaries to be mapped. Real MUX
+controls and buffers use their actual structural fanins. Core races pass (2.774s).
+
+Structural XOR/MUX recognizers retain original branch precedence and tagged
+complement phases. Exhaustive phase/control-order reconstructions compare the
+recognized function with native evaluation. Dangling detection and scratch
+reference utilities include real MUX controls. Mapped-network adapters expose
+owned LUT leaves/truth through both native GIA and existing mf.Mapping, avoiding
+a second circuit model. Review caught x & !x being classified as a buffer merely
+because its two regular fanin IDs matched; classifiers now also compare phases,
+with a zero-truth/reference-count regression. Core races pass (2.830s).

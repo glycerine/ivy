@@ -22,14 +22,22 @@ go test -race pivots.go pivots_test.go -count=1
 go vet pivots.go pivots_test.go
 ```
 
+The ternary simulation truth functions (`Abs_ManSimInfoNot` and
+`Abs_ManSimInfoAnd`) now delegate to `ternary.go`. Tests enumerate all three
+NOT cases, all nine AND pairs, and invalid encodings. Packed-frame allocation
+stores `[]uint32` in the pointer vector instead of C `calloc` memory; reads and
+writes use the shared two-bit packing helper. Run the two focused test files
+together with the packed-field helpers using the commands above with
+`ternary.go ternary_test.go` added to the file list.
+
 ## Current integration boundary
 
-The package remains unbuildable. `go test ./sat/bmc` currently advances past
-the header and `bmcBCore.go` into `bmcBmc2.go`, where C pointer casts and
-expression-style loop assignments remain. Earlier blockers fixed in the
-working tree include callback fields expressed as Go functions, `bmcBCore.go`
-pivot parsing and explicit loops, plus the first two sequential-frame unrolling
-functions in `bmcBmc.go`.
+The package remains unbuildable. `go test ./sat/bmc` currently stops while
+building its `sat/cnf` dependency, which still has syntax errors. The BMC
+header callback fields, pivot parser/loops, first two sequential-frame
+unrolling functions, and the full `bmcBmc2.go` syntax have been converted in
+the working tree. BMC algorithm type integration against native graph and
+solver APIs remains in progress.
 
 The package contains roughly 23,000 generated Go lines. A syntax scan found
 hundreds of C-style macro assignment expressions and ternaries across files.

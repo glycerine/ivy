@@ -76,3 +76,17 @@ func TestRandomSimulationConstantTrueWitness(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestRandomSimulationClearsOldWitness(t *testing.T) {
+	graph := aig.NewGraph()
+	state := graph.NewInput()
+	graph.AddOutput(graph.Const1())
+	graph.AddOutput(state)
+	aig.Aig_ManSetRegNum(graph, 1)
+	if Raig_ManSimulate(graph, 1, 1, 0, 1, 0) != 1 {
+		t.Fatal("initial witness missing")
+	}
+	if Raig_ManSimulate(graph, 1, 2, 0, 0, 0) != 0 || graph.SequentialCounterexample() != nil {
+		t.Fatal("successful simulation retained stale witness")
+	}
+}

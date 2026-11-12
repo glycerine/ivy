@@ -20,52 +20,56 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "Vec.h"
-
-namespace Minisat {
-
-//=================================================================================================
-
-template<class T>
-class Queue {
-    vec<T>  buf;
-    int     first;
-    int     end;
-
-public:
-    typedef T Key;
-
-    Queue() : buf(1), first(0), end(0) {}
-
-    void clear (bool dealloc = false) { buf.clear(dealloc); buf.growTo(1); first = end = 0; }
-    int  size  () { return (end >= first) ? end - first : end - first + buf.size(); }
-
-    T& operator [] (int index) { assert(index >= 0, "index >= 0"); assert(index < size(), "index < size()"); return buf[(first + index) % buf.size()]; }
-    T&       operator [] (int index)        { assert(index >= 0, "index >= 0"); assert(index < size(), "index < size()"); return buf[(first + index) % buf.size()]; }
-
-    T    peek  () { assert(first != end, "first != end"); return buf[first]; }
-    void pop   () { assert(first != end, "first != end"); first++; if (first == buf.size()) first = 0; }
-    void insert(T elem) {   // INVARIANT: buf[end] is always unused
-        buf[end++] = elem;
-        if (end == buf.size()) end = 0;
-        if first == end{  // Resize:
-            vec<T>  tmp((buf.size()*3 + 1) >> 1);
-            //**/printf("queue alloc: %d elems (%.1f MB)\n", tmp.size(), tmp.size() * sizeof(T) / 1000000.0);
-            int j, i = 0;
-            for (j = first; j < buf.size(); j++) tmp[i++] = buf[j];
-            for (j = 0    ; j < end       ; j++) tmp[i++] = buf[j];
-            first = 0;
-            end   = buf.size();
-            tmp.moveTo(buf);
-        }
-    }
-};
-
-
-//=================================================================================================
+type Queue[T any] struct {
+	buffer     []T
+	first, end int
 }
 
-
+func (q *Queue[T]) Len() int {
+	if q.end >= q.first {
+		return q.end - q.first
+	}
+	return q.end - q.first + len(q.buffer)
+}
+func (q *Queue[T]) At(index int) T {
+	if index < 0 || index >= q.Len() {
+		panic("queue index outside live range")
+	}
+	return q.buffer[(q.first+index)%len(q.buffer)]
+}
+func (q *Queue[T]) Peek() T { return q.At(0) }
+func (q *Queue[T]) Pop() T {
+	x := q.Peek()
+	var zero T
+	q.buffer[q.first] = zero
+	q.first++
+	if q.first == len(q.buffer) {
+		q.first = 0
+	}
+	return x
+}
+func (q *Queue[T]) Insert(x T) {
+	if len(q.buffer) == 0 {
+		q.buffer = make([]T, 1)
+	}
+	q.buffer[q.end] = x
+	q.end++
+	if q.end == len(q.buffer) {
+		q.end = 0
+	}
+	if q.first == q.end {
+		next := make([]T, (len(q.buffer)*3+1)/2)
+		n := copy(next, q.buffer[q.first:])
+		copy(next[n:], q.buffer[:q.end])
+		q.first = 0
+		q.end = len(q.buffer)
+		q.buffer = next
+	}
+}
+func (q *Queue[T]) Clear(deallocate bool) {
+	clear(q.buffer)
+	if deallocate {
+		q.buffer = nil
+	}
+	q.first, q.end = 0, 0
+}

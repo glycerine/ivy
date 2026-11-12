@@ -133,7 +133,7 @@ typedef struct {int nPis,nPos,nCis,nCos,nFfs,nNos,nPis1,nCis1,nCisNos1,nCisNosPo
 	p := Faig_ManCreate(simulationFixture())
 	for _, transitions := range []int32{0, 1} {
 		var input bytes.Buffer
-		fmt.Fprintf(&input, "%d %d %d %d 17 4 %d\n", p.nPis, p.nFfs, len(p.nodes), p.nPos, transitions)
+		fmt.Fprintf(&input, "%d %d %d %d 17 4 %d\n", p.nPis, p.nFfs, len(p.nodes), p.pos(), transitions)
 		for _, node := range p.nodes {
 			fmt.Fprintf(&input, "%d %d ", node.fanins[0], node.fanins[1])
 		}

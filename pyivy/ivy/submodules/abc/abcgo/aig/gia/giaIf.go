@@ -2146,37 +2146,7 @@ func Gia_ManTransferPacking(p *Gia_Man_t, pGia *Gia_Man_t) {
     assert(p.vPacking == nil, "p.vPacking == nil");
     p.vPacking = vPackingNew;
 }
-func Gia_ManTransferTiming(p *Gia_Man_t, pGia *Gia_Man_t) {
-    if pGia.vCiArrs || pGia.vCoReqs || pGia.vCoArrs || pGia.vCoAttrs {
-        p.vCiArrs     = pGia.vCiArrs;     pGia.vCiArrs    = nil;
-        p.vCoReqs     = pGia.vCoReqs;     pGia.vCoReqs    = nil;
-        p.vCoArrs     = pGia.vCoArrs;     pGia.vCoArrs    = nil;
-        p.vCoAttrs    = pGia.vCoAttrs;    pGia.vCoAttrs   = nil;
-        p.And2Delay   = pGia.And2Delay;
-    }
-    if pGia.vInArrs || pGia.vOutReqs {
-        p.vInArrs     = pGia.vInArrs;     pGia.vInArrs     = nil;
-        p.vOutReqs    = pGia.vOutReqs;    pGia.vOutReqs    = nil;
-        p.DefInArrs   = pGia.DefInArrs;
-        p.DefOutReqs  = pGia.DefOutReqs;
-        p.And2Delay   = pGia.And2Delay;
-    }
-    if pGia.vNamesIn || pGia.vNamesOut {
-        p.vNamesIn     = pGia.vNamesIn;     pGia.vNamesIn     = nil;
-        p.vNamesOut    = pGia.vNamesOut;    pGia.vNamesOut    = nil;
-    }
-    if pGia.vConfigs || pGia.pCellStr {
-        p.vConfigs     = pGia.vConfigs;     pGia.vConfigs     = nil;
-        p.pCellStr     = pGia.pCellStr;     pGia.pCellStr     = "";
-    }
-    if pGia.pManTime == nil || p == pGia {
-        return; }
-    p.pManTime    = pGia.pManTime;    pGia.pManTime    = nil;
-    p.pAigExtra   = pGia.pAigExtra;   pGia.pAigExtra   = nil;
-    p.vRegClasses = pGia.vRegClasses; pGia.vRegClasses = nil;
-    p.vRegInits   = pGia.vRegInits;   pGia.vRegInits = nil;
-    p.nAnd2Delay  = pGia.nAnd2Delay;  pGia.nAnd2Delay  = 0;
-}
+
 
 /**Function*************************************************************
 

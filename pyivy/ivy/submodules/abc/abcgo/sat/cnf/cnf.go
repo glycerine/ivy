@@ -1,5 +1,25 @@
 package cnf
 
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"time"
+)
+
+type Aig_Man_t = aig.Graph
+type Aig_Obj_t = aig.Edge
+type Vec_Int_t = vec.Vec_Int_t
+type Vec_Ptr_t = vec.Vec_Ptr_t
+type Vec_Str_t = vec.Vec_Str_t
+type Dar_Cut_t struct {
+	nLeaves int32
+	pLeaves []int32
+	uTruth  uint16
+	nCuts   int32
+}
+type Aig_MmFlex_t = struct{}
+type abctime = time.Duration
+
 /**CFile****************************************************************
 
   FileName    [cnf.h]
@@ -11,7 +31,7 @@ package cnf
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - April 28, 2007.]
@@ -19,10 +39,6 @@ package cnf
   Revision    [$Id: cnf.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -41,70 +57,75 @@ package cnf
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-
-
 //ABC_NAMESPACE_HEADER_START
- 
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Cnf_Man_t =            Cnf_Man_t_;
-type Cnf_Dat_t =            Cnf_Dat_t_;
-type Cnf_Cut_t =            Cnf_Cut_t_;
+type Cnf_Man_t = Cnf_Man_t_
+type Cnf_Dat_t = Cnf_Dat_t_
+type Cnf_Cut_t = Cnf_Cut_t_
 
 // the CNF asserting outputs of AIG to be 1
 type Cnf_Dat_t_ struct {
-    pMan      *Aig_Man_t;            // the AIG manager, for which CNF is computed
-    nVars             int32;           // the number of variables
-    nLiterals             int32;       // the number of CNF literals
-    nClauses             int32;        // the number of CNF clauses
-    pClauses           **int32;        // the CNF clauses
-    pVarNums            *int32;        // the number of CNF variable for each node ID (-1 if unused)
-    pObj2Clause            *int32;     // the mapping of objects into clauses
-    pObj2Count            *int32;      // the mapping of objects into clause number
-    unsigned char * pClaPols;        // polarity of input literals in each clause
-    vMapping      *Vec_Int_t;        // mapping of internal nodes
+	Variables  int
+	Clauses    [][]int32
+	VarNums    []int32
+	Mapping    []int32
+	Obj2Clause []int32
+	Obj2Count  []int32
+
+	pMan        *Aig_Man_t // the AIG manager, for which CNF is computed
+	nVars       int32      // the number of variables
+	nLiterals   int32      // the number of CNF literals
+	nClauses    int32      // the number of CNF clauses
+	pClauses    [][]int32  // the CNF clauses
+	pVarNums    []int32    // CNF variable by object ID (-1 if unused)
+	pObj2Clause []int32
+	pObj2Count  []int32
+	pClaPols    []byte
+	vMapping    *Vec_Int_t
 }
 
 // the cut used to represent node in the AIG
 type Cnf_Cut_t_ struct {
-    nFanins            byte;         // the number of leaves
-    Cost            byte;            // the cost of this cut
-    nWords           int16;          // the number of words in truth table
-    Vec_Int_t *     vIsop[2];        // neg/pos ISOPs
-    pFanins [0]int32;      // the fanins (followed by the truth table)
+	nFanins byte  // the number of leaves
+	Cost    byte  // the cost of this cut
+	nWords  int16 // the number of words in truth table
+	vIsop   [2]*Vec_Int_t
+	pFanins []int32
+	truth   []uint32
 }
 
 // the CNF computation manager
 type Cnf_Man_t_ struct {
-    pManAig      *Aig_Man_t;         // the underlying AIG manager
-    pSopSizes           string;       // sizes of SOPs for 4-variable functions
-    pSops          *string;           // the SOPs for 4-variable functions
-    aArea             int32;           // the area of the mapping
-    pMemCuts   *Aig_MmFlex_t;        // memory manager for cuts
-    nMergeLimit             int32;     // the limit on the size of merged cut
-    pTruths [4]*uint32;      // temporary truth tables
-    vMemory      *Vec_Int_t;         // memory for intermediate ISOP representation
-    timeCuts         abctime; 
-    timeMap         abctime;
-    timeSave         abctime;
+	pManAig     *Aig_Man_t // the underlying AIG manager
+	pSopSizes   []byte
+	pSops       []string
+	aArea       int32         // the area of the mapping
+	pMemCuts    *Aig_MmFlex_t // memory manager for cuts
+	nMergeLimit int32         // the limit on the size of merged cut
+	pTruths     [4][]uint32
+	vMemory     *Vec_Int_t // memory for intermediate ISOP representation
+	timeCuts    abctime
+	timeMap     abctime
+	timeSave    abctime
 }
 
-
 // inlining of macro Dar_ObjForEachCut
-func Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { var pCut *Dar_Cut_t; var i int32; for  (pCut) = Dar_ObjCuts(pObj), i = 0; i < int32((pObj).nCuts); i, pCut = i+1, pCut+1  { if (pCut).fUsed==0 {} else if pCut.fBest { return pCut; } }
- return nil; }
+func Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { return nil }
 
-func Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 { return p.pSopSizes[pCut.uTruth] + p.pSopSizes[0xFFFF & ~pCut.uTruth]; }
+func Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 {
+	return int32(p.pSopSizes[pCut.uTruth]) + int32(p.pSopSizes[0xFFFF&^pCut.uTruth])
+}
 
-func Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return pCut.nFanins;                               }
-func Cnf_CutLeaves(pCut *Cnf_Cut_t) *int32 { return pCut.pFanins;                               }
-func Cnf_CutTruth(pCut *Cnf_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nFanins); }
+func Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return int32(pCut.nFanins) }
+func Cnf_CutLeaves(pCut *Cnf_Cut_t) []int32 { return pCut.pFanins }
+func Cnf_CutTruth(pCut *Cnf_Cut_t) []uint32 { return pCut.truth }
 
-func Cnf_ObjBestCut(pObj *Aig_Obj_t) *Cnf_Cut_t { return (Cnf_Cut_t *)pObj.pData;  }
-func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }
+func Cnf_ObjBestCut(pObj *Aig_Obj_t) *Cnf_Cut_t          { return nil }
+func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) {}
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
@@ -119,12 +140,10 @@ func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }
 // #define Cnf_CnfForClause( p, pBeg, pEnd, i )                         \
 //     for ( i = 0; i < p->nClauses && (pBeg = p->pClauses[i]) && (pEnd = p->pClauses[i+1]); i++ )
 
-
 // iterator over leaves of the cut
 // Original macro:
 // #define Cnf_CutForEachLeaf( p, pCut, pLeaf, i )                         \
 //     for ( i = 0; (i < (int)(pCut)->nFanins) && ((pLeaf) = Aig_ManObj(p, (pCut)->pFanins[i])); i++ )
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
@@ -164,7 +183,7 @@ func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }
 /*=== cnfFast.c ========================================================*/
 // extern void            Cnf_CollectLeaves( Aig_Obj_t * pRoot, Vec_Ptr_t * vSuper, int fStopCompl );
 
-// extern void            Cnf_ComputeClauses( Aig_Man_t * p, Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, 
+// extern void            Cnf_ComputeClauses( Aig_Man_t * p, Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves,
 //                            Vec_Ptr_t * vNodes, Vec_Int_t * vMap, Vec_Int_t * vCover, Vec_Int_t * vClauses );
 
 // extern void            Cnf_DeriveFastMark( Aig_Man_t * p );
@@ -244,16 +263,8 @@ func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }
 
 // extern Cnf_Dat_t *     Cnf_DeriveSimpleForRetiming( Aig_Man_t * p );
 
-
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

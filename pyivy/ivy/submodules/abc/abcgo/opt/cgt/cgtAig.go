@@ -1,605 +1,334 @@
 package cgt
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"slices"
+	"sort"
+)
 
-  FileName    [cgtAig.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Clock gating package.]
-
-  Synopsis    [Creates AIG to compute clock-gating.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cgtAig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cgtInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes transitive fanout cone of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDetectCandidates_rec(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsNode(pObj) {
-        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin0(pObj), nLevelMax, vCands );
-        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin1(pObj), nLevelMax, vCands );
-    }
-    if Aig_ObjLevel(pObj) <= nLevelMax && (vUseful == nil || Vec_IntEntry(vUseful, Aig_ObjId(pObj))) {
-        Vec_PtrPush( vCands, pObj ); }
+func Cgt_ManDetectCandidates(g *aig.Graph, useful []bool, root aig.Edge, maxLevel int) []aig.Edge {
+	kind := g.Node(root).Kind
+	if kind != aig.And && kind != aig.ExclusiveOr {
+		return nil
+	}
+	seen := make(map[int]bool)
+	var candidates []aig.Edge
+	var visit func(aig.Edge)
+	visit = func(e aig.Edge) {
+		id := e.NodeID()
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		for _, f := range fanins(g, e) {
+			visit(f)
+		}
+		if g.Node(e).Level <= maxLevel && (useful == nil || id < len(useful) && useful[id]) {
+			candidates = append(candidates, regular(e))
+		}
+	}
+	visit(root)
+	return candidates
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes transitive fanout cone of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDetectCandidates(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {
-    Vec_PtrClear( vCands );
-    if !Aig_ObjIsNode(pObj) {
-        return; }
-    Aig_ManIncrementTravId( pAig );
-    Cgt_ManDetectCandidates_rec( pAig, vUseful, pObj, nLevelMax, vCands );
+func Cgt_ManDetectFanout(g *aig.Graph, root aig.Edge, maxLevel int) []aig.Edge {
+	index := fanoutIndex(g)
+	seen := make(map[int]bool)
+	var visited []aig.Edge
+	var visit func(aig.Edge)
+	visit = func(e aig.Edge) {
+		n := g.Node(e)
+		if n.Kind == aig.Output || n.Level > maxLevel || seen[e.NodeID()] {
+			return
+		}
+		seen[e.NodeID()] = true
+		visited = append(visited, regular(e))
+		for _, out := range index[e.NodeID()] {
+			visit(out)
+		}
+	}
+	visit(root)
+	var boundary []aig.Edge
+	for _, e := range visited {
+		for _, out := range index[e.NodeID()] {
+			if !seen[out.NodeID()] {
+				boundary = append(boundary, e)
+				break
+			}
+		}
+	}
+	sort.Slice(boundary, func(i, j int) bool { return boundary[i] < boundary[j] })
+	return boundary
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes transitive fanout cone of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDetectFanout_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {
-    var pFanout *Aig_Obj_t;
-    var f int32;
-    var iFanout int32 = -1;
-    if Aig_ObjIsCo(pObj) || Aig_ObjLevel(pObj) > nOdcMax {
-        return; }
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    Vec_PtrPush( vFanout, pObj );
-    // inlining of macro Aig_ObjForEachFanout
-    for  assert(pAig.pFanData, "pAig.pFanData"), f = 0; (f < int32((pObj).nRefs)) &&                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) &&           (((pFanout) = Aig_ManObj(pAig, iFanout>>1)), 1); f++  {
-        Cgt_ManDetectFanout_rec( pAig, pFanout, nOdcMax, vFanout );
-    }
+func Cgt_ManCollectVisited(g *aig.Graph, roots []aig.Edge) []aig.Edge {
+	seen := make(map[int]bool)
+	var result []aig.Edge
+	var visit func(aig.Edge)
+	visit = func(e aig.Edge) {
+		if seen[e.NodeID()] {
+			return
+		}
+		seen[e.NodeID()] = true
+		n := g.Node(e)
+		if n.Kind == aig.Input || n.Kind == aig.Constant {
+			return
+		}
+		for _, f := range fanins(g, e) {
+			visit(f)
+		}
+		result = append(result, regular(e))
+	}
+	for _, e := range roots {
+		visit(e)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes transitive fanout cone of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDetectFanout(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {
-    var pFanout *Aig_Obj_t;
-    var i int32;
-    var k int32;
-    var f int32;
-    var iFanout int32 = -1;
-    // collect visited nodes
-    Vec_PtrClear( vFanout );
-    Aig_ManIncrementTravId( pAig );
-    Cgt_ManDetectFanout_rec( pAig, pObj, nOdcMax, vFanout );
-    // remove those nodes whose fanout is included
-    k = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanout)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {
-        // go through the fanouts of this node
-        // inlining of macro Aig_ObjForEachFanout
-        for  assert(pAig.pFanData, "pAig.pFanData"), f = 0; (f < int32((pObj).nRefs)) &&                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) &&           (((pFanout) = Aig_ManObj(pAig, iFanout>>1)), 1); f++  {
-            if !Aig_ObjIsTravIdCurrent(pAig, pFanout) {
-                break; }
-        }
-        if f == Aig_ObjRefs(pObj) { // all fanouts are included
-            continue; }
-        Vec_PtrWriteEntry( vFanout, k++, pObj );
-    }
-    Vec_PtrShrink( vFanout, k );
-    Vec_PtrSort( vFanout, (int (*)(void))Aig_ObjCompareIdIncrease );
-    assert(Vec_PtrSize(vFanout) > 0, "Vec_PtrSize(vFanout) > 0");
+func Cgt_ManConstructCareCondition(p *Manager, dst *aig.Graph, lo aig.Edge, copies0, copies1 map[int]aig.Edge) aig.Edge {
+	boundary := Cgt_ManDetectFanout(p.Graph, lo, p.Params.ODCMax)
+	result := dst.Const0()
+	newInput := func(e aig.Edge) aig.Edge {
+		if copy, ok := p.futureInputs[e.NodeID()]; ok {
+			return copy
+		}
+		copy := dst.NewInput()
+		p.futureInputs[e.NodeID()] = copy
+		return copy
+	}
+	for _, e := range boundary {
+		left := cloneEdge(dst, p.Graph, e, copies0, newInput)
+		right := cloneEdge(dst, p.Graph, e, copies1, newInput)
+		result = dst.OR(result, dst.XOR(left, right))
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes visited nodes in the topological order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManCollectVisited_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vVisited *Vec_Ptr_t) {
-    if Aig_ObjIsCi(pObj) {
-        return; }
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin0(pObj), vVisited );
-    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin1(pObj), vVisited );
-    Vec_PtrPush( vVisited, pObj );
+func Cgt_ManDeriveAigForGating(p *Manager) *aig.Graph {
+	src := p.Graph
+	p.futureInputs = make(map[int]aig.Edge)
+	dst := aig.NewGraph()
+	dst.Name = "CG_miter"
+	copies := map[int]aig.Edge{0: dst.Const1()}
+	for _, e := range src.Inputs() {
+		copies[e.NodeID()] = dst.NewInput()
+	}
+	newInput := func(e aig.Edge) aig.Edge { panic("cgt: first-frame input missing") }
+	for _, e := range src.LiveEdges() {
+		if src.Node(e).Kind != aig.Output {
+			cloneEdge(dst, src, e, copies, newInput)
+		}
+	}
+	regs, pis, pos := layout(src)
+	inputs, outputs := src.Inputs(), src.Outputs()
+	for r := 0; r < regs; r++ {
+		lo := inputs[pis+r]
+		next := cloneEdge(dst, src, driver(src, outputs[pos+r]), copies, newInput)
+		miter := dst.XOR(copies[lo.NodeID()], next)
+		if p.Params.ODCMax > 0 {
+			a, b := map[int]aig.Edge{0: dst.Const1()}, map[int]aig.Edge{0: dst.Const1()}
+			for j := 0; j < regs; j++ {
+				other := inputs[pis+j]
+				value := cloneEdge(dst, src, driver(src, outputs[pos+j]), copies, newInput)
+				a[other.NodeID()], b[other.NodeID()] = value, value
+			}
+			a[lo.NodeID()], b[lo.NodeID()] = dst.Const0(), dst.Const1()
+			care := Cgt_ManConstructCareCondition(p, dst, lo, a, b)
+			miter = dst.AND(miter, care)
+		}
+		co := dst.AddOutput(miter)
+		copies[outputs[pos+r].NodeID()] = co
+	}
+	p.frameCopies = copies
+	p.Frame = dst
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes visited nodes in the topological order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManCollectVisited(pAig *Aig_Man_t, vFanout *Vec_Ptr_t, vVisited *Vec_Ptr_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Vec_PtrClear( vVisited );
-    Aig_ManIncrementTravId( pAig );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanout)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {
-        Cgt_ManCollectVisited_rec( pAig, pObj, vVisited );
-    }
+func Cgt_ManConstructCare(dst, care *aig.Graph, sourceInputs []aig.Edge, inputCopies map[int]aig.Edge) int {
+	if care == nil {
+		return 0
+	}
+	mapping := map[int]aig.Edge{0: dst.Const1()}
+	careInputs := care.Inputs()
+	for i, source := range sourceInputs {
+		if i >= len(careInputs) {
+			break
+		}
+		if copy, ok := inputCopies[source.NodeID()]; ok {
+			mapping[careInputs[i].NodeID()] = copy
+		}
+	}
+	count := 0
+	for _, out := range care.Outputs() {
+		complete := true
+		seen := make(map[int]bool)
+		var support func(aig.Edge)
+		support = func(e aig.Edge) {
+			if seen[e.NodeID()] {
+				return
+			}
+			seen[e.NodeID()] = true
+			if care.Node(e).Kind == aig.Input {
+				if _, ok := mapping[e.NodeID()]; !ok {
+					complete = false
+				}
+			}
+			for _, f := range fanins(care, e) {
+				support(f)
+			}
+		}
+		support(out)
+		if !complete {
+			continue
+		}
+		copy := cloneEdge(dst, care, driver(care, out), mapping, func(aig.Edge) aig.Edge { panic("cgt: missing care support") })
+		if copy == dst.Const1() {
+			continue
+		}
+		dst.AddOutput(copy)
+		count++
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjChild0CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId0(pObj)), Aig_ObjFaninC0(pObj));  }
-func Aig_ObjChild1CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId1(pObj)), Aig_ObjFaninC1(pObj));  }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives miter for clock-gating.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManConstructCareCondition(p *Cgt_Man_t, pNew *Aig_Man_t, pObjLo *Aig_Obj_t, vCopy0 *Vec_Ptr_t, vCopy1 *Vec_Ptr_t) *Aig_Obj_t {
-    var pMiter, pObj, pTemp *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ObjIsCi(pObjLo), "Aig_ObjIsCi(pObjLo)");
-    // detect nodes and their cone
-    Cgt_ManDetectFanout( p.pAig, pObjLo, p.pPars.nOdcMax, p.vFanout );
-    Cgt_ManCollectVisited( p.pAig, p.vFanout, p.vVisited );
-    // add new variables if the observability condition depends on PI variables
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vVisited)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin0(pObj)) && Vec_PtrEntry(vCopy0, Aig_ObjFaninId0(pObj)) == nil {
-            pTemp = Aig_ObjCreateCi( pNew );
-            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId0(pObj), pTemp );
-            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId0(pObj), pTemp );
-        }
-        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin1(pObj)) && Vec_PtrEntry(vCopy0, Aig_ObjFaninId1(pObj)) == nil {
-            pTemp = Aig_ObjCreateCi( pNew );
-            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId1(pObj), pTemp );
-            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId1(pObj), pTemp );
-        }
-    }
-    // construct AIGs for the nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vVisited)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {
-        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy0, pObj), Aig_ObjChild1CopyVec(vCopy0, pObj) );
-        Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObj), pTemp );
-        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy1, pObj), Aig_ObjChild1CopyVec(vCopy1, pObj) );
-        Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObj), pTemp );
-    }
-    // construct the care miter
-    pMiter = Aig_ManConst0( pNew );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vFanout)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanout, i)), 1); i++  {
-        pTemp = Aig_Exor( pNew, (Aig_Obj_t *)Vec_PtrEntry(vCopy0, Aig_ObjId(pObj)), (Aig_Obj_t *)Vec_PtrEntry(vCopy1, Aig_ObjId(pObj)) );
-        pMiter = Aig_Or( pNew, pMiter, pTemp );
-    }
-    return pMiter;
+func cgtPartition(frame *aig.Graph, varsMin, flopsMin, start int, care *aig.Graph) (*aig.Graph, map[int]aig.Edge, int, int) {
+	dst := aig.NewGraph()
+	dst.Name = "partition"
+	copies := map[int]aig.Edge{0: dst.Const1()}
+	newInput := func(e aig.Edge) aig.Edge { return dst.NewInput() }
+	var roots, sourceOutputs []aig.Edge
+	outs := frame.Outputs()
+	for i := start; i < len(outs) && (len(roots) < flopsMin || dst.NodeCount() < varsMin); i++ {
+		roots = append(roots, cloneEdge(dst, frame, driver(frame, outs[i]), copies, newInput))
+		sourceOutputs = append(sourceOutputs, outs[i])
+	}
+	constraints := Cgt_ManConstructCare(dst, care, frame.Inputs(), copies)
+	for i, root := range roots {
+		copies[sourceOutputs[i].NodeID()] = dst.AddOutput(root)
+	}
+	return dst, copies, len(roots), constraints
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives AIG for clock-gating.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDeriveAigForGating(p *Cgt_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjLi, pObjLo, pCare, pMiter *Aig_Obj_t;
-    var vCopy0, vCopy1 *Vec_Ptr_t;
-    var i int32;
-    assert(Aig_ManRegNum(p.pAig), "Aig_ManRegNum(p.pAig)");
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p.pAig) );
-    pNew.pName = Abc_UtilStrsav( "CG_miter" );
-    // build the first frame
-    Aig_ManConst1(p.pAig).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-//    Saig_ManForEachPo( p->pAig, pObj, i )
-//        pObj->pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    if p.pPars.nOdcMax > 0 {
-        // create storage for observability conditions
-        vCopy0 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );
-        vCopy1 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );
-        // initialize register outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );
-            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );
-        }
-        // compute observability condition for each latch output
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            // set the constants
-            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ManConst0(pNew) );
-            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ManConst1(pNew) );
-            // compute condition
-            pCare = Cgt_ManConstructCareCondition( p, pNew, pObjLo, vCopy0, vCopy1 );
-            // restore the values
-            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );
-            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );
-            // compute the miter
-            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );
-            pMiter = Aig_And( pNew, pMiter, pCare );
-            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );
-        }
-        Vec_PtrFree( vCopy0 );
-        Vec_PtrFree( vCopy1 );
-    
-    } else {
-        // construct clock-gating miters for each register input
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );
-            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );
-        }
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetCioIds( pNew );
-    return pNew;
+func Cgt_ManDupPartition(frame *aig.Graph, varsMin, flopsMin, start int, care *aig.Graph) (*aig.Graph, int, error) {
+	if frame == nil || aig.Aig_ManRegNum(frame) != 0 || varsMin <= 0 || flopsMin <= 0 || start < 0 || start >= frame.OutputCount() {
+		return nil, 0, fmt.Errorf("cgt: invalid partition request")
+	}
+	g, copies, n, _ := cgtPartition(frame, varsMin, flopsMin, start, care)
+	for id, copy := range copies {
+		aig.Aig_ObjSetCopy(frame, aig.Edge(id*2), copy)
+	}
+	return g, n, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds relevant constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pNew *Aig_Man_t) *Aig_Obj_t {
-    var pObj0, pObj1 *Aig_Obj_t;
-    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {
-        return (Aig_Obj_t *)pObj.pData; }
-    Aig_ObjSetTravIdCurrent( pCare, pObj );
-    if Aig_ObjIsCi(pObj) {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj0 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pNew );
-    if pObj0 == nil {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj1 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pNew );
-    if pObj1 == nil {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );
-    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, pObj0, pObj1 ));
+func copyMetadata(dst, src *aig.Graph) {
+	dst.Name, dst.Spec = src.Name, src.Spec
+	dst.Assertions, dst.BarrierBuffers = src.Assertions, src.BarrierBuffers
+	dst.FlopNumbers = slices.Clone(src.FlopNumbers)
+	dst.FlopReprs = slices.Clone(src.FlopReprs)
+	dst.ClockDomains = slices.Clone(src.ClockDomains)
+	for i := range dst.ClockDomains {
+		dst.ClockDomains[i] = slices.Clone(src.ClockDomains[i])
+	}
+	dst.PartitionInputs = slices.Clone(src.PartitionInputs)
+	dst.PartitionOutputs = slices.Clone(src.PartitionOutputs)
+	dst.RetimingChanged = src.RetimingChanged
+	if src.Timing != nil {
+		if clone, ok := src.Timing.(interface{ CloneTiming() any }); ok {
+			dst.Timing = clone.CloneTiming()
+		} else {
+			panic("cgt: timing metadata is not cloneable")
+		}
+	}
+	if src.History != nil {
+		if clone, ok := src.History.(interface{ CloneHistory() any }); ok {
+			dst.History = clone.CloneHistory()
+		} else {
+			panic("cgt: history metadata is not cloneable")
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Builds constraints belonging to the given partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManConstructCare(pNew *Aig_Man_t, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, vLeaves *Vec_Ptr_t) {
-    var vOuts *Vec_Int_t;
-    var pLeaf, pPi, pPo, pObjAig *Aig_Obj_t;
-    var i, k, iOut int32;
-    // go through the PIs of the partition
-    // label the corresponding PIs of the care set
-    Aig_ManIncrementTravId( pCare );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pPi = Aig_ManCi( pCare, Aig_ObjCioId(pLeaf) );
-        Aig_ObjSetTravIdCurrent( pCare, pPi );
-        pPi.pData = pLeaf.pData;
-    }
-    // construct the constraints
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        vOuts = Vec_VecEntryInt( vSuppsInv, Aig_ObjCioId(pLeaf) );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vOuts)) && (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {
-            pPo = Aig_ManCo( pCare, iOut );
-            if Aig_ObjIsTravIdCurrent( pCare, pPo ) {
-                continue; }
-            Aig_ObjSetTravIdCurrent( pCare, pPo );
-            if Aig_ObjFanin0(pPo) == Aig_ManConst1(pCare) {
-                continue; }
-            pObjAig = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pPo), pNew );
-            if pObjAig == nil {
-                continue; }
-            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );
-            Aig_ObjCreateCo( pNew, pObjAig );
-        }
-    }
+func Cgt_ManBuildClockGate(dst, src *aig.Graph, gates []aig.Edge, copies, preserved map[int]aig.Edge) aig.Edge {
+	total := dst.Const0()
+	for _, e := range gates {
+		copy, ok := preserved[e.NodeID()]
+		if !ok {
+			copy = copies[e.NodeID()]
+		}
+		total = dst.OR(total, copy^aig.Edge(e&1))
+	}
+	return total
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDupPartition_rec(pNew *Aig_Man_t, pAig *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t) *Aig_Obj_t {
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return (Aig_Obj_t *)pObj.pData; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsCi(pObj) {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-        Vec_PtrPush( vLeaves, pObj );
-        return (Aig_Obj_t *)pObj.pData;
-    }
-    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin0(pObj), vLeaves );
-    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin1(pObj), vLeaves );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));
+func Cgt_ManDeriveGatedAig(src *aig.Graph, gates Gates, reduce bool) (*aig.Graph, int, error) {
+	regs, pis, pos := layout(src)
+	if len(gates) != regs {
+		return nil, 0, fmt.Errorf("cgt: gate/register count differs")
+	}
+	dst := aig.NewGraph()
+	copyMetadata(dst, src)
+	copies := map[int]aig.Edge{0: dst.Const1()}
+	preserved := make(map[int]aig.Edge)
+	marked := make(map[int]uint8)
+	for _, set := range gates {
+		for _, e := range set {
+			if !src.ValidEdge(e) {
+				return nil, 0, fmt.Errorf("cgt: invalid gate literal")
+			}
+			marked[e.NodeID()] |= 1 << uint(e&1)
+		}
+	}
+	for _, e := range src.Inputs() {
+		copies[e.NodeID()] = dst.NewInput()
+	}
+	var clone func(aig.Edge) aig.Edge
+	active := make(map[int]bool)
+	clone = func(e aig.Edge) aig.Edge {
+		if copy, ok := copies[e.NodeID()]; ok {
+			return copy ^ aig.Edge(e&1)
+		}
+		if active[e.NodeID()] {
+			panic("cgt: cyclic graph")
+		}
+		active[e.NodeID()] = true
+		n := src.Node(e)
+		var value aig.Edge
+		switch n.Kind {
+		case aig.And:
+			value = dst.AND(clone(n.Fanins[0]), clone(n.Fanins[1]))
+		case aig.ExclusiveOr:
+			value = dst.NewXor(clone(n.Fanins[0]), clone(n.Fanins[1]))
+		case aig.Buffer, aig.Output:
+			value = clone(n.Fanins[0])
+		default:
+			panic("cgt: invalid copied gate")
+		}
+		delete(active, e.NodeID())
+		copy := value
+		if reduce && (n.Kind == aig.And || n.Kind == aig.ExclusiveOr) {
+			if marked[e.NodeID()] == 3 {
+				panic("cgt: area reduction selected both gate phases")
+			}
+			if marked[e.NodeID()] != 0 {
+				preserved[e.NodeID()] = value
+				copy = dst.Const0()
+				if marked[e.NodeID()] == 2 {
+					copy = dst.Const1()
+				}
+			}
+		}
+		copies[e.NodeID()] = copy
+		return copy ^ aig.Edge(e&1)
+	}
+	for _, e := range src.LiveEdges() {
+		clone(e)
+	}
+	used := dst.NodeCount() - dst.InputCount() - 1
+	outputs, inputs := src.Outputs(), src.Inputs()
+	for i := 0; i < pos; i++ {
+		dst.AddOutput(clone(driver(src, outputs[i])))
+	}
+	for r := 0; r < regs; r++ {
+		next := clone(driver(src, outputs[pos+r]))
+		if len(gates[r]) > 0 {
+			gate := Cgt_ManBuildClockGate(dst, src, gates[r], copies, preserved)
+			next = dst.Mux(gate, copies[inputs[pis+r].NodeID()], next)
+		}
+		dst.AddOutput(next)
+	}
+	aig.Aig_ManSetRegNum(dst, int32(regs))
+	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(src))
+	aig.Aig_ManCleanup(dst)
+	return dst, used, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates register outputs starting from the given one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDupPartition(pFrame *Aig_Man_t, nVarsMin int32, nFlopsMin int32, iStart int32, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, pnOutputs *int32) *Aig_Man_t {
-    var vRoots, vLeaves, vPos *Vec_Ptr_t;
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManRegNum(pFrame) == 0, "Aig_ManRegNum(pFrame) == 0");
-    vRoots = Vec_PtrAlloc( 100 );
-    vLeaves = Vec_PtrAlloc( 100 ); 
-    vPos = Vec_PtrAlloc( 100 );
-    pNew = Aig_ManStart( nVarsMin );
-    pNew.pName = Abc_UtilStrsav( "partition" );
-    Aig_ManIncrementTravId( pFrame );
-    Aig_ManConst1(pFrame).pData = Aig_ManConst1(pNew);
-    Aig_ObjSetTravIdCurrent( pFrame, Aig_ManConst1(pFrame) );
-    for  i = iStart; i < iStart + nFlopsMin && i < Aig_ManCoNum(pFrame); i++  {
-        pObj = Aig_ManCo( pFrame, i );
-        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );
-        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );
-        Vec_PtrPush( vPos, pObj );
-    }
-    for  ; Aig_ManObjNum(pNew) < nVarsMin && i < Aig_ManCoNum(pFrame); i++  {
-        pObj = Aig_ManCo( pFrame, i );
-        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );
-        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );
-        Vec_PtrPush( vPos, pObj );
-    }
-    assert(nFlopsMin >= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) >= nFlopsMin, "nFlopsMin >= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) >= nFlopsMin");
-    // create constaints
-    if pCare != nil {
-        Cgt_ManConstructCare( pNew, pCare, vSuppsInv, vLeaves ); }
-    // create POs
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPos, i)), 1); i++  {
-        pObj.pData = (Aig_Obj_t *)Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vRoots, i) );
-    }
-    if pnOutputs != nil {
-        *pnOutputs = Vec_PtrSize( vPos ); }
-    Vec_PtrFree( vRoots );
-    Vec_PtrFree( vLeaves );
-    Vec_PtrFree( vPos );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements one clock-gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManBuildClockGate(pNew *Aig_Man_t, vGates *Vec_Ptr_t) *Aig_Obj_t {
-    var pGate, pTotal *Aig_Obj_t;
-    var i int32;
-    assert(Vec_PtrSize(vGates) > 0, "Vec_PtrSize(vGates) > 0");
-    pTotal = Aig_ManConst0(pNew);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vGates)) && (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vGates, i)), 1); i++  {
-        if Aig_Regular(pGate).pNext {
-            pGate = Aig_NotCond( Aig_Regular(pGate).pNext, Aig_IsComplement(pGate) );
-        } else {
-            pGate = Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pGate).pData, Aig_IsComplement(pGate) ); }
-        pTotal = Aig_Or( pNew, pTotal, pGate );
-    }
-    return pTotal;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derives AIG after clock-gating.]
-
-  Description [The array contains, for each flop, its gate if present.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_ManDeriveGatedAig(pAig *Aig_Man_t, vGates *Vec_Vec_t, fReduce int32, pnUsedNodes *int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjNew, pObjLi, pObjLo, pGateNew *Aig_Obj_t;
-    var vOne *Vec_Ptr_t;
-    var i, k int32;
-    Aig_ManCleanNext( pAig );
-    // label nodes
-    // inlining of macro Vec_VecForEachEntry
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; i < Vec_VecSize(vGates); i++  {                                                        for  k = 0; (k < Vec_PtrSize(Vec_VecEntry(vGates, i))) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGates, i), k)), 1); k++  {
-        if Aig_IsComplement(pObj) {
-            Aig_Regular(pObj).fMarkB = 1;
-        } else {
-            Aig_Regular(pObj).fMarkA = 1; }
-    }
-    }
-    // construct AIG
-    assert(Aig_ManRegNum(pAig), "Aig_ManRegNum(pAig)");
-    pNew = Aig_ManStart( Aig_ManObjNumMax(pAig) );
-    pNew.pName = Abc_UtilStrsav( pAig.pName );
-    pNew.pSpec = Abc_UtilStrsav( pAig.pSpec );
-    Aig_ManConst1(pAig).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    if fReduce != 0 {
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            assert(!(pObj.fMarkA && pObj.fMarkB), "!(pObj.fMarkA && pObj.fMarkB)");
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-            if pObj.fMarkA {
-                pObj.pNext = (Aig_Obj_t *)pObj.pData;
-                pObj.pData = Aig_ManConst0(pNew);
-            
-            } else if pObj.fMarkB {
-                pObj.pNext = (Aig_Obj_t *)pObj.pData;
-                pObj.pData = Aig_ManConst1(pNew);
-            }
-        }
-        }
-    
-    } else {
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-        }
-    }
-    if pnUsedNodes != nil {
-        *pnUsedNodes = Aig_ManNodeNum(pNew); }
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObjLi) = Saig_ManLi(pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {
-        vOne = Vec_VecEntry( vGates, i );
-        if Vec_PtrSize(vOne) == 0 {
-            pObjNew = Aig_ObjChild0Copy(pObjLi);
-        } else {
-//            pGateNew = Aig_NotCond( Aig_Regular(pGate)->pData, Aig_IsComplement(pGate) );
-            pGateNew = Cgt_ManBuildClockGate( pNew, vOne );
-            pObjNew = Aig_Mux( pNew, pGateNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );
-        }
-        pObjLi.pData = Aig_ObjCreateCo( pNew, pObjNew );
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) );
-    // unlabel nodes
-    Aig_ManCleanMarkAB( pAig );
-    Aig_ManCleanNext( pAig );
-    return pNew;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

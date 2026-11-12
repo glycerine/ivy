@@ -49,21 +49,15 @@ func Saig_ObjGetXsimFanin1(graph *aig.Graph, obj aig.Edge) int32 {
 }
 func Saig_XsimPrint(writer io.Writer, value int32) { aig.Aig_XsimPrint(writer, value) }
 
-type PhaseState struct {
-	Words []uint32
-	Next  *PhaseState
-}
 type Saig_Tsim_t struct {
 	pAig            *aig.Graph
 	fast            *Faig_Man_t
-	states          []*PhaseState
+	states          [][]uint32
 	seen            map[string]int
 	nPrefix, nCycle int32
 	vNonXRegs       *vec.Vec_Int_t
 }
 
-func Saig_TsiNext(state *PhaseState, words int32) *PhaseState          { return state.Next }
-func Saig_TsiSetNext(state *PhaseState, words int32, next *PhaseState) { state.Next = next }
 func Saig_TsiStart(graph *aig.Graph) *Saig_Tsim_t {
 	return &Saig_Tsim_t{pAig: graph, fast: Faig_ManCreate(graph), seen: make(map[string]int)}
 }
@@ -108,10 +102,15 @@ func Saig_TsiStateInsert(p *Saig_Tsim_t, state []uint32, words int32) {
 		panic("saig: duplicate ternary state")
 	}
 	index := -1
-	for i, s := range p.states {
-		if len(state) == 0 || len(s.Words) > 0 && &s.Words[0] == &state[0] {
-			index = i
-			break
+	last := len(p.states) - 1
+	if last >= 0 && (len(state) == 0 || len(p.states[last]) > 0 && &p.states[last][0] == &state[0]) {
+		index = last
+	} else {
+		for i, s := range p.states {
+			if len(state) > 0 && len(s) > 0 && &s[0] == &state[0] {
+				index = i
+				break
+			}
 		}
 	}
 	if index < 0 {
@@ -126,14 +125,14 @@ func Saig_TsiComputePrefix(p *Saig_Tsim_t, state []uint32, words int32) int32 {
 	return -1
 }
 func Saig_TsiStateNew(p *Saig_Tsim_t) []uint32 {
-	state := &PhaseState{Words: make([]uint32, p.words())}
+	state := make([]uint32, p.words())
 	p.states = append(p.states, state)
-	return state.Words
+	return state
 }
 func Saig_TsiStateCount(p *Saig_Tsim_t, state []uint32) int32 {
 	count := int32(0)
 	for i := 0; i < int(aig.Aig_ManRegNum(p.pAig)); i++ {
-		if phaseValue(state, i) != SAIG_XVSX {
+		if value := phaseValue(state, i); value == SAIG_XVS0 || value == SAIG_XVS1 {
 			count++
 		}
 	}
@@ -147,7 +146,7 @@ func Saig_TsiStatePrint(p *Saig_Tsim_t, state []uint32) {
 }
 func Saig_TsiStateOrAll(p *Saig_Tsim_t, state []uint32) {
 	for _, previous := range p.states {
-		for i, value := range previous.Words {
+		for i, value := range previous {
 			state[i] |= value
 		}
 	}
@@ -160,7 +159,7 @@ func Saig_TsiCountNonXValuedRegisters(p *Saig_Tsim_t, prefix int32) int32 {
 	for reg := 0; reg < int(aig.Aig_ManRegNum(p.pAig)); reg++ {
 		binary := true
 		for _, state := range p.states[prefix:] {
-			if phaseValue(state.Words, reg) == SAIG_XVSX {
+			if phaseValue(state, reg) == SAIG_XVSX {
 				binary = false
 				break
 			}
@@ -179,7 +178,7 @@ func Saig_TsiComputeTransient(p *Saig_Tsim_t, prefix int32) *vec.Vec_Int_t {
 	for reg := 0; reg < int(aig.Aig_ManRegNum(p.pAig)); reg++ {
 		previous, lastStep := int32(-1), -1
 		for index, state := range p.states {
-			value := phaseValue(state.Words, reg)
+			value := phaseValue(state, reg)
 			if previous != value {
 				previous = value
 				lastStep = index
@@ -199,7 +198,7 @@ func Saig_TsiPrintTraces(p *Saig_Tsim_t, words, prefix, loop int32) {
 			if frame == int(prefix) {
 				fmt.Print("  ")
 			}
-			Saig_XsimPrint(os.Stdout, phaseValue(state.Words, reg))
+			Saig_XsimPrint(os.Stdout, phaseValue(state, reg))
 		}
 		fmt.Println()
 	}
@@ -265,7 +264,7 @@ func Saig_ManReachableTernary(graph *aig.Graph, initial *vec.Vec_Int_t, verbose 
 		}
 		next := make([]int32, registers)
 		for reg := range next {
-			next[reg] = phaseLit(p.fast.outputs[int(p.fast.nPos)+reg], values)
+			next[reg] = phaseLit(p.fast.outputs[int(p.fast.pos())+reg], values)
 		}
 		for reg, value := range next {
 			id := int(p.fast.nPis) + 1 + reg
@@ -308,7 +307,7 @@ func Saig_ManFindRegisters(p *Saig_Tsim_t, frames, ignore, verbose int32) int32 
 			if index >= p.nPrefix+p.nCycle {
 				index -= p.nCycle
 			}
-			value := phaseValue(p.states[index].Words, int(reg))
+			value := phaseValue(p.states[index], int(reg))
 			if value == SAIG_XVSX {
 				valid = false
 				break
@@ -367,7 +366,7 @@ func Saig_ObjChild1Frames(graph *aig.Graph, mapping []aig.Edge, frames int32, ob
 }
 
 func Saig_ManPerformAbstraction(p *Saig_Tsim_t, frames, verbose int32) *aig.Graph {
-	if frames < 1 || vec.Vec_IntSize(p.vNonXRegs) == 0 {
+	if frames < 1 || frames > 256 || int(frames) > len(p.states) || vec.Vec_IntSize(p.vNonXRegs) == 0 {
 		panic("saig: no phase abstraction candidates")
 	}
 	source := p.pAig
@@ -399,7 +398,7 @@ func Saig_ManPerformAbstraction(p *Saig_Tsim_t, frames, verbose int32) *aig.Grap
 			}
 		}
 		for _, reg := range vec.Vec_IntArray(p.vNonXRegs) {
-			value := phaseValue(p.states[frame].Words, int(reg))
+			value := phaseValue(p.states[frame], int(reg))
 			edge := graph.Const0()
 			if value == SAIG_XVS1 {
 				edge = graph.Const1()
@@ -487,12 +486,7 @@ func Saig_ManPhasePrefixLength(graph *aig.Graph, verbose, veryVerbose int32, tra
 	}
 	return p.nPrefix
 }
-func Saig_ManPhaseAbstract(graph *aig.Graph, initial *vec.Vec_Int_t, frames, prefix, ignore, printOnly, verbose int32) *aig.Graph {
-	p := Saig_ManReachableTernary(graph, initial, verbose)
-	if p == nil {
-		return nil
-	}
-	defer Saig_TsiStop(p)
+func phaseAbstractManager(p *Saig_Tsim_t, frames, prefix, ignore, printOnly, verbose int32) *aig.Graph {
 	Saig_TsiCountNonXValuedRegisters(p, min(p.nPrefix, prefix))
 	if printOnly != 0 {
 		Saig_TsiPrintTraces(p, int32(p.words()), p.nPrefix, p.nCycle)
@@ -506,9 +500,21 @@ func Saig_ManPhaseAbstract(graph *aig.Graph, initial *vec.Vec_Int_t, frames, pre
 	}
 	return Saig_ManPerformAbstraction(p, frames, verbose)
 }
+func Saig_ManPhaseAbstract(graph *aig.Graph, initial *vec.Vec_Int_t, frames, prefix, ignore, printOnly, verbose int32) *aig.Graph {
+	p := Saig_ManReachableTernary(graph, initial, verbose)
+	if p == nil {
+		return nil
+	}
+	defer Saig_TsiStop(p)
+	return phaseAbstractManager(p, frames, prefix, ignore, printOnly, verbose)
+}
 func Saig_ManPhaseAbstractAuto(graph *aig.Graph, verbose int32) *aig.Graph {
-	frames := Saig_ManPhaseFrameNum(graph, nil)
-	result := Saig_ManPhaseAbstract(graph, nil, frames, 0, 0, 0, verbose)
+	p := Saig_ManReachableTernary(graph, nil, verbose)
+	if p == nil {
+		return nil
+	}
+	result := phaseAbstractManager(p, p.nCycle, 0, 0, 0, verbose)
+	Saig_TsiStop(p)
 	if result == nil || result.InputCount() == int(aig.Aig_ManRegNum(result)) {
 		return aig.Aig_ManDupSimple(graph)
 	}
@@ -521,14 +527,36 @@ func Saig_PhaseTranslateCex(graph *aig.Graph, cex *util.Abc_Cex_t) *util.Abc_Cex
 	if cex == nil || pis <= 0 || pos <= 0 || cex.NPis <= 0 || cex.NPis%pis != 0 || cex.IFrame < 0 || cex.IPo < 0 {
 		return nil
 	}
-	frames := cex.NPis / pis
-	if cex.IPo >= pos*frames {
+	expectedBits := int64(cex.NRegs) + (int64(cex.IFrame)+1)*int64(cex.NPis)
+	if cex.NRegs < 0 || expectedBits != int64(cex.NBits) || int64(len(cex.PData))*32 < expectedBits {
 		return nil
 	}
-	frame := cex.IFrame*frames + cex.IPo/pos
+	frames := cex.NPis / pis
+	if int64(cex.IPo) >= int64(pos)*int64(frames) {
+		return nil
+	}
+	constraints := aig.Aig_ManConstrNum(graph)
+	properties := pos - constraints
+	var microframe, output int32
+	if int64(cex.IPo) < int64(properties)*int64(frames) {
+		microframe = cex.IPo / properties
+		output = cex.IPo % properties
+	} else {
+		index := cex.IPo - properties*frames
+		if constraints <= 0 {
+			return nil
+		}
+		microframe = index / constraints
+		output = properties + index%constraints
+	}
+	expandedFrame := int64(cex.IFrame)*int64(frames) + int64(microframe)
+	if expandedFrame >= 1<<31-1 || int64(registers)+(expandedFrame+1)*int64(pis) > 1<<31-1 {
+		return nil
+	}
+	frame := int32(expandedFrame)
 	result := util.Abc_CexAlloc(registers, pis, frame+1)
 	result.IFrame = frame
-	result.IPo = cex.IPo % pos
+	result.IPo = output
 	for src, dst := cex.NRegs, result.NRegs; dst < result.NBits; src, dst = src+1, dst+1 {
 		if src >= cex.NBits || int(src>>5) >= len(cex.PData) {
 			return nil

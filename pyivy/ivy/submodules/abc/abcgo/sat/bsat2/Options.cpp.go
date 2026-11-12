@@ -1,9 +1,6 @@
 package bsat2
 
-import (
-	"fmt"
-	"os"
-)
+import "strings"
 
 /**************************************************************************************[Options.cc]
 Copyright (c) 2008-2010, Niklas Sorensson
@@ -24,77 +21,22 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-//#include "Sort.h"
-//#include "Options.h"
-//#include "ParseUtils.h"
-
-//using namespace Minisat;
-
-
-int Minisat::parseOptions(int& argc, char** argv, bool strict)
-{
-    int i, j;
-    for i = j = 1; i < argc; i++{
-        char* str = argv[i];
-        if match(str, "--") && match(str, Option::getHelpPrefixString()) && match(str, "help"){
-            if (*str == '\0')
-                return printUsageAndExit(argc, argv);
-            else if (match(str, "-verb"))
-                return printUsageAndExit(argc, argv, true);
-        } else {
-            bool parsed_ok = false;
-        
-            for int k = 0; !parsed_ok && k < Option::getOptionList().size(); k++{
-                parsed_ok = Option::getOptionList()[k].parse(argv[i]);
-
-                // fprintf(stderr, "checking %d: %s against flag <%s> (%s)\n", i, argv[i], Option::getOptionList()[k]->name, parsed_ok ? "ok" : "skip");
-            }
-
-            if (!parsed_ok)
-                if strict && match(argv[i], "-") { fmt.Fprintf(os.Stderr, "ERROR! Unknown flag \"%s\". Use '--%shelp' for help.\n", argv[i], Option::getHelpPrefixString()); return 0; } //  exit(0);
-                else
-                    argv[j++] = argv[i];
-        }
-    }
-
-    argc -= (i - j);
-    return 1;
+func (o *Options) Parse(arguments []string) ([]string, error) {
+	normalized := make([]string, len(arguments))
+	for i, arg := range arguments {
+		if strings.HasPrefix(arg, "-no-") {
+			normalized[i] = "-" + strings.TrimPrefix(arg, "-no-") + "=false"
+		} else {
+			normalized[i] = arg
+		}
+	}
+	if err := o.flags.Parse(normalized); err != nil {
+		return nil, err
+	}
+	for _, validate := range o.validators {
+		if err := validate(); err != nil {
+			return nil, err
+		}
+	}
+	return o.flags.Args(), nil
 }
-
-
-void Minisat::setUsageHelp      (char* str){ Option::getUsageString() = str; }
-void Minisat::setHelpPrefixStr  (char* str){ Option::getHelpPrefixString() = str; }
-int Minisat::printUsageAndExit (int argc, char** argv, bool verbose)
-{
-    char* usage = Option::getUsageString();
-    if (usage != NULL)
-        fmt.Fprintf(os.Stderr, usage, argv[0]);
-
-    sort(Option::getOptionList(), Option::OptionLt());
-
-    char* prev_cat  = NULL;
-    char* prev_type = NULL;
-
-    for int i = 0; i < Option::getOptionList().size(); i++{
-        char* cat  = Option::getOptionList()[i].category;
-        char* type = Option::getOptionList()[i].type_name;
-
-        if (cat != prev_cat)
-            fmt.Fprintf(os.Stderr, "\n%s OPTIONS:\n\n", cat);
-        else if (type != prev_type)
-            fmt.Fprintf(os.Stderr, "\n");
-
-        Option::getOptionList()[i].help(verbose);
-
-        prev_cat  = Option::getOptionList()[i].category;
-        prev_type = Option::getOptionList()[i].type_name;
-    }
-
-    fmt.Fprintf(os.Stderr, "\nHELP OPTIONS:\n\n");
-    fmt.Fprintf(os.Stderr, "  --%shelp        Print help message.\n", Option::getHelpPrefixString());
-    fmt.Fprintf(os.Stderr, "  --%shelp-verb   Print verbose help message.\n", Option::getHelpPrefixString());
-    fmt.Fprintf(os.Stderr, "\n");
-//    exit(0);
-    return 0;
-}
-

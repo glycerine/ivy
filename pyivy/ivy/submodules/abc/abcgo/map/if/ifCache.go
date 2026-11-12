@@ -82,7 +82,7 @@ func If_ManCacheRecord(p *If_Man_t, iDsd0 int32, iDsd1 int32, nShared int32, iDs
 func If_ManCacheAnalize(p *If_Man_t) {
 	var vRes *Vec_Int_t
 	var vTest [32]*Vec_Int_t
-	var uUnique int32
+	var uUnique int
 	vRes = Hsh_IntManHashArray(p.vCutData, 4)
 	for i := 0; i <= int(p.pPars.nLutSize); i++ {
 		vTest[i] = Vec_IntAlloc(1000)
@@ -96,13 +96,15 @@ func If_ManCacheAnalize(p *If_Man_t) {
 	}
 	for i := 0; i <= int(p.pPars.nLutSize); i++ {
 		uUnique = Vec_IntCountUnique(vTest[i])
-		fmt.Printf("%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\n", i, Vec_IntSize(vTest[i]), 100.0*Vec_IntSize(vTest[i])/Abc_MaxInt(1, Vec_IntSize(vRes)), uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(vTest[i])))
+		entries := Vec_IntSize(vTest[i])
+		fmt.Printf("%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\n", i, entries, 100.0*float64(entries)/float64(max(1, Vec_IntSize(vRes))), uUnique, 100.0*float64(uUnique)/float64(max(1, entries)))
 	}
 	for i := 0; i <= int(p.pPars.nLutSize); i++ {
 		Vec_IntFree(vTest[i])
 	}
 	uUnique = Vec_IntCountUnique(vRes)
-	fmt.Printf("Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\n", Vec_IntSize(p.vCutData)/4, 100.0, uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(p.vCutData)/4))
+	total := Vec_IntSize(p.vCutData) / 4
+	fmt.Printf("Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\n", total, 100.0, uUnique, 100.0*float64(uUnique)/float64(max(1, total)))
 	Vec_IntFree(vRes)
 }
 

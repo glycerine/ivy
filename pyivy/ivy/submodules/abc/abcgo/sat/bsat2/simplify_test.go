@@ -1,0 +1,100 @@
+package bsat2
+
+import (
+	"math/rand"
+	"testing"
+)
+
+func TestSimplifyingSolverAgainstExhaustiveEnumeration(t *testing.T) {
+	rng := rand.New(rand.NewSource(431))
+	for trial := 0; trial < 500; trial++ {
+		s := NewSimpSolver()
+		if trial%5 == 0 {
+			s.GarbageFraction = 0
+			s.SimplificationGarbageFraction = 0
+		}
+		for i := 0; i < 6; i++ {
+			s.NewVariable()
+		}
+		s.UseAsymmetric = trial%3 == 0
+		s.UseRedundancyCheck = trial%4 == 0
+		formula := [][]Lit{}
+		for count := 0; count < 18; count++ {
+			c := []Lit{}
+			for _, v := range rng.Perm(6)[:2+rng.Intn(3)] {
+				c = append(c, MakeLit(Var(v), rng.Intn(2) == 0))
+			}
+			formula = append(formula, c)
+			s.AddClause(c...)
+		}
+		assumptions := []Lit{}
+		if trial&1 != 0 {
+			assumptions = append(assumptions, MakeLit(0, trial&2 != 0))
+		}
+		_, expected := formulaModel(formula, assumptions, 6)
+		got := s.Solve(assumptions...)
+		if (got == True) != expected || got == Undef {
+			t.Fatal(trial, got, expected, formula, assumptions)
+		}
+		if got == True {
+			for _, c := range formula {
+				satisfied := false
+				for _, l := range c {
+					if s.ModelValue(l) == True {
+						satisfied = true
+					}
+				}
+				if !satisfied {
+					t.Fatal("reconstructed model violates original clause", trial, c, s.Model)
+				}
+			}
+		}
+	}
+}
+func TestEliminationFrozenVariablesAndGarbage(t *testing.T) {
+	s := NewSimpSolver()
+	for i := 0; i < 4; i++ {
+		s.NewVariable()
+	}
+	for _, c := range [][]Lit{{0, 2}, {1, 4}, {3, 6}, {5, 7}} {
+		s.AddClause(c...)
+	}
+	s.SetFrozen(0, true)
+	if !s.Eliminate(false) || s.IsEliminated(0) || s.EliminatedVariables == 0 {
+		t.Fatal("elimination/frozen state")
+	}
+	s.GarbageCollect()
+	if s.Solve(0) != True {
+		t.Fatal("frozen incremental assumption")
+	}
+}
+
+func TestSubstitutionExtendsOriginalModel(t *testing.T) {
+	for _, negative := range []bool{false, true} {
+		s := NewSimpSolver()
+		s.NewVariable()
+		s.NewVariable()
+		s.AddClause(0, 2)
+		replacement := MakeLit(1, negative)
+		if !s.Substitute(0, replacement) || s.Solve() != True || s.ModelValue(0) != s.ModelValue(replacement) {
+			t.Fatal(negative, s.Model)
+		}
+		if s.ModelValue(0) != True && s.ModelValue(2) != True {
+			t.Fatal("substitution lost original clause")
+		}
+	}
+}
+
+func TestSimplificationFailureClearsPreviousModel(t *testing.T) {
+	s := NewSimpSolver()
+	s.NewVariable()
+	s.SetFrozen(0, true)
+	s.AddClause(0)
+	if s.Solve() != True {
+		t.Fatal("initial SAT")
+	}
+	s.AddClause(1)
+	if s.Solve() != False || s.ModelValue(0) != Undef {
+		t.Fatal("stale SAT model after preprocessing UNSAT", s.Model)
+	}
+}

@@ -95,6 +95,7 @@ func copyNetworkMetadata(old *Network) *Network {
 	n.Spec = old.Spec
 	n.Type = old.Type
 	n.Function = old.Function
+	n.FunctionManager = old.FunctionManager
 	n.Barriers = old.Barriers
 	return n
 }

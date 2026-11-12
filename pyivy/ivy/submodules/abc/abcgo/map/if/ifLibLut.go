@@ -1,499 +1,239 @@
+// LUT area/delay libraries from ifLibLut.c.
 package if_
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"math"
+	"os"
+	"strconv"
+	"strings"
 
-import "os"
+	abcmain "github.com/glycerine/abcgo/base/main"
+)
 
-/**CFile****************************************************************
-
-  FileName    [ifLibLut.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [FPGA mapping based on priority cuts.]
-
-  Synopsis    [LUT library.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 21, 2006.]
-
-  Revision    [$Id: ifLibLut.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "if.h"
-//#include "base/main/mainInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the description of LUTs from the LUT library file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutReadString(pStr string) *If_LibLut_t {
-    var p *If_LibLut_t;
-    var vStrs *Vec_Ptr_t;
-    var pToken, pBuffer, pStrNew, pStrMem string;
-    var i, k, j int32;
-
-    if pStr == nil || pStr[0] == 0 {
-        return nil; }
-
-    vStrs = Vec_PtrAlloc( 1000 );
-    pStrNew = pStrMem = Abc_UtilStrsav( pStr );
-    for  *pStrNew  {
-        Vec_PtrPush( vStrs, pStrNew );
-        for  *pStrNew != '\n'  {
-            pStrNew++;
-        }
-        for  *pStrNew == '\n'  {
-            *pStrNew++ = '\0';
-        }
-    }
-
-    p = new(If_LibLut_t);
-    memset( p, 0, sizeof(If_LibLut_t) );
-
-    i = 1;
-    //while ( fgets( pBuffer, 1000, pFile ) != NULL )
-    Vec_PtrForEachEntry( char *, vStrs, pBuffer, j )
-    {
-        if pBuffer[0] == 0 {
-            continue; }
-        pToken = strtok( pBuffer, " \t\n" );
-        if pToken == nil {
-            continue; }
-        if pToken[0] == '#' {
-            continue; }
-        if i != atoi(pToken) {
-            Abc_Print( 1, "Error in the LUT library string.\n" );
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            ABC_FREE( pStrMem );
-            Vec_PtrFree( vStrs );
-            return nil;
-        }
-
-        // read area
-        pToken = strtok( nil, " \t\n" );
-        p.pLutAreas[i] = float32(atof(pToken));
-
-        // read delays
-        k = 0;
-        for  pToken = strtok( nil, " \t\n" )  {
-            p.pLutDelays[i][k++] = float32(atof(pToken));
-        }
-
-        // check for out-of-bound
-        if k > i {
-            Abc_Print( 1, "LUT %d has too many pins (%d). Max allowed is %d.\n", i, k, i );
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            ABC_FREE( pStrMem );
-            Vec_PtrFree( vStrs );
-            return nil;
-        }
-
-        // check if var delays are specified
-        if k > 1 {
-            p.fVarPinDelays = 1; }
-
-        if i == IF_MAX_LUTSIZE {
-            Abc_Print( 1, "Skipping LUTs of size more than %d.\n", i );
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            ABC_FREE( pStrMem );
-            Vec_PtrFree( vStrs );
-            return nil;
-        }
-        i++;
-    }
-    p.LutMax = i-1;
-
-    // check the library
-    if p.fVarPinDelays {
-        for  i = 1; i <= p.LutMax; i++  {
-            for  k = 0; k < i; k++  {
-                if p.pLutDelays[i][k] <= 0.0 {
-                    Abc_Print( 0, "Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", 
-                        k, i, p.pLutDelays[i][k] ); }
-                if (k != 0) && p.pLutDelays[i][k-1] > p.pLutDelays[i][k] {
-                    Abc_Print( 0, "Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\n", 
-                        k-1, i, p.pLutDelays[i][k-1], 
-                        k, i, p.pLutDelays[i][k] ); }
-            }
-        }
-    
-    } else {
-        for  i = 1; i <= p.LutMax; i++  {
-            if p.pLutDelays[i][0] <= 0.0 {
-                Abc_Print( 0, "LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", 
-                    i, p.pLutDelays[i][0] ); }
-        }
-    }
-
-    // cleanup
-    ABC_FREE( pStrMem );
-    Vec_PtrFree( vStrs );
-    return p;
+func lutNumber(text string) (float32, error) {
+	value, err := strconv.ParseFloat(text, 32)
+	if err != nil || value < 0 || math.IsNaN(value) || math.IsInf(value, 0) {
+		return 0, fmt.Errorf("invalid nonnegative finite number %q", text)
+	}
+	return float32(value), nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets the library associated with the string.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FrameSetLutLibrary(pAbc *Abc_Frame_t, pLutLibString string) int32 {
-    var pLib *If_LibLut_t  = If_LibLutReadString( pLutLibString );
-    if pLib == nil {
-        fmt.Fprintf(os.Stdout, "Reading LUT library from string has failed.\n");
-        return 0;
-    }
-    // replace the current library
-    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );
-    Abc_FrameSetLibLut( pLib );
-    return 1;
+// ParseLUTLibrary accepts consecutive rows: input count, area, then one shared
+// delay or a delay per pin. A shared row expands if other rows use pin delays.
+func ParseLUTLibrary(name, text string) (*If_LibLut_t, error) {
+	p := &If_LibLut_t{pName: name}
+	scanner := bufio.NewScanner(strings.NewReader(text))
+	scanner.Buffer(make([]byte, 4096), 1<<20)
+	line := 0
+	var counts [IF_MAX_LUTSIZE + 1]int
+	for scanner.Scan() {
+		line++
+		row, _, _ := strings.Cut(scanner.Text(), "#")
+		fields := strings.Fields(row)
+		if len(fields) == 0 {
+			continue
+		}
+		size, err := strconv.ParseInt(fields[0], 10, 32)
+		expected := int64(p.LutMax) + 1
+		if err != nil || size != expected || size > IF_MAX_LUTSIZE {
+			return nil, fmt.Errorf("%s:%d: expected LUT size %d within 1..%d", name, line, expected, IF_MAX_LUTSIZE)
+		}
+		if len(fields) < 3 {
+			return nil, fmt.Errorf("%s:%d: LUT %d requires area and delay", name, line, size)
+		}
+		pins := len(fields) - 2
+		if pins != 1 && int64(pins) != size {
+			return nil, fmt.Errorf("%s:%d: LUT %d requires one or %d pin delays", name, line, size, size)
+		}
+		p.pLutAreas[size], err = lutNumber(fields[1])
+		if err != nil {
+			return nil, fmt.Errorf("%s:%d: %w", name, line, err)
+		}
+		for pin, value := range fields[2:] {
+			delay, err := lutNumber(value)
+			if err != nil {
+				return nil, fmt.Errorf("%s:%d: %w", name, line, err)
+			}
+			if pin > 0 && delay < p.pLutDelays[size][pin-1] {
+				return nil, fmt.Errorf("%s:%d: pin delays must be nondecreasing", name, line)
+			}
+			p.pLutDelays[size][pin] = delay
+		}
+		counts[size] = pins
+		if pins > 1 {
+			p.fVarPinDelays = 1
+		}
+		p.LutMax = int32(size)
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	if p.LutMax == 0 {
+		return nil, fmt.Errorf("%s: LUT library is empty", name)
+	}
+	if p.fVarPinDelays != 0 {
+		for size := int32(1); size <= p.LutMax; size++ {
+			if counts[size] == 1 {
+				for pin := int32(1); pin < size; pin++ {
+					p.pLutDelays[size][pin] = p.pLutDelays[size][0]
+				}
+			}
+		}
+	}
+	return p, nil
 }
-func Abc_FrameSetLutLibraryTest(pAbc *Abc_Frame_t) int32 {
-    var pStr string  = "1 1.00  1000\n2 1.00  1000 1200\n3 1.00  1000 1200 1400\n4 1.00  1000 1200 1400 1600\n5 1.00  1000 1200 1400 1600 1800\n6 1.00  1000 1200 1400 1600 1800 2000\n\n\n";
-    Abc_FrameSetLutLibrary( pAbc, pStr );
-    return 1;
+func ReadLUTLibrary(filename string) (*If_LibLut_t, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLUTLibrary(filename, string(data))
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the description of LUTs from the LUT library file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutRead(FileName string) *If_LibLut_t {
-    var pBuffer [1000]byte;
-    var pToken string;
-    var p *If_LibLut_t;
-    var pFile *os.File;
-    var i, k int32;
-
-    pFile = os.Open(FileName);
-    if pFile == nil {
-        Abc_Print( -1, "Cannot open LUT library file \"%s\".\n", FileName );
-        return nil;
-    }
-
-    p = new(If_LibLut_t);
-    memset( p, 0, sizeof(If_LibLut_t) );
-    p.pName = Abc_UtilStrsav( FileName );
-
-    i = 1;
-    for  fgets( pBuffer, 1000, pFile ) != nil  {
-        pToken = strtok( pBuffer, " \t\n" );
-        if pToken == nil {
-            continue; }
-        if pToken[0] == '#' {
-            continue; }
-        if i != atoi(pToken) {
-            Abc_Print( 1, "Error in the LUT library file \"%s\".\n", FileName );
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            _ = (pFile).Close();
-            return nil;
-        }
-
-        // read area
-        pToken = strtok( nil, " \t\n" );
-        p.pLutAreas[i] = float32(atof(pToken));
-
-        // read delays
-        k = 0;
-        for  pToken = strtok( nil, " \t\n" )  {
-            p.pLutDelays[i][k++] = float32(atof(pToken));
-        }
-
-        // check for out-of-bound
-        if k > i {
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            Abc_Print( 1, "LUT %d has too many pins (%d). Max allowed is %d.\n", i, k, i );
-            _ = (pFile).Close();
-            return nil;
-        }
-
-        // check if var delays are specified
-        if k > 1 {
-            p.fVarPinDelays = 1; }
-
-        if i == IF_MAX_LUTSIZE {
-            ABC_FREE( p.pName );
-            ABC_FREE( p );
-            Abc_Print( 1, "Skipping LUTs of size more than %d.\n", i );
-            _ = (pFile).Close();
-            return nil;
-        }
-        i++;
-    }
-    p.LutMax = i-1;
-
-    // check the library
-    if p.fVarPinDelays {
-        for  i = 1; i <= p.LutMax; i++  {
-            for  k = 0; k < i; k++  {
-                if p.pLutDelays[i][k] <= 0.0 {
-                    Abc_Print( 0, "Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", 
-                        k, i, p.pLutDelays[i][k] ); }
-                if (k != 0) && p.pLutDelays[i][k-1] > p.pLutDelays[i][k] {
-                    Abc_Print( 0, "Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\n", 
-                        k-1, i, p.pLutDelays[i][k-1], 
-                        k, i, p.pLutDelays[i][k] ); }
-            }
-        }
-    
-    } else {
-        for  i = 1; i <= p.LutMax; i++  {
-            if p.pLutDelays[i][0] <= 0.0 {
-                Abc_Print( 0, "LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", 
-                    i, p.pLutDelays[i][0] ); }
-        }
-    }
-
-    _ = (pFile).Close();
-    return p;
+func If_LibLutReadString(text string) *If_LibLut_t {
+	p, err := ParseLUTLibrary("<string>", text)
+	if err != nil {
+		return nil
+	}
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func If_LibLutRead(filename string) *If_LibLut_t {
+	p, err := ReadLUTLibrary(filename)
+	if err != nil {
+		return nil
+	}
+	return p
+}
 func If_LibLutDup(p *If_LibLut_t) *If_LibLut_t {
-    var pNew *If_LibLut_t;
-    pNew = new(If_LibLut_t);
-    *pNew = *p;
-    pNew.pName = Abc_UtilStrsav( pNew.pName );
-    return pNew;
+	if p == nil {
+		return nil
+	}
+	copy := *p
+	return &copy
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutFree(pLutLib *If_LibLut_t) {
-    if pLutLib == nil {
-        return; }
-    ABC_FREE( pLutLib.pName );
-    ABC_FREE( pLutLib );
+func If_LibLutFree(p *If_LibLut_t) {
+	if p != nil {
+		*p = If_LibLut_t{}
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutPrint(pLutLib *If_LibLut_t) {
-    var i, k int32;
-    Abc_Print( 1, "# The area/delay of k-variable LUTs:\n" );
-    Abc_Print( 1, "# k    area     delay\n" );
-    if pLutLib.fVarPinDelays {
-        for  i = 1; i <= pLutLib.LutMax; i++  {
-            Abc_Print( 1, "%d   %7.2f  ", i, pLutLib.pLutAreas[i] );
-            for  k = 0; k < i; k++  {
-                Abc_Print( 1, " %7.2f", pLutLib.pLutDelays[i][k] );
-            }
-            Abc_Print( 1, "\n" );
-        }
-    
-    } else {
-        for  i = 1; i <= pLutLib.LutMax; i++  {
-            Abc_Print( 1, "%d   %7.2f   %7.2f\n", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0] );
-        } }
+func (p *If_LibLut_t_) Close() error { If_LibLutFree(p); return nil }
+func (p *If_LibLut_t_) Name() string { return p.pName }
+func (p *If_LibLut_t_) Area(inputs int32) float32 {
+	if inputs < 1 || inputs > p.LutMax {
+		panic("LUT input count outside library")
+	}
+	return p.pLutAreas[inputs]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the delays are discrete.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutDelaysAreDiscrete(pLutLib *If_LibLut_t) int32 {
-    var Delay float32;
-    var i int32;
-    for  i = 1; i <= pLutLib.LutMax; i++  {
-        Delay = pLutLib.pLutDelays[i][0];
-        if (float32((int32(Delay)))) != Delay {
-            return 0; }
-    }
-    return 1;
+func (p *If_LibLut_t_) PinDelay(inputs, pin int32) float32 {
+	if inputs < 1 || inputs > p.LutMax || pin < 0 || pin >= inputs {
+		panic("LUT pin outside library")
+	}
+	if p.fVarPinDelays == 0 {
+		pin = 0
+	}
+	return p.pLutDelays[inputs][pin]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the delays are discrete.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutDelaysAreDifferent(pLutLib *If_LibLut_t) int32 {
-    var i, k int32;
-    var Delay float32  = pLutLib.pLutDelays[1][0];
-    if pLutLib.fVarPinDelays {
-        for  i = 2; i <= pLutLib.LutMax; i++  {
-        for  k = 0; k < i; k++  {
-            if pLutLib.pLutDelays[i][k] != Delay {
-                return 1; }
-        }
-        }
-    
-    } else {
-        for  i = 2; i <= pLutLib.LutMax; i++  {
-            if pLutLib.pLutDelays[i][0] != Delay {
-                return 1; }
-        }
-    }
-    return 0;
+func WriteLUTLibrary(w io.Writer, p *If_LibLut_t) error {
+	if p == nil || p.LutMax < 1 || p.LutMax > IF_MAX_LUTSIZE {
+		return fmt.Errorf("invalid LUT library")
+	}
+	if _, err := fmt.Fprintln(w, "# k area delay(s)"); err != nil {
+		return err
+	}
+	for size := int32(1); size <= p.LutMax; size++ {
+		if _, err := fmt.Fprintf(w, "%d %.9g", size, p.pLutAreas[size]); err != nil {
+			return err
+		}
+		pins := int32(1)
+		if p.fVarPinDelays != 0 {
+			pins = size
+		}
+		for pin := int32(0); pin < pins; pin++ {
+			if _, err := fmt.Fprintf(w, " %.9g", p.pLutDelays[size][pin]); err != nil {
+				return err
+			}
+		}
+		if _, err := fmt.Fprintln(w); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets simple LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LibLutSetSimple(nLutSize int32) *If_LibLut_t {
-    var s_LutLib10 If_LibLut_t = If_LibLut_t{ "lutlib",10, 0, {0,1,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };
-    var s_LutLib9 If_LibLut_t  = If_LibLut_t{ "lutlib", 9, 0, {0,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };
-    var s_LutLib8 If_LibLut_t  = If_LibLut_t{ "lutlib", 8, 0, {0,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1}} };
-    var s_LutLib7 If_LibLut_t  = If_LibLut_t{ "lutlib", 7, 0, {0,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1}} };
-    var s_LutLib6 If_LibLut_t  = If_LibLut_t{ "lutlib", 6, 0, {0,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1}} };
-    var s_LutLib5 If_LibLut_t  = If_LibLut_t{ "lutlib", 5, 0, {0,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1}} };
-    var s_LutLib4 If_LibLut_t  = If_LibLut_t{ "lutlib", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };
-    var s_LutLib3 If_LibLut_t  = If_LibLut_t{ "lutlib", 3, 0, {0,1,1,1}, {{0},{1},{1},{1}} };
-    var pLutLib *If_LibLut_t;
-    assert(nLutSize >= 3 && nLutSize <= 10, "nLutSize >= 3 && nLutSize <= 10");
-    switch  nLutSize  {
-        case 3:  pLutLib = &s_LutLib3; break;
-        case 4:  pLutLib = &s_LutLib4; break;
-        case 5:  pLutLib = &s_LutLib5; break;
-        case 6:  pLutLib = &s_LutLib6; break;
-        case 7:  pLutLib = &s_LutLib7; break;
-        case 8:  pLutLib = &s_LutLib8; break;
-        case 9:  pLutLib = &s_LutLib9; break;
-        case 10: pLutLib = &s_LutLib10; break;
-        default: pLutLib = nil; break;
-    }
-    if pLutLib == nil {
-        return nil; }
-    return If_LibLutDup(pLutLib);
+func If_LibLutPrint(p *If_LibLut_t) error { return WriteLUTLibrary(os.Stdout, p) }
+func If_LibLutDelaysAreDiscrete(p *If_LibLut_t) int32 {
+	if p == nil {
+		return 1
+	}
+	for size := int32(1); size <= p.LutMax; size++ {
+		pins := int32(1)
+		if p.fVarPinDelays != 0 {
+			pins = size
+		}
+		for pin := int32(0); pin < pins; pin++ {
+			v := float64(p.pLutDelays[size][pin])
+			if math.IsNaN(v) || math.IsInf(v, 0) || math.Trunc(v) != v {
+				return 0
+			}
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Gets the delay of the fastest pin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func If_LibLutDelaysAreDifferent(p *If_LibLut_t) int32 {
+	if p == nil || p.LutMax < 1 {
+		return 0
+	}
+	first := p.pLutDelays[1][0]
+	for size := int32(1); size <= p.LutMax; size++ {
+		pins := int32(1)
+		if p.fVarPinDelays != 0 {
+			pins = size
+		}
+		for pin := int32(0); pin < pins; pin++ {
+			if p.pLutDelays[size][pin] != first {
+				return 1
+			}
+		}
+	}
+	return 0
+}
+func If_LibLutSetSimple(size int32) *If_LibLut_t {
+	if size < 3 || size > 10 {
+		return nil
+	}
+	p := &If_LibLut_t{pName: "lutlib", LutMax: size}
+	for i := int32(1); i <= size; i++ {
+		p.pLutAreas[i] = 1
+		p.pLutDelays[i][0] = 1
+	}
+	return p
+}
 func If_LibLutFastestPinDelay(p *If_LibLut_t) float32 {
-    if !(p != nil) {
-        return 1.0;
-    } else {
-        return p.pLutDelays[p.LutMax][0];
-    }
+	if p == nil {
+		return 1
+	}
+	return p.pLutDelays[p.LutMax][0]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Gets the delay of the slowest pin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func If_LibLutSlowestPinDelay(p *If_LibLut_t) float32 {
-    if !(p != nil) {
-        return 1.0;
-    } else {
-        if p.fVarPinDelays {
-            return p.pLutDelays[p.LutMax][p.LutMax-1];
-        } else {
-            return p.pLutDelays[p.LutMax][0];
-        }
-    }
+	if p == nil {
+		return 1
+	}
+	if p.fVarPinDelays != 0 && p.LutMax > 0 {
+		return p.pLutDelays[p.LutMax][p.LutMax-1]
+	}
+	return p.pLutDelays[p.LutMax][0]
+}
+func Abc_FrameSetLutLibrary(frame *abcmain.Frame, text string) int32 {
+	p := If_LibLutReadString(text)
+	if p == nil || frame == nil {
+		return 0
+	}
+	frame.SetResource("pLibLut", p)
+	return 1
+}
+func Abc_FrameSetLutLibraryTest(frame *abcmain.Frame) int32 {
+	return Abc_FrameSetLutLibrary(frame, "1 1 1000\n2 1 1000 1200\n3 1 1000 1200 1400\n4 1 1000 1200 1400 1600\n5 1 1000 1200 1400 1600 1800\n6 1 1000 1200 1400 1600 1800 2000\n")
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func (p *If_LibLut_t_) VariablePinDelays() bool { return p.fVarPinDelays != 0 }

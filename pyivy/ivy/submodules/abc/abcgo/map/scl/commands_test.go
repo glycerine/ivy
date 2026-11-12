@@ -96,3 +96,33 @@ func TestReadSCLInstallsMIOAndResetClearsLegacyConstraints(t *testing.T) {
 		t.Fatal(status)
 	}
 }
+
+func TestNumericOptionRulesDoNotCrossTalk(t *testing.T) {
+	o, e := parseSclOptions([]string{"upsize", "-G", "0", "-S", "0"}, "", "GS")
+	if e != nil || o.numbers['G'] != 0 {
+		t.Fatal(o, e)
+	}
+	if o.positive("SG") {
+		t.Fatal("explicit library slew/gain zero accepted")
+	}
+	f := abcmain.NewFrame()
+	defer f.Close()
+	f.Out = io.Discard
+	f.Err = io.Discard
+	Scl_Init(f)
+	for _, name := range []string{"topo", "unbuffer", "buffer", "upsize", "dnsize"} {
+		command, ok := f.LookupCommand(name)
+		if !ok || !command.ChangesNetwork {
+			t.Fatal(name, command, ok)
+		}
+	}
+	count := 0
+	for _, command := range f.CommandList() {
+		if command.Group == "SCL mapping" {
+			count++
+		}
+	}
+	if count != 21 {
+		t.Fatal("registered SCL command count", count)
+	}
+}

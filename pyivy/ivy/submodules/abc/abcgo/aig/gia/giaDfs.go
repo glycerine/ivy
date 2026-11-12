@@ -1,594 +1,287 @@
 package gia
 
+// DFS/support ordering APIs ported from giaDfs.c. Native iterative walks avoid
+// call-stack depth limits and include real MUX controls in graph dependencies.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [giaDfs.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [DFS procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaDfs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectCis_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSupp *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vSupp, Gia_ObjId(p, pObj) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManCollectCis_rec( p, Gia_ObjFanin0(pObj), vSupp );
-    Gia_ManCollectCis_rec( p, Gia_ObjFanin1(pObj), vSupp );
+type giaDfsFrame struct {
+	id       int32
+	expanded bool
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectCis(p *Gia_Man_t, pNodes *int32, nNodes int32, vSupp *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i int32; 
-    Vec_IntClear( vSupp );
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
-    for  i = 0; i < nNodes; i++  {
-        pObj = Gia_ManObj( p, pNodes[i] );
-        if Gia_ObjIsCo(pObj) {
-            Gia_ManCollectCis_rec( p, Gia_ObjFanin0(pObj), vSupp );
-        } else {
-            Gia_ManCollectCis_rec( p, pObj, vSupp ); }
-    }
+func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bool) int32 {
+	stack := []giaDfsFrame{{id: root}}
+	var count int32
+	for len(stack) > 0 {
+		frame := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		obj := Gia_ManObj(p, frame.id)
+		if frame.expanded {
+			if nodes {
+				if result != nil {
+					Vec_IntPush(result, frame.id)
+				}
+				count++
+			}
+			continue
+		}
+		if Gia_ObjIsCo(obj) != 0 {
+			stack = append(stack, giaDfsFrame{id: Gia_ObjFaninId0(obj, frame.id)})
+			continue
+		}
+		if Gia_ObjIsTravIdCurrentId(p, frame.id) != 0 {
+			continue
+		}
+		Gia_ObjSetTravIdCurrentId(p, frame.id)
+		if frame.id == 0 {
+			continue
+		}
+		if Gia_ObjIsCi(obj) != 0 {
+			if inputs && result != nil {
+				Vec_IntPush(result, frame.id)
+			}
+			continue
+		}
+		if Gia_ObjIsAnd(obj) == 0 {
+			panic("gia: unsupported DFS object")
+		}
+		stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
+		fanins := giaObjectFanins(p, obj)
+		for i := len(fanins) - 1; i >= 0; i-- {
+			stack = append(stack, giaDfsFrame{id: fanins[i]})
+		}
+	}
+	return count
+}
+func Gia_ManCollectCis_rec(p *Gia_Man_t, obj *Gia_Obj_t, support *Vec_Int_t) {
+	giaDfsCollect(p, Gia_ObjId(p, obj), support, true, false)
+}
+func Gia_ManCollectCis(p *Gia_Man_t, roots []int32, count int32, support *Vec_Int_t) {
+	Vec_IntClear(support)
+	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	for _, root := range roots[:count] {
+		Gia_ManCollectCis_rec(p, Gia_ManObj(p, root), support)
+	}
+}
+func Gia_ManCollectAnds_rec(p *Gia_Man_t, id int32, nodes *Vec_Int_t) {
+	giaDfsCollect(p, id, nodes, false, true)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectAnds_rec(p *Gia_Man_t, iObj int32, vNodes *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManCollectAnds_rec( p, Gia_ObjFaninId0(pObj, iObj), vNodes );
-    Gia_ManCollectAnds_rec( p, Gia_ObjFaninId1(pObj, iObj), vNodes );
-    Vec_IntPush( vNodes, iObj );
+// CollectAnds deliberately shares the caller's current traversal epoch.
+func Gia_ManCollectAnds(p *Gia_Man_t, roots []int32, count int32, nodes, leaves *Vec_Int_t) {
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	if leaves != nil {
+		for _, leaf := range Vec_IntArray(leaves) {
+			Gia_ObjSetTravIdCurrentId(p, leaf)
+		}
+	}
+	Vec_IntClear(nodes)
+	for _, root := range roots[:count] {
+		obj := Gia_ManObj(p, root)
+		if Gia_ObjIsCo(obj) != 0 || Gia_ObjIsAnd(obj) != 0 {
+			Gia_ManCollectAnds_rec(p, root, nodes)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectAnds(p *Gia_Man_t, pNodes *int32, nNodes int32, vNodes *Vec_Int_t, vLeaves *Vec_Int_t) {
-    var i, iLeaf int32; 
-//    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrentId( p, 0 );
-    if vLeaves != nil {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vLeaves)) && (((iLeaf) = Vec_IntEntry(vLeaves, i)), 1); i++  {
-            Gia_ObjSetTravIdCurrentId( p, iLeaf );
-        } }
-    Vec_IntClear( vNodes );
-    for  i = 0; i < nNodes; i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj( p, pNodes[i] );
-        if Gia_ObjIsCo(pObj) {
-            Gia_ManCollectAnds_rec( p, Gia_ObjFaninId0(pObj, pNodes[i]), vNodes );
-        } else if Gia_ObjIsAnd(pObj) {
-            Gia_ManCollectAnds_rec( p, pNodes[i], vNodes ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManCollectAndsAll(p *Gia_Man_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t; var i int32;
-    var vNodes *Vec_Int_t  = Vec_IntAlloc( Gia_ManAndNum(p) );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        Vec_IntPush( vNodes, i ); }
-    }
-    return vNodes;
+	result := Vec_IntAlloc(int(Gia_ManAndNum(p)))
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			Vec_IntPush(result, obj.id)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectNodesCis_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManCollectNodesCis_rec( p, Gia_ObjFanin0(pObj), vNodes );
-    Gia_ManCollectNodesCis_rec( p, Gia_ObjFanin1(pObj), vNodes );
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
+func Gia_ManCollectNodesCis_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t) {
+	giaDfsCollect(p, Gia_ObjId(p, obj), nodes, true, true)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectNodesCis(p *Gia_Man_t, pNodes *int32, nNodes int32) *Vec_Int_t {
-    var vNodes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32; 
-    vNodes = Vec_IntAlloc( 10000 );
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
-    for  i = 0; i < nNodes; i++  {
-        pObj = Gia_ManObj( p, pNodes[i] );
-        if Gia_ObjIsCo(pObj) {
-            Gia_ManCollectNodesCis_rec( p, Gia_ObjFanin0(pObj), vNodes );
-        } else {
-            Gia_ManCollectNodesCis_rec( p, pObj, vNodes ); }
-    }
-    return vNodes;
+func Gia_ManCollectNodesCis(p *Gia_Man_t, roots []int32, count int32) *Vec_Int_t {
+	result := Vec_IntAlloc(10000)
+	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	for _, root := range roots[:count] {
+		Gia_ManCollectNodesCis_rec(p, Gia_ManObj(p, root), result)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManCollectTest(p *Gia_Man_t) {
-    var vNodes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, iNode int32;
-    var clk abctime  = Abc_Clock();
-    vNodes = Vec_IntAlloc( 100 );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        iNode = Gia_ObjId(p, pObj);
-        Gia_ManCollectAnds( p, &iNode, 1, vNodes, nil );
-    }
-    Vec_IntFree( vNodes );
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("DFS from each output"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
+	start := time.Now()
+	result := Vec_IntAlloc(100)
+	Gia_ManIncrementTravId(p)
+	for i := int32(0); i < Gia_ManCoNum(p); i++ {
+		root := Gia_ObjId(p, Gia_ManCo(p, i))
+		Gia_ManCollectAnds(p, []int32{root}, 1, result, nil)
+	}
+	fmt.Printf("DFS from each output = %9.2f sec\n", time.Since(start).Seconds())
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Computes support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Computes support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManConeSize_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return 0; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return 1 + Gia_ManConeSize_rec( p, Gia_ObjFanin0(pObj) ) +
-        Gia_ManConeSize_rec( p, Gia_ObjFanin1(pObj) );
+func Gia_ManConeSize_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
+	return giaDfsCollect(p, Gia_ObjId(p, obj), nil, false, true)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects support nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManConeSize(p *Gia_Man_t, pNodes *int32, nNodes int32) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32; 
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
-    for  i = 0; i < nNodes; i++  {
-        pObj = Gia_ManObj( p, pNodes[i] );
-        if Gia_ObjIsCo(pObj) {
-            Counter += Gia_ManConeSize_rec( p, Gia_ObjFanin0(pObj) );
-        } else {
-            Counter += Gia_ManConeSize_rec( p, pObj ); }
-    }
-    return Counter;
+func Gia_ManConeSize(p *Gia_Man_t, roots []int32, count int32) int32 {
+	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	var total int32
+	for _, root := range roots[:count] {
+		total += Gia_ManConeSize_rec(p, Gia_ManObj(p, root))
+	}
+	return total
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Levelizes the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManLevelize(p *Gia_Man_t) *Vec_Vec_t { 
-    var pObj *Gia_Obj_t;
-    var vLevels *Vec_Vec_t;
-    var nLevels, Level, i int32;
-    nLevels = Gia_ManLevelNum( p );
-    vLevels = Vec_VecStart( nLevels + 1 );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        Level = Gia_ObjLevel( p, pObj );
-        assert(Level <= nLevels, "Level <= nLevels");
-        Vec_VecPush( vLevels, Level, pObj );
-    }
-    }
-    return vLevels;
+func Gia_ManLevelize(p *Gia_Man_t) *Vec_Vec_t {
+	levels := Gia_ManLevelNum(p)
+	result := vec.Vec_VecStart(int(levels + 1))
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			vec.Vec_VecPush(result, int(Gia_ObjLevel(p, obj)), obj)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Levelizes the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManLevelizeR(p *Gia_Man_t) *Vec_Wec_t { 
-    var pObj *Gia_Obj_t;
-    var vLevels *Vec_Wec_t;
-    var nLevels, Level, i int32;
-    nLevels = Gia_ManLevelRNum( p );
-    vLevels = Vec_WecStart( nLevels + 1 );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if i == 0 || (!Gia_ObjIsCo(pObj) && !Gia_ObjLevel(p, pObj)) {
-            continue; }
-        Level = Gia_ObjLevel( p, pObj );
-        assert(Level <= nLevels, "Level <= nLevels");
-        Vec_WecPush( vLevels, Level, i );
-    }
-    return vLevels;
+func Gia_ManLevelizeR(p *Gia_Man_t) *Vec_Wec_t {
+	levels := Gia_ManLevelRNum(p)
+	result := Vec_WecStart(int(levels + 1))
+	for _, obj := range p.pObjs {
+		level := Gia_ObjLevel(p, obj)
+		if obj.id == 0 || Gia_ObjIsCo(obj) == 0 && level == 0 {
+			continue
+		}
+		Vec_WecPush(result, int(level), obj.id)
+	}
+	return result
 }
-/**Function*************************************************************
-
-  Synopsis    [Computes reverse topological order.]
-
-  Description [Assumes that levels are already assigned.
-  The levels of CO nodes may not be assigned.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManOrderReverse(p *Gia_Man_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t;
-    var vLevels *Vec_Vec_t;
-    var vLevel *Vec_Ptr_t;
-    var vResult *Vec_Int_t;
-    var i, k int32;
-    vLevels = Vec_VecStart( 100 );
-    // make sure levels are assigned
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        assert(Gia_ObjLevel(p, pObj) > 0, "Gia_ObjLevel(p, pObj) > 0"); }
-    }
-    // add CO nodes based on the level of their fanin
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Vec_VecPush( vLevels, Gia_ObjLevel(p, Gia_ObjFanin0(pObj)), pObj );
-    }
-    // add other nodes based on their level
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if !Gia_ObjIsCo(pObj) {
-            Vec_VecPush( vLevels, Gia_ObjLevel(p, pObj), pObj ); }
-    }
-    // put the nodes in the reverse topological order
-    vResult = Vec_IntAlloc( Gia_ManObjNum(p) );
-    // inlining of macro Vec_VecForEachLevelReverse
-    for  i = Vec_VecSize(vLevels)-1; (i >= 0) && (((vLevel) = Vec_VecEntry(vLevels, i)), 1); i--  {
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vLevel)) && (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(vLevel, k)), 1); k++  {
-            Vec_IntPush( vResult, Gia_ObjId(p, pObj) );
-        }
-    }
-    Vec_VecFree( vLevels );
-    return vResult;
+	buckets := make([][]int32, 1)
+	add := func(id, level int32) {
+		if level < 0 {
+			panic("gia: negative level")
+		}
+		for len(buckets) <= int(level) {
+			buckets = append(buckets, nil)
+		}
+		buckets[level] = append(buckets[level], id)
+	}
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 && Gia_ObjLevel(p, obj) <= 0 {
+			panic("gia: reverse ordering requires positive AND levels")
+		}
+	}
+	for i := int32(0); i < Gia_ManCoNum(p); i++ {
+		obj := Gia_ManCo(p, i)
+		add(obj.id, Gia_ObjLevel(p, Gia_ObjFanin0(obj)))
+	}
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsCo(obj) == 0 {
+			add(obj.id, Gia_ObjLevel(p, obj))
+		}
+	}
+	result := Vec_IntAlloc(len(p.pObjs))
+	for i := len(buckets) - 1; i >= 0; i-- {
+		for _, id := range buckets[i] {
+			Vec_IntPush(result, id)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectSeq_rec(p *Gia_Man_t, Id int32, vRoots *Vec_Int_t, vObjs *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrentId( p, Id ) {
-        return; }
-    Gia_ObjSetTravIdCurrentId( p, Id );
-    pObj = Gia_ManObj( p, Id );
-    if Gia_ObjIsAnd(pObj) {
-        Gia_ManCollectSeq_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vObjs );
-        Gia_ManCollectSeq_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vObjs );
-    
-    } else if Gia_ObjIsCi(pObj) {
-        if Gia_ObjIsRo(p, pObj) {
-            Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) ); }
-    
-    } else if Gia_ObjIsCo(pObj) {
-        Gia_ManCollectSeq_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vObjs );
-    } else { assert(false, "0"); }
-    Vec_IntPush( vObjs, Id );
+func Gia_ManCollectSeq_rec(p *Gia_Man_t, id int32, roots, objects *Vec_Int_t) {
+	// Explicit postorder stack preserves source RO-before-appended-RI scheduling.
+	stack := []giaDfsFrame{{id: id}}
+	for len(stack) > 0 {
+		frame := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if frame.expanded {
+			Vec_IntPush(objects, frame.id)
+			continue
+		}
+		if Gia_ObjIsTravIdCurrentId(p, frame.id) != 0 {
+			continue
+		}
+		Gia_ObjSetTravIdCurrentId(p, frame.id)
+		obj := Gia_ManObj(p, frame.id)
+		if Gia_ObjIsCi(obj) != 0 {
+			if Gia_ObjIsRo(p, obj) != 0 {
+				Vec_IntPush(roots, Gia_ObjId(p, Gia_ObjRoToRi(p, obj)))
+			}
+			Vec_IntPush(objects, frame.id)
+			continue
+		}
+		if Gia_ObjIsCo(obj) == 0 && Gia_ObjIsAnd(obj) == 0 {
+			panic("gia: invalid sequential cone object")
+		}
+		stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
+		fanins := giaObjectFanins(p, obj)
+		for i := len(fanins) - 1; i >= 0; i-- {
+			stack = append(stack, giaDfsFrame{id: fanins[i]})
+		}
+	}
 }
-func Gia_ManCollectSeq(p *Gia_Man_t, pPos *int32, nPos int32) *Vec_Int_t {
-    var vObjs, vRoots *Vec_Int_t;
-    var i, iRoot int32;
-    // collect roots
-    vRoots = Vec_IntAlloc( 100 );
-    for  i = 0; i < nPos; i++  {
-        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ManPo(p, pPos[i])) );
-    }
-    // start trav IDs
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrentId( p, 0 );
-    // collect objects
-    vObjs = Vec_IntAlloc( 1000 );
-    Vec_IntPush( vObjs, 0 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRoots)) && (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {
-        Gia_ManCollectSeq_rec( p, iRoot, vRoots, vObjs );
-    }
-    Vec_IntFree( vRoots );
-    return vObjs;
+func Gia_ManCollectSeq(p *Gia_Man_t, outputs []int32, count int32) *Vec_Int_t {
+	roots := Vec_IntAlloc(100)
+	for _, index := range outputs[:count] {
+		Vec_IntPush(roots, Gia_ObjId(p, Gia_ManPo(p, index)))
+	}
+	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	result := Vec_IntAlloc(1000)
+	Vec_IntPush(result, 0)
+	for i := 0; i < Vec_IntSize(roots); i++ {
+		Gia_ManCollectSeq_rec(p, Vec_IntEntry(roots, i), roots, result)
+	}
+	return result
 }
 func Gia_ManCollectSeqTest(p *Gia_Man_t) {
-    var vObjs *Vec_Int_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    for  i = 0; i < Gia_ManPoNum(p); i++  {
-        if i % 10000 == 0 {
-            fmt.Printf("%8d finished...\r", i); }
-
-        vObjs = Gia_ManCollectSeq( p, &i, 1 );
-//        printf( "%d ", Vec_IntSize(vObjs) );
-        Vec_IntFree( vObjs );
-    }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-
+	start := time.Now()
+	for i := int32(0); i < Gia_ManPoNum(p); i++ {
+		if i%10000 == 0 {
+			fmt.Printf("%8d finished...\r", i)
+		}
+		Gia_ManCollectSeq(p, []int32{i}, 1)
+	}
+	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collect TFI nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectTfi_rec(p *Gia_Man_t, iObj int32, vNodes *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManCollectTfi_rec( p, Gia_ObjFaninId0(pObj, iObj), vNodes );
-    Gia_ManCollectTfi_rec( p, Gia_ObjFaninId1(pObj, iObj), vNodes );
-    Vec_IntPush( vNodes, iObj );
+func Gia_ManCollectTfi_rec(p *Gia_Man_t, id int32, nodes *Vec_Int_t) {
+	giaDfsCollect(p, id, nodes, false, true)
 }
-func Gia_ManCollectTfi(p *Gia_Man_t, vRoots *Vec_Int_t, vNodes *Vec_Int_t) {
-    var i, iRoot int32; 
-    Vec_IntClear( vNodes );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRoots)) && (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {
-        Gia_ManCollectTfi_rec( p, iRoot, vNodes );
-    }
+func Gia_ManCollectTfi(p *Gia_Man_t, roots, nodes *Vec_Int_t) {
+	Vec_IntClear(nodes)
+	Gia_ManIncrementTravId(p)
+	for _, root := range Vec_IntArray(roots) {
+		Gia_ManCollectTfi_rec(p, root, nodes)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collect TFI nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectTfo_rec(p *Gia_Man_t, iObj int32, vNodes *Vec_Int_t) {
-    var pObj *Gia_Obj_t; var i, iFan int32;
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjIsCo(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    // inlining of macro Gia_ObjForEachFanoutStaticId
-    for  i = 0; (i < Gia_ObjFanoutNumId(p, iObj))   && (((iFan) = Gia_ObjFanoutId(p, iObj, i)), 1); i++  {
-        Gia_ManCollectTfo_rec( p, iFan, vNodes );
-    }
-    Vec_IntPush( vNodes, iObj );
+func Gia_ManCollectTfo_rec(p *Gia_Man_t, id int32, nodes *Vec_Int_t) {
+	stack := []giaDfsFrame{{id: id}}
+	for len(stack) > 0 {
+		frame := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if frame.expanded {
+			Vec_IntPush(nodes, frame.id)
+			continue
+		}
+		if Gia_ObjIsTravIdCurrentId(p, frame.id) != 0 {
+			continue
+		}
+		Gia_ObjSetTravIdCurrentId(p, frame.id)
+		obj := Gia_ManObj(p, frame.id)
+		if Gia_ObjIsCo(obj) != 0 {
+			continue
+		}
+		if Gia_ObjIsAnd(obj) == 0 {
+			panic("gia: forward cone root must be an AND")
+		}
+		stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
+		for i := Gia_ObjFanoutNumId(p, frame.id) - 1; i >= 0; i-- {
+			stack = append(stack, giaDfsFrame{id: Gia_ObjFanoutId(p, frame.id, i)})
+		}
+	}
 }
-func Gia_ManCollectTfo(p *Gia_Man_t, vRoots *Vec_Int_t, vNodes *Vec_Int_t) {
-    var i, iRoot int32; 
-    Vec_IntClear( vNodes );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRoots)) && (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {
-        Gia_ManCollectTfo_rec( p, iRoot, vNodes );
-    }
+func Gia_ManCollectTfo(p *Gia_Man_t, roots, nodes *Vec_Int_t) {
+	Vec_IntClear(nodes)
+	Gia_ManIncrementTravId(p)
+	for _, root := range Vec_IntArray(roots) {
+		Gia_ManCollectTfo_rec(p, root, nodes)
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

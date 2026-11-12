@@ -3,6 +3,7 @@ package scl
 import (
 	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/map/mio"
+	"strings"
 )
 
 func Abc_SclDeriveGenlibSimple(p *SC_Lib) (*mio.Mio_Library_t, error) {
@@ -24,17 +25,17 @@ func (LibertyMIOReader) ReadMioLiberty(path string, verbose bool) (*mio.Mio_Libr
 	return Abc_SclDeriveGenlibSimple(lib)
 }
 func Abc_SclDeriveGenlib(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float32, minimum int, verbose int32) (*mio.Mio_Library_t, error) {
+	if profile != nil {
+		return deriveProfileGenlib(p, profile, slew, gain, minimum)
+	}
 	text, e := GenlibText(p, slew, gain, minimum)
 	if e != nil {
 		return nil, e
 	}
-	if profile != nil {
-		return deriveProfileGenlib(p, profile, slew, gain, minimum)
-	}
 	return mio.ReadLibrary(p.FileName, text, nil)
 }
 
-func deriveProfileGenlib(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float32, minimum int) (*mio.Mio_Library_t, error) {
+func profileGenlibText(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float32, minimum int) (string, error) {
 	cells := make([]*SC_Cell, 0, len(p.Cells))
 	for _, c := range p.Cells {
 		if c.Inputs > 1 {
@@ -45,7 +46,17 @@ func deriveProfileGenlib(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float
 		}
 		cells = append(cells, c)
 	}
-	text, e := genlibText(p, cells, slew, gain, minimum)
+	return genlibText(p, cells, slew, gain, minimum)
+}
+func Abc_SclProduceGenlibStrProfile(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float32, minimum int, count *int) (string, error) {
+	text, e := profileGenlibText(p, profile, slew, gain, minimum)
+	if count != nil {
+		*count = strings.Count(text, "GATE ")
+	}
+	return text, e
+}
+func deriveProfileGenlib(p *SC_Lib, profile *mio.Mio_Library_t, slew, gain float32, minimum int) (*mio.Mio_Library_t, error) {
+	text, e := profileGenlibText(p, profile, slew, gain, minimum)
 	if e != nil {
 		return nil, e
 	}

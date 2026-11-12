@@ -113,7 +113,7 @@ func Abc_TtCanonicizeHie(p *Abc_TtHieMan_t, truth []uint64, nVars int32, perm []
 	if hit {
 		return 0
 	}
-	if exact != 0 {
+	if exact != 0 && counts[nVars] != 0 {
 		var groups []int32
 		for v := 0; v < int(nVars); {
 			end := v + 1
@@ -158,7 +158,9 @@ func Abc_TtCanonicizeWrap(fn TtCanonicizeFunc, p *Abc_TtHieMan_t, truth []uint64
 		if truth[i] > other[i] {
 			copy(truth, other)
 			copy(perm, pOther)
-			return phaseOther
+			// The second callback saw the complemented input; include that
+			// extra output inversion when describing the original input.
+			return phaseOther ^ (1 << uint(nVars))
 		}
 	}
 	return phase

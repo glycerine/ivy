@@ -106,3 +106,71 @@ func TestPhaseCounterexampleTranslation(t *testing.T) {
 		}
 	}
 }
+
+func TestPhaseRetiresLongBinaryCounter(t *testing.T) {
+	graph := aig.NewGraph()
+	graph.NewInput()
+	state := make([]aig.Edge, 13)
+	for i := range state {
+		state[i] = graph.NewInput()
+	}
+	graph.AddOutput(state[12])
+	carry := graph.Const1()
+	for _, bit := range state {
+		graph.AddOutput(graph.NewXor(bit, carry))
+		carry = graph.AND(carry, bit)
+	}
+	aig.Aig_ManSetRegNum(graph, 13)
+	p := Saig_ManReachableTernary(graph, nil, 0)
+	if p == nil || p.nPrefix < 3000 || p.nCycle != 1 || len(p.states) > 4000 {
+		t.Fatalf("long-counter retirement %+v", p)
+	}
+	if n := Saig_TsiCountNonXValuedRegisters(p, p.nPrefix); n != 0 {
+		t.Fatalf("retired counter retained %d binary bits", n)
+	}
+}
+func TestPhaseConstraintOrderingAndTranslation(t *testing.T) {
+	graph := phaseFixture()
+	aig.Aig_ManSetConstrNum(graph, 1)
+	abstracted := Saig_ManPhaseAbstract(graph, nil, 2, 0, 0, 0, 0)
+	if abstracted == nil || aig.Aig_ManConstrNum(abstracted) != 2 {
+		t.Fatal("constraint count not expanded")
+	}
+	// The second property comes from microframe 1. Constraints follow all
+	// property frames, rather than being interleaved with each property.
+	cex := util.Abc_CexAlloc(aig.Aig_ManRegNum(abstracted), 2, 1)
+	cex.IPo = 1
+	translated := Saig_PhaseTranslateCex(graph, cex)
+	if translated == nil || translated.IFrame != 1 || translated.IPo != 0 {
+		t.Fatalf("property coordinate translation %+v", translated)
+	}
+	cex.IPo = 3
+	translated = Saig_PhaseTranslateCex(graph, cex)
+	if translated == nil || translated.IFrame != 1 || translated.IPo != 1 {
+		t.Fatalf("constraint coordinate translation %+v", translated)
+	}
+}
+
+func TestPhaseIgnoreConstantRegisters(t *testing.T) {
+	graph := aig.NewGraph()
+	graph.NewInput()
+	clock, constant := graph.NewInput(), graph.NewInput()
+	graph.AddOutput(clock)
+	graph.AddOutput(clock.Not())
+	graph.AddOutput(constant)
+	aig.Aig_ManSetRegNum(graph, 2)
+	p := Saig_ManReachableTernary(graph, nil, 0)
+	if Saig_TsiCountNonXValuedRegisters(p, 0) != 2 {
+		t.Fatal("binary candidates missing")
+	}
+	if n := Saig_ManFindRegisters(p, 2, 1, 0); n != 1 || vec.Vec_IntEntry(p.vNonXRegs, 0) != 0 {
+		t.Fatalf("ignore-constant selection %v", vec.Vec_IntArray(p.vNonXRegs))
+	}
+}
+func TestPhaseRejectsTruncatedCounterexample(t *testing.T) {
+	source := phaseFixture()
+	cex := &util.Abc_Cex_t{NRegs: 1, NPis: 2, NBits: 7, IFrame: 2, IPo: 0}
+	if got := Saig_PhaseTranslateCex(source, cex); got != nil {
+		t.Fatal("accepted missing witness bits")
+	}
+}

@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/gia/mf"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -17,7 +19,7 @@ import (
   Synopsis    [BMC used inside IMC.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - Dec 1, 2013.]
@@ -30,7 +32,6 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -39,18 +40,19 @@ import (
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Trasnforms AIG to transition into the init state.]
 
-  Synopsis    [Trasnforms AIG to transition into the init state.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
 	assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
 	pNew := gia.Gia_ManStart(10000)
@@ -89,67 +91,68 @@ func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
 	// Remove dangling nodes after the initialization transition is added.
 	pTemp := pNew
 	pNew = gia.Gia_ManCleanup(pTemp)
-    if fVerbose != 0 {
+	if fVerbose != 0 {
 		fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", gia.Gia_ManAndNum(pTemp), gia.Gia_ManAndNum(pNew))
 	}
 	gia.Gia_ManStop(pTemp)
-    return pNew;
+	return pNew
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Returns 1 if AIG has transition into init state.]
 
-  Synopsis    [Returns 1 if AIG has transition into init state.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Int2_ManCheckInit(p *Gia_Man_t) int32 {
-    var pSat *sat_solver;
-    var pCnf *Cnf_Dat_t;
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var vLits *Vec_Int_t;
-    var i, Lit, RetValue int32;
-    assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0");
-    pNew = Jf_ManDeriveCnf( p, 0 );  
-    pCnf = (Cnf_Dat_t *)pNew.pData; pNew.pData = nil;
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    if pSat != nil {
-        vLits = Vec_IntAlloc( Gia_ManRegNum(p) );
-        // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(pNew)) && ((pObj) = Gia_ManCo(pNew, Gia_ManPoNum(pNew)+i)); i++  {
-            Lit = pCnf.pVarNums[ Gia_ObjId(pNew, Gia_ObjFanin0(pObj)) ];
-            Lit = Abc_Var2Lit( Lit, Gia_ObjFaninC0(pObj) );
-            Vec_IntPush( vLits, Abc_LitNot(Lit) );
-        }
-        if sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 ) == l_True {
-            RetValue = 1; }
-        Vec_IntFree( vLits );
-        sat_solver_delete( pSat );
-    }
-    Cnf_DataFree( pCnf );
-    Gia_ManStop( pNew );
-    return RetValue;
+	assert(gia.Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
+	pNew := gia.Jf_ManDeriveCnf(p, 0)
+	cnf, ok := pNew.TakeData().(*mf.CNF)
+	if !ok || cnf == nil {
+		gia.Gia_ManStop(pNew)
+		return 0
+	}
+	solver := sat_solver_from_clauses(int32(cnf.Variables), cnf.Clauses)
+	if solver == nil {
+		gia.Gia_ManStop(pNew)
+		return 0
+	}
+	assumptions := make([]int32, 0, gia.Gia_ManRegNum(p))
+	for i := int32(0); i < gia.Gia_ManRegNum(pNew); i++ {
+		obj := gia.Gia_ManRi(pNew, i)
+		faninID := gia.Gia_ObjFaninId0p(pNew, obj)
+		variable := cnf.VarNums[faninID]
+		assumptions = append(assumptions, sat_literal(variable, gia.Gia_ObjFaninC0(obj))^1)
+	}
+	status := sat_solver_solve(solver, assumptions, 0, 0, 0, 0)
+	gia.Gia_ManStop(pNew)
+	if status == l_True {
+		return 1
+	}
+	return 0
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Creates the BMC instance in the SAT solver.]
 
-  Synopsis    [Creates the BMC instance in the SAT solver.]
+	Description [The PIs are mapped in the natural order. The flop inputs
+	are the last Gia_ManRegNum(p) variables of resulting SAT solver.]
 
-  Description [The PIs are mapped in the natural order. The flop inputs
-  are the last Gia_ManRegNum(p) variables of resulting SAT solver.]
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
 	pFrames := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
 	pFrames.CopyIdentityFrom(p)
@@ -187,180 +190,195 @@ func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
 	}
 	pTemp := pFrames
 	pFrames = gia.Gia_ManCleanup(pTemp)
-    if fVerbose != 0 {
+	if fVerbose != 0 {
 		fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", gia.Gia_ManAndNum(pTemp), gia.Gia_ManAndNum(pFrames))
 	}
 	gia.Gia_ManStop(pTemp)
-    return pFrames;
+	return pFrames
 }
 func Int2_ManSetupBmcSolver(p *Gia_Man_t, nFrames int32) *sat_solver {
-    var pFrames, pTemp *Gia_Man_t;
-    var pCnf *Cnf_Dat_t;
-    var pSat *sat_solver;
-    // unfold for the given number of timeframes
-    pFrames = Int2_ManFrameInit( p, nFrames, 1 );
-    assert(Gia_ManRegNum(pFrames) == 0, "Gia_ManRegNum(pFrames) == 0");
-    // derive CNF for the timeframes
-    pFrames = Jf_ManDeriveCnf( pTemp = pFrames, 0 );  Gia_ManStop( pTemp );
-    pCnf = (Cnf_Dat_t *)pFrames.pData; pFrames.pData = nil;
-    // create SAT solver
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    if pSat != nil {
-        var pObj *Gia_Obj_t;
-        var i int32;
-        var nVars int32 = sat_solver_nvars( pSat );
-        sat_solver_setnvars( pSat, nVars + Gia_ManPoNum(pFrames) );
-        // add clauses for the POs
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(pFrames.vCos)) && ((pObj) = Gia_ManCo(pFrames, i)); i++  {
-            sat_solver_add_buffer( pSat, nVars + i, pCnf.pVarNums[Gia_ObjId(pFrames, Gia_ObjFanin0(pObj))], Gia_ObjFaninC0(pObj) );
-        }
-    }
-    Cnf_DataFree( pCnf );
-    Gia_ManStop( pFrames );
-    return pSat;
+	pFrames := Int2_ManFrameInit(p, nFrames, 1)
+	assert(gia.Gia_ManRegNum(pFrames) == 0, "Gia_ManRegNum(pFrames) == 0")
+	pNew := gia.Jf_ManDeriveCnf(pFrames, 0)
+	gia.Gia_ManStop(pFrames)
+	cnf, ok := pNew.TakeData().(*mf.CNF)
+	if !ok || cnf == nil {
+		gia.Gia_ManStop(pNew)
+		return nil
+	}
+	solver := sat_solver_from_clauses(int32(cnf.Variables), cnf.Clauses)
+	if solver != nil {
+		firstOutputVar := sat_solver_nvars(solver)
+		sat_solver_setnvars(solver, firstOutputVar+gia.Gia_ManCoNum(pNew))
+		for i := int32(0); i < gia.Gia_ManCoNum(pNew); i++ {
+			obj := gia.Gia_ManCo(pNew, i)
+			faninID := gia.Gia_ObjFaninId0p(pNew, obj)
+			faninVar := cnf.VarNums[faninID]
+			if sat_solver_add_buffer(solver, firstOutputVar+i, faninVar, gia.Gia_ObjFaninC0(obj)) == 0 {
+				solver = nil
+				break
+			}
+		}
+	}
+	gia.Gia_ManStop(pNew)
+	return solver
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Int2_ManCheckFrames(p *Int2_Man_t, iFrame int32, iObj int32) int32 {
-    var vMapFrame *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(p.vMapFrames, iFrame);
-    return Vec_IntEntry(vMapFrame, iObj);
+	if p == nil || p.vMapFrames == nil || iFrame < 0 || iFrame >= int32(vec.Vec_PtrSize(p.vMapFrames)) {
+		return -1
+	}
+	frame, ok := vec.Vec_PtrEntry(p.vMapFrames, int(iFrame)).(*vec.Vec_Int_t)
+	if !ok || frame == nil || iObj < 0 || iObj >= int32(vec.Vec_IntSize(frame)) {
+		return -1
+	}
+	return vec.Vec_IntEntry(frame, int(iObj))
 }
 func Int2_ManWriteFrames(p *Int2_Man_t, iFrame int32, iObj int32, iRes int32) {
-    var vMapFrame *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(p.vMapFrames, iFrame);
-    assert(Vec_IntEntry(vMapFrame, iObj) == -1, "Vec_IntEntry(vMapFrame, iObj) == -1");
-    Vec_IntWriteEntry( vMapFrame, iObj, iRes );
+	assert(p != nil && p.vMapFrames != nil && iFrame >= 0 && iFrame < int32(vec.Vec_PtrSize(p.vMapFrames)), "frame index is in range")
+	frame, ok := vec.Vec_PtrEntry(p.vMapFrames, int(iFrame)).(*vec.Vec_Int_t)
+	assert(ok && frame != nil && iObj >= 0 && iObj < int32(vec.Vec_IntSize(frame)), "object index is in range")
+	assert(vec.Vec_IntEntry(frame, int(iObj)) == -1, "frame entry is unwritten")
+	vec.Vec_IntWriteEntry(frame, int(iObj), iRes)
 }
 func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i, Entry, iLit int32;
-    // create storage room for unfolded IDs
-    for  i = Vec_PtrSize(p.vMapFrames); i <= iFrame; i++  {
-        Vec_PtrPush( p.vMapFrames, Vec_IntStartFull( Gia_ManObjNum(p.pGia) ) );
-    }
-    assert(Vec_PtrSize(p.vMapFrames) == iFrame + 1, "Vec_PtrSize(p.vMapFrames) == iFrame + 1");
-    // create constant 0 node
-    if f == 0 {
-        iLit = 1;
-        Int2_ManWriteFrames( p, iFrame, iObj, 0 );
-        sat_solver_addclause( p.pGiaPref, &iLit, &iLit + 1 );
-    }
-    // start the stack
-    Vec_IntClear( p.vStack );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPrefCos)) && (((Entry) = Vec_IntEntry(vPrefCos, i)), 1); i++  {
-        pObj = Gia_ManCo( p.pGia, Entry );
-        Vec_IntPush( p.vStack, iFrame );
-        Vec_IntPush( p.vStack, Gia_ObjId(p.pGia, pObj) );
-    }
-    // construct unfolded AIG
-    for  Vec_IntSize(p.vStack) > 0  {
-        var iObj int32    = Vec_IntPop(p.vStack);
-        var iFrame int32  = Vec_IntPop(p.vStack);
-        if Int2_ManCheckFrames(p, iFrame, iObj) >= 0 {
-            continue; }
-        pObj = Gia_ManObj( p.pGia, iObj );
-        if Gia_ObjIsPi(p.pGia, pObj) {
-            Int2_ManWriteFrames( p, iFrame, iObj, Gia_ManAppendCi(p.pFrames) );
-        } else if iFrame == 0 && Gia_ObjIsRo(p.pGia, iObj) {
-            Int2_ManWriteFrames( p, iFrame, iObj, 0 );
-        } else if Gia_ObjIsRo(p.pGia, iObj) {
-            var iObjF int32  = Gia_ObjId( p.pGia, Gia_ObjRoToRi(p.pGia, pObj) );
-            var iLit int32  = Int2_ManCheckFrames( p, iFrame-1, iObjF );
-            if iLit >= 0 {
-                Int2_ManWriteFrames( p, iFrame, iObj, iLit );
-            } else {
-                Vec_IntPush( p.vStack, iFrame );
-                Vec_IntPush( p.vStack, iObj );
-                Vec_IntPush( p.vStack, iFrame-1 );
-                Vec_IntPush( p.vStack, iObjF );
-            }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            var iObjF int32  = Gia_ObjFaninId0(p.pGia, iObj);
-            var iLit int32  = Int2_ManCheckFrames( p, iFrame, iObjF );
-            if iLit >= 0 {
-                Int2_ManWriteFrames( p, iFrame, iObj, Abc_LitNotCond(iLit, Gia_ObjFaninC0(pObj)) );
-            } else {
-                Vec_IntPush( p.vStack, iFrame );
-                Vec_IntPush( p.vStack, iObj );
-                Vec_IntPush( p.vStack, iFrame );
-                Vec_IntPush( p.vStack, iObjF );
-            }
-        
-        } else if Gia_ObjIsAnd(pObj) {
-            var iObjF0 int32  = Gia_ObjFaninId0(p.pGia, iObj);
-            var iLit0 int32  = Int2_ManCheckFrames( p, iFrame, iObjF0 );
-            var iObjF1 int32  = Gia_ObjFaninId1(p.pGia, iObj);
-            var iLit1 int32  = Int2_ManCheckFrames( p, iFrame, iObjF1 );
-            if iLit0 >= 0 && iLit1 >= 0 {
-                Entry = Gia_ManObjNum(pFrames);
-                iLit = Gia_ManHashAnd(pFrames, iLit0, iLit1);
-                Int2_ManWriteFrames( p, iFrame, iObj, iLit );
-                if Entry < Gia_ManObjNum(pFrames) {
-                    assert(!Abc_LitIsCompl(iLit), "!Abc_LitIsCompl(iLit)");
-                    sat_solver_add_and( p.pGiaPref, Abc_Lit2Var(iLit), Abc_Lit2Var(iLit0), Abc_Lit2Var(iLit1), Abc_LitIsCompl(iLit0), Abc_LitIsCompl(iLit1), 0 ); 
-                }
-            
-            } else {
-                Vec_IntPush( p.vStack, iFrame );
-                Vec_IntPush( p.vStack, iObj );
-                if iLit0 < 0 {
-                    Vec_IntPush( p.vStack, iFrame );
-                    Vec_IntPush( p.vStack, iObjF0 );
-                }
-                if iLit1 < 0 {
-                    Vec_IntPush( p.vStack, iFrame );
-                    Vec_IntPush( p.vStack, iObjF1 );
-                }
-            }
-        
-        } else { assert(false, "0"); }
-    }
+	assert(p != nil && p.pGia != nil && p.pGiaPref != nil && p.pSatPref != nil, "manager and prefix state exist")
+	assert(iFrame >= 0, "frame index is nonnegative")
+	for i := int32(vec.Vec_PtrSize(p.vMapFrames)); i <= iFrame; i++ {
+		vec.Vec_PtrPush(p.vMapFrames, vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p.pGia))))
+	}
+	assert(int32(vec.Vec_PtrSize(p.vMapFrames)) == iFrame+1, "frame maps are contiguous")
+	if iFrame == 0 {
+		if Int2_ManCheckFrames(p, iFrame, 0) < 0 {
+			Int2_ManWriteFrames(p, iFrame, 0, 0)
+		}
+		if sat_solver_addclause(p.pSatPref, []int32{sat_literal(0, 1)}) == 0 {
+			panic("int2: constant-zero SAT unit is inconsistent")
+		}
+	}
+	vec.Vec_IntClear(p.vStack)
+	for i := 0; i < vec.Vec_IntSize(vPrefCos); i++ {
+		coID := vec.Vec_IntEntry(vPrefCos, i)
+		co := gia.Gia_ManCo(p.pGia, coID)
+		vec.Vec_IntPush(p.vStack, iFrame)
+		vec.Vec_IntPush(p.vStack, gia.Gia_ObjId(p.pGia, co))
+	}
+	for vec.Vec_IntSize(p.vStack) > 0 {
+		iObj := vec.Vec_IntPop(p.vStack)
+		frame := vec.Vec_IntPop(p.vStack)
+		if Int2_ManCheckFrames(p, frame, iObj) >= 0 {
+			continue
+		}
+		obj := gia.Gia_ManObj(p.pGia, iObj)
+		switch {
+		case gia.Gia_ObjIsPi(p.pGia, obj) != 0:
+			Int2_ManWriteFrames(p, frame, iObj, gia.Gia_ManAppendCi(p.pGiaPref))
+		case gia.Gia_ObjIsRo(p.pGia, obj) != 0 && frame == 0:
+			Int2_ManWriteFrames(p, frame, iObj, 0)
+		case gia.Gia_ObjIsRo(p.pGia, obj) != 0:
+			previousID := gia.Gia_ObjId(p.pGia, gia.Gia_ObjRoToRi(p.pGia, obj))
+			previousLit := Int2_ManCheckFrames(p, frame-1, previousID)
+			if previousLit >= 0 {
+				Int2_ManWriteFrames(p, frame, iObj, previousLit)
+			} else {
+				vec.Vec_IntPush(p.vStack, frame)
+				vec.Vec_IntPush(p.vStack, iObj)
+				vec.Vec_IntPush(p.vStack, frame-1)
+				vec.Vec_IntPush(p.vStack, previousID)
+			}
+		case gia.Gia_ObjIsCo(obj) != 0:
+			faninID := gia.Gia_ObjFaninId0p(p.pGia, obj)
+			faninLit := Int2_ManCheckFrames(p, frame, faninID)
+			if faninLit >= 0 {
+				Int2_ManWriteFrames(p, frame, iObj, faninLit^gia.Gia_ObjFaninC0(obj))
+			} else {
+				vec.Vec_IntPush(p.vStack, frame)
+				vec.Vec_IntPush(p.vStack, iObj)
+				vec.Vec_IntPush(p.vStack, frame)
+				vec.Vec_IntPush(p.vStack, faninID)
+			}
+		case gia.Gia_ObjIsAnd(obj) != 0:
+			fanin0ID := gia.Gia_ObjFaninId0p(p.pGia, obj)
+			fanin1ID := gia.Gia_ObjFaninId1p(p.pGia, obj)
+			lit0 := Int2_ManCheckFrames(p, frame, fanin0ID)
+			lit1 := Int2_ManCheckFrames(p, frame, fanin1ID)
+			if lit0 >= 0 && lit1 >= 0 {
+				before := gia.Gia_ManObjNum(p.pGiaPref)
+				lit := gia.Gia_ManHashAnd(p.pGiaPref, lit0, lit1)
+				Int2_ManWriteFrames(p, frame, iObj, lit)
+				if gia.Gia_ManObjNum(p.pGiaPref) > before {
+					assert(lit&1 == 0, "new AND literal is regular")
+					if sat_solver_add_and(p.pSatPref, lit>>1, lit0>>1, lit1>>1, lit0&1, lit1&1, 0) == 0 {
+						panic("int2: SAT solver rejected an AND constraint")
+					}
+				}
+			} else {
+				vec.Vec_IntPush(p.vStack, frame)
+				vec.Vec_IntPush(p.vStack, iObj)
+				if lit0 < 0 {
+					vec.Vec_IntPush(p.vStack, frame)
+					vec.Vec_IntPush(p.vStack, fanin0ID)
+				}
+				if lit1 < 0 {
+					vec.Vec_IntPush(p.vStack, frame)
+					vec.Vec_IntPush(p.vStack, fanin1ID)
+				}
+			}
+		default:
+			panic("int2: unsupported GIA object in frame construction")
+		}
+	}
 }
+
 func Int2_ManCheckBmc(p *Int2_Man_t, vCube *Vec_Int_t) int32 {
-    var status int32;
-    if vCube == nil {
-        var pObj *Gia_Obj_t;
-        var i, iLit int32;
-        // inlining of macro Gia_ManForEachPo
-        for  i = 0; (i < Gia_ManPoNum(p.pGia)) && ((pObj) = Gia_ManCo(p.pGia, i)); i++  {
-            iLit = Int2_ManCheckFrames( p, 0, Gia_ObjId(p.pGia, pObj) );
-            if iLit == 0 {
-                continue; }
-            if iLit == 1 {
-                return 0; }
-            status = sat_solver_solve( p.pSatPref, &iLit, &iLit + 1, 0, 0, 0, 0 );
-            if status == l_False {
-                continue; }
-            if status == l_True {
-                return 0; }
-            return -1;
-        }
-        return 1;
-    }
-    status = sat_solver_solve( p.pSatPref, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube), 0, 0, 0, 0 );
-    if status == l_False {
-        return 1; }
-    if status == l_True {
-        return 0; }
-    return -1;
+	assert(p != nil && p.pGia != nil && p.pSatPref != nil, "BMC manager is initialized")
+	if vCube == nil {
+		for i := int32(0); i < gia.Gia_ManPoNum(p.pGia); i++ {
+			obj := gia.Gia_ManPo(p.pGia, i)
+			lit := Int2_ManCheckFrames(p, 0, gia.Gia_ObjId(p.pGia, obj))
+			if lit == 0 {
+				continue
+			}
+			if lit == 1 {
+				return 0
+			}
+			status := sat_solver_solve(p.pSatPref, []int32{lit}, 0, 0, 0, 0)
+			switch status {
+			case l_False:
+				continue
+			case l_True:
+				return 0
+			default:
+				return -1
+			}
+		}
+		return 1
+	}
+	status := sat_solver_solve(p.pSatPref, vec.Vec_IntArray(vCube), 0, 0, 0, 0)
+	if status == l_False {
+		return 1
+	}
+	if status == l_True {
+		return 0
+	}
+	return -1
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

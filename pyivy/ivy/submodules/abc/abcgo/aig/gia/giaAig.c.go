@@ -158,18 +158,7 @@ func Gia_ManCofactorAig(p *Aig_Man_t, nFrames, nCofFanLit int32) *Aig_Man_t {
 
 // Higher-level DAR/DCH drivers retain their original calls while their package
 // interface is integrated. Their algorithms must not be replaced by no-op hooks.
-func Gia_ManCompress2(p *Gia_Man_t, updateLevel, verbose int32) *Gia_Man_t {
-	if p.pManTime != nil && p.vLevels == nil {
-		Gia_ManLevelWithBoxes(p)
-	}
-	source := Gia_ManToAig(p, 0)
-	optimized := Dar_ManCompress2(source, 1, updateLevel, 1, 0, verbose)
-	aig.Aig_ManStop(source)
-	out := Gia_ManFromAig(optimized)
-	aig.Aig_ManStop(optimized)
-	Gia_ManTransferTiming(out, p)
-	return out
-}
+
 func Gia_ManPerformDch(p *Gia_Man_t, parameters any) *Gia_Man_t {
 	if p.pManTime != nil && p.vLevels == nil {
 		Gia_ManLevelWithBoxes(p)

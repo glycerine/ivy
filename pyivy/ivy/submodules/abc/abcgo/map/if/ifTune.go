@@ -35,9 +35,6 @@ import "fmt"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
  
-const IFN_INS =    11
-#define IFN_WRD  (IFN_INS > 6 ? 1 << (IFN_INS-6) : 1)
-const IFN_PAR =  1024
 
 // network types
  type Ifn_DsdType_t int32
@@ -72,34 +69,6 @@ static char * Ifn_Symbs[16] = {
 };
 
     
-type Ifn_Obj_t struct {
-    Type uint32; /* C bitfield: 3 bits; review packing and truncation */      // node type
-    nFanins uint32; /* C bitfield: 5 bits; review packing and truncation */      // fanin counter
-    iFirst uint32; /* C bitfield: 8 bits; review packing and truncation */      // first parameter
-    Var uint32; /* C bitfield: 16 bits; review packing and truncation */      // current variable
-    Fanins [IFN_INS]int32;   // fanin IDs
-}
-type Ifn_Ntk_t_ struct {
-    // cell structure
-    nInps                    int32;             // inputs
-    nObjs                    int32;             // objects
-    Nodes [2*IFN_INS]Ifn_Obj_t;  // nodes
-    // constraints
-    pConstr [IFN_INS*IFN_INS]int32;  // constraint pairs
-    nConstr                    int32;           // number of pairs
-    // user data
-    nVars                    int32;             // variables
-    nWords                    int32;            // truth table words
-    nParsVNum                    int32;         // selection parameters per variable
-    nParsVIni                    int32;         // first selection parameter
-    nPars                    int32;             // total parameters
-    pTruth                  *word;            // user truth table
-    // matching procedures
-    Values [IFN_PAR]int32;            // variable values
-    word                   pTtElems[IFN_INS*IFN_WRD];  // elementary truth tables
-    word                   pTtObjs[2*IFN_INS*IFN_WRD]; // object truth tables
-}
-
 func Ifn_ElemTruth(p *Ifn_Ntk_t, i int32) *word { return p.pTtElems + i * Abc_TtWordNum(p.nInps); }
 func Ifn_ObjTruth(p *Ifn_Ntk_t, i int32) *word { return p.pTtObjs + i * p.nWords;                }
  

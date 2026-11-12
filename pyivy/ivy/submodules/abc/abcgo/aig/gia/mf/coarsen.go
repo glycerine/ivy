@@ -13,6 +13,8 @@ type Coarsened struct {
 	gates           []coarseGate
 	inputs, outputs []int32
 	siblings        []int32
+	registers       int
+	name, spec      string
 }
 
 func (n *Coarsened) ObjectCount() int        { return len(n.gates) }
@@ -275,7 +277,21 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 			}
 		}
 	}
+	registers := 0
+	if provider, ok := network.(interface{ RegisterCount() int }); ok {
+		registers = provider.RegisterCount()
+		if registers < 0 || registers > len(network.InputLiterals()) || registers > len(outputs) {
+			return nil, fmt.Errorf("mf: invalid register count %d", registers)
+		}
+	}
 	n := newCoarsened()
+	n.registers = registers
+	if named, ok := network.(interface{ NetworkName() string }); ok {
+		n.name = named.NetworkName()
+	}
+	if specified, ok := network.(interface{ NetworkSpec() string }); ok {
+		n.spec = specified.NetworkSpec()
+	}
 	h := coarseHash{n: n, table: make(map[coarseGate]int32)}
 	copies := make([]int32, count)
 	copyLit := func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) }
@@ -340,6 +356,8 @@ func (n *Coarsened) cleanup() *Coarsened {
 		}
 	}
 	out := newCoarsened()
+	out.registers = n.registers
+	out.name, out.spec = n.name, n.spec
 	copies := make([]int32, len(n.gates))
 	for id := 1; id < len(n.gates); id++ {
 		g := n.gates[id]
@@ -367,3 +385,7 @@ func (n *Coarsened) cleanup() *Coarsened {
 	}
 	return out
 }
+func (n *Coarsened) RegisterCount() int { return n.registers }
+
+func (n *Coarsened) NetworkName() string { return n.name }
+func (n *Coarsened) NetworkSpec() string { return n.spec }

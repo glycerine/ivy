@@ -39,10 +39,10 @@ func Gia_ObjIsCo(p *Gia_Obj_t) int32          { return giaBool(p.fTerm != 0 && p
 func Gia_ObjIsAnd(p *Gia_Obj_t) int32         { return giaBool(p.fTerm == 0 && p.iDiff0 != objectNoFanin) }
 func Gia_ObjIsXor(p *Gia_Obj_t) int32         { return giaBool(Gia_ObjIsAnd(p) != 0 && p.iDiff0 < p.iDiff1) }
 func Gia_ObjIsBuf(p *Gia_Obj_t) int32 {
-	return giaBool(p.iDiff0 == p.iDiff1 && p.iDiff0 != objectNoFanin && p.fTerm == 0)
+	return giaBool(p.iDiff0 == p.iDiff1 && p.iDiff0 != objectNoFanin && p.fTerm == 0 && p.fCompl0 == p.fCompl1)
 }
 func Gia_ObjIsAndNotBuf(p *Gia_Obj_t) int32 {
-	return giaBool(Gia_ObjIsAnd(p) != 0 && p.iDiff0 != p.iDiff1)
+	return giaBool(Gia_ObjIsAnd(p) != 0 && Gia_ObjIsBuf(p) == 0)
 }
 func Gia_ObjIsCand(p *Gia_Obj_t) int32 { return giaBool(Gia_ObjIsAnd(p) != 0 || Gia_ObjIsCi(p) != 0) }
 func Gia_ObjIsConst0(p *Gia_Obj_t) int32 {

@@ -32,10 +32,21 @@ func Ivy_ManHaigCreateObj(p *Ivy_Man_t, node *Ivy_Obj_t) {
 		node.pEquiv = Ivy_ObjChild0Equiv(node)
 	case IVY_LATCH:
 		node.pEquiv = Ivy_Latch(p.pHaig, mapped(Ivy_ObjChild0Equiv(node)), node.Init)
-	case IVY_AND:
-		node.pEquiv = Ivy_And(p.pHaig, mapped(Ivy_ObjChild0Equiv(node)), mapped(Ivy_ObjChild1Equiv(node)))
+	case IVY_AND, IVY_EXOR:
+		node.pEquiv = Ivy_Oper(p.pHaig, mapped(Ivy_ObjChild0Equiv(node)), mapped(Ivy_ObjChild1Equiv(node)), node.Type)
+	case IVY_PI:
+		node.pEquiv = Ivy_ObjCreatePi(p.pHaig)
+	case IVY_PO:
+		index := len(p.vPos) - 1
+		if index < len(p.pHaig.vPos) {
+			node.pEquiv = p.pHaig.vPos[index]
+		} else {
+			node.pEquiv = Ivy_ObjCreatePo(p.pHaig, mapped(Ivy_ObjChild0Equiv(node)))
+		}
+	case IVY_ASSERT:
+		node.pEquiv = mapped(Ivy_ObjChild0Equiv(node))
 	default:
-		panic("history creation supports buffers, latches and ANDs")
+		panic("unsupported history object")
 	}
 }
 

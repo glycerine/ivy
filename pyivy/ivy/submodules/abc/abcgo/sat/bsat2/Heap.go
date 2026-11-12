@@ -20,132 +20,125 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "Vec.h"
-
-namespace Minisat {
-
-//=================================================================================================
-// A heap implementation with support for decrease/increase key.
-
-
-template<class Comp>
-class Heap {
-    Comp     lt;       // The heap is a minimum-heap with respect to this comparator
-    vec<int> heap;     // Heap of integers
-    vec<int> indices;  // Each integers position (index) in the Heap
-
-    // Index "traversal" functions
-    static inline int left  (int i) { return i*2+1; }
-    static inline int right (int i) { return (i+1)*2; }
-    static inline int parent(int i) { return (i-1) >> 1; }
-
-
-    void percolateUp(int i)
-    {
-        int x  = heap[i];
-        int p  = parent(i);
-        
-        while (i != 0 && lt(x, heap[p])){
-            heap[i]          = heap[p];
-            indices[heap[p]] = i;
-            i                = p;
-            p                = parent(p);
-        }
-        heap   [i] = x;
-        indices[x] = i;
-    }
-
-
-    void percolateDown(int i)
-    {
-        int x = heap[i];
-        while (left(i) < heap.size()){
-            int child = right(i) < heap.size() && lt(heap[right(i)], heap[left(i)]) ? right(i) : left(i);
-            if (!lt(heap[child], x)) break;
-            heap[i]          = heap[child];
-            indices[heap[i]] = i;
-            i                = child;
-        }
-        heap   [i] = x;
-        indices[x] = i;
-    }
-
-
-  public:
-    Heap(Comp& c) : lt(c) { }
-
-    int  size      ()          { return heap.size(); }
-    bool empty     ()          { return heap.size() == 0; }
-    bool inHeap    (int n)     { return n < indices.size() && indices[n] >= 0; }
-    int  operator[](int index) { assert(index < heap.size(), "index < heap.size()"); return heap[index]; }
-
-
-    void decrease  (int n) { assert(inHeap(n), "inHeap(n)"); percolateUp  (indices[n]); }
-    void increase  (int n) { assert(inHeap(n), "inHeap(n)"); percolateDown(indices[n]); }
-
-
-    // Safe variant of insert/decrease/increase:
-    void update(int n)
-    {
-        if (!inHeap(n))
-            insert(n);
-        else {
-            percolateUp(indices[n]);
-            percolateDown(indices[n]); }
-    }
-
-
-    void insert(int n)
-    {
-        indices.growTo(n+1, -1);
-        assert(!inHeap(n), "!inHeap(n)");
-
-        indices[n] = heap.size();
-        heap.push(n);
-        percolateUp(indices[n]); 
-    }
-
-
-    int  removeMin()
-    {
-        int x            = heap[0];
-        heap[0]          = heap.last();
-        indices[heap[0]] = 0;
-        indices[x]       = -1;
-        heap.pop();
-        if (heap.size() > 1) percolateDown(0);
-        return x; 
-    }
-
-
-    // Rebuild the heap from scratch, using the elements in 'ns':
-    void build(vec<int>& ns) {
-        int i;
-        for (i = 0; i < heap.size(); i++)
-            indices[heap[i]] = -1;
-        heap.clear();
-
-        for i = 0; i < ns.size(); i++{
-            indices[ns[i]] = i;
-            heap.push(ns[i]); }
-
-        for (i = heap.size() / 2 - 1; i >= 0; i--)
-            percolateDown(i);
-    }
-
-    void clear(bool dealloc = false) 
-    { 
-        for (int i = 0; i < heap.size(); i++)
-            indices[heap[i]] = -1;
-        heap.clear(dealloc); 
-    }
-};
-
-
-//=================================================================================================
+// Heap is an indexed minimum heap. Less may observe mutable activity values;
+// Update restores the heap after either an increase or decrease in priority.
+type Heap struct {
+	heap, indices []int32
+	less          func(int32, int32) bool
 }
 
-
+func NewHeap(less func(int32, int32) bool) *Heap {
+	if less == nil {
+		panic("nil heap comparison")
+	}
+	return &Heap{less: less}
+}
+func (h *Heap) Len() int              { return len(h.heap) }
+func (h *Heap) Contains(n int32) bool { return n >= 0 && int(n) < len(h.indices) && h.indices[n] >= 0 }
+func (h *Heap) At(i int) int32        { return h.heap[i] }
+func (h *Heap) up(i int) {
+	x := h.heap[i]
+	for i > 0 {
+		parent := (i - 1) / 2
+		if !h.less(x, h.heap[parent]) {
+			break
+		}
+		h.heap[i] = h.heap[parent]
+		h.indices[h.heap[i]] = int32(i)
+		i = parent
+	}
+	h.heap[i] = x
+	h.indices[x] = int32(i)
+}
+func (h *Heap) down(i int) {
+	x := h.heap[i]
+	for left := 2*i + 1; left < len(h.heap); left = 2*i + 1 {
+		child := left
+		if left+1 < len(h.heap) && h.less(h.heap[left+1], h.heap[left]) {
+			child++
+		}
+		if !h.less(h.heap[child], x) {
+			break
+		}
+		h.heap[i] = h.heap[child]
+		h.indices[h.heap[i]] = int32(i)
+		i = child
+	}
+	h.heap[i] = x
+	h.indices[x] = int32(i)
+}
+func (h *Heap) Insert(n int32) {
+	if n < 0 || h.Contains(n) {
+		panic("invalid heap insertion")
+	}
+	for len(h.indices) <= int(n) {
+		h.indices = append(h.indices, -1)
+	}
+	h.indices[n] = int32(len(h.heap))
+	h.heap = append(h.heap, n)
+	h.up(len(h.heap) - 1)
+}
+func (h *Heap) Update(n int32) {
+	if !h.Contains(n) {
+		h.Insert(n)
+		return
+	}
+	h.up(int(h.indices[n]))
+	h.down(int(h.indices[n]))
+}
+func (h *Heap) Decrease(n int32) {
+	if !h.Contains(n) {
+		panic("missing heap item")
+	}
+	h.up(int(h.indices[n]))
+}
+func (h *Heap) Increase(n int32) {
+	if !h.Contains(n) {
+		panic("missing heap item")
+	}
+	h.down(int(h.indices[n]))
+}
+func (h *Heap) RemoveMin() int32 {
+	if len(h.heap) == 0 {
+		panic("remove from empty heap")
+	}
+	x := h.heap[0]
+	last := h.heap[len(h.heap)-1]
+	h.heap = h.heap[:len(h.heap)-1]
+	h.indices[x] = -1
+	if len(h.heap) > 0 {
+		h.heap[0] = last
+		h.indices[last] = 0
+		h.down(0)
+	}
+	return x
+}
+func (h *Heap) Clear(deallocate bool) {
+	for _, x := range h.heap {
+		h.indices[x] = -1
+	}
+	h.heap = h.heap[:0]
+	if deallocate {
+		h.heap = nil
+		h.indices = nil
+	}
+}
+func (h *Heap) Build(elements []int32) {
+	h.Clear(false)
+	for _, x := range elements {
+		if x < 0 {
+			panic("negative heap item")
+		}
+		for len(h.indices) <= int(x) {
+			h.indices = append(h.indices, -1)
+		}
+		if h.indices[x] >= 0 {
+			panic("duplicate heap item")
+		}
+		h.indices[x] = int32(len(h.heap))
+		h.heap = append(h.heap, x)
+	}
+	for i := len(h.heap)/2 - 1; i >= 0; i-- {
+		h.down(i)
+	}
+}

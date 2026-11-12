@@ -1,1253 +1,729 @@
 package abc
 
-import "fmt"
+import (
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab/primes"
+	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/map/mio"
+	"strings"
+)
 
-/**CFile****************************************************************
+const ABC_MAX_CUBES = 100000
 
-  FileName    [abcFunc.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Transformations between different functionality representations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcFunc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-//#include "base/main/main.h"
-//#include "map/mio/mio.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const ABC_MAX_CUBES =   100000
-
-// static Hop_Obj_t * Abc_ConvertSopToAig( Hop_Man_t * pMan, char * pSop );
-
-
-#ifdef ABC_USE_CUDD
-
-int Abc_ConvertZddToSop( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase );
-static DdNode * Abc_ConvertAigToBdd( DdManager * dd, Hop_Obj_t * pRoot);
-extern int Abc_CountZddCubes( DdManager * dd, DdNode * zCover );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the node from SOP to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_ConvertSopToBdd( DdManager * dd, char * pSop, DdNode ** pbVars )
-{
-    DdNode * bSum, * bCube, * bTemp, * bVar;
-    char * pCube;
-    int nVars, Value, v;
-
-    // start the cover
-    nVars = Abc_SopGetVarNum(pSop);
-    bSum = Cudd_ReadLogicZero(dd);   Cudd_Ref( bSum );
-    if ( Abc_SopIsExorType(pSop) )
-    {
-        for ( v = 0; v < nVars; v++ )
-        {
-            bSum  = Cudd_bddXor( dd, bTemp = bSum, pbVars? pbVars[v] : Cudd_bddIthVar(dd, v) );   Cudd_Ref( bSum );
-            Cudd_RecursiveDeref( dd, bTemp );
-        }
-    }
-    else
-    {
-        // check the logic function of the node
-        Abc_SopForEachCube( pSop, nVars, pCube )
-        {
-            bCube = Cudd_ReadOne(dd);   Cudd_Ref( bCube );
-            Abc_CubeForEachVar( pCube, Value, v )
-            {
-                if ( Value == '0' )
-                    bVar = Cudd_Not( pbVars? pbVars[v] : Cudd_bddIthVar( dd, v ) );
-                else if ( Value == '1' )
-                    bVar = pbVars? pbVars[v] : Cudd_bddIthVar( dd, v );
-                else
-                    continue;
-                bCube  = Cudd_bddAnd( dd, bTemp = bCube, bVar );   Cudd_Ref( bCube );
-                Cudd_RecursiveDeref( dd, bTemp );
-            }
-            bSum = Cudd_bddOr( dd, bTemp = bSum, bCube );   
-            Cudd_Ref( bSum );
-            Cudd_RecursiveDeref( dd, bTemp );
-            Cudd_RecursiveDeref( dd, bCube );
-        }
-    }
-    // complement the result if necessary
-    bSum = Cudd_NotCond( bSum, !Abc_SopGetPhase(pSop) );
-    Cudd_Deref( bSum );
-    return bSum;
+func funcSopVariables(text string) int {
+	if index := strings.IndexByte(text, ' '); index >= 0 {
+		return index
+	}
+	panic("SOP has no output separator")
+}
+func Abc_ConvertSopToBdd(dd *core.DdManager, text string, variables []*core.DdNode) *core.DdNode {
+	count := funcSopVariables(text)
+	rows := fanSOPRows(text, count)
+	sum := dd.LogicZero
+	variable := func(index int) *core.DdNode {
+		if variables != nil {
+			return variables[index]
+		}
+		return core.Cudd_bddIthVar(dd, index)
+	}
+	if len(rows) > 0 && (rows[0].output == 'x' || rows[0].output == 'n') {
+		for i := 0; i < count; i++ {
+			sum = core.Cudd_bddXor(dd, sum, variable(i))
+		}
+	} else {
+		for _, row := range rows {
+			cube := dd.One
+			for i, c := range row.pattern {
+				if c == '0' {
+					cube = core.Cudd_bddAnd(dd, cube, core.Cudd_Not(variable(i)))
+				} else if c == '1' {
+					cube = core.Cudd_bddAnd(dd, cube, variable(i))
+				}
+			}
+			sum = core.Cudd_bddOr(dd, sum, cube)
+		}
+	}
+	if len(rows) > 0 && (rows[0].output == '0' || rows[0].output == 'n') {
+		sum = core.Cudd_Not(sum)
+	}
+	return sum
+}
+func funcMaximumFanins(n *Network) int {
+	maximum := 0
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if len(o.fanins) > maximum {
+			maximum = len(o.fanins)
+		}
+	}
+	return maximum
+}
+func funcBDDFromBoolean(dd *core.DdManager, fn func([]bool) bool, count int) *core.DdNode {
+	values := make([]bool, count)
+	var build func(int) *core.DdNode
+	build = func(index int) *core.DdNode {
+		if index == count {
+			if fn(values) {
+				return dd.One
+			}
+			return dd.LogicZero
+		}
+		values[index] = false
+		low := build(index + 1)
+		values[index] = true
+		high := build(index + 1)
+		return core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, index), high, low)
+	}
+	return build(0)
+}
+func funcSopBDD(dd *core.DdManager, o *Object) *core.DdNode {
+	if fn, ok := o.Data.(func([]bool) bool); ok {
+		return funcBDDFromBoolean(dd, fn, len(o.fanins))
+	}
+	return Abc_ConvertSopToBdd(dd, o.Data.(string), nil)
+}
+func funcRemapBDD(source, destination *core.DdManager, root *core.DdNode, fanins []Edge) (*core.DdNode, []Edge) {
+	permutation := make([]int, len(source.Vars))
+	for i := range permutation {
+		permutation[i] = -1
+	}
+	var ordered []Edge
+	for _, index := range source.InvPerm {
+		if index < len(fanins) {
+			permutation[index] = len(ordered)
+			ordered = append(ordered, fanins[index])
+		}
+	}
+	return source.Transfer(root, destination, permutation), ordered
+}
+func Abc_NtkSopToBdd(n *Network) int32 {
+	main := core.NewBDDManager(funcMaximumFanins(n))
+	temporary := core.NewBDDManager(funcMaximumFanins(n))
+	converted := make(map[*Object]*core.DdNode)
+	reordered := make(map[*Object][]Edge)
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		manager := main
+		if len(o.fanins) > 10 {
+			manager = temporary
+		}
+		root := funcSopBDD(manager, o)
+		if root == nil {
+			return 0
+		}
+		if manager == temporary {
+			core.Cudd_Ref(root)
+			core.Cudd_ReduceHeap(temporary, core.CUDD_REORDER_SYMM_SIFT, 0)
+			held := root
+			root, reordered[o] = funcRemapBDD(temporary, main, root, o.fanins)
+			core.Cudd_RecursiveDeref(temporary, held)
+		}
+		if root == nil {
+			return 0
+		}
+		converted[o] = root
+	}
+	for o, root := range converted {
+		o.Data = root
+		core.Cudd_Ref(root)
+		if fanins, ok := reordered[o]; ok {
+			o.fanins = fanins
+		}
+	}
+	n.FunctionManager = main
+	n.Function = uint8(ABC_FUNC_BDD)
+	clear(n.hashed)
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from SOP to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkSopToBdd( Abc_Ntk_t * pNtk )
-{
-    Abc_Obj_t * pNode;
-    DdManager * dd, * ddTemp = NULL;
-    Vec_Int_t * vFanins = NULL;
-    int nFaninsMax, i, k, iVar;
- 
-    assert( Abc_NtkHasSop(pNtk) ); 
-
-    // start the functionality manager
-    nFaninsMax = Abc_NtkGetFaninMax( pNtk );
-    if ( nFaninsMax == 0 )
-        printf( "Warning: The network has only constant nodes.\n" );
-    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-
-    // start temporary manager for reordered local functions
-    if ( nFaninsMax > 10 )
-    {
-        ddTemp = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-        Cudd_AutodynEnable( ddTemp,  CUDD_REORDER_SYMM_SIFT );
-        vFanins = Vec_IntAlloc( nFaninsMax );
-    }
-
-    // convert each node from SOP to BDD
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if ( Abc_ObjIsBarBuf(pNode) )
-            continue;
-        assert( pNode->pData );
-        if ( Abc_ObjFaninNum(pNode) > 10 )
-        {
-            DdNode * pFunc = Abc_ConvertSopToBdd( ddTemp, (char *)pNode->pData, NULL );
-            if ( pFunc == NULL )
-            {
-                printf( "Abc_NtkSopToBdd: Error while converting SOP into BDD.\n" );
-                return 0;
-            }
-            Cudd_Ref( pFunc );
-            // find variable mapping
-            Vec_IntFill( vFanins, Abc_ObjFaninNum(pNode), -1 );
-            for ( k = iVar = 0; k < nFaninsMax; k++ )
-                if ( ddTemp->invperm[k] < Abc_ObjFaninNum(pNode) )
-                    Vec_IntWriteEntry( vFanins, ddTemp->invperm[k], iVar++ );
-            assert( iVar == Abc_ObjFaninNum(pNode) );
-            // transfer to the main manager
-            pNode->pData = Extra_TransferPermute( ddTemp, dd, pFunc, Vec_IntArray(vFanins) );
-            Cudd_Ref( (DdNode *)pNode->pData );
-            Cudd_RecursiveDeref( ddTemp, pFunc );
-            // update variable order
-            Vec_IntClear( vFanins );
-            for ( k = 0; k < nFaninsMax; k++ )
-                if ( ddTemp->invperm[k] < Abc_ObjFaninNum(pNode) )
-                    Vec_IntPush( vFanins, Vec_IntEntry(&pNode->vFanins, ddTemp->invperm[k]) );
-            for ( k = 0; k < Abc_ObjFaninNum(pNode); k++ )
-                Vec_IntWriteEntry( &pNode->vFanins, k, Vec_IntEntry(vFanins, k) );
-        }
-        else
-        {
-            pNode->pData = Abc_ConvertSopToBdd( dd, (char *)pNode->pData, NULL );
-            if ( pNode->pData == NULL )
-            {
-                printf( "Abc_NtkSopToBdd: Error while converting SOP into BDD.\n" );
-                return 0;
-            }
-            Cudd_Ref( (DdNode *)pNode->pData );
-        }
-    }
-
-    if ( ddTemp )
-    {
-//        printf( "Reorderings performed = %d.\n", Cudd_ReadReorderings(ddTemp) );
-        Extra_StopManager( ddTemp );
-    }
-    Vec_IntFreeP( &vFanins );
-    Mem_FlexStop( (Mem_Flex_t *)pNtk->pManFunc, 0 );
-    pNtk->pManFunc = dd;
-
-    // update the network type
-    pNtk->ntkFunc = ABC_FUNC_BDD;
-    return 1;
+func Abc_ConvertZddToSop_rec(dd *core.DdManager, cover *core.DdNode, text *[]byte, fanins int32, cube *[]byte, phase int32, count *int32) {
+	if cover == dd.Zero {
+		return
+	}
+	if cover == dd.One {
+		*text = append(*text, (*cube)[:fanins]...)
+		*text = append(*text, ' ', byte('0'+phase), '\n')
+		*count++
+		return
+	}
+	positive, negative, absent, ok := core.ZDDCoverCofactors(dd, cover, int(cover.Index&^1))
+	if !ok {
+		panic("invalid paired ZDD cover")
+	}
+	index := int(cover.Index / 2)
+	if index >= int(fanins) {
+		panic("ZDD support exceeds fanins")
+	}
+	(*cube)[index] = '0'
+	Abc_ConvertZddToSop_rec(dd, negative, text, fanins, cube, phase, count)
+	(*cube)[index] = '1'
+	Abc_ConvertZddToSop_rec(dd, positive, text, fanins, cube, phase, count)
+	(*cube)[index] = '-'
+	Abc_ConvertZddToSop_rec(dd, absent, text, fanins, cube, phase, count)
+}
+func Abc_ConvertZddToSop(dd *core.DdManager, cover *core.DdNode, text *[]byte, fanins int32, cube *[]byte, phase int32) int32 {
+	*cube = append((*cube)[:0], strings.Repeat("-", int(fanins))...)
+	*text = (*text)[:0]
+	var count int32
+	Abc_ConvertZddToSop_rec(dd, cover, text, fanins, cube, phase, &count)
+	return count
+}
+func Abc_CountZddCubes_rec(dd *core.DdManager, cover *core.DdNode, count *int32) {
+	if cover == dd.Zero || *count > ABC_MAX_CUBES {
+		return
+	}
+	if cover == dd.One {
+		*count++
+		return
+	}
+	Abc_CountZddCubes_rec(dd, cover.T, count)
+	Abc_CountZddCubes_rec(dd, cover.E, count)
+}
+func Abc_CountZddCubes(dd *core.DdManager, cover *core.DdNode) int32 {
+	var count int32
+	Abc_CountZddCubes_rec(dd, cover, &count)
+	return count
 }
 
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the node from BDD to SOP representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-char * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode )
-{
-    int fVerify = 0;
-    char * pSop;
-    DdNode * bFuncNew, * bCover, * zCover, * zCover0, * zCover1;
-    int nCubes = 0, nCubes0, nCubes1, fPhase = 0;
-
-    assert( bFuncOn == bFuncOnDc || Cudd_bddLeq( dd, bFuncOn, bFuncOnDc ) );
-    if ( Cudd_IsConstant(bFuncOn) || Cudd_IsConstant(bFuncOnDc) )
-    {
-        if ( pMan )
-            pSop = Mem_FlexEntryFetch( pMan, nFanins + 4 );
-        else
-            pSop = ABC_ALLOC( char, nFanins + 4 );
-        pSop[0] = ' ';
-        pSop[1] = '0' + (int)(bFuncOn == Cudd_ReadOne(dd));
-        pSop[2] = '\n';
-        pSop[3] = '\0';
-        return pSop;
-    }
-
-    if ( fMode == -1 )
-    { // try both phases
-        assert( fAllPrimes == 0 );
-
-        // get the ZDD of the negative polarity
-        bCover = Cudd_zddIsop( dd, Cudd_Not(bFuncOnDc), Cudd_Not(bFuncOn), &zCover0 );
-        Cudd_Ref( zCover0 );
-        Cudd_Ref( bCover );
-        Cudd_RecursiveDeref( dd, bCover );
-        nCubes0 = Abc_CountZddCubes( dd, zCover0 );
-
-        // get the ZDD of the positive polarity
-        bCover = Cudd_zddIsop( dd, bFuncOn, bFuncOnDc, &zCover1 );
-        Cudd_Ref( zCover1 );
-        Cudd_Ref( bCover );
-        Cudd_RecursiveDeref( dd, bCover );
-        nCubes1 = Abc_CountZddCubes( dd, zCover1 );
-
-        // compare the number of cubes
-        if ( nCubes1 <= nCubes0 )
-        { // use positive polarity
-            nCubes = nCubes1;
-            zCover = zCover1;
-            Cudd_RecursiveDerefZdd( dd, zCover0 );
-            fPhase = 1;
-        }
-        else
-        { // use negative polarity
-            nCubes = nCubes0;
-            zCover = zCover0;
-            Cudd_RecursiveDerefZdd( dd, zCover1 );
-            fPhase = 0;
-        }
-    }
-    else if ( fMode == 0 )
-    {
-        // get the ZDD of the negative polarity
-        if ( fAllPrimes )
-        {
-            zCover = Extra_zddPrimes( dd, Cudd_Not(bFuncOnDc) ); 
-            Cudd_Ref( zCover );
-        }
-        else
-        {
-            bCover = Cudd_zddIsop( dd, Cudd_Not(bFuncOnDc), Cudd_Not(bFuncOn), &zCover );
-            Cudd_Ref( zCover );
-            Cudd_Ref( bCover );
-            Cudd_RecursiveDeref( dd, bCover );
-        }
-        nCubes = Abc_CountZddCubes( dd, zCover );
-        fPhase = 0;
-    }
-    else if ( fMode == 1 )
-    {
-        // get the ZDD of the positive polarity
-        if ( fAllPrimes )
-        {
-            zCover = Extra_zddPrimes( dd, bFuncOnDc ); 
-            Cudd_Ref( zCover );
-        }
-        else
-        {
-            bCover = Cudd_zddIsop( dd, bFuncOn, bFuncOnDc, &zCover );
-            Cudd_Ref( zCover );
-            Cudd_Ref( bCover );
-            Cudd_RecursiveDeref( dd, bCover );
-        }
-        nCubes = Abc_CountZddCubes( dd, zCover );
-        fPhase = 1;
-    }
-    else
-    {
-        assert( 0 );
-    }
-
-    if ( nCubes > ABC_MAX_CUBES )
-    {
-        Cudd_RecursiveDerefZdd( dd, zCover );
-        printf( "The number of cubes exceeded the predefined limit (%d).\n", ABC_MAX_CUBES );
-        return NULL;
-    }
-
-    // allocate memory for the cover
-    if ( pMan )
-        pSop = Mem_FlexEntryFetch( pMan, (nFanins + 3) * nCubes + 1 );
-    else 
-        pSop = ABC_ALLOC( char, (nFanins + 3) * nCubes + 1 );
-    pSop[(nFanins + 3) * nCubes] = 0;
-    // create the SOP
-    Vec_StrFill( vCube, nFanins, '-' );
-    Vec_StrPush( vCube, '\0' );
-    Abc_ConvertZddToSop( dd, zCover, pSop, nFanins, vCube, fPhase );
-    Cudd_RecursiveDerefZdd( dd, zCover );
-
-    // verify
-    if ( fVerify )
-    {
-        bFuncNew = Abc_ConvertSopToBdd( dd, pSop, NULL );  Cudd_Ref( bFuncNew );
-        if ( bFuncOn == bFuncOnDc )
-        {
-            if ( bFuncNew != bFuncOn )
-                printf( "Verification failed.\n" );
-        }
-        else
-        {
-            if ( !Cudd_bddLeq(dd, bFuncOn, bFuncNew) || !Cudd_bddLeq(dd, bFuncNew, bFuncOnDc) )
-                printf( "Verification failed.\n" );
-        }
-        Cudd_RecursiveDeref( dd, bFuncNew );
-    }
-    return pSop;
+// SOP strings are Go-owned; the legacy allocator parameter is unnecessary.
+func Abc_ConvertBddToSop(_ any, dd *core.DdManager, on, onDC *core.DdNode, fanins, allPrimes int32, cube *[]byte, mode int32) string {
+	if !core.Cudd_bddLeq(dd, on, onDC) {
+		panic("inconsistent BDD bounds")
+	}
+	if on == dd.LogicZero {
+		return " 0\n"
+	}
+	if onDC == dd.One {
+		return " 1\n"
+	}
+	if mode < -1 || mode > 1 || mode == -1 && allPrimes != 0 {
+		panic("invalid SOP phase mode")
+	}
+	coverFor := func(lower, upper *core.DdNode) *core.DdNode {
+		if allPrimes != 0 {
+			return primes.Extra_zddPrimes(dd, upper)
+		}
+		var cover *core.DdNode
+		if core.Cudd_zddIsop(dd, lower, upper, &cover) == nil {
+			return nil
+		}
+		return cover
+	}
+	var cover *core.DdNode
+	phase := mode
+	if mode == -1 {
+		negative := coverFor(core.Cudd_Not(onDC), core.Cudd_Not(on))
+		positive := coverFor(on, onDC)
+		if negative == nil || positive == nil {
+			return ""
+		}
+		if Abc_CountZddCubes(dd, positive) <= Abc_CountZddCubes(dd, negative) {
+			cover = positive
+			phase = 1
+		} else {
+			cover = negative
+			phase = 0
+		}
+	} else if mode == 0 {
+		cover = coverFor(core.Cudd_Not(onDC), core.Cudd_Not(on))
+	} else {
+		cover = coverFor(on, onDC)
+	}
+	if cover == nil || Abc_CountZddCubes(dd, cover) > ABC_MAX_CUBES {
+		return ""
+	}
+	var text []byte
+	Abc_ConvertZddToSop(dd, cover, &text, fanins, cube, phase)
+	return string(text)
+}
+func Abc_NtkBddToSop(n *Network, mode, cubeLimit int32) int32 {
+	dd, ok := n.FunctionManager.(*core.DdManager)
+	if !ok {
+		return 0
+	}
+	converted := make(map[*Object]string)
+	var cube []byte
+	total := 0
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		root, ok := o.Data.(*core.DdNode)
+		if !ok {
+			return 0
+		}
+		text := Abc_ConvertBddToSop(nil, dd, root, root, int32(len(o.fanins)), 0, &cube, mode)
+		if text == "" {
+			return 0
+		}
+		total += strings.Count(text, "\n")
+		if cubeLimit >= 0 && total > int(cubeLimit) {
+			return 0
+		}
+		converted[o] = text
+	}
+	for o, text := range converted {
+		if funcSopVariables(text) == 0 {
+			Abc_ObjRemoveFanins(o)
+		}
+		o.Data = text
+	}
+	n.FunctionManager = nil
+	n.Function = uint8(ABC_FUNC_SOP)
+	Abc_NtkSortSops(n)
+	return 1
+}
+func Abc_NodeBddToCnf(o *Object, allocator any, cube *[]byte, allPrimes int32, negative, positive *string) {
+	dd, ok := o.network.FunctionManager.(*core.DdManager)
+	if !ok {
+		panic("BDD functionality manager missing")
+	}
+	root := o.Data.(*core.DdNode)
+	*negative = Abc_ConvertBddToSop(allocator, dd, root, root, int32(len(o.fanins)), allPrimes, cube, 0)
+	*positive = Abc_ConvertBddToSop(allocator, dd, root, root, int32(len(o.fanins)), allPrimes, cube, 1)
+}
+func Abc_NtkLogicMakeDirectSops(n *Network) {
+	dd := core.NewBDDManager(funcMaximumFanins(n))
+	converted := make(map[*Object]string)
+	var cube []byte
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		rows := fanNodeRows(o)
+		if len(rows) == 0 || rows[0].output != '0' && rows[0].output != 'n' {
+			continue
+		}
+		root := Abc_ConvertSopToBdd(dd, o.Data.(string), nil)
+		text := Abc_ConvertBddToSop(nil, dd, root, root, int32(len(o.fanins)), 0, &cube, 1)
+		if text == "" {
+			panic("SOP direct phase conversion exceeded cube limit")
+		}
+		converted[o] = text
+	}
+	for o, text := range converted {
+		if funcSopVariables(text) == 0 {
+			Abc_ObjRemoveFanins(o)
+		}
+		o.Data = text
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from BDD to SOP representation.]
-
-  Description [If the flag is set to 1, forces the direct phase of all covers.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkBddToSop( Abc_Ntk_t * pNtk, int fMode, int nCubeLimit )
-{
-    Vec_Int_t * vGuide;
-    Vec_Str_t * vCube;
-    Abc_Obj_t * pNode;
-    Mem_Flex_t * pManNew;
-    DdManager * dd = (DdManager *)pNtk->pManFunc;
-    DdNode * bFunc;
-    int i, nCubes;
-
-    // compute SOP size
-    vGuide = Vec_IntAlloc( Abc_NtkObjNumMax(pNtk) );
-    Vec_IntFill( vGuide, Abc_NtkObjNumMax(pNtk), fMode );
-    if ( nCubeLimit < ABC_INFINITY )
-    {
-        // collect all BDDs into one array
-        Vec_Ptr_t * vFuncs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );
-        assert( !Cudd_ReorderingStatus(dd, (Cudd_ReorderingType *)&nCubes) );
-        Abc_NtkForEachNode( pNtk, pNode, i )
-            if ( !Abc_ObjIsBarBuf(pNode) )
-                Vec_PtrWriteEntry( vFuncs, i, pNode->pData );
-        // compute the number of cubes in the ISOPs and detemine polarity
-        nCubes = Extra_bddCountCubes( dd, (DdNode **)Vec_PtrArray(vFuncs), Vec_PtrSize(vFuncs), fMode, nCubeLimit, Vec_IntArray(vGuide) );
-        Vec_PtrFree( vFuncs );
-        if ( nCubes == -1 )
-        {
-            Vec_IntFree( vGuide );
-            return 0;
-        }
-        //printf( "The total number of cubes = %d.\n", nCubes );
-    }
-
-    assert( Abc_NtkHasBdd(pNtk) );
-    if ( dd->size > 0 )
-    Cudd_zddVarsFromBddVars( dd, 2 );
-    // create the new manager
-    pManNew = Mem_FlexStart();
-
-    // go through the objects
-    vCube = Vec_StrAlloc( 100 );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if ( Abc_ObjIsBarBuf(pNode) )
-            continue;
-        assert( pNode->pData );
-        bFunc = (DdNode *)pNode->pData;
-        pNode->pNext = (Abc_Obj_t *)Abc_ConvertBddToSop( pManNew, dd, bFunc, bFunc, Abc_ObjFaninNum(pNode), 0, vCube, Vec_IntEntry(vGuide, i) );
-        if ( pNode->pNext == NULL )
-        {
-            Mem_FlexStop( pManNew, 0 );
-            Abc_NtkCleanNext( pNtk );
-//            printf( "Converting from BDDs to SOPs has failed.\n" );
-            Vec_IntFree( vGuide );
-            Vec_StrFree( vCube );
-            return 0;
-        }
-        // it may happen that a constant node was created after structural mapping
-        if ( Abc_SopGetVarNum((char *)pNode->pNext) == 0 )
-            pNode->vFanins.nSize = 0;
-        // check the support
-        if ( Abc_ObjFaninNum(pNode) != Abc_SopGetVarNum((char *)pNode->pNext) )
-        {
-            printf( "Node %d with level %d has %d fanins but its SOP has support size %d.\n", 
-                pNode->Id, pNode->Level, Abc_ObjFaninNum(pNode), Abc_SopGetVarNum((char *)pNode->pNext) );
-            fflush( stdout );
-        }
-        assert( Abc_ObjFaninNum(pNode) == Abc_SopGetVarNum((char *)pNode->pNext) );
-    }
-    Vec_IntFree( vGuide );
-    Vec_StrFree( vCube );
-
-    // update the network type
-    pNtk->ntkFunc = ABC_FUNC_SOP;
-    // set the new manager
-    pNtk->pManFunc = pManNew;
-    // transfer from next to data
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if ( Abc_ObjIsBarBuf(pNode) )
-            continue;
-        Cudd_RecursiveDeref( dd, (DdNode *)pNode->pData );
-        pNode->pData = pNode->pNext;
-        pNode->pNext = NULL;
-    }
-
-    // check for remaining references in the package
-    Extra_StopManager( dd );
-
-    // reorder fanins and cubes to make SOPs more human-readable
-    Abc_NtkSortSops( pNtk );
-    return 1;
+func Abc_ConvertSopToAigInternal(manager *hop.Hop_Man_t, text string) *hop.Hop_Obj_t {
+	count := funcSopVariables(text)
+	rows := fanSOPRows(text, count)
+	sum := hop.Hop_ManConst0(manager)
+	if len(rows) > 0 && (rows[0].output == 'x' || rows[0].output == 'n') {
+		for i := 0; i < count; i++ {
+			sum = hop.Hop_Exor(manager, sum, hop.Hop_IthVar(manager, int32(i)))
+		}
+	} else {
+		for _, row := range rows {
+			cube := hop.Hop_ManConst1(manager)
+			for i, c := range row.pattern {
+				if c == '0' {
+					cube = hop.Hop_And(manager, cube, hop.Hop_Not(hop.Hop_IthVar(manager, int32(i))))
+				} else if c == '1' {
+					cube = hop.Hop_And(manager, cube, hop.Hop_IthVar(manager, int32(i)))
+				}
+			}
+			sum = hop.Hop_Or(manager, sum, cube)
+		}
+	}
+	if len(rows) > 0 && (rows[0].output == '0' || rows[0].output == 'n') {
+		sum = hop.Hop_Not(sum)
+	}
+	return sum
+}
+func Abc_ConvertSopToAig(manager *hop.Hop_Man_t, text string) *hop.Hop_Obj_t {
+	variables := funcSopVariables(text)
+	rows := fanSOPRows(text, variables)
+	if variables > 2 && len(rows) > 1 && rows[0].output != 'x' && rows[0].output != 'n' {
+		return dec.Dec_GraphFactorSop(manager, text).(*hop.Hop_Obj_t)
+	}
+	return Abc_ConvertSopToAigInternal(manager, text)
+}
+func Abc_NtkSopToAig(n *Network) int32 {
+	manager := hop.Hop_ManStart()
+	maximum := funcMaximumFanins(n)
+	if maximum > 0 {
+		hop.Hop_IthVar(manager, int32(maximum-1))
+	}
+	converted := make(map[*Object]*hop.Hop_Obj_t)
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		var root *hop.Hop_Obj_t
+		if text, ok := o.Data.(string); ok {
+			root = Abc_ConvertSopToAig(manager, text)
+		} else if fn, ok := o.Data.(func([]bool) bool); ok {
+			values := make([]bool, len(o.fanins))
+			var build func(int) *hop.Hop_Obj_t
+			build = func(index int) *hop.Hop_Obj_t {
+				if index == len(values) {
+					if fn(values) {
+						return hop.Hop_ManConst1(manager)
+					}
+					return hop.Hop_ManConst0(manager)
+				}
+				values[index] = false
+				low := build(index + 1)
+				values[index] = true
+				high := build(index + 1)
+				return hop.Hop_Mux(manager, hop.Hop_IthVar(manager, int32(index)), high, low)
+			}
+			root = build(0)
+		} else {
+			return 0
+		}
+		if root == nil {
+			return 0
+		}
+		converted[o] = root
+	}
+	for o, root := range converted {
+		o.Data = root
+	}
+	n.FunctionManager = manager
+	n.Function = uint8(ABC_FUNC_AIG)
+	return 1
+}
+func Abc_ConvertAigToBdd_rec1(dd *core.DdManager, o *hop.Hop_Obj_t) {
+	o = hop.Hop_Regular(o)
+	if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) != 0 {
+		return
+	}
+	Abc_ConvertAigToBdd_rec1(dd, hop.Hop_ObjFanin0(o))
+	Abc_ConvertAigToBdd_rec1(dd, hop.Hop_ObjFanin1(o))
+	a := hop.Hop_ObjData(hop.Hop_ObjFanin0(o)).(*core.DdNode)
+	b := hop.Hop_ObjData(hop.Hop_ObjFanin1(o)).(*core.DdNode)
+	a = core.Cudd_NotCond(a, hop.Hop_ObjFaninC0(o) != 0)
+	b = core.Cudd_NotCond(b, hop.Hop_ObjFaninC1(o) != 0)
+	var root *core.DdNode
+	if hop.Hop_ObjIsExor(o) != 0 {
+		root = core.Cudd_bddXor(dd, a, b)
+	} else {
+		root = core.Cudd_bddAnd(dd, a, b)
+	}
+	core.Cudd_Ref(root)
+	hop.Hop_ObjSetData(o, root)
+	hop.Hop_ObjSetMarkA(o)
+}
+func Abc_ConvertAigToBdd_rec2(dd *core.DdManager, o *hop.Hop_Obj_t) {
+	o = hop.Hop_Regular(o)
+	if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) == 0 {
+		return
+	}
+	Abc_ConvertAigToBdd_rec2(dd, hop.Hop_ObjFanin0(o))
+	Abc_ConvertAigToBdd_rec2(dd, hop.Hop_ObjFanin1(o))
+	core.Cudd_RecursiveDeref(dd, hop.Hop_ObjData(o).(*core.DdNode))
+	hop.Hop_ObjSetData(o, nil)
+	hop.Hop_ObjClearMarkA(o)
+}
+func Abc_ConvertAigToBdd(dd *core.DdManager, root *hop.Hop_Obj_t) *core.DdNode {
+	regular := hop.Hop_Regular(root)
+	if hop.Hop_ObjIsConst1(regular) != 0 {
+		return core.Cudd_NotCond(dd.One, hop.Hop_IsComplement(root) != 0)
+	}
+	Abc_ConvertAigToBdd_rec1(dd, regular)
+	result := core.Cudd_NotCond(hop.Hop_ObjData(regular).(*core.DdNode), hop.Hop_IsComplement(root) != 0)
+	core.Cudd_Ref(result)
+	Abc_ConvertAigToBdd_rec2(dd, regular)
+	core.Cudd_Deref(result)
+	return result
+}
+func Abc_NtkAigToBdd(n *Network) int32 {
+	manager, ok := n.FunctionManager.(*hop.Hop_Man_t)
+	if !ok {
+		return 0
+	}
+	maximum := funcMaximumFanins(n)
+	temporary, main := core.NewBDDManager(maximum), core.NewBDDManager(maximum)
+	hop.Hop_ObjSetData(hop.Hop_ManConst1(manager), temporary.One)
+	for i := 0; i < maximum; i++ {
+		hop.Hop_ObjSetData(hop.Hop_IthVar(manager, int32(i)), core.Cudd_bddIthVar(temporary, i))
+	}
+	converted := make(map[*Object]*core.DdNode)
+	reordered := make(map[*Object][]Edge)
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		root, ok := o.Data.(*hop.Hop_Obj_t)
+		if !ok {
+			return 0
+		}
+		function := Abc_ConvertAigToBdd(temporary, root)
+		if function == nil {
+			return 0
+		}
+		core.Cudd_Ref(function)
+		core.Cudd_ReduceHeap(temporary, core.CUDD_REORDER_SYMM_SIFT, 0)
+		held := function
+		function, reordered[o] = funcRemapBDD(temporary, main, function, o.fanins)
+		core.Cudd_RecursiveDeref(temporary, held)
+		if function == nil {
+			return 0
+		}
+		converted[o] = function
+	}
+	for o, root := range converted {
+		o.Data = root
+		core.Cudd_Ref(root)
+		o.fanins = reordered[o]
+	}
+	n.FunctionManager = main
+	n.Function = uint8(ABC_FUNC_BDD)
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Derive the SOP from the ZDD representation of the cubes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ConvertZddToSop_rec( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase, int * pnCubes )
-{
-    DdNode * zC0, * zC1, * zC2;
-    int Index;
-
-    if ( zCover == dd->zero )
-        return;
-    if ( zCover == dd->one )
-    {
-        char * pCube;
-        pCube = pSop + (*pnCubes) * (nFanins + 3);
-        sprintf( pCube, "%s %d\n", vCube->pArray, fPhase );
-        (*pnCubes)++;
-        return;
-    }
-    Index = zCover->index/2;
-    assert( Index < nFanins );
-    extraDecomposeCover( dd, zCover, &zC0, &zC1, &zC2 );
-    vCube->pArray[Index] = '0';
-    Abc_ConvertZddToSop_rec( dd, zC0, pSop, nFanins, vCube, fPhase, pnCubes );
-    vCube->pArray[Index] = '1';
-    Abc_ConvertZddToSop_rec( dd, zC1, pSop, nFanins, vCube, fPhase, pnCubes );
-    vCube->pArray[Index] = '-';
-    Abc_ConvertZddToSop_rec( dd, zC2, pSop, nFanins, vCube, fPhase, pnCubes );
+func Abc_NtkMapToSop(n *Network) int32 {
+	converted := make(map[*Object]string)
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			continue
+		}
+		gate, ok := o.Data.(*mio.Mio_Gate_t)
+		if !ok {
+			return 0
+		}
+		text := mio.Mio_GateReadSop(gate)
+		fanSOPRows(text, len(o.fanins))
+		converted[o] = text
+	}
+	for o, text := range converted {
+		o.Data = text
+	}
+	n.FunctionManager = nil
+	n.Function = uint8(ABC_FUNC_SOP)
+	return 1
+}
+func Abc_NtkSopToBlifMv(n *Network) int32 { return Abc_NtkConvertToBlifMv(n) }
+func Abc_NtkToSop(n *Network, mode, cubeLimit int32) int32 {
+	switch Abc_NtkFunc_t(n.Function) {
+	case ABC_FUNC_BLACKBOX:
+		return 1
+	case ABC_FUNC_SOP:
+		if mode == -1 {
+			return 1
+		}
+		if Abc_NtkSopToBdd(n) == 0 {
+			return 0
+		}
+		return Abc_NtkBddToSop(n, mode, cubeLimit)
+	case ABC_FUNC_MAP:
+		return Abc_NtkMapToSop(n)
+	case ABC_FUNC_BDD:
+		return Abc_NtkBddToSop(n, mode, cubeLimit)
+	case ABC_FUNC_AIG:
+		if Abc_NtkAigToBdd(n) == 0 {
+			return 0
+		}
+		return Abc_NtkBddToSop(n, mode, cubeLimit)
+	}
+	return 0
+}
+func Abc_NtkToBdd(n *Network) int32 {
+	switch Abc_NtkFunc_t(n.Function) {
+	case ABC_FUNC_BLACKBOX, ABC_FUNC_BDD:
+		return 1
+	case ABC_FUNC_MAP:
+		if Abc_NtkMapToSop(n) == 0 {
+			return 0
+		}
+		return Abc_NtkSopToBdd(n)
+	case ABC_FUNC_SOP:
+		if Abc_NtkSopToAig(n) == 0 {
+			return 0
+		}
+		return Abc_NtkAigToBdd(n)
+	case ABC_FUNC_AIG:
+		return Abc_NtkAigToBdd(n)
+	}
+	return 0
+}
+func Abc_NtkToAig(n *Network) int32 {
+	switch Abc_NtkFunc_t(n.Function) {
+	case ABC_FUNC_BLACKBOX, ABC_FUNC_AIG:
+		return 1
+	case ABC_FUNC_MAP:
+		if Abc_NtkMapToSop(n) == 0 {
+			return 0
+		}
+		return Abc_NtkSopToAig(n)
+	case ABC_FUNC_BDD:
+		if Abc_NtkBddToSop(n, -1, int32(^uint32(0)>>1)) == 0 {
+			return 0
+		}
+		return Abc_NtkSopToAig(n)
+	case ABC_FUNC_SOP:
+		return Abc_NtkSopToAig(n)
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derive the BDD for the function in the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ConvertZddToSop( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase )
-{
-    int nCubes = 0;
-    Abc_ConvertZddToSop_rec( dd, zCover, pSop, nFanins, vCube, fPhase, &nCubes );
-    return nCubes;
+// LocalAIGMapping retains original node IDs and local-cut boundaries on the
+// importable AIG manager used by the Go replacement for the GIA export helper.
+type LocalAIGMapping struct {
+	OriginalIDs map[int]int
+	Cuts        map[int][]int
+	Simple      bool
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the SOPs of the negative and positive phase of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NodeBddToCnf( Abc_Obj_t * pNode, Mem_Flex_t * pMmMan, Vec_Str_t * vCube, int fAllPrimes, char ** ppSop0, char ** ppSop1 )
-{
-    assert( Abc_NtkHasBdd(pNode->pNtk) ); 
-    *ppSop0 = Abc_ConvertBddToSop( pMmMan, (DdManager *)pNode->pNtk->pManFunc, (DdNode *)pNode->pData, (DdNode *)pNode->pData, Abc_ObjFaninNum(pNode), fAllPrimes, vCube, 0 );
-    *ppSop1 = Abc_ConvertBddToSop( pMmMan, (DdManager *)pNode->pNtk->pManFunc, (DdNode *)pNode->pData, (DdNode *)pNode->pData, Abc_ObjFaninNum(pNode), fAllPrimes, vCube, 1 );
+func Abc_ConvertAigToGia_rec1(graph *aig.Graph, o *hop.Hop_Obj_t) {
+	o = hop.Hop_Regular(o)
+	if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) != 0 {
+		return
+	}
+	Abc_ConvertAigToGia_rec1(graph, hop.Hop_ObjFanin0(o))
+	Abc_ConvertAigToGia_rec1(graph, hop.Hop_ObjFanin1(o))
+	a, b := aig.Edge(hop.Hop_ObjIData(hop.Hop_ObjFanin0(o))), aig.Edge(hop.Hop_ObjIData(hop.Hop_ObjFanin1(o)))
+	if hop.Hop_ObjFaninC0(o) != 0 {
+		a = a.Not()
+	}
+	if hop.Hop_ObjFaninC1(o) != 0 {
+		b = b.Not()
+	}
+	value := graph.AND(a, b)
+	if hop.Hop_ObjIsExor(o) != 0 {
+		value = graph.XOR(a, b)
+	}
+	hop.Hop_ObjSetIData(o, int32(value))
+	hop.Hop_ObjSetMarkA(o)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Removes complemented SOP covers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkLogicMakeDirectSops( Abc_Ntk_t * pNtk )
-{
-    DdManager * dd;
-    DdNode * bFunc;
-    Vec_Str_t * vCube;
-    Abc_Obj_t * pNode;
-    int nFaninsMax, fFound, i;
-
-    assert( Abc_NtkHasSop(pNtk) );
-
-    // check if there are nodes with complemented SOPs
-    fFound = 0;
-    Abc_NtkForEachNode( pNtk, pNode, i )
-        if ( !Abc_ObjIsBarBuf(pNode) && Abc_SopIsComplement((char *)pNode->pData) )
-        {
-            fFound = 1;
-            break;
-        }
-    if ( !fFound )
-        return;
-
-    // start the BDD package
-    nFaninsMax = Abc_NtkGetFaninMax( pNtk );
-    if ( nFaninsMax == 0 )
-        printf( "Warning: The network has only constant nodes.\n" );
-    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-
-    // change the cover of negated nodes
-    vCube = Vec_StrAlloc( 100 );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-        if ( !Abc_ObjIsBarBuf(pNode) && Abc_SopIsComplement((char *)pNode->pData) )
-        {
-            bFunc = Abc_ConvertSopToBdd( dd, (char *)pNode->pData, NULL );  Cudd_Ref( bFunc );
-            pNode->pData = Abc_ConvertBddToSop( (Mem_Flex_t *)pNtk->pManFunc, dd, bFunc, bFunc, Abc_ObjFaninNum(pNode), 0, vCube, 1 );
-            Cudd_RecursiveDeref( dd, bFunc );
-            assert( !Abc_SopIsComplement((char *)pNode->pData) );
-        }
-    Vec_StrFree( vCube );
-    Extra_StopManager( dd );
+func Abc_ConvertAigToGia_rec2(o *hop.Hop_Obj_t) {
+	o = hop.Hop_Regular(o)
+	if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) == 0 {
+		return
+	}
+	Abc_ConvertAigToGia_rec2(hop.Hop_ObjFanin0(o))
+	Abc_ConvertAigToGia_rec2(hop.Hop_ObjFanin1(o))
+	hop.Hop_ObjClearMarkA(o)
 }
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Count the number of paths in the ZDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_CountZddCubes_rec( DdManager * dd, DdNode * zCover, int * pnCubes )
-{
-    DdNode * zC0, * zC1, * zC2;
-    if ( zCover == dd->zero )
-        return;
-    if ( zCover == dd->one )
-    {
-        (*pnCubes)++;
-        return;
-    }
-    if ( (*pnCubes) > ABC_MAX_CUBES )
-        return;
-    extraDecomposeCover( dd, zCover, &zC0, &zC1, &zC2 );
-    Abc_CountZddCubes_rec( dd, zC0, pnCubes );
-    Abc_CountZddCubes_rec( dd, zC1, pnCubes );
-    Abc_CountZddCubes_rec( dd, zC2, pnCubes );
+func Abc_ConvertAigToGia(graph *aig.Graph, root *hop.Hop_Obj_t) aig.Edge {
+	regular := hop.Hop_Regular(root)
+	if hop.Hop_ObjIsConst1(regular) != 0 {
+		if hop.Hop_IsComplement(root) != 0 {
+			return 1
+		}
+		return 0
+	}
+	Abc_ConvertAigToGia_rec1(graph, regular)
+	Abc_ConvertAigToGia_rec2(regular)
+	result := aig.Edge(hop.Hop_ObjIData(regular))
+	if hop.Hop_IsComplement(root) != 0 {
+		result = result.Not()
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count the number of paths in the ZDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_CountZddCubes( DdManager * dd, DdNode * zCover )
-{
-    int nCubes = 0;
-    Abc_CountZddCubes_rec( dd, zCover, &nCubes );
-    return nCubes;
+func Abc_NtkAigToGia(n *Network, simple int32) *aig.Graph {
+	manager, ok := n.FunctionManager.(*hop.Hop_Man_t)
+	if !ok {
+		return nil
+	}
+	graph := aig.NewGraph()
+	graph.Name = n.Name
+	graph.Spec = n.Spec
+	mapping := &LocalAIGMapping{OriginalIDs: map[int]int{}, Cuts: map[int][]int{}, Simple: simple != 0}
+	graph.Data = mapping
+	n.constant.Temp = 0
+	hop.Hop_ObjSetIData(hop.Hop_ManConst1(manager), 0)
+	for _, o := range n.cis {
+		o.Temp = int(graph.NewInput())
+	}
+	for _, o := range Abc_NtkDfs(n, 0) {
+		var value aig.Edge
+		if o.Barrier {
+			edge := o.fanins[0]
+			value = aig.Edge(edge.Object.Temp)
+			if edge.Complement {
+				value = value.Not()
+			}
+			value = aig.Aig_ObjCreate(graph, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{value, 0}})
+		} else {
+			for i, edge := range o.fanins {
+				value := aig.Edge(edge.Object.Temp)
+				if edge.Complement {
+					value = value.Not()
+				}
+				hop.Hop_ObjSetIData(hop.Hop_IthVar(manager, int32(i)), int32(value))
+			}
+			root, ok := o.Data.(*hop.Hop_Obj_t)
+			if !ok {
+				return nil
+			}
+			value = Abc_ConvertAigToGia(graph, root)
+			if simple == 0 && graph.Node(value).Kind == aig.And {
+				if _, exists := mapping.Cuts[value.NodeID()]; !exists {
+					cut := make([]int, len(o.fanins))
+					for i, edge := range o.fanins {
+						cut[i] = aig.Edge(edge.Object.Temp).NodeID()
+					}
+					mapping.Cuts[value.NodeID()] = cut
+				}
+			}
+		}
+		o.Temp = int(value)
+		mapping.OriginalIDs[value.NodeID()] = o.ID
+	}
+	for _, o := range n.cos {
+		edge := o.fanins[0]
+		value := aig.Edge(edge.Object.Temp)
+		if edge.Complement {
+			value = value.Not()
+		}
+		graph.AddOutput(value)
+	}
+	aig.Aig_ManSetRegNum(graph, int32(len(n.ObjectsOfKind(ObjectLatch))))
+	return graph
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkAigToBdd( Abc_Ntk_t * pNtk )
-{
-    Abc_Obj_t * pNode;
-    Hop_Man_t * pMan;
-    DdNode * pFunc;
-    DdManager * dd, * ddTemp = NULL;
-    Vec_Int_t * vFanins = NULL;
-    int nFaninsMax, i, k, iVar;
-
-    assert( Abc_NtkHasAig(pNtk) ); 
-
-    // start the functionality manager
-    nFaninsMax = Abc_NtkGetFaninMax( pNtk );
-    if ( nFaninsMax == 0 )
-        printf( "Warning: The network has only constant nodes.\n" );
-
-    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-
-    // start temporary manager for reordered local functions
-    ddTemp = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( ddTemp,  CUDD_REORDER_SYMM_SIFT );
-    vFanins = Vec_IntAlloc( nFaninsMax );
-
-    // set the mapping of elementary AIG nodes into the elementary BDD nodes
-    pMan = (Hop_Man_t *)pNtk->pManFunc;
-    assert( Hop_ManPiNum(pMan) >= nFaninsMax ); 
-    for ( i = 0; i < nFaninsMax; i++ )
-        Hop_ManPi(pMan, i)->pData = Cudd_bddIthVar(ddTemp, i);
-
-    // convert each node from SOP to BDD
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if ( Abc_ObjIsBarBuf(pNode) )
-            continue;
-        pFunc = Abc_ConvertAigToBdd( ddTemp, (Hop_Obj_t *)pNode->pData );
-        if ( pFunc == NULL )
-        {
-            printf( "Abc_NtkAigToBdd: Error while converting AIG into BDD.\n" );
-            return 0;
-        }
-        Cudd_Ref( pFunc );
-        // find variable mapping
-        Vec_IntFill( vFanins, Abc_ObjFaninNum(pNode), -1 );
-        for ( k = iVar = 0; k < nFaninsMax; k++ )
-            if ( ddTemp->invperm[k] < Abc_ObjFaninNum(pNode) )
-                Vec_IntWriteEntry( vFanins, ddTemp->invperm[k], iVar++ );
-        assert( iVar == Abc_ObjFaninNum(pNode) );
-        // transfer to the main manager
-        pNode->pData = Extra_TransferPermute( ddTemp, dd, pFunc, Vec_IntArray(vFanins) );
-        Cudd_Ref( (DdNode *)pNode->pData );
-        Cudd_RecursiveDeref( ddTemp, pFunc );
-        // update variable order
-        Vec_IntClear( vFanins );
-        for ( k = 0; k < nFaninsMax; k++ )
-            if ( ddTemp->invperm[k] < Abc_ObjFaninNum(pNode) )
-                Vec_IntPush( vFanins, Vec_IntEntry(&pNode->vFanins, ddTemp->invperm[k]) );
-        for ( k = 0; k < Abc_ObjFaninNum(pNode); k++ )
-            Vec_IntWriteEntry( &pNode->vFanins, k, Vec_IntEntry(vFanins, k) );
-    }
-
-//    printf( "Reorderings performed = %d.\n", Cudd_ReadReorderings(ddTemp) );
-    Extra_StopManager( ddTemp );
-    Vec_IntFreeP( &vFanins );
-    Hop_ManStop( (Hop_Man_t *)pNtk->pManFunc );
-    pNtk->pManFunc = dd;
-
-    // update the network type
-    pNtk->ntkFunc = ABC_FUNC_BDD;
-    return 1;
+func Abc_ConvertAigToAig_rec(n *Network, o *hop.Hop_Obj_t) {
+	o = hop.Hop_Regular(o)
+	if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) != 0 {
+		return
+	}
+	Abc_ConvertAigToAig_rec(n, hop.Hop_ObjFanin0(o))
+	Abc_ConvertAigToAig_rec(n, hop.Hop_ObjFanin1(o))
+	a, b := hop.Hop_ObjData(hop.Hop_ObjFanin0(o)).(Edge), hop.Hop_ObjData(hop.Hop_ObjFanin1(o)).(Edge)
+	if hop.Hop_ObjFaninC0(o) != 0 {
+		a = a.Not()
+	}
+	if hop.Hop_ObjFaninC1(o) != 0 {
+		b = b.Not()
+	}
+	value := n.AndEdges(a, b)
+	if hop.Hop_ObjIsExor(o) != 0 {
+		value = n.AndEdges(n.AndEdges(a, b.Not()).Not(), n.AndEdges(a.Not(), b).Not()).Not()
+	}
+	hop.Hop_ObjSetData(o, value)
+	hop.Hop_ObjSetMarkA(o)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Construct BDDs and mark AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ConvertAigToBdd_rec1( DdManager * dd, Hop_Obj_t * pObj )
-{
-    assert( !Hop_IsComplement(pObj) );
-    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )
-        return;
-    Abc_ConvertAigToBdd_rec1( dd, Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertAigToBdd_rec1( dd, Hop_ObjFanin1(pObj) );
-    pObj->pData = Cudd_bddAnd( dd, (DdNode *)Hop_ObjChild0Copy(pObj), (DdNode *)Hop_ObjChild1Copy(pObj) ); 
-    Cudd_Ref( (DdNode *)pObj->pData );
-    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection
-    Hop_ObjSetMarkA( pObj );
+func Abc_ConvertAigToAig(n *Network, old *Object) Edge {
+	manager, ok := old.network.FunctionManager.(*hop.Hop_Man_t)
+	if !ok {
+		panic("local Hop manager missing")
+	}
+	root := old.Data.(*hop.Hop_Obj_t)
+	hop.Hop_ObjSetData(hop.Hop_ManConst1(manager), n.One())
+	for i, edge := range old.fanins {
+		value := getCopy(edge.Object)
+		value.Complement = value.Complement != edge.Complement
+		hop.Hop_ObjSetData(hop.Hop_IthVar(manager, int32(i)), value)
+	}
+	if hop.Hop_ObjIsConst1(hop.Hop_Regular(root)) != 0 {
+		value := n.One()
+		if hop.Hop_IsComplement(root) != 0 {
+			value = value.Not()
+		}
+		return value
+	}
+	Abc_ConvertAigToAig_rec(n, hop.Hop_Regular(root))
+	hop.Hop_ConeUnmark_rec(hop.Hop_Regular(root))
+	value := hop.Hop_ObjData(hop.Hop_Regular(root)).(Edge)
+	value.Complement = value.Complement != (hop.Hop_IsComplement(root) != 0)
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Dereference BDDs and unmark AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ConvertAigToBdd_rec2( DdManager * dd, Hop_Obj_t * pObj )
-{
-    assert( !Hop_IsComplement(pObj) );
-    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )
-        return;
-    Abc_ConvertAigToBdd_rec2( dd, Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertAigToBdd_rec2( dd, Hop_ObjFanin1(pObj) );
-    Cudd_RecursiveDeref( dd, (DdNode *)pObj->pData );
-    pObj->pData = NULL;
-    assert( Hop_ObjIsMarkA(pObj) ); // loop detection
-    Hop_ObjClearMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_ConvertAigToBdd( DdManager * dd, Hop_Obj_t * pRoot )
-{
-    DdNode * bFunc;
-    // check the case of a constant
-    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )
-        return Cudd_NotCond( Cudd_ReadOne(dd), Hop_IsComplement(pRoot) );
-    // construct BDD
-    Abc_ConvertAigToBdd_rec1( dd, Hop_Regular(pRoot) );
-    // hold on to the result
-    bFunc = Cudd_NotCond( Hop_Regular(pRoot)->pData, Hop_IsComplement(pRoot) );  Cudd_Ref( bFunc );
-    // dereference BDD
-    Abc_ConvertAigToBdd_rec2( dd, Hop_Regular(pRoot) );
-    // return the result
-    Cudd_Deref( bFunc );
-    return bFunc;
-}
-
-#else
-
-int  Abc_NtkSopToBdd( Abc_Ntk_t * pNtk ) { return 1; }
-int  Abc_NtkBddToSop( Abc_Ntk_t * pNtk, int fMode, int nCubeLimit ) { return 1; }
-void Abc_NodeBddToCnf( Abc_Obj_t * pNode, Mem_Flex_t * pMmMan, Vec_Str_t * vCube, int fAllPrimes, char ** ppSop0, char ** ppSop1 ) {}
-void Abc_NtkLogicMakeDirectSops( Abc_Ntk_t * pNtk ) {}
-int  Abc_NtkAigToBdd( Abc_Ntk_t * pNtk ) { return 1; }
-
-#endif
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from SOP to AIG representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSopToAig(pNtk *Abc_Ntk_t) int32 {
-    var pNode *Abc_Obj_t;
-    var pMan *Hop_Man_t;
-    var i, Max int32;
-
-    assert(Abc_NtkHasSop(pNtk), "Abc_NtkHasSop(pNtk)"); 
-
-    // make dist1-free and SCC-free
-//    Abc_NtkMakeLegit( pNtk );
-
-    // start the functionality manager
-    pMan = Hop_ManStart();
-    Max = Abc_NtkGetFaninMax(pNtk);
-    if Max != 0 { Hop_IthVar( pMan, Max-1 ); }
-
-    // convert each node from SOP to BDD
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if Abc_ObjIsBarBuf(pNode) {
-            continue; }
-        assert(pNode.pData, "pNode.pData");
-        pNode.pData = Abc_ConvertSopToAig( pMan, (char *)pNode.pData );
-        if pNode.pData == nil {
-            Hop_ManStop( pMan );
-            fmt.Printf("Abc_NtkSopToAig: Error while converting SOP into AIG.\n");
-            return 0;
-        }
-    }
-    Mem_FlexStop( (Mem_Flex_t *)pNtk.pManFunc, 0 );
-    pNtk.pManFunc = pMan;
-
-    // update the network type
-    pNtk.ntkFunc = ABC_FUNC_AIG;
-    return 1;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Strashes one logic node using its SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertSopToAigInternal(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {
-    var pAnd, pSum *Hop_Obj_t;
-    var i, Value, nFanins int32;
-    var pCube string;
-    // get the number of variables
-    nFanins = Abc_SopGetVarNum(pSop);
-    if Abc_SopIsExorType(pSop) {
-        pSum = Hop_ManConst0(pMan); 
-        for  i = 0; i < nFanins; i++  {
-            pSum = Hop_Exor( pMan, pSum, Hop_IthVar(pMan,i) );
-        }
-    
-    } else {
-        // go through the cubes of the node's SOP
-        pSum = Hop_ManConst0(pMan); 
-        Abc_SopForEachCube( pSop, nFanins, pCube )
-        {
-            // create the AND of literals
-            pAnd = Hop_ManConst1(pMan);
-            Abc_CubeForEachVar( pCube, Value, i )
-            {
-                if Value == '1' {
-                    pAnd = Hop_And( pMan, pAnd, Hop_IthVar(pMan,i) );
-                } else if Value == '0' {
-                    pAnd = Hop_And( pMan, pAnd, Hop_Not(Hop_IthVar(pMan,i)) ); }
-            }
-            // add to the sum of cubes
-            pSum = Hop_Or( pMan, pSum, pAnd );
-        }
-    }
-    // decide whether to complement the result
-    if Abc_SopIsComplement(pSop) {
-        pSum = Hop_Not(pSum); }
-    return pSum;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertSopToAig(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {
-    extern Hop_Obj_t * Dec_GraphFactorSop( Hop_Man_t * pMan, char * pSop );
-    var fUseFactor int32  = 1;
-    // consider the constant node
-    if Abc_SopGetVarNum(pSop) == 0 {
-        return Hop_NotCond( Hop_ManConst1(pMan), Abc_SopIsConst0(pSop) ); }
-    // decide when to use factoring
-    if (fUseFactor != 0) && Abc_SopGetVarNum(pSop) > 2 && Abc_SopGetCubeNum(pSop) > 1 && !Abc_SopIsExorType(pSop) {
-        return Dec_GraphFactorSop( pMan, pSop ); }
-    return Abc_ConvertSopToAigInternal( pMan, pSop );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to GIA representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertAigToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin1(pObj) );
-    pObj.iData = Gia_ManAppendAnd2( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
-}
-func Abc_ConvertAigToGia_rec2(pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_ConvertAigToGia_rec2( Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertAigToGia_rec2( Hop_ObjFanin1(pObj) );
-    assert(Hop_ObjIsMarkA(pObj), "Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjClearMarkA( pObj );
-}
-func Abc_ConvertAigToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {
-    assert(!Hop_IsComplement(pRoot), "!Hop_IsComplement(pRoot)");
-    if Hop_ObjIsConst1( pRoot ) {
-        return 1; }
-    Abc_ConvertAigToGia_rec1( p, pRoot );
-    Abc_ConvertAigToGia_rec2( pRoot );
-    return pRoot.iData;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAigToGia(p *Abc_Ntk_t, fGiaSimple int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pHopMan *Hop_Man_t;
-    var pHopObj *Hop_Obj_t;
-    var vMapping *Vec_Int_t  = nil;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pFanin *Abc_Obj_t;
-    var i, k, nObjs, iGiaObj int32;
-    assert(Abc_NtkIsAigLogic(p), "Abc_NtkIsAigLogic(p)");
-    pHopMan = (Hop_Man_t *)p.pManFunc;
-    // create new manager
-    pNew = Gia_ManStart( 10000 );
-    pNew.pName = Abc_UtilStrsav( Abc_NtkName(p) );
-    pNew.pSpec = Abc_UtilStrsav( Abc_NtkSpec(p) );
-    pNew.fGiaSimple = fGiaSimple;
-    Abc_NtkCleanCopy( p );
-    Hop_ManConst1(pHopMan).iData = 1;
-    // create primary inputs
-    Abc_NtkForEachCi( p, pNode, i )
-        pNode.iTemp = Gia_ManAppendCi(pNew);
-    // find the number of objects
-    nObjs = 1 + Abc_NtkCiNum(p) + Abc_NtkCoNum(p);
-    Abc_NtkForEachNode( p, pNode, i )
-        nObjs += Abc_ObjIsBarBuf(pNode) ? 1 : Hop_DagSize( (Hop_Obj_t *)pNode.pData );
-    if !(fGiaSimple != 0) {
-        vMapping = Vec_IntStart( nObjs ); }
-    // iterate through nodes used in the mapping
-    vNodes = Abc_NtkDfs( p, 0 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        if Abc_ObjIsBarBuf(pNode) {
-            assert(!Abc_ObjFaninC0(pNode), "!Abc_ObjFaninC0(pNode)");
-            pNode.iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(pNode).iTemp );
-            continue;
-        }
-        Abc_ObjForEachFanin( pNode, pFanin, k )
-            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;
-        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );
-        if Hop_DagSize(pHopObj) > 0 {
-            assert(Abc_ObjFaninNum(pNode) <= Hop_ManPiNum(pHopMan), "Abc_ObjFaninNum(pNode) <= Hop_ManPiNum(pHopMan)");
-            Abc_ConvertAigToGia( pNew, pHopObj );
-            iGiaObj = Abc_Lit2Var( pHopObj.iData );
-            if (vMapping != nil) && Gia_ObjIsAnd(Gia_ManObj(pNew, iGiaObj)) && !Vec_IntEntry(vMapping, iGiaObj) {
-                Vec_IntWriteEntry( vMapping, iGiaObj, Vec_IntSize(vMapping) );
-                Vec_IntPush( vMapping, Abc_ObjFaninNum(pNode) );
-                Abc_ObjForEachFanin( pNode, pFanin, k )
-                    Vec_IntPush( vMapping, Abc_Lit2Var(pFanin.iTemp)  );
-                Vec_IntPush( vMapping, iGiaObj );
-            }
-        }
-        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );
-    }
-    // create primary outputs
-    Abc_NtkForEachCo( p, pNode, i )
-        Gia_ManAppendCo( pNew, Abc_ObjFanin0(pNode).iTemp );
-    Gia_ManSetRegNum( pNew, Abc_NtkLatchNum(p) );
-    // copy original IDs
-    pNew.vIdsOrig = Vec_IntStart( Gia_ManObjNum(pNew) );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-        Vec_IntWriteEntry( pNew.vIdsOrig, Abc_Lit2Var(pNode.iTemp), Abc_ObjId(pNode) );
-    Vec_PtrFree( vNodes );
-    // finish mapping 
-    assert(Gia_ManObjNum(pNew) <= nObjs, "Gia_ManObjNum(pNew) <= nObjs");
-    assert(pNew.vMapping == nil, "pNew.vMapping == nil");
-    pNew.vMapping = vMapping;
-    return pNew;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Construct BDDs and mark AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertAigToAig_rec(pNtkAig *Abc_Ntk_t, pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin1(pObj) );
-    pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, (Abc_Obj_t *)Hop_ObjChild0Copy(pObj), (Abc_Obj_t *)Hop_ObjChild1Copy(pObj) ); 
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertAigToAig(pNtkAig *Abc_Ntk_t, pObjOld *Abc_Obj_t) *Abc_Obj_t {
-    var pHopMan *Hop_Man_t;
-    var pRoot *Hop_Obj_t;
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    // get the local AIG
-    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;
-    pRoot = (Hop_Obj_t *)pObjOld.pData;
-    // check the case of a constant
-    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {
-        return Abc_ObjNotCond( Abc_AigConst1(pNtkAig), Hop_IsComplement(pRoot) ); }
-    // assign the fanin nodes
-    Abc_ObjForEachFanin( pObjOld, pFanin, i )
-    {
-        assert(pFanin.pCopy != nil, "pFanin.pCopy != nil");
-        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;
-    }
-    // construct the AIG
-    Abc_ConvertAigToAig_rec( pNtkAig, Hop_Regular(pRoot) );
-    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );
-    // return the result
-    return Abc_ObjNotCond( (Abc_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Unmaps the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMapToSop(pNtk *Abc_Ntk_t) int32 {
-    extern void * Abc_FrameReadLibGen();                    
-    var pNode *Abc_Obj_t;
-    var pSop string;
-    var i int32;
-
-    assert(Abc_NtkHasMapping(pNtk), "Abc_NtkHasMapping(pNtk)");
-    // update the functionality manager
-    assert(pNtk.pManFunc == Abc_FrameReadLibGen(), "pNtk.pManFunc == Abc_FrameReadLibGen()");
-    pNtk.pManFunc = Mem_FlexStart();
-    // update the nodes
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if Abc_ObjIsBarBuf(pNode) {
-            continue; }
-        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode.pData);
-        assert(Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode), "Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode)");
-        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, pSop );
-    }
-    pNtk.ntkFunc  = ABC_FUNC_SOP;
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts SOP functions into BLIF-MV functions.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSopToBlifMv(pNtk *Abc_Ntk_t) int32 {
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Convers logic network to the SOP form.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToSop(pNtk *Abc_Ntk_t, fMode int32, nCubeLimit int32) int32 {
-    assert(!Abc_NtkIsStrash(pNtk), "!Abc_NtkIsStrash(pNtk)");
-    if Abc_NtkHasBlackbox(pNtk) {
-        return 1; }
-    if Abc_NtkHasSop(pNtk) {
-        if fMode == -1 {
-            return 1; }
-        if !Abc_NtkSopToBdd(pNtk) {
-            return 0; }
-        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);
-    }
-    if Abc_NtkHasMapping(pNtk) {
-        return Abc_NtkMapToSop(pNtk); }
-    if Abc_NtkHasBdd(pNtk) {
-        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit); }
-    if Abc_NtkHasAig(pNtk) {
-        if !Abc_NtkAigToBdd(pNtk) {
-            return 0; }
-        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);
-    }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Convers logic network to the SOP form.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToBdd(pNtk *Abc_Ntk_t) int32 {
-    assert(!Abc_NtkIsStrash(pNtk), "!Abc_NtkIsStrash(pNtk)");
-    if Abc_NtkHasBlackbox(pNtk) {
-        return 1; }
-    if Abc_NtkHasBdd(pNtk) {
-        return 1; }
-    if Abc_NtkHasMapping(pNtk) {
-        Abc_NtkMapToSop(pNtk);
-        return Abc_NtkSopToBdd(pNtk);
-    }
-    if Abc_NtkHasSop(pNtk) {
-        Abc_NtkSopToAig(pNtk);
-        return Abc_NtkAigToBdd(pNtk);
-    }
-    if Abc_NtkHasAig(pNtk) {
-        return Abc_NtkAigToBdd(pNtk); }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Convers logic network to the SOP form.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToAig(pNtk *Abc_Ntk_t) int32 {
-    assert(!Abc_NtkIsStrash(pNtk), "!Abc_NtkIsStrash(pNtk)");
-    if Abc_NtkHasBlackbox(pNtk) {
-        return 1; }
-    if Abc_NtkHasAig(pNtk) {
-        return 1; }
-    if Abc_NtkHasMapping(pNtk) {
-        Abc_NtkMapToSop(pNtk);
-        return Abc_NtkSopToAig(pNtk);
-    }
-    if Abc_NtkHasBdd(pNtk) {
-        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {
-            return 0; }
-        return Abc_NtkSopToAig(pNtk);
-    }
-    if Abc_NtkHasSop(pNtk) {
-        return Abc_NtkSopToAig(pNtk); }
-    assert(false, "0");
-    return 0;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

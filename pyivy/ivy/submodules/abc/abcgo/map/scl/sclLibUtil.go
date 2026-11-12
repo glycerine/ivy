@@ -349,7 +349,7 @@ func genlibText(p *SC_Lib, cells []*SC_Cell, slew, gain float32, minimum int) (s
 		slew = Abc_SclComputeAverageSlew(p)
 	}
 	largest := 0
-	for _, r := range cells {
+	for _, r := range p.CellClasses {
 		if r.Outputs == 1 {
 			largest = max(largest, Abc_SclClassCellNum(r))
 		}

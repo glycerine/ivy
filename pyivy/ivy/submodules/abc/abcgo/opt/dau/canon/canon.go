@@ -288,3 +288,10 @@ func CompareReverse(a, b []uint64) int {
 	}
 	return 0
 }
+
+// AdjacentConfiguration enumerates the source's seven adjacent NPN configs
+// and applies the first strictly smallest one; returned bits encode flip,
+// flip-next, and swap respectively.
+func AdjacentConfiguration(truth []uint64, variable int, swapOnly bool) int {
+	return refine(truth, make([]uint64, len(truth)), make([]uint64, len(truth)), variable, swapOnly)
+}

@@ -341,6 +341,12 @@ func readBLIF(r io.Reader) (*aig.Graph, error) {
 	if int32(p.OutputCount()) != int32(len(poNames)+len(latches)) {
 		return nil, fmt.Errorf("saig: parsed %d outputs, expected %d primary and latch outputs", p.OutputCount(), len(poNames)+len(latches))
 	}
+	for name := range outputNames {
+		edge, ok := values[name]
+		if !ok || !aig.Aig_ObjIsCo(p, edge) {
+			return nil, fmt.Errorf("saig: declared output %q has no .names definition", name)
+		}
+	}
 	aig.Aig_ManSetRegNum(p, int32(len(latches)))
 	p.Data = oldNodeIDs
 	return p, nil

@@ -1,375 +1,219 @@
 package cnf
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [cnfCut.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG-to-CNF conversion.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: cnfCut.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cnf.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates cut of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutAlloc(p *Cnf_Man_t, nLeaves int32) *Cnf_Cut_t {
-    var pCut *Cnf_Cut_t;
-    var nSize int32  = sizeof(Cnf_Cut_t) + sizeof(int) * nLeaves + sizeof(unsigned) * Abc_TruthWordNum(nLeaves);
-    pCut = (Cnf_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCuts, nSize );
-    pCut.nFanins = nLeaves;
-    pCut.nWords = Abc_TruthWordNum(nLeaves);
-    pCut.vIsop[0] = pCut.vIsop[1] = nil;
-    return pCut;
+// Cnf_CutAlloc creates an owned cut with enough words for its truth table.
+func Cnf_CutAlloc(_ *Cnf_Man_t, nLeaves int32) *Cnf_Cut_t {
+	if nLeaves < 0 || nLeaves > 16 {
+		panic("cnf: cut leaf count out of range")
+	}
+	words := 1
+	if nLeaves > 5 {
+		words = 1 << (nLeaves - 5)
+	}
+	return &Cnf_Cut_t{nFanins: byte(nLeaves), nWords: int16(words), pFanins: make([]int32, nLeaves), truth: make([]uint32, words)}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Deallocates cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutFree(pCut *Cnf_Cut_t) {
-    if pCut.vIsop[0] {
-        Vec_IntFree( pCut.vIsop[0] ); }
-    if pCut.vIsop[1] {
-        Vec_IntFree( pCut.vIsop[1] ); }
+func Cnf_CutFree(cut *Cnf_Cut_t) {
+	if cut == nil {
+		return
+	}
+	for i, vector := range cut.vIsop {
+		if vector != nil {
+			vec.Vec_IntFree(vector)
+			cut.vIsop[i] = nil
+		}
+	}
+	cut.pFanins = nil
+	cut.truth = nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates cut for the given node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutCreate(p *Cnf_Man_t, pObj *Aig_Obj_t) *Cnf_Cut_t {
-    var pCutBest *Dar_Cut_t;
-    var pCut *Cnf_Cut_t;
-    var pTruth *uint32;
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    pCutBest = Dar_ObjBestCut( pObj );
-    assert(pCutBest != nil, "pCutBest != nil");
-    assert(pCutBest.nLeaves <= 4, "pCutBest.nLeaves <= 4");
-    pCut = Cnf_CutAlloc( p, pCutBest.nLeaves );
-    memcpy( pCut.pFanins, pCutBest.pLeaves, sizeof(int) * pCutBest.nLeaves );
-    pTruth = Cnf_CutTruth(pCut);
-    *pTruth = (pCutBest.uTruth << 16) | pCutBest.uTruth;
-    pCut.Cost = Cnf_CutSopCost( p, pCutBest );
-    return pCut;
+// Cnf_CutFromTruth constructs a cut from a sorted list of AIG object IDs and
+// packed little-endian truth words. It copies both inputs.
+func Cnf_CutFromTruth(leaves []int32, truth []uint32) *Cnf_Cut_t {
+	cut := Cnf_CutAlloc(nil, int32(len(leaves)))
+	copy(cut.pFanins, leaves)
+	copy(cut.truth, truth)
+	return cut
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Deallocates cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutPrint(pCut *Cnf_Cut_t) {
-    var i int32;
-    fmt.Printf("{");
-    for  i = 0; i < pCut.nFanins; i++  {
-        fmt.Printf("%d ", pCut.pFanins[i]);
-    }
-    fmt.Printf(" } ");
+func Cnf_CutCreate(_ *Cnf_Man_t, _ *Aig_Obj_t) *Cnf_Cut_t {
+	panic("cnf: selected mapping cut must be provided as Cnf_CutFromTruth")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Allocates cut of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutDeref(p *Cnf_Man_t, pCut *Cnf_Cut_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )
-    {
-        assert(pObj.nRefs > 0, "pObj.nRefs > 0");
-        pObj.nRefs--;
-    }
+func Cnf_CutPrint(cut *Cnf_Cut_t) {
+	fmt.Printf("{")
+	for _, leaf := range cut.pFanins {
+		fmt.Printf("%d ", leaf)
+	}
+	fmt.Printf("} ")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Allocates cut of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutRef(p *Cnf_Man_t, pCut *Cnf_Cut_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )
-    {
-        pObj.nRefs++;
-    }
+func Cnf_CutDeref(p *Cnf_Man_t, cut *Cnf_Cut_t) {
+	if p == nil || p.pManAig == nil || cut == nil {
+		return
+	}
+	for _, id := range cut.pFanins {
+		aig.Aig_ObjDeref(p.pManAig, aig.Edge(uint32(id)<<1))
+	}
+}
+func Cnf_CutRef(p *Cnf_Man_t, cut *Cnf_Cut_t) {
+	if p == nil || p.pManAig == nil || cut == nil {
+		return
+	}
+	for _, id := range cut.pFanins {
+		aig.Aig_ObjRef(p.pManAig, aig.Edge(uint32(id)<<1))
+	}
+}
+func Cnf_CutUpdateRefs(p *Cnf_Man_t, old, fan, result *Cnf_Cut_t) {
+	Cnf_CutDeref(p, old)
+	Cnf_CutDeref(p, fan)
+	Cnf_CutRef(p, result)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Allocates cut of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutUpdateRefs(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pCutRes *Cnf_Cut_t) {
-    Cnf_CutDeref( p, pCut );
-    Cnf_CutDeref( p, pCutFan );
-    Cnf_CutRef( p, pCutRes );
+// Cnf_CutMergeLeaves returns the sorted union of two sorted leaf lists.
+func Cnf_CutMergeLeaves(a, b *Cnf_Cut_t) []int32 {
+	result := make([]int32, 0, len(a.pFanins)+len(b.pFanins))
+	i, j := 0, 0
+	for i < len(a.pFanins) && j < len(b.pFanins) {
+		switch {
+		case a.pFanins[i] < b.pFanins[j]:
+			result = append(result, a.pFanins[i])
+			i++
+		case a.pFanins[i] > b.pFanins[j]:
+			result = append(result, b.pFanins[j])
+			j++
+		default:
+			result = append(result, a.pFanins[i])
+			i++
+			j++
+		}
+	}
+	result = append(result, a.pFanins[i:]...)
+	result = append(result, b.pFanins[j:]...)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Merges two arrays of integers.]
-
-  Description [Returns the number of items.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutMergeLeaves(pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pFanins *int32) int32 {
-    var i, k, nFanins int32;
-    for  i = k = 0; i < pCut.nFanins && k < pCutFan.nFanins;  {
-        if pCut.pFanins[i] == pCutFan.pFanins[k] {
-            pFanins[nFanins++] = pCut.pFanins[i], i++, k++;
-        } else if pCut.pFanins[i] < pCutFan.pFanins[k] {
-            pFanins[nFanins++] = pCut.pFanins[i], i++;
-        } else {
-            pFanins[nFanins++] = pCutFan.pFanins[k], k++; }
-    }
-    for  ; i < pCut.nFanins; i++  {
-        pFanins[nFanins++] = pCut.pFanins[i];
-    }
-    for  ; k < pCutFan.nFanins; k++  {
-        pFanins[nFanins++] = pCutFan.pFanins[k];
-    }
-    return nFanins;
+func Cnf_TruthPhase(cut, merged *Cnf_Cut_t) uint32 {
+	var phase uint32
+	for _, leaf := range cut.pFanins {
+		for j, mergedLeaf := range merged.pFanins {
+			if leaf == mergedLeaf {
+				phase |= 1 << j
+				break
+			}
+		}
+	}
+	return phase
+}
+func Cnf_CutRemoveIthVar(cut *Cnf_Cut_t, index int32, leaf int32) {
+	if index < 0 || int(index) >= len(cut.pFanins) || cut.pFanins[index] != leaf {
+		panic("cnf: cut leaf mismatch")
+	}
+	cut.pFanins = append(cut.pFanins[:index], cut.pFanins[index+1:]...)
+	cut.nFanins = byte(len(cut.pFanins))
+}
+func Cnf_CutInsertIthVar(cut *Cnf_Cut_t, index int32, leaf int32) {
+	if index < 0 || int(index) > len(cut.pFanins) {
+		panic("cnf: cut insertion index out of range")
+	}
+	cut.pFanins = append(cut.pFanins, 0)
+	copy(cut.pFanins[index+1:], cut.pFanins[index:])
+	cut.pFanins[index] = leaf
+	cut.nFanins = byte(len(cut.pFanins))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes the stretching phase of the cut w.r.t. the merged cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_TruthPhase(pCut *Cnf_Cut_t, pCut1 *Cnf_Cut_t) uint32 {
-    var uPhase uint32;
-    var i, k int32;
-    for  i = k = 0; i < pCut.nFanins; i++  {
-        if k == pCut1.nFanins {
-            break; }
-        if pCut.pFanins[i] < pCut1.pFanins[k] {
-            continue; }
-        assert(pCut.pFanins[i] == pCut1.pFanins[k], "pCut.pFanins[i] == pCut1.pFanins[k]");
-        uPhase |= (1 << i);
-        k++;
-    }
-    return uPhase;
+func truthBit(words []uint32, assignment int) bool {
+	return words[assignment>>5]&(uint32(1)<<uint(assignment&31)) != 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Removes the fanin variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutRemoveIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {
-    var i int32;
-    assert(pCut.pFanins[iVar] == iFan, "pCut.pFanins[iVar] == iFan");
-    pCut.nFanins--;
-    for  i = iVar; i < pCut.nFanins; i++  {
-        pCut.pFanins[i] = pCut.pFanins[i+1];
-    }
+func setTruthBit(words []uint32, assignment int, value bool) {
+	mask := uint32(1) << uint(assignment&31)
+	if value {
+		words[assignment>>5] |= mask
+	} else {
+		words[assignment>>5] &^= mask
+	}
 }
+func cutValue(cut *Cnf_Cut_t, assignment int) bool { return truthBit(cut.truth, assignment) }
 
-/**Function*************************************************************
-
-  Synopsis    [Inserts the fanin variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cnf_CutInsertIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {
-    var i int32;
-    for  i = pCut.nFanins; i > iVar; i--  {
-        pCut.pFanins[i] = pCut.pFanins[i-1];
-    }
-    pCut.pFanins[iVar] = iFan;
-    pCut.nFanins++;
+// Cnf_CutCompose substitutes fan's function for leaf in cut and returns the
+// exact truth table over the union of the remaining leaves.
+func Cnf_CutCompose(_ *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cut_t {
+	position := -1
+	for i, id := range cut.pFanins {
+		if id == leaf {
+			position = i
+			break
+		}
+	}
+	if position < 0 {
+		return nil
+	}
+	remaining := make([]int32, 0, len(cut.pFanins)-1)
+	remaining = append(remaining, cut.pFanins[:position]...)
+	remaining = append(remaining, cut.pFanins[position+1:]...)
+	leaves := Cnf_CutMergeLeaves(&Cnf_Cut_t{pFanins: remaining}, fan)
+	if len(leaves) > 16 {
+		return nil
+	}
+	resultLeaves := leaves
+	if len(resultLeaves) > 16 {
+		return nil
+	}
+	result := Cnf_CutAlloc(nil, int32(len(resultLeaves)))
+	copy(result.pFanins, resultLeaves)
+	for assignment := 0; assignment < 1<<len(resultLeaves); assignment++ {
+		fanAssignment := 0
+		for i, id := range fan.pFanins {
+			for j, resultID := range resultLeaves {
+				if id == resultID && assignment&(1<<j) != 0 {
+					fanAssignment |= 1 << i
+					break
+				}
+			}
+		}
+		fanResult := cutValue(fan, fanAssignment)
+		cutAssignment := 0
+		for i, id := range cut.pFanins {
+			bit := fanResult
+			if i != position {
+				for j, resultID := range resultLeaves {
+					if id == resultID {
+						bit = assignment&(1<<j) != 0
+						break
+					}
+				}
+			}
+			if bit {
+				cutAssignment |= 1 << i
+			}
+		}
+		setTruthBit(result.truth, assignment, cutValue(cut, cutAssignment))
+	}
+	result.Cost = uint8(cutSopCost(result.truth, len(resultLeaves)))
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Merges two cuts.]
-
-  Description [Returns NULL of the cuts cannot be merged.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Cnf_CutCompose_pFanins [32]int32;
-func Cnf_CutCompose(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, iFan int32) *Cnf_Cut_t {
-    var pCutRes *Cnf_Cut_t;
-    
-    var pTruth, pTruthFan, pTruthRes *uint32;
-    var pTop *uint32 = p.pTruths[0];
-    var pFan *uint32 = p.pTruths[2];
-    var pTemp *uint32 = p.pTruths[3];
-    var uPhase, uPhaseFan uint32;
-    var i, iVar, nFanins, RetValue int32;
-
-    // make sure the second cut is the fanin of the first
-    for  iVar = 0; iVar < pCut.nFanins; iVar++  {
-        if pCut.pFanins[iVar] == iFan {
-            break; }
-    }
-    assert(iVar < pCut.nFanins, "iVar < pCut.nFanins");
-    // remove this variable
-    Cnf_CutRemoveIthVar( pCut, iVar, iFan );
-    // merge leaves of the cuts
-    nFanins = Cnf_CutMergeLeaves( pCut, pCutFan, spStatic_Cnf_CutCompose_pFanins );
-    if nFanins+1 > p.nMergeLimit {
-        Cnf_CutInsertIthVar( pCut, iVar, iFan );
-        return nil;
-    }
-    // create new cut
-    pCutRes = Cnf_CutAlloc( p, nFanins );
-    memcpy( pCutRes.pFanins, spStatic_Cnf_CutCompose_pFanins, sizeof(int) * nFanins );
-    assert(pCutRes.nFanins <= pCut.nFanins + pCutFan.nFanins, "pCutRes.nFanins <= pCut.nFanins + pCutFan.nFanins");
-
-    // derive its truth table
-    // get the truth tables in the composition space
-    pTruth    = Cnf_CutTruth(pCut);
-    pTruthFan = Cnf_CutTruth(pCutFan);
-    pTruthRes = Cnf_CutTruth(pCutRes);
-    for  i = 0; i < 2*pCutRes.nWords; i++  {
-        pTop[i] = pTruth[i % pCut.nWords];
-    }
-    for  i = 0; i < pCutRes.nWords; i++  {
-        pFan[i] = pTruthFan[i % pCutFan.nWords];
-    }
-    // move the variable to the end
-    uPhase = Kit_BitMask( pCutRes.nFanins+1 ) & ~(1 << iVar);
-    Kit_TruthShrink( pTemp, pTop, pCutRes.nFanins, pCutRes.nFanins+1, uPhase, 1 );
-    // compute the phases
-    uPhase    = Cnf_TruthPhase( pCutRes, pCut    ) | (1 << pCutRes.nFanins);
-    uPhaseFan = Cnf_TruthPhase( pCutRes, pCutFan );
-    // permute truth-tables to the common support
-    Kit_TruthStretch( pTemp, pTop, pCut.nFanins+1,  pCutRes.nFanins+1, uPhase,    1 );
-    Kit_TruthStretch( pTemp, pFan, pCutFan.nFanins, pCutRes.nFanins,   uPhaseFan, 1 );
-    // perform Boolean operation
-    Kit_TruthMux( pTruthRes, pTop, pTop+pCutRes.nWords, pFan, pCutRes.nFanins );
-    // return the cut to its original condition
-    Cnf_CutInsertIthVar( pCut, iVar, iFan );
-    // consider the simple case
-    if pCutRes.nFanins < 5 {
-        pCutRes.Cost = p.pSopSizes[0xFFFF & *pTruthRes] + p.pSopSizes[0xFFFF & ~*pTruthRes];
-        return pCutRes;
-    }
-
-    // derive ISOP for positive phase
-    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );
-    pCutRes.vIsop[1] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );
-    // derive ISOP for negative phase
-    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );
-    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );
-    pCutRes.vIsop[0] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );
-    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );
-
-    // compute the cut cost
-    if pCutRes.vIsop[0] == nil || pCutRes.vIsop[1] == nil {
-        pCutRes.Cost = 127;
-    } else if Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]) > 127 {
-        pCutRes.Cost = 127;
-    } else {
-        pCutRes.Cost = Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]); }
-    return pCutRes;
+func containsLeaf(leaves []int32, id int32) bool {
+	for _, leaf := range leaves {
+		if leaf == id {
+			return true
+		}
+	}
+	return false
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func cutSopCost(truth []uint32, variables int) int {
+	minterms, maxterms := 0, 0
+	for i := 0; i < 1<<variables; i++ {
+		if truthBit(truth, i) {
+			minterms++
+		} else {
+			maxterms++
+		}
+	}
+	return minterms + maxterms
+}

@@ -32,3 +32,22 @@ func TestModelNetworkNormalizationAndInterface(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestModelMetadataSurvivesMappingCoarsening(t *testing.T) {
+	model := &ioa.Model{Name: "named-circuit", MaxVar: 3, Inputs: []uint32{2, 4}, ANDs: []ioa.And{{Literal: 6, Left: 4, Right: 2}}, Outputs: []uint32{6}}
+	network, err := NetworkFromModel(model)
+	if err != nil {
+		t.Fatal(err)
+	}
+	coarse, err := Coarsen(network, 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mapping, err := GenerateMapping(coarse, DefaultOptions())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mapping.NetworkName() != "named-circuit" || mapping.NetworkSpec() != "" {
+		t.Fatal("mapped metadata", mapping.NetworkName(), mapping.NetworkSpec())
+	}
+}

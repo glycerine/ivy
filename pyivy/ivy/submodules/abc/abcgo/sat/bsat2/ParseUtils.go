@@ -1,8 +1,10 @@
 package bsat2
 
 import (
-	"fmt"
-	"os"
+	"bufio"
+	"io"
+	"strconv"
+	"strings"
 )
 
 /************************************************************************************[ParseUtils.h]
@@ -25,105 +27,36 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include <stdlib.h>
-//#include <stdio.h>
-
-//#include "misc/zlib/zlib.h"
-
-namespace Minisat {
-
-//-------------------------------------------------------------------------------------------------
-// A simple buffered character stream class:
-
-static int buffer_size = 1048576;
-
-
-class StreamBuffer {
-    gzFile        in;
-    unsigned char buf[buffer_size];
-    int           pos;
-    int           size;
-
-    void assureLookahead() {
-        if pos >= size {
-            pos  = 0;
-            size = gzread(in, buf, sizeof(buf)); } }
-
-public:
-    explicit StreamBuffer(gzFile i) : in(i), pos(0), size(0) { assureLookahead(); }
-
-    int  operator *  () { return (pos >= size) ? -1 : buf[pos]; }
-    void operator ++ ()       { pos++; assureLookahead(); }
-    int  position    () { return pos; }
-};
-
-
-//-------------------------------------------------------------------------------------------------
-// End-of-file detection functions for StreamBuffer and char*:
-
-
-static inline bool isEof(StreamBuffer& in) { return *in == -1;  }
-static inline bool isEof(char*   in) { return *in == '\0'; }
-
-//-------------------------------------------------------------------------------------------------
-// Generic parse functions parametrized over the input-stream type.
-
-
-template<class B>
-static void skipWhitespace(B& in) {
-    while ((*in >= 9 && *in <= 13) || *in == 32)
-        ++in; }
-
-
-template<class B>
-static void skipLine(B& in) {
-    for {
-        if (isEof(in)) return;
-        if *in == '\n' { ++in; return; }
-        ++in; } }
-
-
-template<class B>
-static int parseInt(B& in) {
-    int     val = 0;
-    bool    neg = false;
-    skipWhitespace(in);
-    if      (*in == '-') neg = true, ++in;
-    else if (*in == '+') ++in;
-    if (*in < '0' || *in > '9') fmt.Fprintf(os.Stderr, "PARSE ERROR! Unexpected char: %c\n", *in), os.Exit(int(3));
-    while (*in >= '0' && *in <= '9')
-        val = val*10 + (*in - '0'),
-        ++in;
-    return neg ? -val : val; }
-
-
-// String matching: in case of a match the input iterator will be advanced the corresponding
-// number of characters.
-template<class B>
-static bool match(B& in, char* str) {
-    int i;
-    for (i = 0; str[i] != '\0'; i++)
-        if (in[i] != str[i])
-            return false;
-
-    in += i;
-
-    return true; 
+// TokenReader preserves line positions for DIMACS and option diagnostics.
+type TokenReader struct {
+	scanner *bufio.Scanner
+	line    int
+	pending []string
 }
 
-// String matching: consumes characters eagerly, but does not require random access iterator.
-template<class B>
-static bool eagerMatch(B& in, char* str) {
-    for (; *str != '\0'; ++str, ++in)
-        if (*str != *in)
-            return false;
-    return true; }
-
-
-//=================================================================================================
+func NewTokenReader(reader io.Reader) *TokenReader {
+	scanner := bufio.NewScanner(reader)
+	scanner.Buffer(make([]byte, 4096), 64<<20)
+	return &TokenReader{scanner: scanner}
 }
-
-
+func (r *TokenReader) Next() (string, error) {
+	for len(r.pending) == 0 {
+		if !r.scanner.Scan() {
+			if err := r.scanner.Err(); err != nil {
+				return "", err
+			}
+			return "", io.EOF
+		}
+		r.line++
+		line := strings.TrimSpace(r.scanner.Text())
+		if line == "" || strings.HasPrefix(line, "c") {
+			continue
+		}
+		r.pending = strings.Fields(line)
+	}
+	token := r.pending[0]
+	r.pending = r.pending[1:]
+	return token, nil
+}
+func (r *TokenReader) Line() int               { return r.line }
+func ParseInteger(token string) (int64, error) { return strconv.ParseInt(token, 10, 64) }

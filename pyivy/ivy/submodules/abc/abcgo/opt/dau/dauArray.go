@@ -1,250 +1,252 @@
 package dau
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-/**CFile****************************************************************
-
-  FileName    [dauArray.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware unmapping.]
-
-  Synopsis    [Array representation of DSD.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: dauArray.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dauInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
-type Dau_Dsd_t struct {
-    iVar uint32; /* C bitfield: 5 bits; review packing and truncation */  // variable
-    nFans uint32; /* C bitfield: 5 bits; review packing and truncation */  // fanin count
-    Depth uint32; /* C bitfield: 5 bits; review packing and truncation */  // tree depth
-    Offset uint32; /* C bitfield: 5 bits; review packing and truncation */  // the diff between this and other node
-    Data uint32; /* C bitfield: 5 bits; review packing and truncation */  // user data
-    Type uint32; /* C bitfield: 3 bits; review packing and truncation */  // node type
-    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
-    fUnused uint32; /* C bitfield: 1 bits; review packing and truncation */  // this vertice is unused
+// Dau_DsdArrayNode is the private dauArray.c bitfield record. Its distinct Go
+// name avoids colliding with dauDsd.c's unrelated file-local Dau_Dsd_t manager.
+type Dau_DsdArrayNode struct {
+	iVar, nFans, Depth, Offset, Data int32
+	Type                             Dau_DsdType_t
+	fCompl, fUnused                  int32
 }
 
-func Dau_DsdClean(p *Dau_Dsd_t) { *((int *)p) = 0; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-func Dau_DsdCountAnd(p *Dau_Dsd_t) int32 {
-    var Count int32;
-    var Costs [7]int32 = [7]int32{0, 0, 0, 1, 3, 3, 3};
-    for  Count = 0; p.Type; p++  {
-        Count += Costs[p.Type];
-    }
-    return Count;
+func Dau_DsdClean(p *Dau_DsdArrayNode) { *p = Dau_DsdArrayNode{} }
+func Dau_DsdCountAnd(nodes []Dau_DsdArrayNode) int32 {
+	costs := [7]int32{0, 0, 0, 1, 3, 3, 3}
+	sum := int32(0)
+	for _, n := range nodes {
+		if n.Type == DAU_DSD_NONE {
+			break
+		}
+		sum += costs[n.Type]
+	}
+	return sum
 }
-
-/*
-void Dau_DsdMark( Dau_Dsd_t * p, int nSize, int * pMarks )
-{
-    int pStore[DAU_MAX_VAR] = {0};
-    Dau_Dsd_t * q;
-    if ( p->Type == DAU_DSD_CONST || p->Type == DAU_DSD_VAR )
-        return;
-    for ( q = p + nSize - 1; q >= p; q-- )
-    {
-        if ( q->Type == DAU_DSD_VAR )
-            pStore[q->Depth] += pMarks[q->iVar];
-        else 
-        {
-            q->Data = pStore[q->Depth+1]; pStore[q->Depth+1] = 0;
-            pStore[q->Depth] += (q->Data == q->nFans);            
-        }
-    }
+func Dau_DsdConstruct(text string, store []Dau_DsdArrayNode) int32 {
+	if len(store) < 2 {
+		panic("short DAU DSD array")
+	}
+	if Dau_DsdIsConst(text) != 0 {
+		store[0] = Dau_DsdArrayNode{Type: DAU_DSD_CONST0, fCompl: Dau_DsdIsConst1(text)}
+		store[1] = Dau_DsdArrayNode{}
+		return 1
+	}
+	var levels [DAU_MAX_VAR]int
+	var close [DAU_MAX_VAR]byte
+	depth, n, compl := -1, 0, int32(0)
+	for i := 0; i < len(text); i++ {
+		c := text[i]
+		if c == '!' {
+			compl ^= 1
+			continue
+		}
+		if c == ')' || c == ']' || c == '>' || c == '}' {
+			if depth < 0 || close[depth] != c || compl != 0 {
+				panic("unbalanced DAU DSD array expression")
+			}
+			depth--
+			if depth >= 0 {
+				parent, child := &store[levels[depth]], &store[levels[depth+1]]
+				parent.nFans++
+				parent.Data = min(parent.Data, child.Data)
+			}
+			continue
+		}
+		if n+1 >= len(store) {
+			panic("DAU DSD array capacity exceeded")
+		}
+		q := &store[n]
+		*q = Dau_DsdArrayNode{Data: 31, fCompl: compl}
+		compl = 0
+		index := n
+		n++
+		if c >= 'a' && c <= 'z' {
+			q.Type = DAU_DSD_VAR
+			q.iVar = int32(c - 'a')
+			q.Depth = int32(depth + 1)
+			if depth >= 0 {
+				parent := &store[levels[depth]]
+				parent.nFans++
+				parent.Data = min(parent.Data, q.iVar)
+			}
+			continue
+		}
+		var closing byte
+		switch c {
+		case '(':
+			q.Type = DAU_DSD_AND
+			closing = ')'
+		case '[':
+			q.Type = DAU_DSD_XOR
+			closing = ']'
+		case '<':
+			q.Type = DAU_DSD_MUX
+			closing = '>'
+		case '{':
+			q.Type = DAU_DSD_PRIME
+			closing = '}'
+		default:
+			panic("invalid DAU DSD array token")
+		}
+		depth++
+		if depth >= DAU_MAX_VAR {
+			panic("DAU DSD array nesting exceeds variable bound")
+		}
+		levels[depth] = index
+		close[depth] = closing
+		q.Depth = int32(depth)
+	}
+	if depth != -1 || compl != 0 || n == 0 {
+		panic("incomplete DAU DSD array expression")
+	}
+	store[n] = Dau_DsdArrayNode{}
+	return int32(n)
 }
-*/
-
-func Dau_DsdConstruct(pDsd string, pStore *Dau_Dsd_t) int32 {
-    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;
-    var q *Dau_Dsd_t  = pStore;
-    var d int32 = -1;
-    var fCompl int32;
-    if Dau_DsdIsConst(pDsd) {
-        Dau_DsdClean( q );
-        q.Type   = DAU_DSD_CONST0;
-        q.fCompl = Dau_DsdIsConst1(pDsd);
-        return 1;
-    }
-    for  --q; *pDsd; pDsd++  {
-        if *pDsd == '!' {
-            fCompl ^= 1;
-            continue;
-        }
-        if *pDsd == ')' || *pDsd == ']' || *pDsd == '>' || *pDsd == '}' {
-            assert(fCompl == 0, "fCompl == 0");
-            if d--; d >= 0 {
-                pLevel[d].nFans++;
-                if pLevel[d].Data > pLevel[d+1].Data {
-                    pLevel[d].Data = pLevel[d+1].Data; }
-            }
-            continue;
-        }
-        Dau_DsdClean( ++q );
-        q.Data = 31;
-        q.fCompl = fCompl;
-        fCompl = 0;
-        if *pDsd >= 'a' && *pDsd <= 'z' {
-            q.Type   = DAU_DSD_VAR;
-            q.iVar   = *pDsd - 'a';
-            q.Depth  = d + 1;
-            if d >= 0 {
-                pLevel[d].nFans++;
-                if pLevel[d].Data > q.iVar {
-                    pLevel[d].Data = q.iVar; }
-            }
-            continue;
-        }
-        if *pDsd == '(' {
-            q.Type = DAU_DSD_AND;
-        } else if *pDsd == '[' {
-            q.Type = DAU_DSD_XOR;
-        } else if *pDsd == '<' {
-            q.Type = DAU_DSD_MUX;
-        } else if *pDsd == '{' {
-            q.Type = DAU_DSD_PRIME;
-        } else { assert(false, "0"); }
-        pLevel[++d] = q;
-        q.Depth = d;
-    }
-    assert(d == -1, "d == -1");
-    Dau_DsdClean( ++q );
-    return q - pStore;
+func DauDsdArrayString(nodes []Dau_DsdArrayNode) string {
+	if len(nodes) == 0 {
+		return ""
+	}
+	if nodes[0].Type == DAU_DSD_CONST0 {
+		return fmt.Sprint(nodes[0].fCompl)
+	}
+	open := [7]byte{0, 0, 0, '(', '[', '<', '{'}
+	close := [7]byte{0, 0, 0, ')', ']', '>', '}'}
+	var result strings.Builder
+	var closings [DAU_MAX_VAR + 1]byte
+	var visits [DAU_MAX_VAR + 1]int32
+	depth := 0
+	visits[0] = 1
+	for _, node := range nodes {
+		if node.Type == DAU_DSD_NONE {
+			break
+		}
+		if node.fCompl != 0 {
+			result.WriteByte('!')
+		}
+		if node.Type == DAU_DSD_VAR {
+			result.WriteByte(byte('a' + node.iVar))
+			for depth > 0 {
+				visits[depth]--
+				if visits[depth] != 0 {
+					break
+				}
+				result.WriteByte(closings[depth])
+				depth--
+			}
+		} else {
+			depth++
+			visits[depth] = node.nFans
+			result.WriteByte(open[node.Type])
+			result.WriteByte(byte('a' + node.Data))
+			fmt.Fprint(&result, node.Depth)
+			closings[depth] = close[node.Type]
+		}
+	}
+	if depth != 0 {
+		panic("incomplete DAU DSD array fanins")
+	}
+	return result.String()
 }
-
-func Dau_DsdPrint(p *Dau_Dsd_t) {
-    var OpenType [7]byte = [7]byte{0, 0, 0, '(', '[', '<', '{'};
-    var CloseType [7]byte = [7]byte{0, 0, 0, ')', ']', '>', '}'};
-    var pTypes [DAU_MAX_VAR]byte;
-    var d int32;
-    var pVisits [DAU_MAX_VAR]int32;
-    if p.Type == DAU_DSD_CONST0 {
-        fmt.Printf("%d\n", p.fCompl);
-        return;
-    }
-    pVisits[0] = 1;
-    for  d = 0; p.Type; p++  {
-        if p.fCompl {
-            fmt.Printf("!"); }
-        if p.Type == DAU_DSD_VAR {
-            fmt.Printf("%c", 'a' + p.iVar);
-            for  d > 0 && --pVisits[d] == 0  {
-                fmt.Printf("%c", pTypes[d--]);
-            }
-        
-        } else {
-            pVisits[++d] = p.nFans;
-            fmt.Printf("%c", OpenType[p.Type]);
-            fmt.Printf("%c", 'a' + p.Data);
-            fmt.Printf("%d", p.Depth);
-            pTypes[d]  = CloseType[p.Type];
-        }
-    }
-    assert(d == 0, "d == 0");
-    fmt.Printf("\n");
+func Dau_DsdPrint(nodes []Dau_DsdArrayNode) { fmt.Println(DauDsdArrayString(nodes)) }
+func Dau_DsdDepth(nodes []Dau_DsdArrayNode) {
+	if len(nodes) == 0 || nodes[0].Type == DAU_DSD_CONST0 {
+		return
+	}
+	var visits [DAU_MAX_VAR + 1]int32
+	visits[0] = 1
+	depth := 0
+	for i := range nodes {
+		p := &nodes[i]
+		if p.Type == DAU_DSD_NONE {
+			break
+		}
+		p.Depth = int32(depth)
+		if p.Type == DAU_DSD_VAR {
+			for depth > 0 {
+				visits[depth]--
+				if visits[depth] != 0 {
+					break
+				}
+				depth--
+			}
+		} else {
+			depth++
+			visits[depth] = p.nFans
+		}
+	}
+	if depth != 0 {
+		panic("incomplete DAU DSD array")
+	}
 }
-
-func Dau_DsdDepth(p *Dau_Dsd_t) {
-    var d int32;
-    var pVisits [DAU_MAX_VAR]int32;
-    if p.Type == DAU_DSD_CONST0 {
-        return; }
-    pVisits[0] = 1;
-    for  d = 0; p.Type; p++  {
-        p.Depth = d;
-        if p.Type == DAU_DSD_VAR {
-            for  d > 0 && --pVisits[d] == 0  {
-                d--;
-            }
-        } else {
-            pVisits[++d] = p.nFans; }
-    }
-    assert(d == 0, "d == 0");
+func Dau_DsdRemoveUseless(nodes []Dau_DsdArrayNode) {
+	if len(nodes) == 0 || nodes[0].Type == DAU_DSD_CONST0 {
+		return
+	}
+	var levels [DAU_MAX_VAR + 1]int
+	var visits [DAU_MAX_VAR + 1]int32
+	visits[0] = 1
+	depth := 0
+	changed := false
+	for i := range nodes {
+		p := &nodes[i]
+		if p.Type == DAU_DSD_NONE {
+			break
+		}
+		p.Depth = int32(depth)
+		if p.Type == DAU_DSD_VAR {
+			for depth > 0 {
+				visits[depth]--
+				if visits[depth] != 0 {
+					break
+				}
+				depth--
+			}
+			continue
+		}
+		flatten := false
+		if depth > 0 {
+			parent := &nodes[levels[depth-1]]
+			flatten = parent.Type == DAU_DSD_XOR && p.Type == DAU_DSD_XOR || parent.Type == DAU_DSD_AND && p.Type == DAU_DSD_AND && p.fCompl == 0
+			if flatten {
+				parent.nFans += p.nFans - 1
+				visits[depth] += p.nFans - 1
+				if p.Type == DAU_DSD_XOR {
+					parent.fCompl ^= p.fCompl
+				}
+				p.fUnused = 1
+				changed = true
+			}
+		}
+		if !flatten {
+			levels[depth] = i
+			depth++
+			visits[depth] = p.nFans
+		}
+	}
+	if depth != 0 {
+		panic("incomplete DAU DSD array")
+	}
+	if changed {
+		write := 0
+		for _, n := range nodes {
+			if n.Type == DAU_DSD_NONE {
+				break
+			}
+			if n.fUnused == 0 {
+				nodes[write] = n
+				write++
+			}
+		}
+		nodes[write] = Dau_DsdArrayNode{}
+	}
 }
-
-func Dau_DsdRemoveUseless(p *Dau_Dsd_t) {
-    var q *Dau_Dsd_t = p;
-    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;
-    var d int32;
-    var fChange int32;
-    var pVisits [DAU_MAX_VAR]int32;
-    if p.Type == DAU_DSD_CONST0 {
-        return; }
-    pVisits[0] = 1;
-    for  d = 0; p.Type; p++  {
-        p.Depth = d;
-        if p.Type == DAU_DSD_VAR {
-            for  d > 0 && --pVisits[d] == 0  {
-                d--;
-            }
-        } else {
-            if d > 0 && (pLevel[d-1].Type == DAU_DSD_XOR && p.Type == DAU_DSD_XOR ||
-                           pLevel[d-1].Type == DAU_DSD_AND && p.Type == DAU_DSD_AND && !p.fCompl) {
-                pLevel[d-1].nFans += p.nFans - 1;
-                pVisits[d] += p.nFans - 1;
-                p.fUnused = 1;
-                fChange = 1;
-            
-            } else {
-                pLevel[d++] = p;
-                pVisits[d] = p.nFans;
-            }
-        }
-    }
-    assert(d == 0, "d == 0");
-    // compact
-    if fChange != 0 {
-        for  p = q; p.Type; p++  {
-            if !p.fUnused {
-                *q++ = *p; }
-        }
-        Dau_DsdClean( q );
-    }
-}
-
 func Dau_DsdTest22() {
-    var pStore [2 * DAU_MAX_VAR]Dau_Dsd_t;
-//    char * pDsd = "[(ab)c(f!(he))]";
-//    char * pDsd = "[(abd)cf(f!{she})]";
-    var pDsd string  = "[(abd)[cf](f(sg(he)))]";
-//    char * pDsd = "[(ab)[cf]]";
-    var i int32;
-    var nSize int32 = Dau_DsdConstruct( pDsd, pStore );
-//    Dau_DsdDepth( pStore );
-    Dau_DsdPrint( pStore );
-
-    Dau_DsdRemoveUseless( pStore );
-
-    Dau_DsdPrint( pStore );
-    i = 0;
+	nodes := make([]Dau_DsdArrayNode, 2*DAU_MAX_VAR)
+	Dau_DsdConstruct("[(abd)[cf](f(sg(he)))]", nodes)
+	Dau_DsdPrint(nodes)
+	Dau_DsdRemoveUseless(nodes)
+	Dau_DsdPrint(nodes)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

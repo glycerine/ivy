@@ -1,5 +1,10 @@
 package bsat2
 
+import (
+	"runtime"
+	"sync/atomic"
+)
+
 /***************************************************************************************[System.cc]
 Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
 Copyright (c) 2007-2010, Niklas Sorensson
@@ -20,79 +25,16 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-//#include "System.h"
+var peakHeap atomic.Uint64
 
-#if defined(__linux__)
-
-#include <stdio.h>
-#include <stdlib.h>
-
-//using namespace Minisat;
-
-
-// TODO: split the memory reading functions into two: one for reading high-watermark of RSS, and
-// one for reading the current virtual memory size.
-
-static inline int memReadStat(int field)
-{
-    char  name[256];
-    pid_t pid = getpid();
-    int   value;
-
-    sprintf(name, "/proc/%d/statm", pid);
-    FILE* in = fopen(name, "rb");
-    if (in == NULL) return 0;
-
-    for (; field >= 0; field--)
-        if (fscanf(in, "%d", &value) != 1)
-            printf("ERROR! Failed to parse memory statistics from \"/proc\".\n"), exit(1);
-    fclose(in);
-    return value;
+// PeakMemoryUsage tracks the largest sampled Go heap allocation, in MiB.
+func PeakMemoryUsage() float64 {
+	var stats runtime.MemStats
+	runtime.ReadMemStats(&stats)
+	for previous := peakHeap.Load(); stats.HeapAlloc > previous; previous = peakHeap.Load() {
+		if peakHeap.CompareAndSwap(previous, stats.HeapAlloc) {
+			break
+		}
+	}
+	return float64(peakHeap.Load()) / (1024 * 1024)
 }
-
-
-static inline int memReadPeak(void)
-{
-    char  name[256];
-    pid_t pid = getpid();
-
-    sprintf(name, "/proc/%d/status", pid);
-    FILE* in = fopen(name, "rb");
-    if (in == NULL) return 0;
-
-    // Find the correct line, beginning with "VmPeak:":
-    int peak_kb = 0;
-    while (!feof(in) && fscanf(in, "VmPeak: %d kB", &peak_kb) != 1)
-        while (!feof(in) && fgetc(in) != '\n')
-            ;
-    fclose(in);
-
-    return peak_kb;
-}
-
-double Minisat::memUsed() { return (double)memReadStat(0) * (double)getpagesize() / (1024*1024); }
-double Minisat::memUsedPeak() { 
-    double peak = memReadPeak() / 1024;
-    return peak == 0 ? memUsed() : peak; }
-
-#elif defined(__FreeBSD__)
-
-double Minisat::memUsed(void) {
-    struct rusage ru;
-    getrusage(RUSAGE_SELF, &ru);
-    return (double)ru.ru_maxrss / 1024; }
-double MiniSat::memUsedPeak(void) { return memUsed(); }
-
-
-#elif defined(__APPLE__)
-#include <malloc/malloc.h>
-
-double Minisat::memUsed(void) {
-    malloc_statistics_t t;
-    malloc_zone_statistics(NULL, &t);
-    return (double)t.max_size_in_use / (1024*1024); }
-
-#else
-double Minisat::memUsed()     { return 0; }
-double Minisat::memUsedPeak() { return 0; }
-#endif

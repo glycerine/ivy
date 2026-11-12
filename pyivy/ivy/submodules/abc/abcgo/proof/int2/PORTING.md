@@ -18,6 +18,13 @@ AND and buffer constraints. CNF loading also preserves the source literal
 encoding, including immediate contradiction detection. The bridge component
 passes its explicit-file race test and vet gate.
 
+`int2Util.go` now uses public GIA/vector APIs to collect support cones and
+construct the suffix graph. SOP parsing checks cube lengths and register
+indices, and `int2_util_test.go` covers initial-state and multi-cube CO
+selection plus malformed input. The preimage loop now uses distinct suffix
+CI and prefix-state maps, and releases each temporary assignment/cube before
+continuing.
+
 Focused verification for this completed component (run from the repository
 root):
 
@@ -28,16 +35,27 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo test -race ./proof/int2/sat_bridge.go ./pro
 GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./proof/int2/sat_bridge.go ./proof/int2/sat_bridge_test.go
 ```
 
-The full package is not yet buildable. The remaining source-derived files still
-contain invalid C expressions and casts. The C code also relies on solver and
-CNF APIs that must be bridged through the exported `bsat.Solver` API. GIA now
+The checked-in C interpolation driver has unresolved names (`vImageOne`,
+`vImagesAll`, `vCiMap`, `vCoMap`, and `pGiaSuff`) and the preimage helper reads
+manager fields absent from its signature. Rather than return undecided after
+frame zero or claim an incomplete interpolant proof, `Int2_ManPerformInterpolation`
+currently uses exact reachable-state enumeration from the all-zero initial
+state. It proves only after the reachable set closes; the current limits are
+16 primary inputs, 262,144 distinct states, and 4,194,304 explored state/input
+pairs. A configured depth or time limit can also return undecided.
+Counterexamples are reported when a property output is true in a reached
+state. Small cyclic, counterexample, and depth-limited machines have focused
+regression tests.
+
+The dependency GIA package also currently fails to parse in `giaBalAig.go`,
+before Go can typecheck INT2. GIA now
 provides `Data`, `SetData`, `TakeData`, `Identity`, and `SetIdentity` accessors
 along with object value/mark APIs. The source itself also contains unresolved
-identifiers/typos in `Int2_ManCreateFrames` and interpolation setup; these need
-to be resolved against the intended algorithm, not mechanically copied.
+identifiers/typos in interpolation setup; these need to be resolved against
+the intended algorithm, not mechanically copied.
 
-No full-package or algorithm-fidelity claim is made yet. Next steps are to
-finish converting C-style loops/expressions, translate solver calls to the
-public BSAT API, validate CNF data ownership, then add original-C fixtures
-for unrolling, initialization checks, BMC frames, refinement cubes and
-preimage enumeration.
+No full-package or interpolation-fidelity claim is made yet. Next steps are to
+run the new transition-system tests after the GIA package compiles, add
+original-C fixtures for unrolling, initialization checks, BMC frames,
+refinement cubes and preimage enumeration, and reconstruct the original image
+interpolation driver if a complete source contract becomes available.

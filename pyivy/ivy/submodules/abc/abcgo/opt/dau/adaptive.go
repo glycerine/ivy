@@ -493,3 +493,465 @@ func Abc_TgSimpleEnumeration(p *Abc_TgMan_t) {
 		}
 	}
 }
+
+func Abc_NextPermSwapC(data, dir []int, size int) int {
+	k := -1
+	for i := 0; i < size; i++ {
+		j := i + dir[i]
+		if j >= 0 && j < size && data[i] > data[j] && (k < 0 || data[i] > data[k]) {
+			k = i
+		}
+	}
+	if k < 0 {
+		k = 0
+	}
+	for i := 0; i < size; i++ {
+		if data[i] > data[k] {
+			dir[i] = -dir[i]
+		}
+	}
+	j := k + dir[k]
+	return min(j, k)
+}
+func Abc_TgIsInitPerm(data, dir []int, size int) bool {
+	if size == 0 {
+		return true
+	}
+	if dir[0] != -1 {
+		return false
+	}
+	for i := 1; i < size; i++ {
+		if dir[i] != -1 || data[i] < data[i-1] {
+			return false
+		}
+	}
+	return true
+}
+func Abc_TgFirstPermutation(p *Abc_TgMan_t) {
+	for i := 0; i < p.nGVars; i++ {
+		p.pPermDir[i] = -1
+	}
+}
+func Abc_TgNextPermutation(p *Abc_TgMan_t) bool {
+	for i := 0; i < p.nGroups; i++ {
+		g := p.pGroup[i]
+		if g.nGVars <= 1 {
+			continue
+		}
+		j := Abc_NextPermSwapC(p.pPerm[g.iStart:], p.pPermDir[g.iStart:], g.nGVars)
+		if j >= 0 {
+			Abc_TgSwapAdjacentSymGroups(p, g.iStart+j)
+			return true
+		}
+		Abc_TgSwapAdjacentSymGroups(p, g.iStart)
+	}
+	return false
+}
+func grayCode(a uint32) uint32 { return a ^ (a >> 1) }
+func grayFlip(a uint32) int    { return bits.TrailingZeros32(a + 1) }
+func Abc_TgSaveBest(p, best *Abc_TgMan_t) {
+	if canon.CompareReverse(best.pTruth, p.pTruth) == 1 {
+		Abc_TgManCopy(best, best.pTruth, p)
+	}
+}
+func Abc_TgPhaseEnumeration(p, best *Abc_TgMan_t) {
+	Abc_TgSaveBest(p, best)
+	if p.fPhased {
+		return
+	}
+	n := p.pGroup[0].nGVars
+	var order [16]int
+	for i := 0; i < n; i++ {
+		v := p.pPerm[i]
+		j := i
+		for j > 0 && p.symPhase[order[j-1]] > p.symPhase[v] {
+			order[j] = order[j-1]
+			j--
+		}
+		order[j] = v
+	}
+	for i := uint32(0); i < (1<<uint(n))-1; i++ {
+		Abc_TgFlipSymGroupByVar(p, order[grayFlip(i)])
+		Abc_TgSaveBest(p, best)
+	}
+}
+func Abc_TgCalcScc(p *Abc_TgMan_t, out []int32, sortCoefficients bool) {
+	Abc_TtSccInCofs(p.pTruth, int32(p.nVars), out)
+	i := 0
+	for j := 0; j < p.nGVars; j++ {
+		out[j] = out[i]
+		for k := p.pPerm[j]; k >= 0; k = p.symLink[k] {
+			i++
+		}
+	}
+	if !sortCoefficients {
+		return
+	}
+	for g := 0; g < p.nGroups; g++ {
+		start := p.pGroup[g].iStart
+		end := start + p.pGroup[g].nGVars
+		for i := start + 1; i < end; i++ {
+			v := out[i]
+			j := i
+			for j > start && out[j-1] > v {
+				out[j] = out[j-1]
+				j--
+			}
+			out[j] = v
+		}
+	}
+}
+func Abc_TgSplitGroupsByScc(p *Abc_TgMan_t) {
+	var cofs [16]int32
+	Abc_TgCalcScc(p, cofs[:], false)
+	for g := 0; g < p.nGroups; g++ {
+		g += Abc_TgSplitGroup(p, g, cofs[p.pGroup[g].iStart:])
+	}
+	var dest [16]byte
+	Abc_TgExpendSymmetry(p, dest[:])
+	Abc_TgImplementPerm(p, dest[:])
+}
+func Abc_TgCompareCoef(a, b []int32, n int) int {
+	for i := 0; i < n; i++ {
+		if a[i] < b[i] {
+			return -1
+		}
+		if a[i] > b[i] {
+			return 1
+		}
+	}
+	return 0
+}
+
+var log2fn = [17]int{0, 0, 100, 258, 458, 691, 949, 1230, 1530, 1847, 2179, 2525, 2884, 3254, 3634, 4025, 4425}
+
+func Abc_TgPermCostScc(p *Abc_TgMan_t, cofs []int32) int {
+	cost, k := 0, 0
+	for g := 0; g < p.nGroups; g++ {
+		n := p.pGroup[g].nGVars
+		same := 1
+		k++
+		for j := 1; j < n; j++ {
+			if cofs[k] == cofs[k-1] {
+				same++
+			} else {
+				cost += log2fn[same]
+				same = 1
+			}
+			k++
+		}
+		cost += log2fn[same]
+	}
+	return cost
+}
+func Abc_TgPermEnumerationScc(p, best *Abc_TgMan_t) {
+	var cur Abc_TgMan_t
+	Abc_TgManCopy(&cur, make([]uint64, len(p.pTruth)), p)
+	if p.nAlgorithm > 1 {
+		Abc_TgSplitGroupsByScc(&cur)
+	}
+	Abc_TgFirstPermutation(&cur)
+	for {
+		Abc_TgSaveBest(&cur, best)
+		if !Abc_TgNextPermutation(&cur) {
+			break
+		}
+	}
+}
+func Abc_TgReorderFGrps(p *Abc_TgMan_t) {
+	n := p.pGroup[0].nGVars
+	if p.fPhased {
+		n = 0
+	}
+	for i := 0; i < n; i++ {
+		v := p.pPerm[i]
+		j := i
+		for j > 0 && p.symPhase[p.pFGrps[j-1]] > p.symPhase[v] {
+			p.pFGrps[j] = p.pFGrps[j-1]
+			j--
+		}
+		p.pFGrps[j] = v
+	}
+}
+func ilog2(n int) int {
+	if n <= 1 {
+		return 0
+	}
+	return bits.Len(uint(n)) - 1
+}
+
+type Abc_SccCost_t struct{ cNeg, cPhase, cPerm int }
+
+func Abc_TgRecordPhase(p *Abc_TgMan_t, mode int) Abc_SccCost_t {
+	var cofs, minCofs [18]int32
+	ret := Abc_SccCost_t{}
+	if p.fPhased {
+		Abc_TgCalcScc(p, cofs[2:], true)
+		ret.cPerm = Abc_TgPermCostScc(p, cofs[2:])
+		return ret
+	}
+	n := p.pGroup[0].nGVars
+	if n == 0 {
+		return ret
+	}
+	if p.vPhase == nil {
+		panic("DAU SCC enumeration needs phase storage")
+	}
+	start := 0
+	if mode == 0 {
+		start = 1
+	}
+	nCoefs := p.nGVars + 2 - start
+	Abc_TgReorderFGrps(p)
+	minCofs[1] = Abc_TtScc(p.pTruth, int32(p.nVars))
+	Abc_TgCalcScc(p, minCofs[2:], true)
+	if mode != 0 {
+		minCofs[0] = int32(Abc_TgPermCostScc(p, minCofs[2:]))
+	}
+	vec.Vec_IntPush(p.vPhase, 0)
+	for i := uint32(0); ; i++ {
+		j := grayFlip(i)
+		if j >= n {
+			break
+		}
+		Abc_TgFlipSymGroupByVar(p, p.pFGrps[j])
+		cofs[1] = Abc_TtScc(p.pTruth, int32(p.nVars))
+		if mode == 0 && cofs[1] > minCofs[1] {
+			continue
+		}
+		Abc_TgCalcScc(p, cofs[2:], true)
+		if mode > 0 {
+			cofs[0] = int32(Abc_TgPermCostScc(p, cofs[2:]))
+		}
+		if Abc_TgCompareCoef(cofs[start:], minCofs[start:], nCoefs) < 0 {
+			copy(minCofs[start:start+nCoefs], cofs[start:start+nCoefs])
+			vec.Vec_IntClear(p.vPhase)
+		}
+		if Abc_TgCompareCoef(cofs[start:], minCofs[start:], nCoefs) == 0 {
+			vec.Vec_IntPush(p.vPhase, int32(grayCode(i+1)))
+		}
+	}
+	Abc_TgFlipSymGroupByVar(p, p.pFGrps[n-1])
+	ret.cNeg = n
+	ret.cPhase = ilog2(vec.Vec_IntSize(p.vPhase))
+	ret.cPerm = Abc_TgPermCostScc(p, minCofs[2:])
+	return ret
+}
+func Abc_TgRecordPhase1(p *Abc_TgMan_t) int {
+	if p.fPhased {
+		return 0
+	}
+	n := p.pGroup[0].nGVars
+	if n == 0 {
+		return 0
+	}
+	if p.vPhase == nil {
+		panic("DAU SCC enumeration needs phase storage")
+	}
+	Abc_TgReorderFGrps(p)
+	minimum := Abc_TtScc(p.pTruth, int32(p.nVars))
+	vec.Vec_IntPush(p.vPhase, 0)
+	for i := uint32(0); ; i++ {
+		j := grayFlip(i)
+		if j >= n {
+			break
+		}
+		Abc_TgFlipSymGroupByVar(p, p.pFGrps[j])
+		value := Abc_TtScc(p.pTruth, int32(p.nVars))
+		if value > minimum {
+			continue
+		}
+		if value < minimum {
+			minimum = value
+			vec.Vec_IntClear(p.vPhase)
+		}
+		vec.Vec_IntPush(p.vPhase, int32(grayCode(i+1)))
+	}
+	Abc_TgFlipSymGroupByVar(p, p.pFGrps[n-1])
+	return ilog2(vec.Vec_IntSize(p.vPhase))
+}
+func Abc_TgPhaseEnumerationScc(p, best *Abc_TgMan_t) {
+	if p.fPhased {
+		Abc_TgPermEnumerationScc(p, best)
+		return
+	}
+	if p.pGroup[0].nGVars == 0 {
+		Abc_TgSaveBest(p, best)
+		return
+	}
+	var cur Abc_TgMan_t
+	Abc_TgManCopy(&cur, make([]uint64, len(p.pTruth)), p)
+	previous := int32(0)
+	for _, phase := range vec.Vec_IntArray(p.vPhase) {
+		flip := phase ^ previous
+		for j := 0; j < p.pGroup[0].nGVars; j++ {
+			if flip&(1<<uint(j)) != 0 {
+				Abc_TgFlipSymGroupByVar(&cur, p.pFGrps[j])
+			}
+		}
+		previous = phase
+		Abc_TgPermEnumerationScc(&cur, best)
+	}
+}
+func Abc_TgFullEnumeration(work, best *Abc_TgMan_t) {
+	if work.nAlgorithm > 0 {
+		for i := range best.pTruth {
+			best.pTruth[i] = ^uint64(0)
+		}
+		Abc_TgPhaseEnumerationScc(work, best)
+	} else {
+		Abc_TgFirstPermutation(work)
+		for {
+			Abc_TgPhaseEnumeration(work, best)
+			if !Abc_TgNextPermutation(work) {
+				break
+			}
+		}
+	}
+	best.uPhase |= 1 << 30
+}
+func Abc_SccPhaseCost(p *Abc_TgMan_t) float64 {
+	return float64(p.nVars)*0.997 + float64(p.nGVars)*1.043 - 15.9
+}
+func Abc_SccEnumCost(p *Abc_TgMan_t, c Abc_SccCost_t) float64 {
+	switch p.nAlgorithm {
+	case 0:
+		return float64(p.nVars) + float64(c.cPhase)*1.09 + float64(c.cPerm)*0.01144
+	case 1:
+		return float64(p.nVars) + float64(c.cPhase)*0.855 + float64(c.cPerm)*0.00797
+	case 2:
+		return float64(p.nVars)*0.94 + float64(c.cPhase)*0.885 + float64(c.cPerm)*0.00855 - 20.59
+	}
+	return 0
+}
+func Abc_TgEnumerationCost(p *Abc_TgMan_t) int {
+	if p.nGroups == 0 {
+		return 0
+	}
+	cost := Abc_SccCost_t{}
+	for i := 0; i < p.nGroups; i++ {
+		cost.cPerm += log2fn[p.pGroup[i].nGVars]
+	}
+	if !p.fPhased {
+		if p.nAlgorithm == 0 {
+			cost.cPhase = p.pGroup[0].nGVars
+		} else {
+			cost.cPhase = Abc_TgRecordPhase1(p)
+		}
+	}
+	return int(Abc_SccEnumCost(p, cost) + 0.5)
+}
+func Abc_TtCanonicizeAda(p *Abc_TtHieMan_t, truth []uint64, nVars int32, perm []byte, threshold int32) uint32 {
+	if nVars == 0 {
+		truth[0] = 0
+		return 0
+	}
+	if nVars < 0 || nVars > 16 || len(perm) < int(nVars) {
+		panic("invalid DAU adaptive dimensions")
+	}
+	Abc_TtVerifySmallTruth(truth, nVars)
+	algorithm := 0
+	if threshold >= 1000 {
+		algorithm = 1
+	}
+	if algorithm != 0 && p == nil {
+		panic("DAU SCC algorithm requires a cache manager")
+	}
+	const hash uint32 = 1 << 29
+	if p != nil && Abc_TtHieRetrieveOrInsert(p, -5, truth, truth) > 0 {
+		return hash
+	}
+	var cur, saved Abc_TgMan_t
+	var phase *vec.Vec_Int_t
+	if p != nil {
+		phase = p.vPhase
+	}
+	Abc_TgInitMan(&cur, truth, int(nVars), algorithm, phase)
+	Abc_TgCreateGroups(&cur)
+	if p != nil && Abc_TtHieRetrieveOrInsert(p, -4, truth, truth) > 0 {
+		return hash
+	}
+	Abc_TgPurgeSymmetry(&cur, threshold%1000 >= 100)
+	Abc_TgExpendSymmetry(&cur, perm)
+	Abc_TgImplementPerm(&cur, perm)
+	cost := Abc_TgEnumerationCost(&cur)
+	exact := threshold%100 > 84 || cost < int(threshold%100)
+	if p == nil || len(p.levels) == 1 {
+		if exact {
+			Abc_TgManCopy(&saved, make([]uint64, len(cur.pTruth)), &cur)
+			Abc_TgFullEnumeration(&saved, &cur)
+		} else {
+			Abc_TgSimpleEnumeration(&cur)
+		}
+	} else {
+		flag := uint32(0)
+		if exact {
+			flag = 1 << 30
+		}
+		if Abc_TtHieRetrieveOrInsert(p, -3, truth, truth) > 0 {
+			return hash | flag
+		}
+		Abc_TgManCopy(&saved, make([]uint64, len(cur.pTruth)), &cur)
+		Abc_TgSimpleEnumeration(&cur)
+		if Abc_TtHieRetrieveOrInsert(p, -2, truth, truth) > 0 {
+			return hash | flag
+		}
+		if exact {
+			Abc_TgManCopy(&cur, truth, &saved)
+			Abc_TgFullEnumeration(&saved, &cur)
+		}
+		Abc_TtHieRetrieveOrInsert(p, -1, truth, truth)
+	}
+	for i := 0; i < int(nVars); i++ {
+		perm[i] = byte(cur.pPermT[i])
+	}
+	return cur.uPhase
+}
+func Abc_TtCanonicizeCA(p *Abc_TtHieMan_t, truth []uint64, nVars int32, perm []byte, costAware int32) uint32 {
+	if nVars == 0 {
+		truth[0] = 0
+		return 0
+	}
+	if p == nil || nVars < 0 || nVars > 16 || len(perm) < int(nVars) {
+		panic("invalid DAU cost-aware dimensions")
+	}
+	Abc_TtVerifySmallTruth(truth, nVars)
+	const hash uint32 = 1 << 29
+	if Abc_TtHieRetrieveOrInsert(p, -5, truth, truth) > 0 {
+		return hash
+	}
+	var cur, saved Abc_TgMan_t
+	Abc_TgInitMan(&cur, truth, int(nVars), 2, p.vPhase)
+	Abc_TgCreateGroups(&cur)
+	if Abc_TtHieRetrieveOrInsert(p, -4, truth, truth) > 0 {
+		return hash
+	}
+	Abc_TgPurgeSymmetry(&cur, true)
+	Abc_TgExpendSymmetry(&cur, perm)
+	Abc_TgImplementPerm(&cur, perm)
+	if Abc_TtHieRetrieveOrInsert(p, -3, truth, truth) > 0 {
+		return hash
+	}
+	Abc_TgManCopy(&saved, make([]uint64, len(cur.pTruth)), &cur)
+	Abc_TgSimpleEnumeration(&cur)
+	if Abc_TtHieRetrieveOrInsert(p, -2, truth, truth) > 0 {
+		return hash
+	}
+	Abc_TgManCopy(&cur, truth, &saved)
+	for i := range truth[:len(cur.pTruth)] {
+		truth[i] = ^uint64(0)
+	}
+	cost := Abc_TgRecordPhase(&saved, 0)
+	hard := uint32(0)
+	if costAware != 0 && Abc_SccEnumCost(&saved, cost) > Abc_SccPhaseCost(&saved) {
+		Abc_TgResetGroup(&saved)
+		Abc_TgRecordPhase(&saved, 1)
+		hard = 1 << 28
+	}
+	Abc_TgFullEnumeration(&saved, &cur)
+	Abc_TtHieRetrieveOrInsert(p, -1, truth, truth)
+	for i := 0; i < int(nVars); i++ {
+		perm[i] = byte(cur.pPermT[i])
+	}
+	return cur.uPhase | hard
+}

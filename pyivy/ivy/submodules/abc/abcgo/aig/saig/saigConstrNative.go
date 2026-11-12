@@ -259,8 +259,6 @@ func removeEdge(edges []aig.Edge, target aig.Edge) []aig.Edge {
 	return edges
 }
 
-func cloneEdges(edges []aig.Edge) []aig.Edge { return append([]aig.Edge(nil), edges...) }
-
 func equalEdges(a, b []aig.Edge) bool {
 	if len(a) != len(b) {
 		return false

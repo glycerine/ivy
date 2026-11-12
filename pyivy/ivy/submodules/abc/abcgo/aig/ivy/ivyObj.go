@@ -2,7 +2,7 @@
 package ivy
 
 func Ivy_ObjReplace(p *Ivy_Man_t, old, next *Ivy_Obj_t, deleteOld, freeTop, update int32) {
-	if old == nil || next == nil || Ivy_IsComplement(old) != 0 || old.owner != p || Ivy_Regular(next).owner != p || old.recycled || Ivy_Regular(next).recycled || Ivy_ObjIsPi(old) != 0 || old == p.pConst1 || old == Ivy_Regular(next) || Ivy_ObjIsBuf(next) != 0 || Ivy_ObjIsCo(next) != 0 {
+	if old == nil || next == nil || Ivy_IsComplement(old) != 0 || old.owner != p || Ivy_Regular(next).owner != p || old.recycled || Ivy_Regular(next).recycled || Ivy_ObjIsPi(old) != 0 || old == p.pConst1 || old == Ivy_Regular(next) || Ivy_ObjIsBuf(next) != 0 || (Ivy_Regular(next).Type == IVY_PO || Ivy_Regular(next).Type == IVY_ASSERT) {
 		panic("ivy: invalid object replacement")
 	}
 	// A replacement preserves old's identity; recycling it is incompatible.

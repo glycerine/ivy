@@ -145,3 +145,14 @@ func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
 	}
 	return result, nil
 }
+
+// AndFaninLiterals exposes ordinary AND/buffer dependencies to adapters that
+// cannot represent specialized XOR/MUX nodes. Complements remain in low bits.
+func (p *Gia_Man_t) AndFaninLiterals(id int32) (a, b int32, ok bool) {
+	a, b, _, kind := p.Gate(id)
+	if kind == 5 {
+		return a, a, true
+	}
+	return a, b, kind == 2
+}
+func (p *Gia_Man_t) OutputFaninLiterals() []int32 { return p.OutputLiterals() }

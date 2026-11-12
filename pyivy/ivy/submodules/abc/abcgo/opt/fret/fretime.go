@@ -94,6 +94,20 @@ func ensureInitToOrig(id int32) {
 	pManMR.pInitToOrig = next
 }
 
+func updateSinkDistanceHistogram(oldDistance, newDistance int32) {
+	histogram := pManMR.vSinkDistHist
+	if oldDistance < 0 || newDistance < 0 ||
+		int(oldDistance) >= vec.Vec_IntSize(histogram) ||
+		int(newDistance) >= vec.Vec_IntSize(histogram) {
+		panic("retiming sink-distance histogram index out of range")
+	}
+	vec.Vec_IntAddToEntry(histogram, int(oldDistance), -1)
+	vec.Vec_IntAddToEntry(histogram, int(newDistance), 1)
+	if vec.Vec_IntEntry(histogram, int(oldDistance)) == 0 {
+		pManMR.fSinkDistTerminate = 1
+	}
+}
+
 func FSET(obj *Abc_Obj_t, mask int32)        { flowData(obj).mark |= mask }
 func FUNSET(obj *Abc_Obj_t, mask int32)      { flowData(obj).mark &^= mask }
 func FTEST(obj *Abc_Obj_t, mask int32) int32 { return flowData(obj).mark & mask }

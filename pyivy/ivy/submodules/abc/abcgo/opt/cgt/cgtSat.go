@@ -1,98 +1,85 @@
 package cgt
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/satoko"
+)
 
-  FileName    [cgtSat.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Clock gating package.]
-
-  Synopsis    [Checking implications using SAT.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cgtSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cgtInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Runs equivalence test for the two nodes.]
-
-  Description [Both nodes should be regular and different from each other.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cgt_CheckImplication(p *Cgt_Man_t, pGate *Aig_Obj_t, pMiter *Aig_Obj_t) int32 {
-    var nBTLimit int32  = p.pPars.nConfMax;
-    var pLits [2]int32;
-    var RetValue int32;
-    var clk abctime;
-    p.nCalls++;
-
-    // sanity checks
-    assert(p.pSat && p.pCnf, "p.pSat && p.pCnf");
-    assert(!Aig_IsComplement(pMiter), "!Aig_IsComplement(pMiter)");
-    assert(Aig_Regular(pGate) != pMiter, "Aig_Regular(pGate) != pMiter");
-
-    // solve under assumptions
-    // G => !M -- true     G & M -- false
-    pLits[0] = toLitCond( p.pCnf.pVarNums[Aig_Regular(pGate).Id], Aig_IsComplement(pGate) );
-    pLits[1] = toLitCond( p.pCnf.pVarNums[pMiter.Id], 0 );
-
-clk = Abc_Clock();
-    RetValue = sat_solver_solve( p.pSat, pLits, pLits + 2, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-p.timeSat += Abc_Clock() - clk;
-    if RetValue == l_False {
-p.timeSatUnsat += Abc_Clock() - clk;
-        pLits[0] = lit_neg( pLits[0] );
-        pLits[1] = lit_neg( pLits[1] );
-        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-        assert((RetValue != 0), "RetValue");
-        sat_solver_compress( p.pSat );
-        p.nCallsUnsat++;
-        return 1;
-    
-    } else if RetValue == l_True {
-p.timeSatSat += Abc_Clock() - clk;
-        p.nCallsSat++;
-        return 0;
-    
-    } else { // if ( RetValue1 == l_Undef )
-    
-p.timeSatUndec += Abc_Clock() - clk;
-        p.nCallsUndec++;
-        return -1;
-    }
-    return -2;
+func (p *Manager) encodePart() {
+	if p.solver == nil {
+		p.solver = satoko.New()
+		p.encoded = make(map[int]bool)
+	}
+	p.solver.SetVariables(len(p.Part.Nodes()))
+	for _, e := range p.Part.LiveEdges() {
+		id := e.NodeID()
+		if p.encoded[id] {
+			continue
+		}
+		p.encoded[id] = true
+		n := p.Part.Node(e)
+		z := int(e)
+		a, b := int(n.Fanins[0]), int(n.Fanins[1])
+		add := func(lits ...int) { p.solver.AddClause(lits) }
+		switch n.Kind {
+		case aig.Constant:
+			add(z)
+		case aig.Input:
+		case aig.And:
+			add(a^1, b^1, z)
+			add(a, z^1)
+			add(b, z^1)
+		case aig.ExclusiveOr:
+			add(a, b, z^1)
+			add(a^1, b^1, z^1)
+			add(a, b^1, z)
+			add(a^1, b, z)
+		case aig.Buffer, aig.Output:
+			add(a^1, z)
+			add(a, z^1)
+		}
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Cgt_CheckImplication(p *Manager, gate, miter aig.Edge) int {
+	p.encodePart()
+	p.Stats.Calls++
+	status := p.solver.SolveAssumptionsLimit([]int{int(gate), int(miter)}, int64(p.Params.ConflictMax))
+	switch status {
+	case satoko.SATOKO_UNSAT:
+		p.Stats.UNSAT++
+		p.solver.AddClause([]int{int(gate) ^ 1, int(miter) ^ 1})
+		return 1
+	case satoko.SATOKO_SAT:
+		p.Stats.SAT++
+		inputs := p.Part.Inputs()
+		assignment := make([]bool, len(inputs))
+		for i, e := range inputs {
+			assignment[i] = p.solver.ModelValue(e.NodeID()) == 1
+		}
+		p.lastModel = evaluateNodes(p.Part, assignment)
+		return 0
+	default:
+		p.Stats.Unknown++
+		return -1
+	}
+}
+func Cgt_SimulationFilter(p *Manager, gate, miter aig.Edge) bool {
+	for _, pattern := range p.patterns {
+		if gate.NodeID() >= len(pattern) || miter.NodeID() >= len(pattern) {
+			continue
+		}
+		g := pattern[gate.NodeID()] != (gate&1 != 0)
+		m := pattern[miter.NodeID()] != (miter&1 != 0)
+		if g && m {
+			return false
+		}
+	}
+	return true
+}
+func Cgt_SimulationRecord(p *Manager) {
+	if p.lastModel == nil {
+		panic("cgt: no satisfiable pattern to record")
+	}
+	p.patterns = append(p.patterns, append([]bool(nil), p.lastModel...))
+	p.Stats.Patterns++
+}

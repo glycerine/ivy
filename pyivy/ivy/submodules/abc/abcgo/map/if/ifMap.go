@@ -56,9 +56,9 @@ import "os"
 ***********************************************************************/
 func If_ManCutAigDelay_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) int32 {
     var Delay0, Delay1 int32;
-    if pObj.fVisit {
+	if pObj.fVisit != 0 {
         return pObj.iCopy; }
-    if If_ObjIsCi(pObj) || If_ObjIsConst1(pObj) {
+	if If_ObjIsCi(pObj) != 0 || If_ObjIsConst1(pObj) != 0 {
         return -1; }
     // store the node in the structure by level
     assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)");
@@ -66,7 +66,7 @@ func If_ManCutAigDelay_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) int
     Vec_PtrPush( vVisited, pObj );
     Delay0 = If_ManCutAigDelay_rec( p, pObj.pFanin0, vVisited );
     Delay1 = If_ManCutAigDelay_rec( p, pObj.pFanin1, vVisited );
-    if Delay0 >= 0 && Delay1 >= 0 {
+	if Delay0 >= 0 && Delay1 >= 0 {
         pObj.iCopy = 1 + Abc_MaxInt(Delay0, Delay1);
     } else {
         pObj.iCopy = -1;
@@ -74,11 +74,11 @@ func If_ManCutAigDelay_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) int
     return pObj.iCopy;
 }
 func If_ManCutAigDelay(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {
-    var pLeaf *If_Obj_t;
-    var i, Delay int32;
+	var Delay int32
     Vec_PtrClear( p.vVisited );
     // inlining of macro If_CutForEachLeaf
-    for  i = 0; (i < int32((pCut).nLeaves)) && ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {
+	for i := 0; i < int(pCut.nLeaves); i++ {
+		pLeaf := If_ManObj(p, pCut.pLeaves[i])
         assert(pLeaf.fVisit == 0, "pLeaf.fVisit == 0");
         pLeaf.fVisit = 1;
         Vec_PtrPush( p.vVisited, pLeaf );
@@ -86,8 +86,8 @@ func If_ManCutAigDelay(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {
     }
     Delay = If_ManCutAigDelay_rec( p, pObj, p.vVisited );
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vVisited)) && (((pLeaf) = (If_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {
-        pLeaf.fVisit = 0;
+	for _, entry := range Vec_PtrArray(p.vVisited) {
+		entry.(*If_Obj_t).fVisit = 0
     }
 //    assert( Delay <= (int)pObj->Level );
     return Delay;
@@ -109,7 +109,7 @@ func If_WordCountOnes(uWord uint32) int32 {
     uWord = (uWord & 0x33333333) + ((uWord>>2) & 0x33333333);
     uWord = (uWord & 0x0F0F0F0F) + ((uWord>>4) & 0x0F0F0F0F);
     uWord = (uWord & 0x00FF00FF) + ((uWord>>8) & 0x00FF00FF);
-    return  (uWord & 0x0000FFFF) + (uWord>>16);
+	return int32((uWord & 0x0000FFFF) + (uWord >> 16))
 }
 
 /**Function*************************************************************
@@ -125,22 +125,19 @@ func If_WordCountOnes(uWord uint32) int32 {
 ***********************************************************************/
 var spStatic_If_CutDelaySpecial_Pin2Pin [2][3]float32 = [2][3]float32{ {1.0, 1.0, 1.0}, {1.0, 1.0, 0.0} };
 func If_CutDelaySpecial(p *If_Man_t, pCut *If_Cut_t, fCarry int32) float32 {
-    
-    var pLeaf *If_Obj_t;
-    var DelayCur float32;
+	var DelayCur float32
     var Delay float32 = -IF_FLOAT_LARGE;
-    var i int32;
     assert(pCut.nLeaves <= 3, "pCut.nLeaves <= 3");
     // inlining of macro If_CutForEachLeaf
-    for  i = 0; (i < int32((pCut).nLeaves)) && ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {
+	for i := 0; i < int(pCut.nLeaves); i++ {
+		pLeaf := If_ManObj(p, pCut.pLeaves[i])
         DelayCur = If_ObjCutBest(pLeaf).Delay;
         // inlining of macro IF_MAX
         
-        if (Delay) > (spStatic_If_CutDelaySpecial_Pin2Pin[fCarry][i] + DelayCur) {
-            Delay = (Delay);
-        } else {
-            Delay = (spStatic_If_CutDelaySpecial_Pin2Pin[fCarry][i] + DelayCur);
-        }
+		pinDelay := spStatic_If_CutDelaySpecial_Pin2Pin[int(fCarry)][i]
+		if Delay < pinDelay+DelayCur {
+			Delay = pinDelay + DelayCur
+		}
     }
     return Delay;
 }
@@ -252,14 +249,18 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
             } }
         // save the best cut from the previous iteration
         if !(fPreprocess != 0) {
-            If_CutCopy( p, pCutSet.ppCuts[pCutSet.nCuts++], pCut ); }
+			If_CutCopy( p, pCutSet.ppCuts[pCutSet.nCuts], pCut )
+			pCutSet.nCuts++
+		}
     }
 
     // generate cuts
     // inlining of macro If_ObjForEachCut
-    for  i = 0; (i < (pObj.pFanin0).pCutSet.nCuts) && ((pCut0) = (pObj.pFanin0).pCutSet.ppCuts[i]); i++  {
+	for i := 0; i < int(pObj.pFanin0.pCutSet.nCuts); i++ {
+		pCut0 = pObj.pFanin0.pCutSet.ppCuts[i]
     // inlining of macro If_ObjForEachCut
-    for  k = 0; (k < (pObj.pFanin1).pCutSet.nCuts) && ((pCut1) = (pObj.pFanin1).pCutSet.ppCuts[k]); k++  {
+	for k := 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
+		pCut1 = pObj.pFanin1.pCutSet.ppCuts[k]
         // get the next free cut
         assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax");
         pCut = pCutSet.ppCuts[pCutSet.nCuts];
@@ -319,7 +320,6 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
             if p.pPars.fLut6Filter && pCut.nLeaves == 6 && !If_CutCheckTruth6(p, pCut) {
                 continue; }
             if p.pPars.fUseDsd {
-                extern void If_ManCacheRecord( If_Man_t * p, int iDsd0, int iDsd1, int nShared, int iDsd );
                 var truthId int32  = Abc_Lit2Var(pCut.iCutFunc);
                 if truthId >= Vec_IntSize(p.vTtDsds[pCut.nLeaves]) || Vec_IntEntry(p.vTtDsds[pCut.nLeaves], truthId) == -1 {
                     for  truthId >= Vec_IntSize(p.vTtDsds[pCut.nLeaves])  {
@@ -328,7 +328,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
                             Vec_StrPush( p.vTtPerms[pCut.nLeaves], IF_BIG_CHAR );
                         }
                     }
-                    iCutDsd = If_DsdManCompute( p.pIfDsdMan, If_CutTruthWR(p, pCut), pCut.nLeaves, (unsigned char *)If_CutDsdPerm(p, pCut), p.pPars.pLutStruct );
+					 iCutDsd = If_DsdManCompute( p.pIfDsdMan, If_CutTruthWR(p, pCut), int32(pCut.nLeaves), If_CutDsdPerm(p, pCut), p.pPars.pLutStruct );
                     Vec_IntWriteEntry( p.vTtDsds[pCut.nLeaves], truthId, iCutDsd );
                 }
                 assert(If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves), "If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves)");

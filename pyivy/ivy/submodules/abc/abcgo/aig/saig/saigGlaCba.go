@@ -408,7 +408,7 @@ func Aig_Gla1ObjAddToSolver(p *Aig_Gla1Man_t, pObj *Aig_Obj_t, k int32) int32 {
             Cnf_ComputeClauses( p.pAig, pObj, p.vLeaves, p.vVolume, nil, p.vCover, vClauses );
         }
         // derive variables
-        Cnf_CollectLeaves( pObj, p.vLeaves, 0 );
+        Cnf_CollectLeaves( p.pAig, pObj, p.vLeaves, 0 );
         // inlining of macro Vec_PtrForEachEntry
         for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
             Aig_Gla1FetchVar( p, pObj, k );

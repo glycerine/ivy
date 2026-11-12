@@ -1299,73 +1299,54 @@ func Abc_FlowRetime_AddInitBias() {
 
 ***********************************************************************/
 func Abc_FlowRetime_ClearInitToOrig(pInit *Abc_Obj_t) {
-  var id int32  = Abc_ObjId( pInit );
-
+	if pInit == nil {
+		panic("cannot clear init mapping for a nil object")
+	}
+	id := Abc_ObjId(pInit)
 	ensureInitToOrig(id)
-
-  pManMR.pInitToOrig[id].id = -1;
+	pManMR.pInitToOrig[int(id)] = NodeLag_t{id: -1}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Sets mapping from init node to original node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_SetInitToOrig(pInit *Abc_Obj_t, pOrig *Abc_Obj_t) {
-  var lag int32;
-  var id int32  = Abc_ObjId( pInit );
-
+	if pInit == nil || pOrig == nil {
+		panic("cannot set an init mapping with a nil object")
+	}
+	id := Abc_ObjId(pInit)
 	ensureInitToOrig(id)
 
-  // ignore BI, BO, and latch nodes
-  if Abc_ObjIsBo(pOrig) || Abc_ObjIsBi(pOrig) || Abc_ObjIsLatch(pOrig) {
-    Abc_FlowRetime_ClearInitToOrig(pInit);
-    return;
-  }
+	// Box boundaries and latches do not correspond to ordinary logic nodes.
+	if Abc_ObjIsBo(pOrig) != 0 || Abc_ObjIsBi(pOrig) != 0 || Abc_ObjIsLatch(pOrig) != 0 {
+		Abc_FlowRetime_ClearInitToOrig(pInit)
+		return
+	}
 
-  // move out of latch boxes
-  lag = Abc_FlowRetime_ObjFirstNonLatchBox(pOrig, &pOrig);
-
-  pManMR.pInitToOrig[id].id = Abc_ObjId(pOrig);
-  pManMR.pInitToOrig[id].lag = Abc_FlowRetime_GetLag(pOrig) + lag;
+	lag := Abc_FlowRetime_ObjFirstNonLatchBox(pOrig, &pOrig)
+	pManMR.pInitToOrig[int(id)] = NodeLag_t{
+		id:  Abc_ObjId(pOrig),
+		lag: Abc_FlowRetime_GetLag(pOrig) + lag,
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Gets mapping from init node to original node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_GetInitToOrig(pInit *Abc_Obj_t, pOrig **Abc_Obj_t, lag *int32) {
+	if pInit == nil || pOrig == nil || lag == nil {
+		panic("cannot get an init mapping with nil arguments")
+	}
+	id := Abc_ObjId(pInit)
+	if id < 0 || int(id) >= len(pManMR.pInitToOrig) {
+		panic("init object has no original-node mapping")
+	}
+	mapping := pManMR.pInitToOrig[int(id)]
+	if mapping.id < 0 {
+		if Abc_ObjFaninNum(pInit) == 0 {
+			panic("unmapped init object has no fanin")
+		}
+		Abc_FlowRetime_GetInitToOrig(Abc_ObjFanin0(pInit), pOrig, lag)
+		return
+	}
 
-  var id int32  = Abc_ObjId( pInit );
-  var origId int32;
-
-	assert(id >= 0 && int(id) < len(pManMR.pInitToOrig), "id indexes pInitToOrig");
-
-  origId = pManMR.pInitToOrig[id].id;
-
-  if origId < 0 {
-    assert(Abc_ObjFaninNum(pInit), "Abc_ObjFaninNum(pInit)");
-    Abc_FlowRetime_GetInitToOrig( Abc_ObjFanin0(pInit), pOrig, lag);
-    return;
-  }
-
-  *pOrig = Abc_NtkObj(pManMR.pNtk, origId);
-  *lag = pManMR.pInitToOrig[id].lag;
+	*pOrig = Abc_NtkObj(pManMR.pNtk, mapping.id)
+	*lag = mapping.lag
 }
+
 //ABC_NAMESPACE_IMPL_END
 

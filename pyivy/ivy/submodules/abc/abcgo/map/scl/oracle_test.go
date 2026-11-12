@@ -121,7 +121,9 @@ func TestLibertyReaderOriginalC(t *testing.T) {
 	}
 }
 
-func TestDownsizeOriginalC(t *testing.T) {
+func TestDownsizeOriginalC(t *testing.T) { testSizingOriginalC(t, false) }
+func TestUpsizeOriginalC(t *testing.T)   { testSizingOriginalC(t, true) }
+func testSizingOriginalC(t *testing.T, up bool) {
 	abc, e := filepath.Abs("../../../abc")
 	if e != nil {
 		t.Fatal(e)
@@ -130,6 +132,21 @@ func TestDownsizeOriginalC(t *testing.T) {
 		t.Skip("original ABC executable unavailable")
 	}
 	lib, _ := downsizeFixture(t)
+	if up {
+		for i, c := range lib.Cells {
+			delay := float32(3)
+			if i == 1 {
+				delay = 1
+			}
+			for _, g := range c.Pins[1].Timings {
+				for _, timing := range g.Timings {
+					for _, surface := range []*SC_Surface{&timing.CellRise, &timing.CellFall, &timing.RiseTrans, &timing.FallTrans} {
+						surface.Data[0][0] = delay
+					}
+				}
+			}
+		}
+	}
 	inv := *lib.Cells[0]
 	inv.Name = "INV"
 	inv.ID = 2
@@ -156,7 +173,16 @@ func TestDownsizeOriginalC(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	command := fmt.Sprintf("read_lib %s; read_genlib %s; read_blif %s; dnsize -I 2 -N 4 -G 1; write_blif %s", libpath, genpath, netpath, outpath)
+	operation := "dnsize -I 2 -N 4 -G 1"
+	want := ".gate small"
+	if up {
+		operation = "upsize -I 10 -W 1 -R 100 -N 4"
+		want = ".gate large"
+		if e = os.WriteFile(netpath, []byte(".model chain\n.inputs a\n.outputs y\n.gate small A=a Y=n\n.gate small A=n Y=y\n.end\n"), 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
+	command := fmt.Sprintf("read_lib %s; read_genlib %s; read_blif %s; %s; write_blif %s", libpath, genpath, netpath, operation, outpath)
 	output, e := exec.Command(abc, "-s", "-c", command).CombinedOutput()
 	if e != nil {
 		t.Fatal(e, string(output))
@@ -165,7 +191,7 @@ func TestDownsizeOriginalC(t *testing.T) {
 	if e != nil {
 		t.Fatal(e, string(output))
 	}
-	if strings.Count(string(result), ".gate small") != 2 {
-		t.Fatal("original downsizing did not select both small cells", string(result), string(output))
+	if strings.Count(string(result), want) != 2 {
+		t.Fatal("original sizing did not select expected gates", string(result), string(output))
 	}
 }

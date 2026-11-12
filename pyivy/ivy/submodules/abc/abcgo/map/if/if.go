@@ -20,16 +20,21 @@ type Mem_Fixed_t = mem.Mem_Fixed_t
 type Mem_Flex_t = mem.Mem_Flex_t
 type Tim_Man_t = tim.Tim_Man_t
 
-func Vec_PtrSize(v *Vec_Ptr_t) int                  { return vec.Vec_PtrSize(v) }
-func Vec_PtrEntry(v *Vec_Ptr_t, i int) any          { return vec.Vec_PtrEntry(v, i) }
-func Vec_PtrArray(v *Vec_Ptr_t) []any               { return vec.Vec_PtrArray(v) }
-func Vec_IntArray(v *Vec_Int_t) []int32             { return vec.Vec_IntArray(v) }
-func Vec_MemReadEntry(v *Vec_Mem_t, i int) []uint64 { return vec.Vec_MemReadEntry(v, i) }
-func Vec_StrEntryP(v *Vec_Str_t, i int) *byte       { return vec.Vec_StrEntryP(v, i) }
-func Abc_Lit2Var(lit int32) int32                   { return abcutil.Abc_Lit2Var(lit) }
-func Abc_LitIsCompl(lit int32) int32                { return abcutil.Abc_LitIsCompl(lit) }
-func Abc_Lit2LitL(values []int32, lit int32) int32  { return abcutil.Abc_Lit2LitL(values, lit) }
-func Abc_MaxInt(a, b int32) int32                   { return abcutil.Abc_MaxInt(a, b) }
+func Vec_PtrSize(v *Vec_Ptr_t) int                      { return vec.Vec_PtrSize(v) }
+func Vec_PtrEntry(v *Vec_Ptr_t, i int) any              { return vec.Vec_PtrEntry(v, i) }
+func Vec_PtrArray(v *Vec_Ptr_t) []any                   { return vec.Vec_PtrArray(v) }
+func Vec_IntArray(v *Vec_Int_t) []int32                 { return vec.Vec_IntArray(v) }
+func Vec_MemReadEntry(v *Vec_Mem_t, i int) []uint64     { return vec.Vec_MemReadEntry(v, i) }
+func Vec_StrEntryP(v *Vec_Str_t, i int) *byte           { return vec.Vec_StrEntryP(v, i) }
+func Abc_Lit2Var(lit int32) int32                       { return abcutil.Abc_Lit2Var(lit) }
+func Abc_LitIsCompl(lit int32) int32                    { return abcutil.Abc_LitIsCompl(lit) }
+func Abc_Lit2LitL(values []int32, lit int32) int32      { return abcutil.Abc_Lit2LitL(values, lit) }
+func Abc_MaxInt(a, b int32) int32                       { return abcutil.Abc_MaxInt(a, b) }
+func Abc_Clock() int64                                  { return abcutil.Abc_Clock() }
+func Abc_Print(level int32, format string, args ...any) { abcutil.Abc_Print(level, format, args...) }
+func Abc_PrintTime(level int32, label string, elapsed int64) {
+	abcutil.Abc_PrintTime(level, label, elapsed)
+}
 
 /**CFile****************************************************************
 

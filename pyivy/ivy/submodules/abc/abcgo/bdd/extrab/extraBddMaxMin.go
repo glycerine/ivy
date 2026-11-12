@@ -99,17 +99,7 @@ package extrab
   SeeAlso     [Extra_zddMinimal]
 
 ******************************************************************************/
-func Extra_zddMaximal(dd *DdManager, S *DdNode) *DdNode {
-    var res *DdNode;
-    for {
-	dd.reordered = 0;
-	res = extraZddMaximal(dd, S);
-    
-if !(dd.reordered == 1) { break }
-} 
-    return(res);
-
-} /* end of Extra_zddMaximal */
+// Extra_zddMaximal is ported in extraBddSet.go (authoritative extrab/sets).
 
 
 /**Function********************************************************************
@@ -273,70 +263,7 @@ if !(dd.reordered == 1) { break }
   SeeAlso     []
 
 ******************************************************************************/
-func extraZddMaximal(dd *DdManager, zSet *DdNode) *DdNode {
-	var zRes *DdNode;
-    statLine(dd); 
-
-	/* consider terminal cases */
-	if zSet == z0 || zSet == z1 {
-		return zSet; }
-
-    /* check cache */
-	zRes = cuddCacheLookup1Zdd(dd, extraZddMaximal, zSet);
-	if zRes != nil {
-		return(zRes);
-	} else {
-		var zSet0, zSet1, zRes0, zRes1 *DdNode;
-
-		/* compute maximal for subsets without the top-most element */
-		// inlining of macro cuddE
-		zSet0 = extraZddMaximal(dd, ((zSet).type.kids.E));
-		if zSet0 == nil {
-			return nil; }
-		// inlining of macro cuddRef
-		cuddSatInc(Cudd_Regular(zSet0).ref);
-
-		/* compute maximal for subsets with the top-most element */
-		// inlining of macro cuddT
-		zSet1 = extraZddMaximal(dd, ((zSet).type.kids.T));
-		if zSet1 == nil {
-			Cudd_RecursiveDerefZdd(dd, zSet0);
-			return nil;
-		}
-		// inlining of macro cuddRef
-		cuddSatInc(Cudd_Regular(zSet1).ref);
-
-		/* remove subsets without this element covered by subsets with this element */
-		zRes0 = extraZddNotSubSet(dd, zSet0, zSet1);
-		if zRes0 == nil {
-			Cudd_RecursiveDerefZdd(dd, zSet0);
-			Cudd_RecursiveDerefZdd(dd, zSet1);
-			return nil;
-		}
-		// inlining of macro cuddRef
-		cuddSatInc(Cudd_Regular(zRes0).ref);
-		Cudd_RecursiveDerefZdd(dd, zSet0);
-
-		/* subset with this element remains unchanged */
-		zRes1 = zSet1;
-
-		/* create the new node */
-		zRes = cuddZddGetNode( dd, zSet.index, zRes1, zRes0 );
-		if zRes == nil {
-			Cudd_RecursiveDerefZdd( dd, zRes0 );
-			Cudd_RecursiveDerefZdd( dd, zRes1 );
-			return nil;
-		}
-		// inlining of macro cuddDeref
-		cuddSatDec(Cudd_Regular(zRes0).ref);
-		// inlining of macro cuddDeref
-		cuddSatDec(Cudd_Regular(zRes1).ref);
-
-		/* insert the result into cache */
-		cuddCacheInsert1(dd, extraZddMaximal, zSet, zRes);
-		return zRes;
-	}
-} /* end of extraZddMaximal */
+// extraZddMaximal is ported in extraBddSet.go (authoritative extrab/sets).
 
 
 

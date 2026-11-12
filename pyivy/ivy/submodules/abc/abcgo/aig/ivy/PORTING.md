@@ -347,3 +347,37 @@ The connected test/vet scripts now run from abcgo/ so imports resolve through
 its module. They include all completed files plus the FRAIG files and tests;
 `bash /tmp/test-ivy-core.sh -race` and `bash /tmp/vet-ivy-core.sh` are the exact
 current commands. No experiments directory is built or tested.
+
+## HAIG history family
+
+The remaining ivyHaig.c APIs are now ported in ivyHaig.go: history start,
+transfer/stop, choice-ring counting, postprocessing, modified three-valued
+simulation and diagnostic output. Earlier representative, object creation and
+choice insertion helpers remain in ivyHistoryCreate.go. Transfer requires a
+fresh input boundary and moves ownership to the destination. Stop clears working
+mappings and is idempotent. New terminal/native-XOR construction records valid
+history mappings instead of the original helper's unsupported-type assertion.
+
+The separate readability pass uses typed latch-origin slices and local
+simulation-value maps. Diagnostic simulation does not overwrite structural Init
+or Level fields. It preserves the source's modified rule where unknown dominates
+zero in AND simulation, its choice compatibility rule and ten-round trace.
+Choice traversal checks malformed/cyclic rings instead of looping indefinitely.
+
+The separate bug review repaired structural hashing when original history
+latches are reset to DC. Formerly distinct initial-state keys may collide;
+identity-preserving buffers now retain source mappings while sharing the canonical
+reset latch. That regression exposed and fixed an earlier object-replacement
+validation bug: Co includes latches, but the original replacement algorithm
+explicitly permits latch operands and buffers them; only PO/assert operands must
+be rejected. Transfer ownership no longer leaves two managers able to stop the
+same history. Simulation scratch cannot corrupt graph validation or hash keys.
+
+Tests cover associative choice creation/counting/representatives, live graph
+checks after simulation, stop/repeated stop, canonical DC-latch collisions,
+transferred ownership, continued terminal/XOR recording, all modified
+three-valued AND combinations and malformed rings. A new-latch diagnostic trace
+is checked against test_vectors/haig_new_latch.trace, including unknown-to-known
+state propagation and preserved latch structural fields. The connected race
+suite and vet pass. Whole Ivy compilation now first fails in visible
+ivyMulti.go/ivyMulti8.go drafts.

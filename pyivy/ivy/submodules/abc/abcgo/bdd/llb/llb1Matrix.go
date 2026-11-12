@@ -2,430 +2,210 @@ package llb
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [llb1Matrix.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Partition clustering as a matrix problem.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Matrix.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-//              0123              nCols
-//             +--------------------->  
-// pi        0 |  111             row0   pRowSums[0]  
-// pi        1 | 1     11         row1   pRowSums[1] 
-// pi        2 |   1  11          row2   pRowSums[2] 
-// CS          |1       1
-// CS          |1      111
-// CS          |111    111
-// int         |  11111           
-// int         |     111          
-// int         |       111        
-// int         |         111      
-// NS          |           11 11
-// NS          |            11 1
-// NS          |             111
-//       nRows |
-//             v    
-//              cccc   pColSums[0]
-//              oooo   pColSums[1]
-//              llll   pColSums[2]
-//              0123   pColSums[3]
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Verify columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Llb_MtrVerifyRowsAll checks the cached sum for every partition column.
 func Llb_MtrVerifyRowsAll(p *Llb_Mtr_t) {
-    var iRow, iCol, Counter int32;
-    for  iCol = 0; iCol < p.nCols; iCol++  {
-        Counter = 0;
-        for  iRow = 0; iRow < p.nRows; iRow++  {
-            if p.pMatrix[iCol][iRow] == 1 {
-                Counter++; }
-        }
-        assert(Counter == p.pColSums[iCol], "Counter == p.pColSums[iCol]");
-    }
+	for col := int32(0); col < p.nCols; col++ {
+		var count int32
+		for row := int32(0); row < p.nRows; row++ {
+			if p.pMatrix[col][row] {
+				count++
+			}
+		}
+		assert(count == p.pColSums[col], "count == p.pColSums[col]")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Verify columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Llb_MtrVerifyColumnsAll checks the cached sum for every variable row.
 func Llb_MtrVerifyColumnsAll(p *Llb_Mtr_t) {
-    var iRow, iCol, Counter int32;
-    for  iRow = 0; iRow < p.nRows; iRow++  {
-        Counter = 0;
-        for  iCol = 0; iCol < p.nCols; iCol++  {
-            if p.pMatrix[iCol][iRow] == 1 {
-                Counter++; }
-        }
-        assert(Counter == p.pRowSums[iRow], "Counter == p.pRowSums[iRow]");
-    }
+	for row := int32(0); row < p.nRows; row++ {
+		var count int32
+		for col := int32(0); col < p.nCols; col++ {
+			if p.pMatrix[col][row] {
+				count++
+			}
+		}
+		assert(count == p.pRowSums[row], "count == p.pRowSums[row]")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Verify columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrVerifyMatrix(p *Llb_Mtr_t) {
-    Llb_MtrVerifyRowsAll( p );
-    Llb_MtrVerifyColumnsAll( p );
+	Llb_MtrVerifyRowsAll(p)
+	Llb_MtrVerifyColumnsAll(p)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sort variables in the order of removal.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_MtrFindVarOrder(p *Llb_Mtr_t) *int32 {
-    var pOrder, pLast *int32;
-    var i, k, fChanges, Temp int32;
-    pOrder = ABC_CALLOC( int, p.nRows );
-    pLast  = ABC_CALLOC( int, p.nRows );
-    for  i = 0; i < p.nRows; i++  {
-        pOrder[i] = i;
-        for  k = p.nCols - 1; k >= 0; k--  {
-            if p.pMatrix[k][i] {
-                pLast[i] = k;
-                break;
-            }
-        }
-    }
-    for
-    {
-        fChanges = 0;
-        for  i = 0; i < p.nRows - 1; i++  {
-            if pLast[i] > pLast[i+1] {
-                Temp = pOrder[i];
-                pOrder[i] = pOrder[i+1];
-                pOrder[i+1] = Temp;
-
-                Temp = pLast[i];
-                pLast[i] = pLast[i+1];
-                pLast[i+1] = Temp;
-
-                fChanges = 1;
-            }
-        }
-    
-if !( fChanges ) { break }
-}
-    
-    ABC_FREE( pLast );
-    return pOrder;
+// Llb_MtrFindVarOrder orders variables by the last partition in which they occur.
+func Llb_MtrFindVarOrder(p *Llb_Mtr_t) []int32 {
+	order := make([]int32, p.nRows)
+	last := make([]int32, p.nRows)
+	for row := int32(0); row < p.nRows; row++ {
+		order[row] = row
+		for col := p.nCols - 1; col >= 0; col-- {
+			if p.pMatrix[col][row] {
+				last[row] = col
+				break
+			}
+		}
+	}
+	// Stable adjacent ordering preserves the source algorithm's tie behavior.
+	for changed := true; changed; {
+		changed = false
+		for i := 0; i+1 < len(order); i++ {
+			if last[i] > last[i+1] {
+				last[i], last[i+1] = last[i+1], last[i]
+				order[i], order[i+1] = order[i+1], order[i]
+				changed = true
+			}
+		}
+	}
+	return order
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns type of a variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Llb_MtrVarName_Buffer [10]byte;
 func Llb_MtrVarName(p *Llb_Mtr_t, iVar int32) string {
-    
-    if iVar < p.nPis {
-        strcpy( spStatic_Llb_MtrVarName_Buffer, "pi" );
-    } else if iVar < p.nPis + p.nFfs {
-        strcpy( spStatic_Llb_MtrVarName_Buffer, "CS" );
-    } else if iVar >= p.nRows - p.nFfs {
-        strcpy( spStatic_Llb_MtrVarName_Buffer, "NS" );
-    } else { 
-        strcpy( spStatic_Llb_MtrVarName_Buffer, "int" ); }
-    return spStatic_Llb_MtrVarName_Buffer;
+	switch {
+	case iVar < p.nPis:
+		return "pi"
+	case iVar < p.nPis+p.nFfs:
+		return "CS"
+	case iVar >= p.nRows-p.nFfs:
+		return "NS"
+	default:
+		return "int"
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates one column with vars in the array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrPrint(p *Llb_Mtr_t, fOrder int32) {
-    var pOrder *int32  = nil;
-    var i, iRow, iCol int32;
-    if fOrder != 0 {
-        pOrder = Llb_MtrFindVarOrder( p ); }
-    for  i = 0; i < p.nRows; i++  {
-        if pOrder != nil {
-            iRow = pOrder[i];
-        } else {
-            iRow = i;
-        }
-        fmt.Printf("%3d : ", iRow);
-        fmt.Printf("%3d ", p.pRowSums[iRow]);
-        fmt.Printf("%3s ", Llb_MtrVarName(p, iRow));
-        for  iCol = 0; iCol < p.nCols; iCol++  {
-            fmt.Printf("%c", p.pMatrix[iCol][iRow] ? '*' : ' ');
-        }
-        fmt.Printf("\n");
-    }
-    ABC_FREE( pOrder );
+	var order []int32
+	if fOrder != 0 {
+		order = Llb_MtrFindVarOrder(p)
+	}
+	for i := int32(0); i < p.nRows; i++ {
+		row := i
+		if order != nil {
+			row = order[i]
+		}
+		fmt.Printf("%3d : %3d %3s ", row, p.pRowSums[row], Llb_MtrVarName(p, row))
+		for col := int32(0); col < p.nCols; col++ {
+			if p.pMatrix[col][row] {
+				fmt.Print("*")
+			} else {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Println()
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Verify columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrPrintMatrixStats(p *Llb_Mtr_t) {
-    var iVar, iGrp, iGrp1, iGrp2, Span, nCutSize, nCutSizeMax int32;
-    var pGrp1 *int32  = ABC_CALLOC( int, p.nRows ); 
-    var pGrp2 *int32  = ABC_CALLOC( int, p.nRows ); 
-    for  iVar = 0; iVar < p.nRows; iVar++  {
-        if p.pRowSums[iVar] == 0 {
-            continue; }
-        for  iGrp1 = 0; iGrp1 < p.nCols; iGrp1++  {
-            if p.pMatrix[iGrp1][iVar] == 1 {
-                break; }
-        }
-        for  iGrp2 = p.nCols - 1; iGrp2 >= 0; iGrp2--  {
-            if p.pMatrix[iGrp2][iVar] == 1 {
-                break; }
-        }
-        assert(iGrp1 <= iGrp2, "iGrp1 <= iGrp2");
-        pGrp1[iVar] = iGrp1;
-        pGrp2[iVar] = iGrp2;
-        Span += iGrp2 - iGrp1;
-    }
-    // compute span
-    for  iGrp = 0; iGrp < p.nCols; iGrp++  {
-        for  iVar = 0; iVar < p.nRows; iVar++  {
-            if pGrp1[iVar] == iGrp {
-                nCutSize++; }
-        }
-        if nCutSizeMax < nCutSize {
-            nCutSizeMax = nCutSize; }
-        for  iVar = 0; iVar < p.nRows; iVar++  {
-            if pGrp2[iVar] == iGrp {
-                nCutSize--; }
-        }
-    }
-    ABC_FREE( pGrp1 );
-    ABC_FREE( pGrp2 );
-    fmt.Printf("[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\n", p.nCols, p.nRows, 1.0*Span/p.nRows, nCutSizeMax);
-    if nCutSize {
-        Abc_Print( -1, "Cut size is not zero (%d).\n", nCutSize ); }
+	first := make([]int32, p.nRows)
+	last := make([]int32, p.nRows)
+	var span, active, maxCut int32
+	for row := int32(0); row < p.nRows; row++ {
+		if p.pRowSums[row] == 0 {
+			continue
+		}
+		first[row], last[row] = -1, -1
+		for col := int32(0); col < p.nCols; col++ {
+			if p.pMatrix[col][row] {
+				if first[row] < 0 {
+					first[row] = col
+				}
+				last[row] = col
+			}
+		}
+		assert(first[row] >= 0 && first[row] <= last[row], "first[row] >= 0 && first[row] <= last[row]")
+		span += last[row] - first[row]
+	}
+	for col := int32(0); col < p.nCols; col++ {
+		for row := int32(0); row < p.nRows; row++ {
+			if first[row] == col {
+				active++
+			}
+		}
+		if maxCut < active {
+			maxCut = active
+		}
+		for row := int32(0); row < p.nRows; row++ {
+			if last[row] == col {
+				active--
+			}
+		}
+	}
+	avg := float64(0)
+	if p.nRows != 0 {
+		avg = float64(span) / float64(p.nRows)
+	}
+	fmt.Printf("[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\n", p.nCols, p.nRows, avg, maxCut)
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the matrix representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_MtrAlloc(nPis int32, nFfs int32, nCols int32, nRows int32) *Llb_Mtr_t {
-    var p *Llb_Mtr_t;
-    var i int32;
-    p = new(Llb_Mtr_t);
-    p.nPis  = nPis;
-    p.nFfs  = nFfs;
-    p.nRows = nRows;
-    p.nCols = nCols;
-    p.pRowSums = ABC_CALLOC( int, nRows );
-    p.pColSums = ABC_CALLOC( int, nCols );
-    p.pColGrps = ABC_CALLOC( Llb_Grp_t *, nCols );
-    p.pMatrix  = ABC_CALLOC( char *, nCols );
-    for  i = 0; i < nCols; i++  {
-        p.pMatrix[i] = ABC_CALLOC( char, nRows );
-    }
-    // partial product
-    p.pProdVars = ABC_CALLOC( char, nRows );  // variables in the partial product
-    p.pProdNums = ABC_CALLOC( int, nRows );   // var counts in the remaining partitions
-    return p;
+func Llb_MtrAlloc(nPis, nFfs, nCols, nRows int32) *Llb_Mtr_t {
+	if nPis < 0 || nFfs < 0 || nCols < 0 || nRows < 0 {
+		panic("negative matrix dimension")
+	}
+	p := &Llb_Mtr_t_{
+		nPis: nPis, nFfs: nFfs, nCols: nCols, nRows: nRows,
+		pColSums: make([]int32, nCols),
+		pColGrps: make([]*Llb_Grp_t, nCols),
+		pRowSums: make([]int32, nRows),
+		pMatrix: make([][]bool, nCols),
+		pProdVars: make([]bool, nRows),
+		pProdNums: make([]int32, nRows),
+	}
+	for col := range p.pMatrix {
+		p.pMatrix[col] = make([]bool, nRows)
+	}
+	return p
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the matrix representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrFree(p *Llb_Mtr_t) {
-    var i int32;
-    ABC_FREE( p.pProdVars );
-    ABC_FREE( p.pProdNums );
-    for  i = 0; i < p.nCols; i++  {
-        ABC_FREE( p.pMatrix[i] );
-    }
-    ABC_FREE( p.pRowSums );
-    ABC_FREE( p.pColSums );
-    ABC_FREE( p.pMatrix );
-    ABC_FREE( p.pColGrps );
-    ABC_FREE( p );
+	if p == nil {
+		return
+	}
+	p.pProdVars = nil
+	p.pProdNums = nil
+	p.pMatrix = nil
+	p.pRowSums = nil
+	p.pColSums = nil
+	p.pColGrps = nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates one column with vars in the array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_MtrAddColumn(p *Llb_Mtr_t, pGrp *Llb_Grp_t) {
-    var pVar *Aig_Obj_t;
-    var i int32;
-    var iRow int32;
-    var iCol int32 = pGrp.Id;
-    assert(iCol >= 0 && iCol < p.nCols, "iCol >= 0 && iCol < p.nCols");
-    p.pColGrps[iCol] = pGrp;
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vIns, pVar, i )
-    {
-        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );
-        assert(iRow >= 0 && iRow < p.nRows, "iRow >= 0 && iRow < p.nRows");
-        p.pMatrix[iCol][iRow] = 1;
-        p.pColSums[iCol]++;
-        p.pRowSums[iRow]++;
-    }
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vOuts, pVar, i )
-    {
-        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );
-        assert(iRow >= 0 && iRow < p.nRows, "iRow >= 0 && iRow < p.nRows");
-        p.pMatrix[iCol][iRow] = 1;
-        p.pColSums[iCol]++;
-        p.pRowSums[iRow]++;
-    }
+func Llb_MtrAddColumn(p *Llb_Mtr_t, group *Llb_Grp_t) {
+	col := group.Id
+	assert(col >= 0 && col < p.nCols, "col >= 0 && col < p.nCols")
+	p.pColGrps[col] = group
+	add := func(obj *Aig_Obj_t) {
+		row := Vec_IntEntry(group.pMan.vObj2Var, Aig_ObjId(obj))
+		assert(row >= 0 && row < p.nRows, "row >= 0 && row < p.nRows")
+		if !p.pMatrix[col][row] {
+			p.pMatrix[col][row] = true
+			p.pColSums[col]++
+			p.pRowSums[row]++
+		}
+	}
+	var obj *Aig_Obj_t
+	var i int32
+	Vec_PtrForEachEntry(Aig_Obj_t, group.vIns, obj, i) { add(obj) }
+	Vec_PtrForEachEntry(Aig_Obj_t, group.vOuts, obj, i) { add(obj) }
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Matrix reduce.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrRemoveSingletonRows(p *Llb_Mtr_t) {
-    var i, k int32;
-    for  i = 0; i < p.nRows; i++  {
-        if p.pRowSums[i] < 2 {
-            p.pRowSums[i] = 0;
-            for  k = 0; k < p.nCols; k++  {
-                if p.pMatrix[k][i] == 1 {
-                    p.pMatrix[k][i] = 0;
-                    p.pColSums[k]--;
-                }
-            }
-        }
-    }
+	for row := int32(0); row < p.nRows; row++ {
+		if p.pRowSums[row] >= 2 {
+			continue
+		}
+		for col := int32(0); col < p.nCols; col++ {
+			if p.pMatrix[col][row] {
+				p.pMatrix[col][row] = false
+				p.pColSums[col]--
+			}
+		}
+		p.pRowSums[row] = 0
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Matrix reduce.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_MtrCreate(p *Llb_Man_t) *Llb_Mtr_t {
-    var pMatrix *Llb_Mtr_t;
-    var pGroup *Llb_Grp_t;
-    var i int32;
-    pMatrix = Llb_MtrAlloc( Saig_ManPiNum(p.pAig), Saig_ManRegNum(p.pAig), 
-        Vec_PtrSize(p.vGroups), Vec_IntSize(p.vVar2Obj) );
-    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGroup, i )
-        Llb_MtrAddColumn( pMatrix, pGroup );
-//    Llb_MtrRemoveSingletonRows( pMatrix );
-    return pMatrix;
+	matrix := Llb_MtrAlloc(Saig_ManPiNum(p.pAig), Saig_ManRegNum(p.pAig), Vec_PtrSize(p.vGroups), Vec_IntSize(p.vVar2Obj))
+	var group *Llb_Grp_t
+	var i int32
+	Vec_PtrForEachEntry(Llb_Grp_t, p.vGroups, group, i) { Llb_MtrAddColumn(matrix, group) }
+	return matrix
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

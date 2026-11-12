@@ -60,7 +60,7 @@ type Llb_Man_t_ struct {
     vObj2Var      *Vec_Int_t;       // mapping AIG ObjId into BDD var index
     vVar2Obj      *Vec_Int_t;       // mapping BDD var index into AIG ObjId
     vGroups      *Vec_Ptr_t;        // group Id into group pointer
-    pMatrix      *Llb_Mtr_t;        // dependency matrix
+    pMatrix      *Llb_Mtr_t;        // dependency matrix, column-major
     // image computation
     vRings      *Vec_Ptr_t;         // onion rings
     vVarBegs      *Vec_Int_t;       // the first group where the var appears  
@@ -82,14 +82,14 @@ type Llb_Mtr_t_ struct {
     nFfs             int32;           // number of flip-flops
     nRows             int32;          // number of rows
     nCols             int32;          // number of columns
-    pColSums            *int32;       // sum of values in a column
-    pColGrps     **Llb_Grp_t;       // group structure for each col
-    pRowSums            *int32;       // sum of values in a row
-    pMatrix          *string;        // dependency matrix
+    pColSums            []int32;       // sum of values in a column
+    pColGrps     []*Llb_Grp_t;       // group structure for each col
+    pRowSums            []int32;       // sum of values in a row
+    pMatrix          [][]bool;        // dependency matrix, column-major
     pMan      *Llb_Man_t;           // manager
     // partial product
-    pProdVars           string;      // variables in the partial product
-    pProdNums            *int32;      // var counts in the remaining partitions
+    pProdVars           []bool;      // variables in the partial product
+    pProdNums            []int32;      // var counts in the remaining partitions
 }
 
 type Llb_Grp_t_ struct {

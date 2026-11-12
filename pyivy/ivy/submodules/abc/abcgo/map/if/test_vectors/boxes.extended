@@ -1,0 +1,6 @@
+# Extended attributes survive writing and duplication.
+.box 2 adder 3 2 comb white inner
+10 11 -
+12 13 14
+.box 7 stateful 1 1 seq black outer
+20

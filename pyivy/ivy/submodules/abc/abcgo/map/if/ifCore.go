@@ -48,23 +48,17 @@ var s_MappingTime abctime
 **********************************************************************
 */
 func If_ManSetDefaultPars(pPars *If_Par_t) {
-	memset(pPars, 0, sizeof(If_Par_t))
-	pPars.nLutSize = -1
-	pPars.nCutsMax = 8
-	pPars.nFlowIters = 1
-	pPars.nAreaIters = 2
-	pPars.DelayTarget = -1
-	pPars.Epsilon = float32(0.005)
-	pPars.fPreprocess = 1
-	pPars.fArea = 0
-	pPars.fFancy = 0
-	pPars.fExpRed = 1
-	pPars.fLatchPaths = 0
-	pPars.fEdge = 1
-	pPars.fPower = 0
-	pPars.fCutMin = 0
-	pPars.fBidec = 0
-	pPars.fVerbose = 0
+	*pPars = If_Par_t_{
+		nLutSize:    -1,
+		nCutsMax:    8,
+		nFlowIters:  1,
+		nAreaIters:  2,
+		DelayTarget: -1,
+		Epsilon:     0.005,
+		fPreprocess: 1,
+		fExpRed:     1,
+		fEdge:       1,
+	}
 }
 
 /*

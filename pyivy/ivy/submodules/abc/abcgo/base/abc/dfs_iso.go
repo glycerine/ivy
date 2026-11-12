@@ -3,6 +3,9 @@ package abc
 import (
 	"fmt"
 	aig "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"strings"
 )
@@ -34,7 +37,13 @@ func Abc_NtkFunctionalIsoGia_rec(graph *aig.Graph, o *Object) aig.Edge {
 		}
 		value = graph.AND(args[0], args[1])
 	default:
-		if text, ok := o.Data.(string); ok {
+		if root, ok := o.Data.(*hop.Hop_Obj_t); ok {
+			value = isoHop(graph, root, args)
+		} else if root, ok := o.Data.(*core.DdNode); ok {
+			value = isoBDD(graph, root, args)
+		} else if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
+			value = isoCover(graph, mio.Mio_GateReadSop(gate), args)
+		} else if text, ok := o.Data.(string); ok {
 			value = isoCover(graph, text, args)
 		} else {
 			fn := localFunction(o)
@@ -205,4 +214,55 @@ func Abc_NtkFunctionalIsoInt(n *Network, first, second, common int32) int32 {
 }
 func Abc_NtkFunctionalIso(n *Network, first, second, common int32) int32 {
 	return Abc_NtkFunctionalIsoInt(n, first, second, common)
+}
+
+func isoHop(graph *aig.Graph, root *hop.Hop_Obj_t, args []aig.Edge) aig.Edge {
+	memo := map[*hop.Hop_Obj_t]aig.Edge{}
+	var visit func(*hop.Hop_Obj_t) aig.Edge
+	visit = func(edge *hop.Hop_Obj_t) aig.Edge {
+		node := hop.Hop_Regular(edge)
+		value, ok := memo[node]
+		if !ok {
+			switch {
+			case hop.Hop_ObjIsConst1(node) != 0:
+				value = 0
+			case hop.Hop_ObjIsPi(node) != 0:
+				value = args[node.PioNum]
+			default:
+				a, b := visit(hop.Hop_ObjChild0(node)), visit(hop.Hop_ObjChild1(node))
+				if hop.Hop_ObjIsExor(node) != 0 {
+					value = graph.XOR(a, b)
+				} else {
+					value = graph.AND(a, b)
+				}
+			}
+			memo[node] = value
+		}
+		if hop.Hop_IsComplement(edge) != 0 {
+			value = value.Not()
+		}
+		return value
+	}
+	return visit(root)
+}
+func isoBDD(graph *aig.Graph, root *core.DdNode, args []aig.Edge) aig.Edge {
+	memo := map[*core.DdNode]aig.Edge{}
+	var visit func(*core.DdNode) aig.Edge
+	visit = func(edge *core.DdNode) aig.Edge {
+		node := core.Cudd_Regular(edge)
+		value, ok := memo[node]
+		if !ok {
+			if core.Cudd_IsConstant(node) {
+				value = 0
+			} else {
+				value = graph.Mux(args[node.Index], visit(node.T), visit(node.E))
+			}
+			memo[node] = value
+		}
+		if core.Cudd_IsComplement(edge) {
+			value = value.Not()
+		}
+		return value
+	}
+	return visit(root)
 }
