@@ -35,79 +35,6 @@ import "fmt"
 
 // operation manager
    
-type Unm_Man_t struct {
-    pGia         *Gia_Man_t;           // user's AIG
-    pNew         *Gia_Man_t;           // constructed AIG
-    pHash     *Hash_IntMan_t;          // hash table
-    nNewSize                int32;       // expected size of new manager
-    vUsed         *Vec_Int_t;          // used nodes
-    vId2Used         *Vec_Int_t;       // mapping of obj IDs into used node IDs
-    vTruths         *Vec_Wrd_t;        // truth tables
-    vLeaves         *Vec_Int_t;        // temporary storage for leaves
-    clkStart            abctime;       // starting the clock
-}
-
-// extern word Shr_ManComputeTruth6( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vLeaves, Vec_Wrd_t * vTruths );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Unm_ManAlloc(pGia *Gia_Man_t) *Unm_Man_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Unm_Man_t{};
-    p.clkStart    = Abc_Clock();
-    p.nNewSize    = 3 * Gia_ManObjNum(pGia) / 2;
-    p.pGia        = pGia;
-    p.pNew        = Gia_ManStart( p.nNewSize );
-    p.pNew.pName = Abc_UtilStrsav( pGia.pName );
-    p.pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
-    Gia_ManHashAlloc( p.pNew );
-    Gia_ManCleanLevels( p.pNew, p.nNewSize );
-    // allocate traversal IDs
-    p.pNew.nObjs = p.nNewSize;
-    Gia_ManIncrementTravId( p.pNew );
-    p.pNew.nObjs = 1;
-    // start hashing
-    p.pHash = Hash_IntManStart( 1000 );
-    // truth tables
-    p.vLeaves = Vec_IntStart( 10 );
-    return p;
-}
-func Unm_ManFree(p *Unm_Man_t) *Gia_Man_t {
-    var pTemp *Gia_Man_t  = p.pNew; p.pNew = nil;
-    Gia_ManHashStop( pTemp );
-    Vec_IntFreeP( &pTemp.vLevels );
-    Gia_ManSetRegNum( pTemp, Gia_ManRegNum(p.pGia) );
-    // truth tables
-    Vec_WrdFreeP( &p.vTruths );
-    Vec_IntFreeP( &p.vLeaves );
-    Vec_IntFreeP( &p.vUsed );
-    Vec_IntFreeP( &p.vId2Used );
-    // free data structures
-    Hash_IntManStop( p.pHash );
-    // inlining of macro ABC_FREE
-    p = nil;
-
-    Gia_ManStop( pTemp );
-    pTemp = nil;
-
-    return pTemp;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Computes information about node pairs.]
@@ -213,47 +140,6 @@ func Unm_ManComputePairs(p *Unm_Man_t, fVerbose int32) *Vec_Int_t {
     return vPairs;    
 }
 // finds used nodes
-func Unm_ManFindUsedNodes(vPairs *Vec_Int_t, nObjs int32) *Vec_Int_t {
-    var vNodes *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vMarks *Vec_Str_t  = Vec_StrStart( nObjs ); var i int32;
-    for  i = 0; i < Vec_IntSize(vPairs); i += 3  {
-        Vec_StrWriteEntry( vMarks, Vec_IntEntry(vPairs, i), 1 );
-    }
-    for  i = 0; i < nObjs; i++  {
-        if Vec_StrEntry( vMarks, i ) {
-            Vec_IntPush( vNodes, i ); }
-    }
-    Vec_StrFree( vMarks );
-    fmt.Printf("The number of used nodes = %d\n", Vec_IntSize(vNodes));
-    return vNodes;
-}
-// computes truth table for selected nodes
-func Unm_ManComputeTruths(p *Unm_Man_t) *Vec_Wrd_t {
-    var vTruthsTemp, vTruths *Vec_Wrd_t;
-    var i, k, iObj, iNode int32;
-    var uTruth word;
-    vTruths = Vec_WrdAlloc( Vec_IntSize(p.vUsed) );
-    vTruthsTemp = Vec_WrdStart( Gia_ManObjNum(p.pGia) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vUsed)) && (((iObj) = Vec_IntEntry(p.vUsed, i)), 1); i++  {
-        assert(Gia_ObjIsLut(p.pGia, iObj), "Gia_ObjIsLut(p.pGia, iObj)");
-        // collect leaves of this gate  
-        Vec_IntClear( p.vLeaves );
-        // inlining of macro Gia_LutForEachFanin
-        for  k = 0; k < Gia_ObjLutSize(p.pGia,iObj) && ((iNode = Gia_ObjLutFanins(p.pGia,iObj)[k]),1); k++  {
-            Vec_IntPush( p.vLeaves, iNode );
-        }
-        assert(Vec_IntSize(p.vLeaves) <= 6, "Vec_IntSize(p.vLeaves) <= 6");
-        // compute truth table 
-        uTruth = Shr_ManComputeTruth6( p.pGia, Gia_ManObj(p.pGia, iObj), p.vLeaves, vTruthsTemp );
-        Vec_WrdPush( vTruths, uTruth );
-//        if ( i % 100 == 0 )
-//            Kit_DsdPrintFromTruth( (unsigned *)&uTruth, 6 ), printf( "\n" );
-    }
-    Vec_WrdFreeP( &vTruthsTemp );
-    return vTruths;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Collects decomposable pairs.]
