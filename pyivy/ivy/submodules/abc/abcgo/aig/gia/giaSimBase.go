@@ -469,99 +469,10 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
 
    
 
-func Gia_SimQualityPatternsMax(p *Gia_Man_t, vPat *Vec_Int_t, Iter int32, fVerbose int32, vStats *Vec_Int_t) int32 {
-    var k int32;
-    var MaxIn int32 = -1;
-    var vTries *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vRes *Vec_Int_t  = Gia_SimQualityOne( p, vPat, 0 );
-    var Value float64;
-    var InitValue float64;
-    var MaxValue float64 = InitValue = Gia_SimComputeScore( p, vStats, vRes );
-    Vec_IntFree( vRes );
-
-    if fVerbose != 0 {
-        fmt.Printf("Iter %5d : Init = %6.3f  ", Iter, InitValue); }
-
-    for  k = 0; k < Gia_ManCiNum(p); k++  {
-        Vec_IntArray(vPat)[k] ^= 1;
-        //Vec_IntPrint( vPat );
-
-        vRes = Gia_SimQualityOne( p, vPat, 0 );
-        Value = Gia_SimComputeScore( p, vStats, vRes );
-        if MaxValue <= Value {
-            if MaxValue < Value {
-                Vec_IntClear( vTries ); }
-            Vec_IntPush( vTries, k );
-            MaxValue = Value;
-            MaxIn = k;
-        }
-        Vec_IntFree( vRes );
-
-        Vec_IntArray(vPat)[k] ^= 1;
-    }
-    if Vec_IntSize(vTries) {
-        MaxIn = Vec_IntEntry( vTries, rand()%Vec_IntSize(vTries) );
-    } else {
-        MaxIn = -1;
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Final = %6.3f  Ratio = %4.2f  Tries = %5d  ", MaxValue, MaxValue/InitValue, Vec_IntSize(vTries));
-        fmt.Printf("Choosing %5d\r", MaxIn);
-    }
-    Vec_IntFree( vTries );
-    return MaxIn;
-}
 
 
-func Gia_ManPatDistImprove(p *Gia_Man_t, fVerbose int32) {
-    var n int32;
-    var k int32;
-    var nWords int32 = Vec_WrdSize(p.vSimsPi) / Gia_ManCiNum(p);
-    var InitValue, InitTotal, FinalValue, FinalTotal float64;
-    var vPat *Vec_Int_t;
-    var vRes *Vec_Int_t;
-    var vStats *Vec_Int_t = Gia_SimGenerateStats( p );
-    var vPatterns *Vec_Wrd_t  = p.vSimsPi; p.vSimsPi = nil;
-    Abc_Random(1);
-    for  n = 0; n < 64*nWords; n++  {
-        var clk abctime  = Abc_Clock();
-//        if ( n == 32 )
-//            break;
 
-        vPat = Gia_ManPatCollectOne( p, vPatterns, n, nWords );
-        vRes = Gia_SimQualityOne( p, vPat, 0 );
-        InitValue = Gia_SimComputeScore(p, vStats, vRes);
-        InitTotal += InitValue;
-        Vec_IntFree( vRes );
 
-        for  k = 0; k < 100; k++  {
-            var MaxIn int32  = Gia_SimQualityPatternsMax( p, vPat, k, fVerbose, vStats );
-            if MaxIn == -1 {
-                break; }
-            assert(MaxIn >= 0 && MaxIn < Gia_ManCiNum(p), "MaxIn >= 0 && MaxIn < Gia_ManCiNum(p)");
-            Vec_IntArray(vPat)[MaxIn] ^= 1;            
-        }
-        //Vec_IntPrint( vPat );
-
-        vRes = Gia_SimQualityOne( p, vPat, 0 );
-        FinalValue = Gia_SimComputeScore(p, vStats, vRes);
-        FinalTotal += FinalValue;
-        Vec_IntFree( vRes );
-
-        if fVerbose != 0 {
-            fmt.Printf("Pat %5d : Tries = %5d  InitValue = %6.3f  FinalValue = %6.3f  Ratio = %4.2f  ", n, k, InitValue, FinalValue, FinalValue/InitValue);
-            Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-        }
-
-        Gia_ManPatUpdateOne( p, vPatterns, n, nWords, vPat );
-        Vec_IntFree( vPat );
-    }
-    Vec_IntFree( vStats );
-    if fVerbose != 0 {
-        fmt.Printf("\n"); }
-    fmt.Printf("Improved %d patterns with average init value %.2f and average final value %.2f.\n", 64*nWords, 1.0*InitTotal/(64*nWords), 1.0*FinalTotal/(64*nWords));
-    p.vSimsPi = vPatterns;
-}
 
 /**Function*************************************************************
 
