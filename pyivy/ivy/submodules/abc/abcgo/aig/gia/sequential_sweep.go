@@ -91,6 +91,21 @@ func giaTernaryStates(p *Gia_Man_t) [][]byte {
 	}
 }
 func Gia_ManReduceConst(p *Gia_Man_t, verbose int32) *Gia_Man_t {
+	// The compact frontier simulator implements ordinary AND/inverter AIGs.
+	// Keep the general evaluator for graphs with explicit XOR, MUX or buffers.
+	plain := p.pMuxes == nil
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsBuf(obj) != 0 {
+			plain = false
+			break
+		}
+	}
+	if plain {
+		manager := Gia_ManTerSimulate(p, verbose)
+		mapping := Gia_ManTerCreateMap(manager, verbose)
+		Gia_ManTerDelete(manager)
+		return Gia_ManDupDfsCiMap(p, mapping, nil)
+	}
 	states := giaTernaryStates(p)
 	mapping := make([]int32, Gia_ManCiNum(p))
 	for i := range mapping {
