@@ -55,3 +55,17 @@ func TestSatPartitionStore(t *testing.T) {
 		t.Fatalf("terminal literals %v", seen)
 	}
 }
+
+func TestSatPartitionExperiment(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	root := Gia_ManAppendAnd(p, x^1, c)
+	Gia_ManAppendCo(p, root)
+	Gia_ManSatExperiment(p)
+	for _, obj := range p.pObjs {
+		if obj.fMark0 != 0 {
+			t.Fatal("partition marks not cleared")
+		}
+	}
+}
