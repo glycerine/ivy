@@ -1,67 +1,136 @@
+// Package psat implements the proof-producing solver contract in m114p.h.
+// The external MiniSat-1.14p implementation is absent from this checkout; this
+// Go implementation produces independently replayable resolution proofs.
 package psat
 
-// C-language header for MiniSat 1.14p
+import (
+	"fmt"
+	"os"
+)
 
+type Solver struct {
+	roots                   [][]int
+	variables               int
+	recordProof             bool
+	deleted                 bool
+	proof                   *Proof
+	model                   []int
+	conflicts               int
+	rootCursor, chainCursor int
+}
 
-
-
-
-//#include "m114p_types.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-// SAT solver APIs
-// extern M114p_Solver_t M114p_SolverNew( int fRecordProof );
-
-// extern void           M114p_SolverDelete( M114p_Solver_t s );
-
-// extern void           M114p_SolverPrintStats( M114p_Solver_t s, double Time );
-
-// extern void           M114p_SolverSetVarNum( M114p_Solver_t s, int nVars );
-
-// extern int            M114p_SolverAddClause( M114p_Solver_t s, lit* begin, lit* end );
-
-// extern int            M114p_SolverSimplify( M114p_Solver_t s );
-
-// extern int            M114p_SolverSolve( M114p_Solver_t s, lit* begin, lit* end, int nConfLimit );
-
-// extern int            M114p_SolverGetConflictNum( M114p_Solver_t s );
-
-
-// proof status APIs
-// extern int            M114p_SolverProofIsReady( M114p_Solver_t s );
-
-// extern void           M114p_SolverProofSave( M114p_Solver_t s, char * pFileName );
-
-// extern int            M114p_SolverProofClauseNum( M114p_Solver_t s );
-
-
-// proof traversal APIs
-// extern int            M114p_SolverGetFirstRoot( M114p_Solver_t s, int ** ppLits );
-
-// extern int            M114p_SolverGetNextRoot( M114p_Solver_t s, int ** ppLits );
-
-// extern int            M114p_SolverGetFirstChain( M114p_Solver_t s, int ** ppClauses, int ** ppVars );
-
-// extern int            M114p_SolverGetNextChain( M114p_Solver_t s, int ** ppClauses, int ** ppVars );
-
-
-// iterator over the root clauses (should be called first)
-// Original macro:
-// #define M114p_SolverForEachRoot( s, ppLits, nLits, i )                           \
-//     for ( i = 0, nLits = M114p_SolverGetFirstRoot(s, ppLits); nLits;             \
-//           i++, nLits = M114p_SolverGetNextRoot(s, ppLits) )
-
-
-// iterator over the learned clauses (should be called after iterating over roots)
-// Original macro:
-// #define M114p_SolverForEachChain( s, ppClauses, ppVars, nVars, i )               \
-//     for ( i = 0, nVars = M114p_SolverGetFirstChain(s, ppClauses, ppVars); nVars; \
-//           i++, nVars = M114p_SolverGetNextChain(s, ppClauses, ppVars) )
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
+func New(recordProof bool) *Solver { return &Solver{recordProof: recordProof} }
+func (s *Solver) checkOpen() {
+	if s == nil || s.deleted {
+		panic("invalid or deleted PSAT solver")
+	}
+}
+func (s *Solver) SetVariableCount(n int) {
+	s.checkOpen()
+	if n < 0 {
+		panic("negative variable count")
+	}
+	if n > s.variables {
+		s.variables = n
+	}
+	s.model = nil
+}
+func (s *Solver) VariableCount() int { s.checkOpen(); return s.variables }
+func (s *Solver) AddClause(lits []int) bool {
+	s.checkOpen()
+	for _, lit := range lits {
+		if lit < 0 {
+			panic("negative encoded literal")
+		}
+	}
+	normalized, _ := normalize(lits)
+	for _, lit := range normalized {
+		if n := (lit >> 1) + 1; n > s.variables {
+			s.variables = n
+		}
+	}
+	s.roots = append(s.roots, normalized)
+	s.proof = nil
+	s.model = nil
+	s.rootCursor = 0
+	s.chainCursor = 0
+	return s.Simplify()
+}
+func (s *Solver) Simplify() bool {
+	s.checkOpen()
+	values := make([]int8, s.variables)
+	for i := range values {
+		values[i] = -1
+	}
+	changed := true
+	for changed {
+		changed = false
+		for _, clause := range s.roots {
+			if tautology(clause) {
+				continue
+			}
+			open := 0
+			last := 0
+			satisfied := false
+			for _, lit := range clause {
+				value := values[lit>>1]
+				if value < 0 {
+					open++
+					last = lit
+				} else if int(value)^(lit&1) == 1 {
+					satisfied = true
+					break
+				}
+			}
+			if satisfied {
+				continue
+			}
+			if open == 0 {
+				return false
+			}
+			if open == 1 {
+				v := last >> 1
+				want := int8(1 - (last & 1))
+				if values[v] >= 0 && values[v] != want {
+					return false
+				}
+				if values[v] < 0 {
+					values[v] = want
+					changed = true
+				}
+			}
+		}
+	}
+	return true
+}
+func (s *Solver) ModelValue(v int) int {
+	if v < 0 || v >= len(s.model) {
+		return -1
+	}
+	return s.model[v]
+}
+func (s *Solver) ConflictCount() int { s.checkOpen(); return s.conflicts }
+func (s *Solver) ProofReady() bool   { return s != nil && !s.deleted && s.recordProof && s.proof != nil }
+func (s *Solver) Proof() *Proof {
+	if !s.ProofReady() {
+		return nil
+	}
+	return s.proof.Clone()
+}
+func (s *Solver) SaveProof(path string) error {
+	if !s.ProofReady() {
+		return fmt.Errorf("no UNSAT proof available")
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	if err = s.proof.Write(f); err != nil {
+		f.Close()
+		return err
+	}
+	return f.Close()
+}
+func (s *Solver) PrintStats(seconds float64) {
+	fmt.Printf("PSAT: %d variables, %d roots, %d resolution conflicts, %.3f seconds\n", s.variables, len(s.roots), s.conflicts, seconds)
+}
