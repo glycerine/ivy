@@ -171,3 +171,17 @@ RetF paths.
 GIA's explicit-file race suite passes after adding AGI/support and arena-backed
 memory APIs; its live-code scan confirms the reviewed free-and-clear sites now
 clear fields directly. Full GIA remains blocked by other generated algorithms.
+
+The standard-library `misc/bzlib` port is now integrated, including its pure-Go
+encoder and ABC stream adapters; cross-tool bzip2 interoperability, race tests
+and vet pass. The base ABC network port has advanced through its original
+`abcAig` manager APIs; the next full-package parser blocker is `abcBarBuf.go`.
+
+Subsequent integration: `bool/rsb` is ported and race/vet clean, with original-C
+search and counterexample oracles; `misc/vec` hash indexes now remain coherent
+after explicit mutation and are race-tested. CUDD's ZDD set operations also
+have a permanent checksum fixture derived from the original C implementation
+(65,536 operation pairs). The expanded AIG/Scl source-file race suite passes
+after a Repr fix; all four sweep drivers reduce three registers to one while
+preserving sequential traces. The full AIG package remains blocked by other
+original files, and full-module verification remains outstanding.
