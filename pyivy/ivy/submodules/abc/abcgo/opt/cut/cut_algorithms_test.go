@@ -266,3 +266,58 @@ func TestOracleChoiceKeepsAlternativeInputPhases(t *testing.T) {
 		}
 	}
 }
+
+func TestNetworkConstantAndBufferOracle(t *testing.T) {
+	for _, value := range []bool{false, true} {
+		n := cutTestNetwork{{ID: 0, Constant: true, Value: value}, {ID: 1, Input: true}, {ID: 2, Buffer: true, Fanins: [2]int32{0, 0}}, {ID: 3, Fanins: [2]int32{1, 2}}}
+		params := DefaultParams(4)
+		params.FTruth = 1
+		params.FRecord = 1
+		p := Abc_NtkCuts(n, params)
+		c := p.newCuts[0]
+		want := uint32(0)
+		if value {
+			want = ^uint32(0)
+		}
+		if c.truth[0] != want || c.FSimul != value {
+			t.Fatalf("constant %v truth=%x simulation=%v", value, c.truth[0], c.FSimul)
+		}
+		oracle := Cut_OracleStart(p)
+		Abc_NtkCutsOracle(n, oracle)
+		for id, list := range p.newCuts {
+			a, b := cutSlice(list), cutSlice(oracle.manager.newCuts[id])
+			if len(a) != len(b) {
+				t.Fatalf("node %d lengths", id)
+			}
+			for i := range a {
+				if a[i].truth[0] != b[i].truth[0] {
+					t.Fatalf("node %d cut %d truth mismatch", id, i)
+				}
+			}
+		}
+	}
+}
+
+func TestSequentialNetworkXorAndUnary(t *testing.T) {
+	n := cutTestNetwork{{ID: 0, Input: true}, {ID: 1, Input: true}, {ID: 2, XOR: true, Fanins: [2]int32{0, 1}}, {ID: 3, Buffer: true, Fanins: [2]int32{2, 0}, Compl: [2]bool{true, false}}}
+	params := DefaultParams(4)
+	params.FTruth = 1
+	p := Abc_NtkSeqCuts(n, params)
+	for _, check := range []struct {
+		id    int32
+		truth uint32
+	}{{2, 0x66666666}, {3, 0x99999999}} {
+		found := false
+		for c := p.newCuts[check.id]; c != nil; c = c.Next {
+			if len(c.leaves) == 2 && c.leaves[0] == 0 && c.leaves[1] == 256 {
+				found = true
+				if c.truth[0] != check.truth {
+					t.Fatalf("node %d truth %x", check.id, c.truth[0])
+				}
+			}
+		}
+		if !found {
+			t.Fatalf("missing sequential cut for %d", check.id)
+		}
+	}
+}

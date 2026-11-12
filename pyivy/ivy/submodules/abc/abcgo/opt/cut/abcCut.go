@@ -91,14 +91,8 @@ func Abc_NtkCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 			if p.newCuts[id] == nil {
 				Cut_NodeSetTriv(p, id)
 			}
-		} else if node.Constant { // Constants have an empty-support truth, not a fake input.
-			c := Cut_CutCreateTriv(p, node.ID)
-			if node.Value {
-				for i := range c.truth {
-					c.truth[i] = ^uint32(0)
-				}
-			}
-			p.newCuts[id] = c
+		} else if node.Constant {
+			cutSetConstant(p, node.ID, node.Value)
 		} else if node.Output {
 			visit(node.Fanins[0])
 			if params.FDrop != 0 {
@@ -157,9 +151,21 @@ func Abc_NtkCutsOracle(network Network, p *Cut_Oracle_t) {
 		active[id] = true
 		if node.Input {
 			Cut_OracleNodeSetTriv(p, id)
-		} else if !node.Constant && !node.Output {
+		} else if node.Constant {
+			cutSetConstant(p.manager, id, node.Value)
+		} else if !node.Output {
+			for _, step := range p.records[id].Steps {
+				if step.Proof.Kind != 0 {
+					visit(step.Proof.Sources[0])
+					if step.Proof.Kind != 3 {
+						visit(step.Proof.Sources[1])
+					}
+				}
+			}
 			visit(node.Fanins[0])
-			visit(node.Fanins[1])
+			if !node.Buffer {
+				visit(node.Fanins[1])
+			}
 			Cut_OracleComputeCuts(p, id, node.Fanins[0], node.Fanins[1], cutBool(node.Compl[0]), cutBool(node.Compl[1]))
 		} else if node.Output {
 			visit(node.Fanins[0])
@@ -246,8 +252,13 @@ func Abc_NtkSeqCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 	p.network, p.networkCounts = networkInventory(network)
 	for _, node := range network.CutNodes() {
 		if !node.Output {
-			c := Cut_CutCreateTriv(p, node.ID)
-			p.oldCuts[node.ID] = c
+			if node.Constant {
+				cutSetConstant(p, node.ID, node.Value)
+				p.oldCuts[node.ID] = p.newCuts[node.ID]
+				delete(p.newCuts, node.ID)
+			} else {
+				p.oldCuts[node.ID] = Cut_CutCreateTriv(p, node.ID)
+			}
 		}
 	}
 	for iteration := int32(0); iteration < 10; iteration++ {
@@ -261,13 +272,19 @@ func Abc_NtkSeqCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 			if oldCount >= params.NKeepMax {
 				continue
 			}
-			a, b := Cut_CutDupList(p, p.oldCuts[node.Fanins[0]]), Cut_CutDupList(p, p.oldCuts[node.Fanins[1]])
+			fanin1, latch1, phase1 := node.Fanins[1], node.Latches[1], node.Compl[1]
+			if node.Buffer {
+				fanin1, latch1, phase1 = node.Fanins[0], node.Latches[0], node.Compl[0]
+			}
+			a, b := Cut_CutDupList(p, p.oldCuts[node.Fanins[0]]), Cut_CutDupList(p, p.oldCuts[fanin1])
 			Cut_NodeShiftCutLeaves(a, node.Latches[0])
-			Cut_NodeShiftCutLeaves(b, node.Latches[1])
+			Cut_NodeShiftCutLeaves(b, latch1)
 			var list Cut_List_t
 			Cut_ListStart(&list)
 			p.budget = params.NKeepMax - oldCount
-			Cut_NodeDoComputeCuts(p, &list, node.ID, cutBool(node.Compl[0]), cutBool(node.Compl[1]), a, b, 0, 0)
+			p.xor = node.XOR && !node.Buffer
+			Cut_NodeDoComputeCuts(p, &list, node.ID, cutBool(node.Compl[0]), cutBool(phase1), a, b, 0, 0)
+			p.xor = false
 			Cut_CutRecycleList(p, a)
 			Cut_CutRecycleList(p, b)
 			var head *Cut_Cut_t
@@ -300,4 +317,18 @@ func Abc_NtkSeqCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 		Cut_NodeOldTransferToNew(p, node.ID)
 	}
 	return p
+}
+
+// Constants retain a positive-size cut, as required by the source list buckets,
+// while their truth and simulation represent the constant rather than its ID.
+func cutSetConstant(p *Cut_Man_t, id int32, value bool) {
+	c := Cut_CutCreateTriv(p, id)
+	c.FSimul = value
+	for i := range c.truth {
+		c.truth[i] = 0
+		if value {
+			c.truth[i] = ^uint32(0)
+		}
+	}
+	p.newCuts[id] = c
 }
