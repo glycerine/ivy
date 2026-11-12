@@ -101,3 +101,31 @@ func TestScriptChoiceConstruction(t *testing.T) {
 		t.Fatal("choice construction changed function")
 	}
 }
+
+func TestSynch2ChoiceSynthesis(t *testing.T) {
+	for _, light := range []bool{false, true} {
+		p := Gia_ManStart(12)
+		p.pName, p.pSpec = "choice-test", "example"
+		a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+		x := Gia_ManAppendAnd(p, a, b^1)
+		Gia_ManAppendCo(p, Gia_ManAppendAnd(p, x, c))
+		pars := dch.DefaultParams()
+		pars.LightSynth, pars.Synthesis = light, false
+		calls := 0
+		balance := func(g *Gia_Man_t, size, cuts, relax, verbose int32) *Gia_Man_t {
+			calls++
+			if size != 6 || cuts != 8 || relax != 0 || verbose != 0 {
+				t.Fatal("incorrect DSD balancing parameters")
+			}
+			return Gia_ManDup(g)
+		}
+		q := giaAigSynch2(p, &pars, 10, balance)
+		wantCalls := 1
+		if light {
+			wantCalls = 0
+		}
+		if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 || calls != wantCalls || q.pName != p.pName || q.pSpec != p.pSpec {
+			t.Fatalf("light=%v calls=%d: synthesis changed the graph or metadata", light, calls)
+		}
+	}
+}
