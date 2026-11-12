@@ -38,3 +38,23 @@ func declarationTypes(mask string, signatures [][]int) map[string]bool {
 	}
 	return types
 }
+
+// Header-defined UpperCamelCase names (for example ProgressBar) are not always
+// visible in this translation unit. Recognize that common type spelling as a
+// draft heuristic, in addition to known names and C's conventional _t suffix.
+// Requiring mixed case and another capital avoids treating ordinary lowercase
+// operands or ALL_CAPS constants as types. Full C name resolution is out of scope.
+func isDeclarationType(name string, types map[string]bool) bool {
+	if types[name] || strings.HasSuffix(name, "_t") {
+		return true
+	}
+	if len(name) == 0 || name[0] < 'A' || name[0] > 'Z' {
+		return false
+	}
+	lower, capital := false, false
+	for i := 1; i < len(name); i++ {
+		lower = lower || (name[i] >= 'a' && name[i] <= 'z')
+		capital = capital || (name[i] >= 'A' && name[i] <= 'Z')
+	}
+	return lower && capital
+}

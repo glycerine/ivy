@@ -40,3 +40,20 @@ func TestCommaDeclarationsAndZeroInitializers(t *testing.T) {
 		}
 	}
 }
+
+func TestHeaderNamedTypeDeclarations(t *testing.T) {
+	r, err := Analyze("x.c", `void f(void) {
+ ProgressBar *pProgress;
+ MyWidget *first, *second;
+ lower * operand;
+ ALL_CAPS * operand;
+ }`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"var pProgress *ProgressBar;", "var first, second *MyWidget;", "lower * operand;", "ALL_CAPS * operand;"} {
+		if !strings.Contains(r.Draft, want) {
+			t.Fatalf("missing %q:\n%s", want, r.Draft)
+		}
+	}
+}

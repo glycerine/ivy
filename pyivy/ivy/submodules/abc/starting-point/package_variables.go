@@ -5,7 +5,7 @@ import (
 )
 
 // packageVariableEdits routes simple file-scope variables through the existing
-// declaration lowering without applying body transforms to types or prototypes.
+// declaration lowering, and comments out function prototypes without bodies.
 func packageVariableEdits(source string, all []Token, types map[string]bool, opaque []opaqueRegion) ([]Edit, error) {
 	var ts []Token
 	for _, t := range all {
@@ -34,14 +34,14 @@ func packageVariableEdits(source string, all []Token, types map[string]bool, opa
 			}
 		}
 		typeIndex := i
-		for typeIndex < len(ts) && (ts[typeIndex].Text == "static" || ts[typeIndex].Text == "const") {
+		for typeIndex < len(ts) && (ts[typeIndex].Text == "static" || ts[typeIndex].Text == "const" || ts[typeIndex].Text == "extern" || ts[typeIndex].Text == "inline") {
 			typeIndex++
 		}
 		if typeIndex >= len(ts) {
 			continue
 		}
 		typ := ts[typeIndex].Text
-		if !types[typ] && !strings.HasSuffix(typ, "_t") {
+		if typ != "void" && !isDeclarationType(typ, types) {
 			continue
 		}
 		end := typeIndex + 1
@@ -73,6 +73,15 @@ func packageVariableEdits(source string, all []Token, types map[string]bool, opa
 		if overlap {
 			continue
 		}
+		if functionPrototype(ts, pairs, typeIndex, end) {
+			original := source[t.Start:ts[end].End]
+			commented := "// " + strings.ReplaceAll(original, "\n", "\n// ")
+			// Do not swallow a declaration or definition following on the same line.
+			commented += "\n"
+			edits = append(edits, Edit{t.Start, ts[end].End, commented})
+			i = end
+			continue
+		}
 		// Retain comments in qualified declarations instead of erasing them.
 		if strings.Contains(source[t.Start:ts[typeIndex].Start], "/*") || strings.Contains(source[t.Start:ts[typeIndex].Start], "//") {
 			continue
@@ -95,4 +104,19 @@ func packageVariableEdits(source string, all []Token, types map[string]bool, opa
 		i = end
 	}
 	return edits, nil
+}
+
+// A direct function declarator has a name immediately before its argument list,
+// and no initializer or body. Pointer variables and function-pointer variables
+// are deliberately excluded.
+func functionPrototype(ts []Token, pairs map[int]int, start, end int) bool {
+	for j := start + 1; j < end; j++ {
+		if ts[j].Text == "(" {
+			return j > start+1 && ts[j-1].Kind == "word" && pairs[j] == end-1
+		}
+		if ts[j].Kind != "word" && ts[j].Text != "*" {
+			return false
+		}
+	}
+	return false
 }

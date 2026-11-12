@@ -1557,3 +1557,43 @@ Validation: `go test ./...` passes. Regenerated starter.c in
 `/tmp/starting-point-v43-starter`: ABC_PRT contains direct fmt.Printf calls,
 without anonymous functions. Installed the updated starting-point executable.
 Existing user output directories were not overwritten.
+
+
+## Prototype 44: forward declarations and named variables
+
+Comment out file-scope direct function prototypes, including static/extern and
+multiline declarations, preserving their original text and comments. Force a
+newline after the commented prototype so a following same-line definition or
+variable remains active. Function definitions and function-pointer variables are
+not classified as forward declarations. Opaque preprocessor regions remain intact.
+Strip extern alongside static/const before package-variable lowering:
+`extern int nTotal, nGood, nEqual;` becomes
+`var nTotal, nGood, nEqual int32;`.
+
+Recognize otherwise unknown UpperCamelCase type spellings such as ProgressBar
+and MyWidget at declaration boundaries, in addition to learned types and _t
+names. This is a draft heuristic for types from headers, not full name resolution;
+ambiguous multiplication using an UpperCamelCase operand can still need repair.
+Lowercase operands and ALL_CAPS constants are excluded from this heuristic.
+`ProgressBar * pProgress;` now becomes `var pProgress *ProgressBar;`.
+
+Validation: all Go tests pass, with real abcCut.c regression coverage and focused
+cases for multiline prototypes, same-line definitions, extern variables,
+function-pointer exclusion, opaque regions, and named local declarations.
+Generated `/tmp/starting-point-v44-cut/abcCut.go` confirms all reported fixes.
+Installed prototype-44; existing user output directories are not overwritten.
+
+
+## Prototype 45: floating-point casts
+
+Interpret the user's float632 spelling as float32. Convert scalar C `(double)`
+and `(float)` casts to Go float64(expr) and float32(expr), respectively. The token
+pass identifies a unary operand including calls, subscripts, member access,
+numeric literals and nested casts, preserving binary-expression precedence.
+It runs on whole projected drafts and function metadata, so macros and global
+initializers receive the same conversion. Comments/strings, pointer casts,
+sizeof(type), and opaque conditional text are preserved. No closures are added.
+
+Validation: all Go tests pass, including nested casts, literal exponents, operand
+precedence, comments, macros, globals, and opaque-region protection. Installed
+prototype-45; existing output directories remain unchanged.

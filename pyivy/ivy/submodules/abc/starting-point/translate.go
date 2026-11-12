@@ -308,6 +308,10 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		if err != nil {
 			return r, err
 		}
+		r.Draft, err = lowerFloatCasts(r.Draft)
+		if err != nil {
+			return r, err
+		}
 		r.Draft, err = integerDefines(r.Draft)
 		if err != nil {
 			return r, err
@@ -329,6 +333,10 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 	}
 	if err == nil {
 		for i := range r.Functions {
+			r.Functions[i].Draft, err = lowerFloatCasts(r.Functions[i].Draft)
+			if err != nil {
+				return r, err
+			}
 			r.Functions[i].Draft, err = integerDefines(r.Functions[i].Draft)
 			if err != nil {
 				return r, err

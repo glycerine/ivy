@@ -25,7 +25,7 @@ func lowerDeclarations(source string, types map[string]bool, allInitializers boo
 	}
 	var edits []Edit
 	for i, t := range ts {
-		if t.Kind != "word" || (!types[t.Text] && !strings.HasSuffix(t.Text, "_t")) {
+		if t.Kind != "word" || !isDeclarationType(t.Text, types) {
 			continue
 		}
 		if i == 0 || (ts[i-1].Text != "{" && ts[i-1].Text != "}" && ts[i-1].Text != ";") {
