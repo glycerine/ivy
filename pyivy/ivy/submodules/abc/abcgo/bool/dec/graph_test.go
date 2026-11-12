@@ -91,3 +91,42 @@ func TestLegacyGraphAPI(t *testing.T) {
 		t.Fatal("constant truth")
 	}
 }
+
+func TestGraphVariableAccessRejectsInternalRoot(t *testing.T) {
+	for _, indexOnly := range []bool{false, true} {
+		func() {
+			g := Dec_GraphCreate(2)
+			g.eRoot = Dec_GraphAddNodeAnd(g, Dec_EdgeCreate(0, 0), Dec_EdgeCreate(1, 0))
+			defer func() {
+				if recover() == nil {
+					t.Fatal("internal root accepted as variable", indexOnly)
+				}
+			}()
+			if indexOnly {
+				Dec_GraphVarInt(g)
+			} else {
+				Dec_GraphVar(g)
+			}
+		}()
+	}
+}
+
+func TestNodeMetadataBounds(t *testing.T) {
+	g := Dec_GraphCreate(1)
+	n := Dec_GraphNode(g, 0)
+	n.SetLatches([3]uint32{0, 32, 255})
+	if got := n.Latches(); got != [3]uint32{0, 0, 31} {
+		t.Fatal(got)
+	}
+	n.SetPrintingFlags([3]uint32{2, 3, 255})
+	if got := n.PrintingFlags(); got != [3]uint32{0, 1, 1} {
+		t.Fatal(got)
+	}
+	n.SetLevel(^uint32(0))
+	if n.Level != 16383 {
+		t.Fatal(n.Level)
+	}
+	if Dec_GraphNodeInt(g, n) != 0 {
+		t.Fatal("metadata changed identity")
+	}
+}

@@ -95,8 +95,13 @@ func Dec_GraphIsVar(g *Dec_Graph_t) int32 { return decBool(g.eRoot.Node < uint32
 func Dec_GraphNodeIsVar(g *Dec_Graph_t, n *Dec_Node_t) int32 {
 	return decBool(Dec_GraphNodeInt(g, n) < g.nLeaves)
 }
-func Dec_GraphVar(g *Dec_Graph_t) *Dec_Node_t       { return Dec_GraphNode(g, int32(g.eRoot.Node)) }
-func Dec_GraphVarInt(g *Dec_Graph_t) int32          { return int32(g.eRoot.Node) }
+func Dec_GraphVar(g *Dec_Graph_t) *Dec_Node_t { return Dec_GraphNode(g, Dec_GraphVarInt(g)) }
+func Dec_GraphVarInt(g *Dec_Graph_t) int32 {
+	if Dec_GraphIsVar(g) == 0 {
+		panic("dec: root is not a variable")
+	}
+	return int32(g.eRoot.Node)
+}
 func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t) { g.eRoot = e }
 func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
 	n := &Dec_Node_t{index: int32(len(g.pNodes))}
@@ -157,3 +162,18 @@ func (g *Dec_Graph_t) SetLeafSignal(index int, signal any) {
 	g.pNodes[index].pFunc = signal
 }
 func (g *Dec_Graph_t) LeafCount() int { return int(g.nLeaves) }
+
+// Latches returns the two input-edge counts followed by the output-edge count.
+func (n *Dec_Node_t) Latches() [3]uint32 { return [3]uint32{n.nLat0, n.nLat1, n.nLat2} }
+func (n *Dec_Node_t) SetLatches(counts [3]uint32) {
+	n.nLat0, n.nLat1, n.nLat2 = counts[0]&31, counts[1]&31, counts[2]&31
+}
+
+// PrintingFlags returns original OR, input-zero complement, input-one complement.
+func (n *Dec_Node_t) PrintingFlags() [3]uint32 { return [3]uint32{n.fNodeOr, n.fCompl0, n.fCompl1} }
+func (n *Dec_Node_t) SetPrintingFlags(flags [3]uint32) {
+	n.fNodeOr, n.fCompl0, n.fCompl1 = flags[0]&1, flags[1]&1, flags[2]&1
+}
+
+// SetLevel preserves the original node's unsigned fourteen-bit field semantics.
+func (n *Dec_Node_t) SetLevel(level uint32) { n.Level = level & ((1 << 14) - 1) }
