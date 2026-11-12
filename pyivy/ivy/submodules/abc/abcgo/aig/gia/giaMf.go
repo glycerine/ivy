@@ -667,80 +667,10 @@ func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
 
 ***********************************************************************/
 
-func Mf_ManPrintStats(p *Mf_Man_t, pTitle string) {
-    if !p.pPars.fVerbose {
-        return; }
-    fmt.Printf("%s :  ", pTitle);
-    fmt.Printf("Level =%6d   ", int64(p.pPars.Delay));
-    fmt.Printf("Area =%9d   ", int64(p.pPars.Area));
-    fmt.Printf("Edge =%9d   ", int64(p.pPars.Edge));
-    if p.pPars.fGenCnf {
-        fmt.Printf("CNF =%9d   ", int64(p.pPars.Clause)); }
-    if p.pPars.fGenLit {
-        fmt.Printf("FFL =%9d   ", int64(p.pPars.Clause)); }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - p.clkStart );
-    fflush( os.Stdout );
-}
-func Mf_ManPrintInit(p *Mf_Man_t) {
-    if !p.pPars.fVerbose {
-        return; }
-    fmt.Printf("LutSize = %d  ", p.pPars.nLutSize);
-    fmt.Printf("CutNum = %d  ", p.pPars.nCutNum);
-    fmt.Printf("Iter = %d  ", p.pPars.nRounds + p.pPars.nRoundsEla);
-    fmt.Printf("Edge = %d  ", p.pPars.fOptEdge);
-    fmt.Printf("CutMin = %d  ", p.pPars.fCutMin);
-    fmt.Printf("Coarse = %d  ", p.pPars.fCoarsen);
-    fmt.Printf("CNF = %d  ", p.pPars.fGenCnf);
-    fmt.Printf("FFL = %d  ", p.pPars.fGenLit);
-    fmt.Printf("\n");
-    fmt.Printf("Computing cuts...\r");
-    fflush( os.Stdout );
-}
-func Mf_ManPrintQuit(p *Mf_Man_t, pNew *Gia_Man_t) {
-    var MemGia float32    = Gia_ManMemory(p.pGia) / (1<<20);
-    var MemMan float32    = 1.0 * sizeof(Mf_Obj_t) * Gia_ManObjNum(p.pGia) / (1<<20);
-    var MemCuts float32   = 1.0 * sizeof(int) * (1 << 16) * Vec_PtrSize(&p.vPages) / (1<<20);
-    var MemTt float32;
-    if p.vTtMem {
-        MemTt = Vec_MemMemory(p.vTtMem) / (1<<20);
-    } else {
-        MemTt = 0;
-    }
-    var MemMap float32    = Vec_IntMemory(pNew.vMapping) / (1<<20);
-    if p.CutCount[0] == 0 {
-        p.CutCount[0] = 1; }
-    if !p.pPars.fVerbose {
-        return; }
-    fmt.Printf("CutPair = %.0f  ", p.CutCount[0]);
-    fmt.Printf("Merge = %.0f (%.2f %%)  ", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0]);
-    fmt.Printf("Eval = %.0f (%.2f %%)  ", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0]);
-    fmt.Printf("Cut = %.0f (%.2f %%)  ", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0]);
-    fmt.Printf("\n");
-    fmt.Printf("Gia = %.2f MB  ", MemGia);
-    fmt.Printf("Man = %.2f MB  ", MemMan); 
-    fmt.Printf("Cut = %.2f MB   ", MemCuts);
-    fmt.Printf("Map = %.2f MB  ", MemMap); 
-    fmt.Printf("TT = %.2f MB  ", MemTt); 
-    fmt.Printf("Total = %.2f MB", MemGia + MemMan + MemCuts + MemMap + MemTt); 
-    fmt.Printf("\n");
-    if true {
-        var i int32;
-        for  i = 0; i <= p.pPars.nLutSize; i++  {
-            fmt.Printf("%d = %d  ", i, p.nCutCounts[i]);
-        }
-        if p.vTtMem {
-            fmt.Printf("TT = %d (%.2f %%)  ", Vec_MemEntryNum(p.vTtMem), 100.0 * Vec_MemEntryNum(p.vTtMem) / p.CutCount[2]); }
-        Abc_PrintTime( 1, "Time",    Abc_Clock() - p.clkStart );
-    }
-    fflush( os.Stdout );
-}
-func Mf_ManComputeCuts(p *Mf_Man_t) {
-    var i int32;
-    Gia_ManForEachAndId( p.pGia, i )
-        Mf_ObjMergeOrder( p, i );
-    Mf_ManSetMapRefs( p );
-    Mf_ManPrintStats( p, (char *)(p.fUseEla ? "Ela  " : (p.Iter ? "Area " : "Delay")) );
-}
+
+
+
+
 
 /**Function*************************************************************
 
@@ -874,13 +804,7 @@ func Mf_ManOptimization(p *Mf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManComputeMapping(p *Mf_Man_t) {
-    var i int32;
-    Gia_ManForEachAndId( p.pGia, i )
-        Mf_ObjComputeBestCut( p, i );
-    Mf_ManSetMapRefs( p );
-    Mf_ManPrintStats( p, (char *)(p.fUseEla ? "Ela  " : (p.Iter ? "Area " : "Delay")) );
-}
+
 func Mf_ManPerformMapping(pGia *Gia_Man_t, pPars *Jf_Par_t) *Gia_Man_t {
     var p *Mf_Man_t;
     var pNew, pCls *Gia_Man_t;

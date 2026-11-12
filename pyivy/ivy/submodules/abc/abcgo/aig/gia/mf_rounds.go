@@ -1,0 +1,82 @@
+package gia
+
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"unsafe"
+)
+
+func Mf_ManPrintStats(p *Mf_Man_t, title string) {
+	if p.pPars.fVerbose == 0 {
+		return
+	}
+	q := p.pPars
+	fmt.Printf("%s :  Level =%6d   Area =%9d   Edge =%9d   ", title, q.Delay, q.Area, q.Edge)
+	if q.fGenCnf != 0 {
+		fmt.Printf("CNF =%9d   ", q.Clause)
+	}
+	if q.fGenLit != 0 {
+		fmt.Printf("FFL =%9d   ", q.Clause)
+	}
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
+}
+func Mf_ManPrintInit(p *Mf_Man_t) {
+	q := p.pPars
+	if q.fVerbose == 0 {
+		return
+	}
+	fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  CNF = %d  FFL = %d\nComputing cuts...\r", q.nLutSize, q.nCutNum, q.nRounds+q.nRoundsEla, q.fOptEdge, q.fCutMin, q.fCoarsen, q.fGenCnf, q.fGenLit)
+}
+func Mf_ManPrintQuit(p *Mf_Man_t, result *Gia_Man_t) {
+	if p.CutCount[0] == 0 {
+		p.CutCount[0] = 1
+	}
+	if p.pPars.fVerbose == 0 {
+		return
+	}
+	fmt.Printf("CutPair = %.0f  Merge = %.0f (%.2f %%)  Eval = %.0f (%.2f %%)  Cut = %.0f (%.2f %%)\n", p.CutCount[0], p.CutCount[1], 100*p.CutCount[1]/p.CutCount[0], p.CutCount[2], 100*p.CutCount[2]/p.CutCount[0], p.CutCount[3], 100*p.CutCount[3]/p.CutCount[0])
+	gia := Gia_ManMemory(p.pGia) / (1 << 20)
+	man := float64(unsafe.Sizeof(Mf_Obj_t{})) * float64(len(p.pLfObjs)) / (1 << 20)
+	cuts := float64(4*mfPageSize*len(p.vPages)) / (1 << 20)
+	var truth float64
+	if p.vTtMem != nil {
+		truth = vec.Vec_MemMemory(p.vTtMem) / (1 << 20)
+	}
+	mapping := vec.Vec_IntMemory(result.vMapping) / (1 << 20)
+	fmt.Printf("Gia = %.2f MB  Man = %.2f MB  Cut = %.2f MB   Map = %.2f MB  TT = %.2f MB  Total = %.2f MB\n", gia, man, cuts, mapping, truth, gia+man+cuts+mapping+truth)
+	for i := int32(0); i <= p.pPars.nLutSize; i++ {
+		fmt.Printf("%d = %d  ", i, p.nCutCounts[i])
+	}
+	if p.vTtMem != nil {
+		fmt.Printf("TT = %d (%.2f %%)  ", vec.Vec_MemEntryNum(p.vTtMem), 100*float64(vec.Vec_MemEntryNum(p.vTtMem))/p.CutCount[2])
+	}
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
+}
+func mfRoundTitle(p *Mf_Man_t) string {
+	if p.fUseEla != 0 {
+		return "Ela  "
+	}
+	if p.Iter != 0 {
+		return "Area "
+	}
+	return "Delay"
+}
+func Mf_ManComputeCuts(p *Mf_Man_t) {
+	for _, obj := range p.pGia.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			Mf_ObjMergeOrder(p, obj.id)
+		}
+	}
+	Mf_ManSetMapRefs(p)
+	Mf_ManPrintStats(p, mfRoundTitle(p))
+}
+func Mf_ManComputeMapping(p *Mf_Man_t) {
+	for _, obj := range p.pGia.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			Mf_ObjComputeBestCut(p, obj.id)
+		}
+	}
+	Mf_ManSetMapRefs(p)
+	Mf_ManPrintStats(p, mfRoundTitle(p))
+}
