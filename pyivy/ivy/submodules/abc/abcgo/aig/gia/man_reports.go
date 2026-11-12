@@ -165,3 +165,28 @@ func Gia_ManReportImprovement(p, q *Gia_Man_t) {
 	}
 	fmt.Printf("REG: Beg = %5d. End = %5d. (R =%5.1f %%)  AND: Beg = %6d. End = %6d. (R =%5.1f %%)\n", Gia_ManRegNum(p), Gia_ManRegNum(q), pct(Gia_ManRegNum(p), Gia_ManRegNum(q)), Gia_ManAndNum(p), Gia_ManAndNum(q), pct(Gia_ManAndNum(p), Gia_ManAndNum(q)))
 }
+
+func Gia_ManPrintStatsMiter(p *Gia_Man_t, verbose int32) {
+	Gia_ManLevelNum(p)
+	Gia_ManCreateRefs(p)
+	if LfSwitchingProvider == nil {
+		panic("gia: switching simulator is not connected")
+	}
+	copy := Gia_ManDup(p)
+	frames := int32(1)
+	if Gia_ManRegNum(p) != 0 {
+		frames = 16
+	}
+	probability := LfSwitchingProvider(copy, frames, 0, 1)
+	Gia_ManStop(copy)
+	if probability == nil || vec.Vec_FltSize(probability) < int(p.nObjs) {
+		panic("gia: invalid output probabilities")
+	}
+	fmt.Println("Statistics for each outputs of the miter:")
+	for i := int32(0); i < Gia_ManPoNum(p); i++ {
+		obj := Gia_ManPo(p, i)
+		id := obj.id
+		roots := []int32{id}
+		fmt.Printf("%4d : Level = %5d  Supp = %5d  Cone = %5d  Mffc = %5d  Prob = %8.4f  \n", i, Gia_ObjLevelId(p, id), Gia_ManSuppSize(p, roots, 1), Gia_ManConeSize(p, roots, 1), Gia_NodeMffcSize(p, Gia_ObjFanin0(obj)), vec.Vec_FltEntry(probability, int(id)))
+	}
+}

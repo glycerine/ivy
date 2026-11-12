@@ -403,27 +403,7 @@ spStatic_Gia_ManPrintStats_nPiPo = Gia_ManCiNum(p) + Gia_ManCoNum(p); }
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPrintStatsMiter(p *Gia_Man_t, fVerbose int32) {
-    var pObj *Gia_Obj_t;
-    var vProb *Vec_Flt_t;
-    var i, iObjId int32;
-    Gia_ManLevelNum( p );
-    Gia_ManCreateRefs( p );
-    vProb = Gia_ManPrintOutputProb( p );
-    fmt.Printf("Statistics for each outputs of the miter:\n");
-    Gia_ManForEachPo( p, pObj, i )
-    {
-        iObjId = Gia_ObjId(p, pObj);
-        fmt.Printf("%4d : ", i);
-        fmt.Printf("Level = %5d  ", Gia_ObjLevelId(p, iObjId));
-        fmt.Printf("Supp = %5d  ", Gia_ManSuppSize(p, &iObjId, 1));
-        fmt.Printf("Cone = %5d  ", Gia_ManConeSize(p, &iObjId, 1));
-        fmt.Printf("Mffc = %5d  ", Gia_NodeMffcSize(p, Gia_ObjFanin0(pObj)));
-        fmt.Printf("Prob = %8.4f  ", Vec_FltEntry(vProb, iObjId));
-        fmt.Printf("\n");
-    }
-    Vec_FltFree( vProb );
-}
+
 
 /**Function*************************************************************
 
@@ -463,85 +443,7 @@ func Gia_ManPrintStatsMiter(p *Gia_Man_t, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPrintNpnClasses(p *Gia_Man_t) {
-    extern char ** Kit_DsdNpn4ClassNames();
-    var pNames *string  = Kit_DsdNpn4ClassNames();
-    var vLeaves, vTruth, vVisited *Vec_Int_t;
-    var pLutClass *int32;
-    var ClassCounts [222]int32 ;
-    var i, k, iFan, Class, OtherClasses, OtherClasses2, nTotal, Counter, Counter2 int32;
-    var pTruth *uint32;
-    assert(Gia_ManHasMapping(p), "Gia_ManHasMapping(p)");
-    assert(Gia_ManLutSizeMax( p ) <= 4, "Gia_ManLutSizeMax( p ) <= 4");
-    vLeaves   = Vec_IntAlloc( 100 );
-    vVisited  = Vec_IntAlloc( 100 );
-    vTruth    = Vec_IntAlloc( (1<<16) );
-    pLutClass = ABC_CALLOC( int, Gia_ManObjNum(p) );
-    Gia_ManCleanTruth( p );
-    Gia_ManForEachLut( p, i )
-    {
-        if Gia_ObjLutSize(p,i) > 4 {
-            continue; }
-        Vec_IntClear( vLeaves );
-        Gia_LutForEachFanin( p, i, iFan, k )
-            Vec_IntPush( vLeaves, iFan );
-        for  ; k < 4; k++  {
-            Vec_IntPush( vLeaves, 0 );
-        }
-        pTruth = Gia_ManConvertAigToTruth( p, Gia_ManObj(p, i), vLeaves, vTruth, vVisited );
-        Class = Dar_LibReturnClass( *pTruth );
-        ClassCounts[ Class ]++;
-        pLutClass[i] = Class;
-    }
-    Vec_IntFree( vLeaves );
-    Vec_IntFree( vTruth );
-    Vec_IntFree( vVisited );
-    Vec_IntFreeP( &p.vTruths );
-    nTotal = 0;
-    for  i = 0; i < 222; i++  {
-        nTotal += ClassCounts[i];
-    }
-    Abc_Print( 1, "NPN CLASS STATISTICS (for %d LUT4 present in the current mapping):\n", nTotal );
-    OtherClasses = 0;
-    for  i = k = 0; i < 222; i++  {
-        if ClassCounts[i] == 0 {
-            continue; }
-//        if ( 100.0 * ClassCounts[i] / (nTotal+1) < 0.1 ) // do not show anything below 0.1 percent
-//            continue;
-        OtherClasses += ClassCounts[i];
-        Abc_Print( 1, "%3d: Class %3d :  Count = %6d   (%7.2f %%)   %s\n", 
-            ++k, i, ClassCounts[i], 100.0 * ClassCounts[i] / (nTotal+1), pNames[i] );
-    }
-    OtherClasses = nTotal - OtherClasses;
-    Abc_Print( 1, "Other     :  Count = %6d   (%7.2f %%)\n", 
-        OtherClasses, 100.0 * OtherClasses / (nTotal+1) );
-    // count the number of LUTs that have MUX function and two fanins with MUX functions
-    OtherClasses = OtherClasses2 = 0;
-    p.Refs = nil;
-    Gia_ManSetRefsMapped( p );
-    Gia_ManForEachLut( p, i )
-    {
-        if pLutClass[i] != 109 {
-            continue; }
-        Counter = Counter2 = 0;
-        Gia_LutForEachFanin( p, i, iFan, k )
-        {
-            Counter  += (pLutClass[iFan] == 109);
-            Counter2 += (pLutClass[iFan] == 109) && (Gia_ObjRefNumId(p, iFan) == 1);
-        }
-        OtherClasses  += (Counter > 1);
-        OtherClasses2 += (Counter2 > 1);
-//            Abc_Print( 1, "%d -- ", pLutClass[i] );
-//            Gia_LutForEachFanin( p, i, iFan, k )
-//                Abc_Print( 1, "%d ", pLutClass[iFan] );
-//            Abc_Print( 1, "\n" );
-    }
-    p.Refs = nil;
-    Abc_Print( 1, "Approximate number of 4:1 MUX structures: All = %6d  (%7.2f %%)  MFFC = %6d  (%7.2f %%)\n", 
-        OtherClasses,  100.0 * OtherClasses  / (nTotal+1),
-        OtherClasses2, 100.0 * OtherClasses2 / (nTotal+1) );
-    pLutClass = nil;
-}
+
 
 
 /**Function*************************************************************

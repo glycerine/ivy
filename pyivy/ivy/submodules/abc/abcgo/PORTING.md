@@ -1849,3 +1849,9 @@ calculation and reporting, including timing-box traversal. Focused tests cover
 raw and LUT-mapped networks plus a timing box; the focused GIA core passes.
 Other `giaMan.go` reporting functions and later draft files still prevent the
 actual GIA/IF package build.
+
+Ported the manager's NPN class report using the Go DAR canonicalization library
+and its per-output miter report using the switching-simulation provider. Focused
+tests exercise both reports; the focused GIA core passes. The miter probability
+report shares LF's still-unconnected switching provider. The main manager
+statistics routine and later C drafts still block actual GIA/IF builds.
