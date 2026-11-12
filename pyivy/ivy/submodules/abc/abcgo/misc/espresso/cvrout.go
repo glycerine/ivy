@@ -1,705 +1,451 @@
 package espresso
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+	"strings"
+)
 
-import "os"
-
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-/*
-    module: cvrout.c
-    purpose: cube and cover output routines
-*/
-
-//#include "espresso.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-void fprint_pla(fp, PLA, output_type)
-INOUT FILE *fp;
-IN pPLA PLA;
-IN int output_type;
-{
-    int num;
-    register pcube last, p;
-
-    if (output_type & CONSTRAINTS_type) != 0 {
-    output_symbolic_constraints(fp, PLA, 0);
-    output_type &= ~ CONSTRAINTS_type;
-    if output_type == 0 {
-        return;
-    }
-    }
-
-    if (output_type & SYMBOLIC_CONSTRAINTS_type) != 0 {
-    output_symbolic_constraints(fp, PLA, 1);
-    output_type &= ~ SYMBOLIC_CONSTRAINTS_type;
-    if output_type == 0 {
-        return;
-    }
-    }
-
-    if output_type == PLEASURE_type {
-    pls_output(PLA);
-    } else if output_type == EQNTOTT_type {
-    eqn_output(PLA);
-    } else if output_type == KISS_type {
-    kiss_output(fp, PLA);
-    } else {
-    fpr_header(fp, PLA, output_type);
-
-    num = 0;
-    if (output_type & F_type) num += (PLA.F).count;
-    if (output_type & D_type) num += (PLA.D).count;
-    if (output_type & R_type) num += (PLA.R).count;
-    (void) fmt.Fprintf(fp, ".p %d\n", num);
-
-    /* quick patch 01/17/85 to support TPLA ! */
-    if output_type == F_type {
-        // inlining of macro foreach_set
-        for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p<last;p+=PLA.F.wsize {
-        print_cube(fp, p, "01");
-        }
-        (void) fmt.Fprintf(fp, ".e\n");
-    } else {
-        if output_type & F_type {
-        // inlining of macro foreach_set
-        for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p<last;p+=PLA.F.wsize {
-            print_cube(fp, p, "~1");
-        }
-        }
-        if output_type & D_type {
-        // inlining of macro foreach_set
-        for p=PLA.D.data,last=p+PLA.D.count*PLA.D.wsize;p<last;p+=PLA.D.wsize {
-            print_cube(fp, p, "~2");
-        }
-        }
-        if output_type & R_type {
-        // inlining of macro foreach_set
-        for p=PLA.R.data,last=p+PLA.R.count*PLA.R.wsize;p<last;p+=PLA.R.wsize {
-            print_cube(fp, p, "~0");
-        }
-        }
-        (void) fmt.Fprintf(fp, ".end\n");
-    }
-    }
+func mappedBit(mapping string, p pcube, i int32) byte {
+	if is_in_set(p, i) {
+		return mapping[1]
+	}
+	return mapping[0]
 }
-
-void fpr_header(fp, PLA, output_type)
-var fp *os.File;
-var PLA pPLA;
-var output_type int32;
-{
-    register int i, var;
-    int first, last;
-
-    /* .type keyword gives logical type */
-    if output_type != F_type {
-    (void) fmt.Fprintf(fp, ".type ");
-    if (output_type & F_type) putc('f', fp);
-    if (output_type & D_type) putc('d', fp);
-    if (output_type & R_type) putc('r', fp);
-    putc('\n', fp);
-    }
-
-    /* Check for binary or multiple-valued labels */
-    if cube.num_mv_vars <= 1 {
-    (void) fmt.Fprintf(fp, ".i %d\n", cube.num_binary_vars);
-    if (cube.output != -1)
-        (void) fmt.Fprintf(fp, ".o %d\n", cube.part_size[cube.output]);
-    } else {
-    (void) fmt.Fprintf(fp, ".mv %d %d", cube.num_vars, cube.num_binary_vars);
-    for(var = cube.num_binary_vars; var < cube.num_vars; var++)
-        (void) fmt.Fprintf(fp, " %d", cube.part_size[var]);
-    (void) fmt.Fprintf(fp, "\n");
-    }
-
-    /* binary valued labels */
-    if PLA.label != NIL(char *) && PLA.label[1] != NILbyte(
-        && cube.num_binary_vars) > 0 {
-    (void) fmt.Fprintf(fp, ".ilb");
-    for(var = 0; var < cube.num_binary_vars; var++)
-      /* see (NIL) OUTLABELS comment below */
-      // inlining of macro INLABEL
-      if PLA.label[cube.first_part[var] + 1] == NIL(char){
-        (void) fmt.Fprintf(fp, " (null)");
-      }
-      else{
-        // inlining of macro INLABEL
-        (void) fmt.Fprintf(fp, " %s", PLA.label[cube.first_part[var] + 1]);
-      }
-    putc('\n', fp);
-    }
-
-    /* output-part (last multiple-valued variable) labels */
-    if PLA.label != NIL(char *) &&
-        PLA.label[cube.first_part[cube.output]] != NILbyte(
-        && cube.output) != -1 {
-    (void) fmt.Fprintf(fp, ".ob");
-    for(i = 0; i < cube.part_size[cube.output]; i++)
-      /* (NIL) OUTLABELS caused espresso to segfault under solaris */
-      // inlining of macro OUTLABEL
-      if PLA.label[cube.first_part[cube.output] + i] == NIL(char){
-        (void) fmt.Fprintf(fp, " (null)");
-      }
-      else{
-        // inlining of macro OUTLABEL
-        (void) fmt.Fprintf(fp, " %s", PLA.label[cube.first_part[cube.output] + i]);
-      }
-    putc('\n', fp);
-    }
-
-    /* multiple-valued labels */
-    for var = cube.num_binary_vars; var < cube.num_vars-1; var++ {
-    first = cube.first_part[var];
-    last = cube.last_part[var];
-    if PLA.label != NULL && PLA.label[first] != NULL {
-        (void) fmt.Fprintf(fp, ".label var=%d", var);
-        for i = first; i <= last; i++ {
-        (void) fmt.Fprintf(fp, " %s", PLA.label[i]);
-        }
-        putc('\n', fp);
-    }
-    }
-
-    if PLA.phase != (pcube) NULL {
-    first = cube.first_part[cube.output];
-    last = cube.last_part[cube.output];
-    (void) fmt.Fprintf(fp, "#.phase ");
-    for(i = first; i <= last; i++)
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        putc((PLA.phase[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) ? '1' : '0', fp);
-    (void) fmt.Fprintf(fp, "\n");
-    }
+func fmt_cube(c pcube, outMap string) string {
+	var b strings.Builder
+	for v := int32(0); v < cube.num_binary_vars; v++ {
+		b.WriteByte("?01-"[GETINPUT(c, v)])
+	}
+	for v := cube.num_binary_vars; v < cube.num_vars-1; v++ {
+		b.WriteByte(' ')
+		for i := cube.first_part[v]; i <= cube.last_part[v]; i++ {
+			b.WriteByte(mappedBit("01", c, i))
+		}
+	}
+	if cube.output != -1 {
+		b.WriteByte(' ')
+		for i := cube.first_part[cube.output]; i <= cube.last_part[cube.output]; i++ {
+			b.WriteByte(mappedBit(outMap, c, i))
+		}
+	}
+	return b.String()
 }
-
-void pls_output(PLA)
-IN pPLA PLA;
-{
-    register pcube last, p;
-
-    (void) fmt.Printf(".option unmerged\n");
-    makeup_labels(PLA);
-    pls_label(PLA, os.Stdout);
-    pls_group(PLA, os.Stdout);
-    (void) fmt.Printf(".p %d\n", PLA.F.count);
-    // inlining of macro foreach_set
-    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p<last;p+=PLA.F.wsize {
-    print_expanded_cube(os.Stdout, p, PLA.phase);
-    }
-    (void) fmt.Printf(".end\n");
+func pc1(c pcube) string                             { return fmt_cube(c, "01") }
+func pc2(c pcube) string                             { return fmt_cube(c, "01") }
+func print_cube(w io.Writer, c pcube, outMap string) { fmt.Fprintln(w, fmt_cube(c, outMap)) }
+func print_expanded_cube(w io.Writer, c, phase pcube) {
+	var b strings.Builder
+	for v := int32(0); v < cube.num_vars-1; v++ {
+		mapping := "~1"
+		if v >= cube.num_binary_vars {
+			mapping = "1~"
+		}
+		for i := cube.first_part[v]; i <= cube.last_part[v]; i++ {
+			b.WriteByte(mappedBit(mapping, c, i))
+		}
+	}
+	if cube.output != -1 {
+		b.WriteByte(' ')
+		for i := cube.first_part[cube.output]; i <= cube.last_part[cube.output]; i++ {
+			mapping := "~1"
+			if phase != nil && !is_in_set(phase, i) {
+				mapping = "~0"
+			}
+			b.WriteByte(mappedBit(mapping, c, i))
+		}
+	}
+	fmt.Fprintln(w, b.String())
 }
-
-
-void pls_group(PLA, fp)
-var PLA pPLA;
-var fp *os.File;
-{
-    int var, i, col, len;
-
-    (void) fmt.Fprintf(fp, "\n.group");
-    col = 6;
-    for var = 0; var < cube.num_vars-1; var++ {
-    (void) fmt.Fprintf(fp, " ("), col += 2;
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        len = len(PLA.label[i]);
-        if (col + len > 75)
-        (void) fmt.Fprintf(fp, " \\\n"), col = 0;
-        else if (i != 0)
-        putc(' ', fp), col += 1;
-        (void) fmt.Fprintf(fp, "%s", PLA.label[i]), col += len;
-    }
-    (void) fmt.Fprintf(fp, ")"), col += 1;
-    }
-    (void) fmt.Fprintf(fp, "\n");
+func debug_print(t *cubeList, name string, level int32) {
+	if verbose_debug && level == 0 {
+		fmt.Println()
+	}
+	fmt.Printf("%s[%d]: ord(T)=%d\n", name, level, len(t.cubes))
+	if verbose_debug {
+		fmt.Printf("cofactor=%s\n", pc1(t.cofactor))
+		temp := new_cube()
+		for i, p := range t.cubes {
+			set_or(temp, p, t.cofactor)
+			fmt.Printf("%4d. %s\n", i+1, pc1(temp))
+		}
+	}
 }
-
-
-void pls_label(PLA, fp)
-var PLA pPLA;
-var fp *os.File;
-{
-    int var, i, col, len;
-
-    (void) fmt.Fprintf(fp, ".label");
-    col = 6;
-    for(var = 0; var < cube.num_vars; var++)
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        len = len(PLA.label[i]);
-        if (col + len > 75)
-        (void) fmt.Fprintf(fp, " \\\n"), col = 0;
-        else
-        putc(' ', fp), col += 1;
-        (void) fmt.Fprintf(fp, "%s", PLA.label[i]), col += len;
-    }
+func debug1_print(t pcover, name string, number int32) {
+	if verbose_debug && number == 0 {
+		fmt.Println()
+	}
+	fmt.Printf("%s[%d]: ord(T)=%d\n", name, number, t.count)
+	if verbose_debug {
+		for i := int32(0); i < t.count; i++ {
+			fmt.Printf("%4d. %s\n", i+1, pc1(GETSET(t, i)))
+		}
+	}
 }
-
-
-
-/*
-    eqntott output mode -- output algebraic equations
-*/
-void eqn_output(PLA)
-var PLA pPLA;
-{
-    register pcube p, last;
-    register int i, var, col, len;
-    int x;
-    bool firstand, firstor;
-
-    if (cube.output == -1)
-    fatal("Cannot have no-output function for EQNTOTT output mode");
-    if (cube.num_mv_vars != 1)
-    fatal("Must have binary-valued function for EQNTOTT output mode");
-    makeup_labels(PLA);
-
-    /* Write a single equation for each output */
-    for i = 0; i < cube.part_size[cube.output]; i++ {
-    // inlining of macro OUTLABEL
-    (void) fmt.Printf("%s = ", PLA.label[cube.first_part[cube.output] + i]);
-    // inlining of macro OUTLABEL
-    col = len(PLA.label[cube.first_part[cube.output] + i]) + 3;
-    firstor = TRUE;
-
-    /* Write product terms for each cube in this output */
-    // inlining of macro foreach_set
-    for(p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p<last;p+=PLA.F.wsize)
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        if p[(((i + cube.first_part[cube.output]) >> LOGBPI) + 1)] & (1 << ((i + cube.first_part[cube.output]) & (BPI-1))) {
-        if (firstor)
-            (void) fmt.Printf("("), col += 1;
-        else
-            (void) fmt.Printf(" | (");
-col += 4;
-        firstor = FALSE;
-        firstand = TRUE;
-
-        /* print out a product term */
-        for(var = 0; var < cube.num_binary_vars; var++)
-            // inlining of macro GETINPUT
-            // inlining of macro WHICH_WORD
-            // inlining of macro WHICH_BIT
-            if (x=((p[(((2*var) >> LOGBPI) + 1)] >> ((2*var) & (BPI-1))) & 3)) != DASH {
-            // inlining of macro INLABEL
-            len = len(PLA.label[cube.first_part[var] + 1]);
-            if (col+len > 72)
-                (void) fmt.Printf("\n    "), col = 4;
-            if (! firstand)
-                (void) fmt.Printf("&"), col += 1;
-            firstand = FALSE;
-            if (x == ZERO)
-                (void) fmt.Printf("!"), col += 1;
-            // inlining of macro INLABEL
-            (void) fmt.Printf("%s", PLA.label[cube.first_part[var] + 1]), col += len;
-            }
-        (void) fmt.Printf(")"), col += 1;
-        }
-    (void) fmt.Printf(";\n\n");
-    }
+func cprint(t pcover) {
+	for i := int32(0); i < t.count; i++ {
+		fmt.Println(pc1(GETSET(t, i)))
+	}
 }
-
-
-char *fmt_cube(c, out_map, s)
-register pcube c;
-register char *out_map, *s;
-{
-    register int i, var, last, len = 0;
-
-    for var = 0; var < cube.num_binary_vars; var++ {
-    // inlining of macro GETINPUT
-    // inlining of macro WHICH_WORD
-    // inlining of macro WHICH_BIT
-    s[len++] = "?01-" [((c[(((2*var) >> LOGBPI) + 1)] >> ((2*var) & (BPI-1))) & 3)];
-    }
-    for var = cube.num_binary_vars; var < cube.num_vars - 1; var++ {
-    s[len++] = ' ';
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        s[len++] = "01" [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-    }
-    }
-    if cube.output != -1 {
-    last = cube.last_part[cube.output];
-    s[len++] = ' ';
-    for i = cube.first_part[cube.output]; i <= last; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        s[len++] = out_map [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-    }
-    }
-    s[len] = '\0';
-    return s;
+func makeup_labels(pla pPLA) {
+	if len(pla.label) < int(cube.size) {
+		PLA_labels(pla)
+	}
+	for v := int32(0); v < cube.num_vars; v++ {
+		for i := int32(0); i < cube.part_size[v]; i++ {
+			index := cube.first_part[v] + i
+			if pla.label[index] != "" {
+				continue
+			}
+			if v < cube.num_binary_vars {
+				pla.label[index] = fmt.Sprintf("v%d", v)
+				if i%2 == 0 {
+					pla.label[index] += ".bar"
+				}
+			} else {
+				pla.label[index] = fmt.Sprintf("v%d.%d", v, i)
+			}
+		}
+	}
 }
-
-
-void print_cube(fp, c, out_map)
-register FILE *fp;
-register pcube c;
-register char *out_map;
-{
-    register int i, var, ch;
-    int last;
-
-    for var = 0; var < cube.num_binary_vars; var++ {
-    // inlining of macro GETINPUT
-    // inlining of macro WHICH_WORD
-    // inlining of macro WHICH_BIT
-    ch = "?01-" [((c[(((2*var) >> LOGBPI) + 1)] >> ((2*var) & (BPI-1))) & 3)];
-    putc(ch, fp);
-    }
-    for var = cube.num_binary_vars; var < cube.num_vars - 1; var++ {
-    putc(' ', fp);
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        ch = "01" [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(ch, fp);
-    }
-    }
-    if cube.output != -1 {
-    last = cube.last_part[cube.output];
-    putc(' ', fp);
-    for i = cube.first_part[cube.output]; i <= last; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        ch = out_map [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(ch, fp);
-    }
-    }
-    putc('\n', fp);
+func labelAt(pla pPLA, index int32) string {
+	if index < 0 || int(index) >= len(pla.label) || pla.label[index] == "" {
+		return "(null)"
+	}
+	return pla.label[index]
 }
-
-
-void print_expanded_cube(fp, c, phase)
-register FILE *fp;
-register pcube c;
-pcube phase;
-{
-    register int i, var, ch;
-    char *out_map;
-
-    for var = 0; var < cube.num_binary_vars; var++ {
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        ch = "~1" [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(ch, fp);
-    }
-    }
-    for var = cube.num_binary_vars; var < cube.num_vars - 1; var++ {
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        ch = "1~" [(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(ch, fp);
-    }
-    }
-    if cube.output != -1 {
-    var = cube.num_vars - 1;
-    putc(' ', fp);
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        if phase == (pcube) NULL || (phase[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) {
-        out_map = "~1";
-        } else {
-        out_map = "~0";
-        }
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        ch = out_map[(c[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(ch, fp);
-    }
-    }
-    putc('\n', fp);
+func fpr_header(w io.Writer, pla pPLA, outputType int32) {
+	if outputType != F_type {
+		fmt.Fprint(w, ".type ")
+		for _, entry := range []struct {
+			flag int32
+			text string
+		}{{F_type, "f"}, {D_type, "d"}, {R_type, "r"}} {
+			if outputType&entry.flag != 0 {
+				fmt.Fprint(w, entry.text)
+			}
+		}
+		fmt.Fprintln(w)
+	}
+	if cube.num_mv_vars <= 1 {
+		fmt.Fprintf(w, ".i %d\n", cube.num_binary_vars)
+		if cube.output != -1 {
+			fmt.Fprintf(w, ".o %d\n", cube.part_size[cube.output])
+		}
+	} else {
+		fmt.Fprintf(w, ".mv %d %d", cube.num_vars, cube.num_binary_vars)
+		for v := cube.num_binary_vars; v < cube.num_vars; v++ {
+			fmt.Fprintf(w, " %d", cube.part_size[v])
+		}
+		fmt.Fprintln(w)
+	}
+	if cube.num_binary_vars > 0 && len(pla.label) > 1 && pla.label[1] != "" {
+		fmt.Fprint(w, ".ilb")
+		for v := int32(0); v < cube.num_binary_vars; v++ {
+			fmt.Fprintf(w, " %s", labelAt(pla, v*2+1))
+		}
+		fmt.Fprintln(w)
+	}
+	if cube.output != -1 && len(pla.label) > int(cube.first_part[cube.output]) && pla.label[cube.first_part[cube.output]] != "" {
+		fmt.Fprint(w, ".ob")
+		for i := cube.first_part[cube.output]; i <= cube.last_part[cube.output]; i++ {
+			fmt.Fprintf(w, " %s", labelAt(pla, i))
+		}
+		fmt.Fprintln(w)
+	}
+	for v := cube.num_binary_vars; v < cube.num_vars-1; v++ {
+		first, last := cube.first_part[v], cube.last_part[v]
+		if int(first) < len(pla.label) && pla.label[first] != "" {
+			fmt.Fprintf(w, ".label var=%d", v)
+			for i := first; i <= last; i++ {
+				fmt.Fprintf(w, " %s", labelAt(pla, i))
+			}
+			fmt.Fprintln(w)
+		}
+	}
+	if pla.phase != nil && cube.output != -1 {
+		fmt.Fprint(w, "#.phase ")
+		for i := cube.first_part[cube.output]; i <= cube.last_part[cube.output]; i++ {
+			fmt.Fprintf(w, "%c", mappedBit("01", pla.phase, i))
+		}
+		fmt.Fprintln(w)
+	}
 }
-
-
-char *pc1(c) pcube c;
-{static char s1[256];return fmt_cube(c, "01", s1);}
-char *pc2(c) pcube c;
-{static char s2[256];return fmt_cube(c, "01", s2);}
-
-
-void debug_print(T, name, level)
-pcube *T;
-var name string;
-var level int32;
-{
-    register pcube *T1, p, temp;
-    register int cnt;
-
-    // inlining of macro CUBELISTSIZE
-    cnt = (((pcube *) T[1] - T) - 3);
-    // inlining of macro new_cube
-    // inlining of macro set_new
-    temp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);
-    if (verbose_debug && level == 0)
-    (void) fmt.Printf("\n");
-    (void) fmt.Printf("%s[%d]: ord(T)=%d\n", name, level, cnt);
-    if verbose_debug {
-    (void) fmt.Printf("cofactor=%s\n", pc1(T[0]));
-    for(T1 = T+2, cnt = 1; (p = *T1++) != (pcube) NULL; cnt++)
-        (void) fmt.Printf("%4d. %s\n", cnt, pc1(set_or(temp, p, T[0])));
-    }
-    // inlining of macro free_cube
-    // inlining of macro set_free
-    FREE(temp);
+func fprint_pla(w io.Writer, pla pPLA, outputType int32) {
+	if outputType&CONSTRAINTS_type != 0 {
+		output_symbolic_constraints(w, pla, false)
+		outputType &^= CONSTRAINTS_type
+		if outputType == 0 {
+			return
+		}
+	}
+	if outputType&SYMBOLIC_CONSTRAINTS_type != 0 {
+		output_symbolic_constraints(w, pla, true)
+		outputType &^= SYMBOLIC_CONSTRAINTS_type
+		if outputType == 0 {
+			return
+		}
+	}
+	switch outputType {
+	case PLEASURE_type:
+		pls_output(pla)
+		return
+	case EQNTOTT_type:
+		eqn_output(pla)
+		return
+	case KISS_type:
+		kiss_output(w, pla)
+		return
+	}
+	fpr_header(w, pla, outputType)
+	number := int32(0)
+	covers := []struct {
+		flag    int32
+		family  pcover
+		mapping string
+	}{{F_type, pla.F, "~1"}, {D_type, pla.D, "~2"}, {R_type, pla.R, "~0"}}
+	for _, item := range covers {
+		if outputType&item.flag != 0 && item.family != nil {
+			number += item.family.count
+		}
+	}
+	fmt.Fprintf(w, ".p %d\n", number)
+	if outputType == F_type {
+		if pla.F != nil {
+			for i := int32(0); i < pla.F.count; i++ {
+				print_cube(w, GETSET(pla.F, i), "01")
+			}
+		}
+		fmt.Fprintln(w, ".e")
+		return
+	}
+	for _, item := range covers {
+		if outputType&item.flag != 0 && item.family != nil {
+			for i := int32(0); i < item.family.count; i++ {
+				print_cube(w, GETSET(item.family, i), item.mapping)
+			}
+		}
+	}
+	fmt.Fprintln(w, ".end")
 }
-
-
-void debug1_print(T, name, num)
-pcover T;
-var name string;
-var num int32;
-{
-    register int cnt = 1;
-    register pcube p, last;
-
-    if (verbose_debug && num == 0)
-    (void) fmt.Printf("\n");
-    (void) fmt.Printf("%s[%d]: ord(T)=%d\n", name, num, T.count);
-    if (verbose_debug)
-    // inlining of macro foreach_set
-    for(p=T.data,last=p+T.count*T.wsize;p<last;p+=T.wsize)
-        (void) fmt.Printf("%4d. %s\n", cnt++, pc1(p));
+func pls_output(pla pPLA) {
+	fmt.Println(".option unmerged")
+	makeup_labels(pla)
+	pls_label(pla, os.Stdout)
+	pls_group(pla, os.Stdout)
+	fmt.Printf(".p %d\n", pla.F.count)
+	for i := int32(0); i < pla.F.count; i++ {
+		print_expanded_cube(os.Stdout, GETSET(pla.F, i), pla.phase)
+	}
+	fmt.Println(".end")
 }
-
-
-void cprint(T)
-pcover T;
-{
-    register pcube p, last;
-
-    // inlining of macro foreach_set
-    for(p=T.data,last=p+T.count*T.wsize;p<last;p+=T.wsize)
-    (void) fmt.Printf("%s\n", pc1(p));
+func pls_label(pla pPLA, w io.Writer) {
+	fmt.Fprint(w, ".label")
+	column := 6
+	for v := int32(0); v < cube.num_vars; v++ {
+		for i := cube.first_part[v]; i <= cube.last_part[v]; i++ {
+			label := pla.label[i]
+			if column+len(label) > 75 {
+				fmt.Fprint(w, " \\\n")
+				column = 0
+			} else {
+				fmt.Fprint(w, " ")
+				column++
+			}
+			fmt.Fprint(w, label)
+			column += len(label)
+		}
+	}
 }
-
-
-void makeup_labels(PLA)
-var PLA pPLA;
-{
-    int var, i, ind;
-
-    if (PLA.label == (char **) NULL)
-    PLA_labels(PLA);
-
-    for(var = 0; var < cube.num_vars; var++)
-    for i = 0; i < cube.part_size[var]; i++ {
-        ind = cube.first_part[var] + i;
-        if PLA.label[ind] == (char *) NULL {
-        PLA.label[ind] = ALLOC(char, 15);
-        if (var < cube.num_binary_vars)
-            if ((i % 2) == 0)
-            (void) sprintf(PLA.label[ind], "v%d.bar", var);
-            else
-            (void) sprintf(PLA.label[ind], "v%d", var);
-        else
-            (void) sprintf(PLA.label[ind], "v%d.%d", var, i);
-        }
-    }
+func pls_group(pla pPLA, w io.Writer) {
+	fmt.Fprint(w, "\n.group")
+	column := 6
+	for v := int32(0); v < cube.num_vars-1; v++ {
+		fmt.Fprint(w, " (")
+		column += 2
+		for i := cube.first_part[v]; i <= cube.last_part[v]; i++ {
+			label := pla.label[i]
+			if column+len(label) > 75 {
+				fmt.Fprint(w, " \\\n")
+				column = 0
+			} else if i != 0 {
+				fmt.Fprint(w, " ")
+				column++
+			}
+			fmt.Fprint(w, label)
+			column += len(label)
+		}
+		fmt.Fprint(w, ")")
+		column++
+	}
+	fmt.Fprintln(w)
 }
-
-
-void kiss_output(fp, PLA)
-var fp *os.File;
-var PLA pPLA;
-{
-    register pset last, p;
-
-    // inlining of macro foreach_set
-    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p<last;p+=PLA.F.wsize {
-    kiss_print_cube(fp, PLA, p, "~1");
-    }
-    // inlining of macro foreach_set
-    for p=PLA.D.data,last=p+PLA.D.count*PLA.D.wsize;p<last;p+=PLA.D.wsize {
-    kiss_print_cube(fp, PLA, p, "~2");
-    }
+func eqn_output(pla pPLA) {
+	if cube.output == -1 || cube.num_mv_vars != 1 {
+		panic("espresso: EQNTOTT output requires binary-valued inputs and output")
+	}
+	makeup_labels(pla)
+	for output := int32(0); output < cube.part_size[cube.output]; output++ {
+		name := labelAt(pla, cube.first_part[cube.output]+output)
+		fmt.Printf("%s = ", name)
+		column := len(name) + 3
+		firstOr := true
+		for row := int32(0); row < pla.F.count; row++ {
+			p := GETSET(pla.F, row)
+			if !is_in_set(p, output+cube.first_part[cube.output]) {
+				continue
+			}
+			if firstOr {
+				fmt.Print("(")
+				column++
+			} else {
+				fmt.Print(" | (")
+				column += 4
+			}
+			firstOr = false
+			firstAnd := true
+			for v := int32(0); v < cube.num_binary_vars; v++ {
+				x := GETINPUT(p, v)
+				if x == DASH {
+					continue
+				}
+				label := labelAt(pla, 2*v+1)
+				if column+len(label) > 72 {
+					fmt.Print("\n    ")
+					column = 4
+				}
+				if !firstAnd {
+					fmt.Print("&")
+					column++
+				}
+				firstAnd = false
+				if x == ZERO {
+					fmt.Print("!")
+					column++
+				}
+				fmt.Print(label)
+				column += len(label)
+			}
+			fmt.Print(")")
+			column++
+		}
+		fmt.Print(";\n\n")
+	}
 }
-
-
-void kiss_print_cube(fp, PLA, p, out_string)
-var fp *os.File;
-var PLA pPLA;
-pcube p;
-var out_string string;
-{
-    register int i, var;
-    int part, x;
-
-    for var = 0; var < cube.num_binary_vars; var++ {
-    // inlining of macro GETINPUT
-    // inlining of macro WHICH_WORD
-    // inlining of macro WHICH_BIT
-    x = "?01-" [((p[(((2*var) >> LOGBPI) + 1)] >> ((2*var) & (BPI-1))) & 3)];
-    putc(x, fp);
-    }
-
-    for var = cube.num_binary_vars; var < cube.num_vars - 1; var++ {
-    putc(' ', fp);
-    if setp_implies(cube.var_mask[var], p) {
-        putc('-', fp);
-    } else {
-        part = -1;
-        for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        if p[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1))) {
-            if part != -1 {
-            fatal("more than 1 part in a symbolic variable\n");
-            }
-            part = i;
-        }
-        }
-        if part == -1 {
-        putc('~', fp);    /* no parts, hope its an output ... */
-        } else {
-        (void) fputs(PLA.label[part], fp);
-        }
-    }
-    }
-
-    if (var = cube.output) != -1 {
-    putc(' ', fp);
-    for i = cube.first_part[var]; i <= cube.last_part[var]; i++ {
-        // inlining of macro is_in_set
-        // inlining of macro WHICH_WORD
-        // inlining of macro WHICH_BIT
-        x = out_string [(p[(((i) >> LOGBPI) + 1)] & (1 << ((i) & (BPI-1)))) != 0];
-        putc(x, fp);
-    }
-    }
-
-    putc('\n', fp);
+func kiss_output(w io.Writer, pla pPLA) {
+	for _, item := range []struct {
+		f       pcover
+		mapping string
+	}{{pla.F, "~1"}, {pla.D, "~2"}} {
+		if item.f != nil {
+			for i := int32(0); i < item.f.count; i++ {
+				kiss_print_cube(w, pla, GETSET(item.f, i), item.mapping)
+			}
+		}
+	}
 }
-
-void output_symbolic_constraints(fp, PLA, output_symbolic)
-var fp *os.File;
-var PLA pPLA;
-var output_symbolic int32;
-{
-    pset_family A;
-    register int i, j;
-    int size, var, npermute, *permute, *weight, noweight;
-
-    if (cube.num_vars - cube.num_binary_vars) <= 1 {
-    return;
-    }
-    makeup_labels(PLA);
-
-    for var=cube.num_binary_vars; var < cube.num_vars-1; var++ {
-
-    /* pull out the columns for variable "var" */
-    npermute = cube.part_size[var];
-    permute = ALLOC(int, npermute);
-    for i=0; i < npermute; i++ {
-        permute[i] = cube.first_part[var] + i;
-    }
-    A = sf_permute(sf_save(PLA.F), permute, npermute);
-    FREE(permute);
-
-
-    /* Delete the singletons and the full sets */
-    noweight = 0;
-    for i = 0; i < A.count; i++ {
-        // inlining of macro GETSET
-        size = set_ord(((A).data + (A).wsize * (i)));
-        if size == 1 || size == A.sf_size {
-        sf_delset(A, i--);
-        noweight++;
-        }
-    }
-
-
-    /* Count how many times each is duplicated */
-    weight = ALLOC(int, A.count);
-    for i = 0; i < A.count; i++ {
-        // inlining of macro RESET
-        // inlining of macro GETSET
-        (((A).data + (A).wsize * (i))[0] &= ~ (COVERED));
-    }
-    for i = 0; i < A.count; i++ {
-        weight[i] = 0;
-        // inlining of macro TESTP
-        // inlining of macro GETSET
-        if ! (((A).data + (A).wsize * (i))[0] & (COVERED)) {
-        weight[i] = 1;
-        for j = i+1; j < A.count; j++ {
-            // inlining of macro GETSET
-            if setp_equal(((A).data + (A).wsize * (i)), ((A).data + (A).wsize * (j))) {
-            weight[i]++;
-            // inlining of macro SET
-            // inlining of macro GETSET
-            (((A).data + (A).wsize * (j))[0] |= (COVERED));
-            }
-        }
-        }
-    }
-
-
-    /* Print out the constraints */
-    if ! (output_symbolic != 0) {
-        (void) fmt.Fprintf(fp, "# Symbolic constraints for variable %d (Numeric form)\n", var);
-        (void) fmt.Fprintf(fp, "# unconstrained weight = %d\n", noweight);
-        (void) fmt.Fprintf(fp, "num_codes=%d\n", cube.part_size[var]);
-        for i = 0; i < A.count; i++ {
-        if weight[i] > 0 {
-            (void) fmt.Fprintf(fp, "weight=%d: ", weight[i]);
-            for j = 0; j < A.sf_size; j++ {
-            // inlining of macro is_in_set
-            // inlining of macro GETSET
-            // inlining of macro WHICH_WORD
-            // inlining of macro WHICH_BIT
-            if ((A).data + (A).wsize * (i))[(((j) >> LOGBPI) + 1)] & (1 << ((j) & (BPI-1))) {
-                (void) fmt.Fprintf(fp, " %d", j);
-            }
-            }
-            (void) fmt.Fprintf(fp, "\n");
-        }
-        }
-    } else {
-        (void) fmt.Fprintf(fp, "# Symbolic constraints for variable %d (Symbolic form)\n", var);
-        for i = 0; i < A.count; i++ {
-        if weight[i] > 0 {
-            (void) fmt.Fprintf(fp, "#   w=%d: (", weight[i]);
-            for j = 0; j < A.sf_size; j++ {
-            // inlining of macro is_in_set
-            // inlining of macro GETSET
-            // inlining of macro WHICH_WORD
-            // inlining of macro WHICH_BIT
-            if ((A).data + (A).wsize * (i))[(((j) >> LOGBPI) + 1)] & (1 << ((j) & (BPI-1))) {
-                (void) fmt.Fprintf(fp, " %s", PLA.label[cube.first_part[var]+j]);
-            }
-            }
-            (void) fmt.Fprintf(fp, " )\n");
-        }
-        }
-        FREE(weight);
-    }
-    }
+func kiss_print_cube(w io.Writer, pla pPLA, p pcube, outMap string) {
+	var b strings.Builder
+	for v := int32(0); v < cube.num_binary_vars; v++ {
+		b.WriteByte("?01-"[GETINPUT(p, v)])
+	}
+	for v := cube.num_binary_vars; v < cube.num_vars-1; v++ {
+		b.WriteByte(' ')
+		if setp_implies(cube.var_mask[v], p) {
+			b.WriteByte('-')
+			continue
+		}
+		part := int32(-1)
+		for i := cube.first_part[v]; i <= cube.last_part[v]; i++ {
+			if is_in_set(p, i) {
+				if part != -1 {
+					panic("espresso: more than one part in symbolic variable")
+				}
+				part = i
+			}
+		}
+		if part == -1 {
+			b.WriteByte('~')
+		} else {
+			b.WriteString(labelAt(pla, part))
+		}
+	}
+	if cube.output != -1 {
+		b.WriteByte(' ')
+		for i := cube.first_part[cube.output]; i <= cube.last_part[cube.output]; i++ {
+			b.WriteByte(mappedBit(outMap, p, i))
+		}
+	}
+	fmt.Fprintln(w, b.String())
 }
-//ABC_NAMESPACE_IMPL_END
-
+func output_symbolic_constraints(w io.Writer, pla pPLA, symbolic bool) {
+	if cube.num_vars-cube.num_binary_vars <= 1 {
+		return
+	}
+	makeup_labels(pla)
+	for v := cube.num_binary_vars; v < cube.num_vars-1; v++ {
+		columns := make([]int32, cube.part_size[v])
+		for i := range columns {
+			columns[i] = cube.first_part[v] + int32(i)
+		}
+		a := sf_permute(sf_save(pla.F), columns, int32(len(columns)))
+		unconstrained := 0
+		for i := int32(0); i < a.count; {
+			size := set_ord(GETSET(a, i))
+			if size == 1 || size == a.sf_size {
+				sf_delset(a, i)
+				unconstrained++
+			} else {
+				i++
+			}
+		}
+		weights := make([]int32, a.count)
+		for i := int32(0); i < a.count; i++ {
+			RESET(GETSET(a, i), COVERED)
+		}
+		for i := int32(0); i < a.count; i++ {
+			if TESTP(GETSET(a, i), COVERED) {
+				continue
+			}
+			weights[i] = 1
+			for j := i + 1; j < a.count; j++ {
+				if setp_equal(GETSET(a, i), GETSET(a, j)) {
+					weights[i]++
+					SET(GETSET(a, j), COVERED)
+				}
+			}
+		}
+		form := "Numeric"
+		if symbolic {
+			form = "Symbolic"
+		}
+		fmt.Fprintf(w, "# Symbolic constraints for variable %d (%s form)\n", v, form)
+		if !symbolic {
+			fmt.Fprintf(w, "# unconstrained weight = %d\nnum_codes=%d\n", unconstrained, cube.part_size[v])
+		}
+		for i, weight := range weights {
+			if weight == 0 {
+				continue
+			}
+			if symbolic {
+				fmt.Fprintf(w, "#   w=%d: (", weight)
+			} else {
+				fmt.Fprintf(w, "weight=%d: ", weight)
+			}
+			for j := int32(0); j < a.sf_size; j++ {
+				if is_in_set(GETSET(a, int32(i)), j) {
+					if symbolic {
+						fmt.Fprintf(w, " %s", pla.label[cube.first_part[v]+j])
+					} else {
+						fmt.Fprintf(w, " %d", j)
+					}
+				}
+			}
+			if symbolic {
+				fmt.Fprint(w, " )")
+			}
+			fmt.Fprintln(w)
+		}
+	}
+}

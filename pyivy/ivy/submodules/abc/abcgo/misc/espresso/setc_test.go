@@ -141,7 +141,7 @@ func TestCubeGeometryOriginalCDifferentialFixture(t *testing.T) {
 	pkg := filepath.Dir(file)
 	root := filepath.Clean(filepath.Join(pkg, "../../.."))
 	binary := filepath.Join(t.TempDir(), "setc_oracle")
-	command := exec.Command(compiler, "-std=gnu89", "-O0", "-include", filepath.Join(pkg, "testdata/setc_prelude.h"), "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "testdata/setc_oracle.c"), filepath.Join(root, "src/misc/espresso/set.c"), filepath.Join(root, "src/misc/espresso/setc.c"), filepath.Join(root, "src/misc/espresso/cubestr.c"), "-o", binary)
+	command := exec.Command(compiler, "-std=gnu89", "-O0", "-include", filepath.Join(pkg, "test_vectors/setc_prelude.h"), "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/setc_oracle.c"), filepath.Join(root, "src/misc/espresso/set.c"), filepath.Join(root, "src/misc/espresso/setc.c"), filepath.Join(root, "src/misc/espresso/cubestr.c"), "-o", binary)
 	if result, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("C cube oracle compile: %v\n%s", err, result)
 	}

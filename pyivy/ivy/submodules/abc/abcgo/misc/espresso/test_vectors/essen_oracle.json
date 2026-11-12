@@ -1,0 +1,5937 @@
+[
+  {
+    "input": [
+      107,
+      83,
+      77
+    ],
+    "dc": [
+      75
+    ],
+    "query": 42,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      42
+    ],
+    "essential": [
+      107
+    ],
+    "remaining": [
+      83,
+      77
+    ],
+    "dc_after": [
+      75,
+      107
+    ]
+  },
+  {
+    "input": [
+      63,
+      111,
+      114,
+      111,
+      106
+    ],
+    "dc": [
+      127,
+      61
+    ],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      57,
+      121,
+      115,
+      121,
+      107
+    ],
+    "essential": [],
+    "remaining": [
+      63,
+      111,
+      114,
+      111,
+      106
+    ],
+    "dc_after": [
+      127,
+      61
+    ]
+  },
+  {
+    "input": [
+      114,
+      118,
+      55,
+      85,
+      86
+    ],
+    "dc": [
+      58
+    ],
+    "query": 81,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      83,
+      83,
+      113,
+      81,
+      83
+    ],
+    "essential": [],
+    "remaining": [
+      114,
+      118,
+      55,
+      85,
+      86
+    ],
+    "dc_after": [
+      58
+    ]
+  },
+  {
+    "input": [
+      42,
+      125,
+      91,
+      74,
+      49,
+      45,
+      49
+    ],
+    "dc": [
+      89,
+      71
+    ],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      106,
+      75,
+      74
+    ],
+    "essential": [],
+    "remaining": [
+      42,
+      125,
+      91,
+      74,
+      49,
+      45,
+      49
+    ],
+    "dc_after": [
+      89,
+      71
+    ]
+  },
+  {
+    "input": [
+      78,
+      106,
+      42,
+      89
+    ],
+    "dc": [
+      71,
+      95
+    ],
+    "query": 75,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      74,
+      74,
+      106,
+      73
+    ],
+    "essential": [],
+    "remaining": [
+      78,
+      106,
+      42,
+      89
+    ],
+    "dc_after": [
+      71,
+      95
+    ]
+  },
+  {
+    "input": [
+      63,
+      110,
+      126,
+      73,
+      47
+    ],
+    "dc": [],
+    "query": 38,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      38,
+      38,
+      38,
+      38,
+      38,
+      38
+    ],
+    "essential": [
+      63,
+      126
+    ],
+    "remaining": [
+      110,
+      73,
+      47
+    ],
+    "dc_after": [
+      63,
+      126
+    ]
+  },
+  {
+    "input": [
+      41,
+      83,
+      114,
+      53,
+      117,
+      109,
+      121
+    ],
+    "dc": [
+      39
+    ],
+    "query": 37,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      45,
+      37,
+      37,
+      37,
+      37,
+      37,
+      61
+    ],
+    "essential": [],
+    "remaining": [
+      41,
+      83,
+      114,
+      53,
+      117,
+      109,
+      121
+    ],
+    "dc_after": [
+      39
+    ]
+  },
+  {
+    "input": [
+      89
+    ],
+    "dc": [
+      123,
+      95
+    ],
+    "query": 73,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [
+      73
+    ],
+    "essential": [],
+    "remaining": [
+      89
+    ],
+    "dc_after": [
+      123,
+      95
+    ]
+  },
+  {
+    "input": [
+      38,
+      57,
+      51,
+      75,
+      115
+    ],
+    "dc": [
+      113
+    ],
+    "query": 111,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      45,
+      63,
+      127
+    ],
+    "essential": [],
+    "remaining": [
+      38,
+      57,
+      51,
+      75,
+      115
+    ],
+    "dc_after": [
+      113
+    ]
+  },
+  {
+    "input": [
+      90,
+      119,
+      115,
+      102
+    ],
+    "dc": [
+      91,
+      51,
+      122
+    ],
+    "query": 43,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      106,
+      63,
+      59,
+      46
+    ],
+    "essential": [],
+    "remaining": [
+      90,
+      119,
+      115,
+      102
+    ],
+    "dc_after": [
+      91,
+      51,
+      122
+    ]
+  },
+  {
+    "input": [
+      101,
+      93,
+      113,
+      58,
+      77,
+      101,
+      54,
+      103
+    ],
+    "dc": [],
+    "query": 83,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      85,
+      81,
+      81,
+      114,
+      93,
+      85,
+      114,
+      87
+    ],
+    "essential": [],
+    "remaining": [
+      101,
+      93,
+      113,
+      58,
+      77,
+      101,
+      54,
+      103
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      75,
+      127,
+      101,
+      93,
+      81,
+      107,
+      45,
+      103
+    ],
+    "dc": [
+      105
+    ],
+    "query": 118,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      94,
+      118,
+      103,
+      87,
+      83,
+      126,
+      39,
+      102
+    ],
+    "essential": [],
+    "remaining": [
+      75,
+      127,
+      101,
+      93,
+      81,
+      107,
+      45,
+      103
+    ],
+    "dc_after": [
+      105
+    ]
+  },
+  {
+    "input": [
+      57,
+      43,
+      123,
+      94,
+      122,
+      49,
+      63
+    ],
+    "dc": [
+      54,
+      122,
+      79
+    ],
+    "query": 103,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      61,
+      47,
+      127,
+      70,
+      126,
+      53,
+      39
+    ],
+    "essential": [],
+    "remaining": [
+      57,
+      43,
+      123,
+      94,
+      122,
+      49,
+      63
+    ],
+    "dc_after": [
+      54,
+      122,
+      79
+    ]
+  },
+  {
+    "input": [
+      55,
+      114,
+      79,
+      121,
+      101,
+      61,
+      117
+    ],
+    "dc": [
+      38,
+      51
+    ],
+    "query": 107,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      63,
+      122,
+      75,
+      105,
+      109,
+      41,
+      125
+    ],
+    "essential": [],
+    "remaining": [
+      55,
+      114,
+      79,
+      121,
+      101,
+      61,
+      117
+    ],
+    "dc_after": [
+      38,
+      51
+    ]
+  },
+  {
+    "input": [
+      38,
+      57,
+      54,
+      57,
+      109,
+      69,
+      122
+    ],
+    "dc": [
+      125
+    ],
+    "query": 93,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      121,
+      121,
+      77,
+      91
+    ],
+    "essential": [],
+    "remaining": [
+      38,
+      57,
+      54,
+      57,
+      109,
+      69,
+      122
+    ],
+    "dc_after": [
+      125
+    ]
+  },
+  {
+    "input": [
+      71,
+      82,
+      51,
+      118,
+      74,
+      37,
+      106
+    ],
+    "dc": [
+      82,
+      123,
+      118
+    ],
+    "query": 85,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      69,
+      83,
+      113,
+      87,
+      101
+    ],
+    "essential": [],
+    "remaining": [
+      71,
+      82,
+      51,
+      118,
+      74,
+      37,
+      106
+    ],
+    "dc_after": [
+      82,
+      123,
+      118
+    ]
+  },
+  {
+    "input": [
+      123,
+      37,
+      38,
+      87,
+      59,
+      85,
+      69,
+      118
+    ],
+    "dc": [
+      122,
+      91
+    ],
+    "query": 81,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      81,
+      81,
+      81,
+      113,
+      81,
+      85,
+      83
+    ],
+    "essential": [],
+    "remaining": [
+      123,
+      37,
+      38,
+      87,
+      59,
+      85,
+      69,
+      118
+    ],
+    "dc_after": [
+      122,
+      91
+    ]
+  },
+  {
+    "input": [
+      85,
+      54,
+      45,
+      71,
+      126,
+      114
+    ],
+    "dc": [
+      91
+    ],
+    "query": 101,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      69,
+      39,
+      37,
+      69,
+      103
+    ],
+    "essential": [],
+    "remaining": [
+      85,
+      54,
+      45,
+      71,
+      126,
+      114
+    ],
+    "dc_after": [
+      91
+    ]
+  },
+  {
+    "input": [
+      86,
+      41,
+      94,
+      82,
+      77,
+      43,
+      121,
+      103,
+      111
+    ],
+    "dc": [
+      87
+    ],
+    "query": 89,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      83,
+      105,
+      91,
+      83,
+      89,
+      105,
+      89,
+      93,
+      89,
+      73
+    ],
+    "essential": [
+      111
+    ],
+    "remaining": [
+      86,
+      41,
+      94,
+      82,
+      77,
+      43,
+      121,
+      103
+    ],
+    "dc_after": [
+      87,
+      111
+    ]
+  },
+  {
+    "input": [
+      122
+    ],
+    "dc": [
+      101
+    ],
+    "query": 123,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [],
+    "essential": [
+      122
+    ],
+    "remaining": [],
+    "dc_after": [
+      101,
+      122
+    ]
+  },
+  {
+    "input": [
+      101,
+      110,
+      85,
+      63,
+      125,
+      55,
+      95
+    ],
+    "dc": [
+      63,
+      86
+    ],
+    "query": 45,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      37,
+      47,
+      101,
+      45,
+      45,
+      45,
+      45,
+      109
+    ],
+    "essential": [],
+    "remaining": [
+      101,
+      110,
+      85,
+      63,
+      125,
+      55,
+      95
+    ],
+    "dc_after": [
+      63,
+      86
+    ]
+  },
+  {
+    "input": [
+      47,
+      115,
+      42,
+      126,
+      110,
+      54,
+      47
+    ],
+    "dc": [],
+    "query": 78,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      110,
+      94,
+      106,
+      78,
+      78,
+      78,
+      102,
+      110
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      47,
+      115,
+      42,
+      110,
+      54,
+      47
+    ],
+    "dc_after": [
+      126
+    ]
+  },
+  {
+    "input": [
+      70,
+      107,
+      110,
+      103,
+      106,
+      71,
+      113
+    ],
+    "dc": [
+      101,
+      107
+    ],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      105,
+      107,
+      125,
+      107,
+      93
+    ],
+    "essential": [],
+    "remaining": [
+      70,
+      107,
+      110,
+      103,
+      106,
+      71,
+      113
+    ],
+    "dc_after": [
+      101,
+      107
+    ]
+  },
+  {
+    "input": [
+      43,
+      45,
+      71,
+      45,
+      94,
+      106,
+      113
+    ],
+    "dc": [
+      41,
+      73
+    ],
+    "query": 111,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      78,
+      125
+    ],
+    "essential": [],
+    "remaining": [
+      43,
+      45,
+      71,
+      45,
+      94,
+      106,
+      113
+    ],
+    "dc_after": [
+      41,
+      73
+    ]
+  },
+  {
+    "input": [
+      87,
+      41
+    ],
+    "dc": [],
+    "query": 42,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1
+    ],
+    "consensus": [
+      43
+    ],
+    "essential": [
+      87
+    ],
+    "remaining": [
+      41
+    ],
+    "dc_after": [
+      87
+    ]
+  },
+  {
+    "input": [
+      42,
+      122,
+      114,
+      94
+    ],
+    "dc": [
+      77,
+      74,
+      79
+    ],
+    "query": 63,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      58,
+      50,
+      126
+    ],
+    "essential": [],
+    "remaining": [
+      42,
+      122,
+      114,
+      94
+    ],
+    "dc_after": [
+      77,
+      74,
+      79
+    ]
+  },
+  {
+    "input": [
+      53,
+      95,
+      58,
+      47,
+      83,
+      85,
+      70,
+      83
+    ],
+    "dc": [
+      75,
+      69,
+      87
+    ],
+    "query": 79,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      101,
+      79,
+      106,
+      111,
+      95,
+      77,
+      95
+    ],
+    "essential": [],
+    "remaining": [
+      53,
+      95,
+      58,
+      47,
+      83,
+      85,
+      70,
+      83
+    ],
+    "dc_after": [
+      75,
+      69,
+      87
+    ]
+  },
+  {
+    "input": [
+      73,
+      61,
+      79,
+      45
+    ],
+    "dc": [
+      47,
+      70
+    ],
+    "query": 75,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      105,
+      75,
+      105
+    ],
+    "essential": [],
+    "remaining": [
+      73,
+      61,
+      79,
+      45
+    ],
+    "dc_after": [
+      47,
+      70
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      57
+    ],
+    "query": 87,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      57
+    ]
+  },
+  {
+    "input": [
+      89,
+      114,
+      47,
+      55,
+      82
+    ],
+    "dc": [],
+    "query": 38,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      54,
+      38,
+      38
+    ],
+    "essential": [],
+    "remaining": [
+      89,
+      114,
+      47,
+      55,
+      82
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 78,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      122,
+      82,
+      63,
+      115,
+      74,
+      63,
+      61,
+      101
+    ],
+    "dc": [
+      113,
+      45,
+      73
+    ],
+    "query": 103,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      126,
+      86,
+      39,
+      119,
+      78,
+      39,
+      37
+    ],
+    "essential": [
+      63,
+      63
+    ],
+    "remaining": [
+      122,
+      82,
+      115,
+      74,
+      61,
+      101
+    ],
+    "dc_after": [
+      113,
+      45,
+      73,
+      63,
+      63
+    ]
+  },
+  {
+    "input": [
+      119,
+      47,
+      42,
+      125,
+      106
+    ],
+    "dc": [
+      121,
+      82,
+      57
+    ],
+    "query": 82,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      82,
+      82,
+      83,
+      90
+    ],
+    "essential": [],
+    "remaining": [
+      119,
+      47,
+      42,
+      125,
+      106
+    ],
+    "dc_after": [
+      121,
+      82,
+      57
+    ]
+  },
+  {
+    "input": [
+      102,
+      81,
+      109,
+      73,
+      126,
+      85
+    ],
+    "dc": [
+      122,
+      123
+    ],
+    "query": 59,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      62,
+      113,
+      57,
+      41,
+      105,
+      58,
+      58,
+      113
+    ],
+    "essential": [],
+    "remaining": [
+      102,
+      81,
+      109,
+      73,
+      126,
+      85
+    ],
+    "dc_after": [
+      122,
+      123
+    ]
+  },
+  {
+    "input": [
+      79
+    ],
+    "dc": [
+      113
+    ],
+    "query": 114,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      94
+    ],
+    "essential": [
+      79
+    ],
+    "remaining": [],
+    "dc_after": [
+      113,
+      79
+    ]
+  },
+  {
+    "input": [
+      59,
+      94,
+      101,
+      57,
+      107,
+      102
+    ],
+    "dc": [
+      69,
+      47
+    ],
+    "query": 42,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      42,
+      106,
+      43,
+      42,
+      46
+    ],
+    "essential": [],
+    "remaining": [
+      59,
+      94,
+      101,
+      57,
+      107,
+      102
+    ],
+    "dc_after": [
+      69,
+      47
+    ]
+  },
+  {
+    "input": [
+      107,
+      70,
+      70,
+      106,
+      122,
+      53
+    ],
+    "dc": [],
+    "query": 119,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      127,
+      126,
+      118
+    ],
+    "essential": [
+      107
+    ],
+    "remaining": [
+      70,
+      70,
+      106,
+      122,
+      53
+    ],
+    "dc_after": [
+      107
+    ]
+  },
+  {
+    "input": [
+      90,
+      110,
+      123,
+      83,
+      123
+    ],
+    "dc": [
+      46
+    ],
+    "query": 113,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      1
+    ],
+    "consensus": [
+      83,
+      113,
+      81,
+      113
+    ],
+    "essential": [
+      123
+    ],
+    "remaining": [
+      90,
+      110,
+      83,
+      123
+    ],
+    "dc_after": [
+      46,
+      123
+    ]
+  },
+  {
+    "input": [
+      121,
+      81,
+      125,
+      62,
+      54,
+      53,
+      127,
+      77
+    ],
+    "dc": [
+      118,
+      58
+    ],
+    "query": 126,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      123,
+      83,
+      127,
+      55,
+      126,
+      79
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      121,
+      81,
+      125,
+      62,
+      54,
+      53,
+      77
+    ],
+    "dc_after": [
+      118,
+      58,
+      127
+    ]
+  },
+  {
+    "input": [
+      107,
+      71,
+      78,
+      125,
+      107,
+      113,
+      50,
+      59
+    ],
+    "dc": [
+      58,
+      117,
+      87
+    ],
+    "query": 63,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      43,
+      103,
+      110,
+      61,
+      43,
+      49
+    ],
+    "essential": [],
+    "remaining": [
+      107,
+      71,
+      78,
+      125,
+      107,
+      113,
+      50,
+      59
+    ],
+    "dc_after": [
+      58,
+      117,
+      87
+    ]
+  },
+  {
+    "input": [
+      39,
+      43,
+      39,
+      62
+    ],
+    "dc": [],
+    "query": 123,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      63,
+      63,
+      58
+    ],
+    "essential": [
+      62
+    ],
+    "remaining": [
+      39,
+      43,
+      39
+    ],
+    "dc_after": [
+      62
+    ]
+  },
+  {
+    "input": [
+      49,
+      126,
+      47,
+      123,
+      105,
+      109
+    ],
+    "dc": [],
+    "query": 87,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      113,
+      86,
+      86,
+      103,
+      87,
+      83,
+      93,
+      85,
+      69
+    ],
+    "essential": [],
+    "remaining": [
+      49,
+      126,
+      47,
+      123,
+      105,
+      109
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      102,
+      95,
+      69,
+      103,
+      59,
+      54,
+      74,
+      73,
+      118
+    ],
+    "dc": [
+      59,
+      95
+    ],
+    "query": 114,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      118,
+      82,
+      118,
+      50,
+      50,
+      90,
+      114
+    ],
+    "essential": [],
+    "remaining": [
+      102,
+      95,
+      69,
+      103,
+      59,
+      54,
+      74,
+      73,
+      118
+    ],
+    "dc_after": [
+      59,
+      95
+    ]
+  },
+  {
+    "input": [
+      126,
+      121
+    ],
+    "dc": [
+      119,
+      113
+    ],
+    "query": 78,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0
+    ],
+    "consensus": [
+      78,
+      78,
+      75
+    ],
+    "essential": [],
+    "remaining": [
+      126,
+      121
+    ],
+    "dc_after": [
+      119,
+      113
+    ]
+  },
+  {
+    "input": [
+      85,
+      73,
+      39,
+      85,
+      57,
+      59
+    ],
+    "dc": [],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      75,
+      106
+    ],
+    "essential": [],
+    "remaining": [
+      85,
+      73,
+      39,
+      85,
+      57,
+      59
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      49,
+      53,
+      127,
+      118,
+      58,
+      57
+    ],
+    "dc": [
+      109,
+      93,
+      39
+    ],
+    "query": 50,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      51,
+      51,
+      50,
+      50,
+      50,
+      50,
+      50,
+      51
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      49,
+      53,
+      118,
+      58,
+      57
+    ],
+    "dc_after": [
+      109,
+      93,
+      39,
+      127
+    ]
+  },
+  {
+    "input": [
+      45,
+      90,
+      103
+    ],
+    "dc": [
+      46
+    ],
+    "query": 46,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      47,
+      106,
+      38
+    ],
+    "essential": [
+      103
+    ],
+    "remaining": [
+      45,
+      90
+    ],
+    "dc_after": [
+      46,
+      103
+    ]
+  },
+  {
+    "input": [
+      57,
+      125,
+      86,
+      41,
+      47
+    ],
+    "dc": [],
+    "query": 83,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      113,
+      81,
+      81,
+      82
+    ],
+    "essential": [],
+    "remaining": [
+      57,
+      125,
+      86,
+      41,
+      47
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      94,
+      91,
+      102,
+      115,
+      86,
+      41,
+      102
+    ],
+    "dc": [],
+    "query": 119,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      86,
+      87,
+      61
+    ],
+    "essential": [],
+    "remaining": [
+      94,
+      91,
+      102,
+      115,
+      86,
+      41,
+      102
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      43,
+      58,
+      86
+    ],
+    "dc": [],
+    "query": 81,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      1
+    ],
+    "consensus": [
+      83
+    ],
+    "essential": [
+      43,
+      86
+    ],
+    "remaining": [
+      58
+    ],
+    "dc_after": [
+      43,
+      86
+    ]
+  },
+  {
+    "input": [
+      127
+    ],
+    "dc": [
+      81,
+      41
+    ],
+    "query": 87,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      87,
+      87
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [],
+    "dc_after": [
+      81,
+      41,
+      127
+    ]
+  },
+  {
+    "input": [
+      69,
+      45,
+      69
+    ],
+    "dc": [
+      51,
+      37,
+      86
+    ],
+    "query": 46,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      47
+    ],
+    "essential": [],
+    "remaining": [
+      69,
+      45,
+      69
+    ],
+    "dc_after": [
+      51,
+      37,
+      86
+    ]
+  },
+  {
+    "input": [
+      102,
+      94,
+      70,
+      50,
+      127,
+      91,
+      118,
+      117
+    ],
+    "dc": [
+      114,
+      57,
+      59
+    ],
+    "query": 82,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      86,
+      82,
+      86,
+      114,
+      82,
+      82,
+      82,
+      82,
+      82,
+      83
+    ],
+    "essential": [],
+    "remaining": [
+      102,
+      94,
+      70,
+      50,
+      127,
+      91,
+      118,
+      117
+    ],
+    "dc_after": [
+      114,
+      57,
+      59
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      121,
+      105,
+      62
+    ],
+    "query": 78,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      121,
+      105,
+      62
+    ]
+  },
+  {
+    "input": [
+      110,
+      90,
+      81
+    ],
+    "dc": [],
+    "query": 94,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      78,
+      83
+    ],
+    "essential": [
+      110
+    ],
+    "remaining": [
+      90,
+      81
+    ],
+    "dc_after": [
+      110
+    ]
+  },
+  {
+    "input": [
+      111,
+      125,
+      77,
+      86,
+      55,
+      41,
+      42
+    ],
+    "dc": [],
+    "query": 79,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      79,
+      77,
+      77,
+      78,
+      103,
+      105,
+      106
+    ],
+    "essential": [],
+    "remaining": [
+      111,
+      125,
+      77,
+      86,
+      55,
+      41,
+      42
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      50,
+      126,
+      126,
+      71,
+      118,
+      77,
+      43
+    ],
+    "dc": [
+      77
+    ],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      74,
+      74,
+      74,
+      74,
+      78,
+      94,
+      75,
+      106
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      50,
+      126,
+      71,
+      118,
+      77,
+      43
+    ],
+    "dc_after": [
+      77,
+      126
+    ]
+  },
+  {
+    "input": [
+      71,
+      119,
+      86
+    ],
+    "dc": [],
+    "query": 119,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0
+    ],
+    "consensus": [],
+    "essential": [],
+    "remaining": [
+      71,
+      119,
+      86
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 77,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      125,
+      93,
+      58,
+      95
+    ],
+    "dc": [],
+    "query": 45,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      45,
+      45,
+      109,
+      43,
+      109
+    ],
+    "essential": [
+      125,
+      95
+    ],
+    "remaining": [
+      93,
+      58
+    ],
+    "dc_after": [
+      125,
+      95
+    ]
+  },
+  {
+    "input": [
+      85,
+      90,
+      78,
+      95,
+      62
+    ],
+    "dc": [],
+    "query": 82,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      83,
+      82,
+      94,
+      82,
+      114
+    ],
+    "essential": [
+      95
+    ],
+    "remaining": [
+      85,
+      90,
+      78,
+      62
+    ],
+    "dc_after": [
+      95
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      79,
+      126
+    ],
+    "query": 45,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      79,
+      126
+    ]
+  },
+  {
+    "input": [
+      42,
+      86,
+      63,
+      53,
+      106,
+      50,
+      102,
+      74,
+      83
+    ],
+    "dc": [
+      75,
+      42,
+      78
+    ],
+    "query": 119,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      62,
+      55,
+      126,
+      94
+    ],
+    "essential": [
+      63
+    ],
+    "remaining": [
+      42,
+      86,
+      53,
+      106,
+      50,
+      102,
+      74,
+      83
+    ],
+    "dc_after": [
+      75,
+      42,
+      78,
+      63
+    ]
+  },
+  {
+    "input": [
+      58,
+      57,
+      45
+    ],
+    "dc": [],
+    "query": 83,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      114,
+      113
+    ],
+    "essential": [],
+    "remaining": [
+      58,
+      57,
+      45
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      42
+    ],
+    "dc": [
+      123,
+      45
+    ],
+    "query": 69,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [],
+    "essential": [],
+    "remaining": [
+      42
+    ],
+    "dc_after": [
+      123,
+      45
+    ]
+  },
+  {
+    "input": [
+      83,
+      119,
+      69,
+      87,
+      89,
+      71
+    ],
+    "dc": [
+      70
+    ],
+    "query": 61,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      113,
+      53,
+      101,
+      117,
+      121,
+      101
+    ],
+    "essential": [],
+    "remaining": [
+      83,
+      119,
+      69,
+      87,
+      89,
+      71
+    ],
+    "dc_after": [
+      70
+    ]
+  },
+  {
+    "input": [
+      94,
+      37,
+      45,
+      113,
+      70,
+      110,
+      103,
+      95,
+      115
+    ],
+    "dc": [
+      79,
+      42
+    ],
+    "query": 49,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      53,
+      61,
+      49,
+      53,
+      113,
+      49
+    ],
+    "essential": [],
+    "remaining": [
+      94,
+      37,
+      45,
+      113,
+      70,
+      110,
+      103,
+      95,
+      115
+    ],
+    "dc_after": [
+      79,
+      42
+    ]
+  },
+  {
+    "input": [
+      91,
+      127,
+      125,
+      102
+    ],
+    "dc": [
+      95,
+      45,
+      121
+    ],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      89,
+      121,
+      121
+    ],
+    "essential": [],
+    "remaining": [
+      91,
+      127,
+      125,
+      102
+    ],
+    "dc_after": [
+      95,
+      45,
+      121
+    ]
+  },
+  {
+    "input": [
+      126,
+      82,
+      110,
+      89
+    ],
+    "dc": [
+      61,
+      75,
+      122
+    ],
+    "query": 43,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      42,
+      42,
+      42,
+      42,
+      105
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      82,
+      110,
+      89
+    ],
+    "dc_after": [
+      61,
+      75,
+      122,
+      126
+    ]
+  },
+  {
+    "input": [
+      37,
+      58,
+      125,
+      75
+    ],
+    "dc": [
+      59
+    ],
+    "query": 70,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      71,
+      78
+    ],
+    "essential": [
+      125
+    ],
+    "remaining": [
+      37,
+      58,
+      75
+    ],
+    "dc_after": [
+      59,
+      125
+    ]
+  },
+  {
+    "input": [
+      59,
+      39,
+      125
+    ],
+    "dc": [
+      119
+    ],
+    "query": 70,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      102,
+      71
+    ],
+    "essential": [
+      125
+    ],
+    "remaining": [
+      59,
+      39
+    ],
+    "dc_after": [
+      119,
+      125
+    ]
+  },
+  {
+    "input": [
+      71,
+      49,
+      125,
+      109,
+      87,
+      47,
+      85,
+      122
+    ],
+    "dc": [
+      113,
+      85,
+      63
+    ],
+    "query": 54,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      102,
+      51,
+      55,
+      39,
+      118,
+      54,
+      54,
+      50
+    ],
+    "essential": [],
+    "remaining": [
+      71,
+      49,
+      125,
+      109,
+      87,
+      47,
+      85,
+      122
+    ],
+    "dc_after": [
+      113,
+      85,
+      63
+    ]
+  },
+  {
+    "input": [
+      41,
+      87,
+      45,
+      105
+    ],
+    "dc": [
+      39
+    ],
+    "query": 91,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      105,
+      91,
+      105,
+      73
+    ],
+    "essential": [],
+    "remaining": [
+      41,
+      87,
+      45,
+      105
+    ],
+    "dc_after": [
+      39
+    ]
+  },
+  {
+    "input": [
+      89,
+      103,
+      85
+    ],
+    "dc": [],
+    "query": 95,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      71
+    ],
+    "essential": [],
+    "remaining": [
+      89,
+      103,
+      85
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 110,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      47,
+      85
+    ],
+    "dc": [
+      75,
+      95
+    ],
+    "query": 91,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0
+    ],
+    "consensus": [
+      107,
+      89
+    ],
+    "essential": [],
+    "remaining": [
+      47,
+      85
+    ],
+    "dc_after": [
+      75,
+      95
+    ]
+  },
+  {
+    "input": [
+      81,
+      113,
+      122,
+      61,
+      118,
+      106,
+      113
+    ],
+    "dc": [],
+    "query": 110,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      110,
+      47,
+      110
+    ],
+    "essential": [],
+    "remaining": [
+      81,
+      113,
+      122,
+      61,
+      118,
+      106,
+      113
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      86,
+      115,
+      119,
+      125,
+      70,
+      122
+    ],
+    "dc": [
+      106,
+      78
+    ],
+    "query": 70,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      70,
+      86,
+      70,
+      70,
+      71,
+      94
+    ],
+    "essential": [],
+    "remaining": [
+      86,
+      115,
+      119,
+      125,
+      70,
+      122
+    ],
+    "dc_after": [
+      106,
+      78
+    ]
+  },
+  {
+    "input": [
+      73,
+      59,
+      62,
+      62,
+      50,
+      121
+    ],
+    "dc": [
+      87
+    ],
+    "query": 126,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      75,
+      58,
+      123
+    ],
+    "essential": [],
+    "remaining": [
+      73,
+      59,
+      62,
+      62,
+      50,
+      121
+    ],
+    "dc_after": [
+      87
+    ]
+  },
+  {
+    "input": [
+      127,
+      38,
+      103,
+      58,
+      111,
+      101,
+      43,
+      79,
+      57
+    ],
+    "dc": [
+      47
+    ],
+    "query": 93,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      93,
+      69,
+      77,
+      69,
+      105,
+      77,
+      121
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      38,
+      103,
+      58,
+      111,
+      101,
+      43,
+      79,
+      57
+    ],
+    "dc_after": [
+      47,
+      127
+    ]
+  },
+  {
+    "input": [
+      93,
+      107,
+      57,
+      53,
+      106,
+      113
+    ],
+    "dc": [],
+    "query": 46,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      42,
+      43,
+      39,
+      42
+    ],
+    "essential": [],
+    "remaining": [
+      93,
+      107,
+      57,
+      53,
+      106,
+      113
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      110,
+      63
+    ],
+    "dc": [],
+    "query": 117,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1
+    ],
+    "consensus": [
+      103,
+      53
+    ],
+    "essential": [
+      110
+    ],
+    "remaining": [
+      63
+    ],
+    "dc_after": [
+      110
+    ]
+  },
+  {
+    "input": [
+      126,
+      77,
+      93,
+      102
+    ],
+    "dc": [
+      83
+    ],
+    "query": 53,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      55,
+      101,
+      117,
+      39
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      77,
+      93,
+      102
+    ],
+    "dc_after": [
+      83,
+      126
+    ]
+  },
+  {
+    "input": [
+      70,
+      45,
+      121,
+      58
+    ],
+    "dc": [
+      50,
+      113,
+      103
+    ],
+    "query": 114,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      86,
+      115,
+      50
+    ],
+    "essential": [],
+    "remaining": [
+      70,
+      45,
+      121,
+      58
+    ],
+    "dc_after": [
+      50,
+      113,
+      103
+    ]
+  },
+  {
+    "input": [
+      95,
+      102,
+      83,
+      122,
+      127,
+      118,
+      126,
+      111
+    ],
+    "dc": [
+      62,
+      39,
+      89
+    ],
+    "query": 54,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      118,
+      38,
+      114,
+      54,
+      50,
+      54,
+      54,
+      54,
+      54,
+      54,
+      54,
+      38
+    ],
+    "essential": [],
+    "remaining": [
+      95,
+      102,
+      83,
+      122,
+      127,
+      118,
+      126,
+      111
+    ],
+    "dc_after": [
+      62,
+      39,
+      89
+    ]
+  },
+  {
+    "input": [
+      126,
+      86
+    ],
+    "dc": [
+      123,
+      109
+    ],
+    "query": 55,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0
+    ],
+    "consensus": [
+      54,
+      54,
+      118
+    ],
+    "essential": [],
+    "remaining": [
+      126,
+      86
+    ],
+    "dc_after": [
+      123,
+      109
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      79,
+      83
+    ],
+    "query": 49,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      79,
+      83
+    ]
+  },
+  {
+    "input": [
+      59,
+      50,
+      110,
+      115,
+      78,
+      70
+    ],
+    "dc": [
+      94,
+      91
+    ],
+    "query": 39,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      63,
+      54,
+      38,
+      38,
+      55,
+      102,
+      102
+    ],
+    "essential": [],
+    "remaining": [
+      59,
+      50,
+      110,
+      115,
+      78,
+      70
+    ],
+    "dc_after": [
+      94,
+      91
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      70
+    ],
+    "query": 109,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      70
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      117
+    ],
+    "query": 109,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      117
+    ]
+  },
+  {
+    "input": [
+      78,
+      87,
+      102,
+      117,
+      50,
+      90,
+      49
+    ],
+    "dc": [
+      46
+    ],
+    "query": 59,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      106,
+      115,
+      62,
+      57,
+      49,
+      122
+    ],
+    "essential": [],
+    "remaining": [
+      78,
+      87,
+      102,
+      117,
+      50,
+      90,
+      49
+    ],
+    "dc_after": [
+      46
+    ]
+  },
+  {
+    "input": [
+      111,
+      49
+    ],
+    "dc": [
+      101,
+      78,
+      37
+    ],
+    "query": 50,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0
+    ],
+    "consensus": [
+      62,
+      51
+    ],
+    "essential": [
+      111
+    ],
+    "remaining": [
+      49
+    ],
+    "dc_after": [
+      101,
+      78,
+      37,
+      111
+    ]
+  },
+  {
+    "input": [
+      114,
+      107,
+      46,
+      91,
+      87
+    ],
+    "dc": [
+      57,
+      37
+    ],
+    "query": 101,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      109,
+      39,
+      93,
+      69
+    ],
+    "essential": [],
+    "remaining": [
+      114,
+      107,
+      46,
+      91,
+      87
+    ],
+    "dc_after": [
+      57,
+      37
+    ]
+  },
+  {
+    "input": [
+      127,
+      126,
+      81,
+      87,
+      79
+    ],
+    "dc": [
+      58
+    ],
+    "query": 82,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      82,
+      82,
+      82,
+      82,
+      83,
+      82,
+      94
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      126,
+      81,
+      87,
+      79
+    ],
+    "dc_after": [
+      58,
+      127
+    ]
+  },
+  {
+    "input": [
+      54,
+      55,
+      55,
+      63,
+      118,
+      106,
+      77
+    ],
+    "dc": [
+      90,
+      73,
+      77
+    ],
+    "query": 126,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      54,
+      54,
+      62,
+      79
+    ],
+    "essential": [
+      63
+    ],
+    "remaining": [
+      54,
+      55,
+      55,
+      118,
+      106,
+      77
+    ],
+    "dc_after": [
+      90,
+      73,
+      77,
+      63
+    ]
+  },
+  {
+    "input": [
+      61,
+      43,
+      83,
+      123
+    ],
+    "dc": [
+      81,
+      85,
+      70
+    ],
+    "query": 81,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      113,
+      81,
+      81,
+      81
+    ],
+    "essential": [
+      123
+    ],
+    "remaining": [
+      61,
+      43,
+      83
+    ],
+    "dc_after": [
+      81,
+      85,
+      70,
+      123
+    ]
+  },
+  {
+    "input": [
+      101,
+      118,
+      70,
+      106,
+      75,
+      70,
+      82,
+      127,
+      93
+    ],
+    "dc": [
+      42,
+      102,
+      75
+    ],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      125,
+      115,
+      107,
+      73,
+      83,
+      121,
+      89
+    ],
+    "essential": [],
+    "remaining": [
+      101,
+      118,
+      70,
+      106,
+      75,
+      70,
+      82,
+      127,
+      93
+    ],
+    "dc_after": [
+      42,
+      102,
+      75
+    ]
+  },
+  {
+    "input": [
+      75,
+      63,
+      39
+    ],
+    "dc": [
+      71,
+      74,
+      89
+    ],
+    "query": 93,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      73,
+      125,
+      101
+    ],
+    "essential": [],
+    "remaining": [
+      75,
+      63,
+      39
+    ],
+    "dc_after": [
+      71,
+      74,
+      89
+    ]
+  },
+  {
+    "input": [
+      119,
+      50,
+      125,
+      105,
+      109,
+      101,
+      45,
+      37,
+      89
+    ],
+    "dc": [
+      121
+    ],
+    "query": 61,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      53,
+      51,
+      61,
+      41,
+      45,
+      37,
+      121
+    ],
+    "essential": [
+      119
+    ],
+    "remaining": [
+      50,
+      125,
+      105,
+      109,
+      101,
+      45,
+      37,
+      89
+    ],
+    "dc_after": [
+      121,
+      119
+    ]
+  },
+  {
+    "input": [
+      81,
+      85,
+      107
+    ],
+    "dc": [
+      127
+    ],
+    "query": 87,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      95
+    ],
+    "essential": [],
+    "remaining": [
+      81,
+      85,
+      107
+    ],
+    "dc_after": [
+      127
+    ]
+  },
+  {
+    "input": [
+      75,
+      85,
+      37,
+      69,
+      70,
+      79,
+      102
+    ],
+    "dc": [],
+    "query": 102,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      78,
+      71,
+      39,
+      71,
+      70
+    ],
+    "essential": [
+      79
+    ],
+    "remaining": [
+      75,
+      85,
+      37,
+      69,
+      70,
+      102
+    ],
+    "dc_after": [
+      79
+    ]
+  },
+  {
+    "input": [
+      111,
+      55,
+      122,
+      63,
+      73,
+      70,
+      77
+    ],
+    "dc": [
+      95,
+      79
+    ],
+    "query": 55,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      55,
+      39,
+      54,
+      50,
+      55,
+      102,
+      101
+    ],
+    "essential": [],
+    "remaining": [
+      111,
+      55,
+      122,
+      63,
+      73,
+      70,
+      77
+    ],
+    "dc_after": [
+      95,
+      79
+    ]
+  },
+  {
+    "input": [
+      47
+    ],
+    "dc": [
+      91,
+      53
+    ],
+    "query": 54,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      54
+    ],
+    "essential": [
+      47
+    ],
+    "remaining": [],
+    "dc_after": [
+      91,
+      53,
+      47
+    ]
+  },
+  {
+    "input": [
+      125,
+      43,
+      105,
+      83,
+      47,
+      123,
+      113
+    ],
+    "dc": [
+      46,
+      41
+    ],
+    "query": 102,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "consensus": [
+      103,
+      46,
+      86,
+      38,
+      126
+    ],
+    "essential": [
+      125,
+      123
+    ],
+    "remaining": [
+      43,
+      105,
+      83,
+      47,
+      113
+    ],
+    "dc_after": [
+      46,
+      41,
+      125,
+      123
+    ]
+  },
+  {
+    "input": [
+      101,
+      42,
+      118,
+      90,
+      81,
+      93,
+      47
+    ],
+    "dc": [],
+    "query": 38,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      39,
+      46,
+      38,
+      38,
+      38
+    ],
+    "essential": [],
+    "remaining": [
+      101,
+      42,
+      118,
+      90,
+      81,
+      93,
+      47
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      89,
+      115,
+      75,
+      50,
+      63
+    ],
+    "dc": [
+      62
+    ],
+    "query": 73,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      73,
+      89,
+      73,
+      105
+    ],
+    "essential": [],
+    "remaining": [
+      89,
+      115,
+      75,
+      50,
+      63
+    ],
+    "dc_after": [
+      62
+    ]
+  },
+  {
+    "input": [
+      109
+    ],
+    "dc": [],
+    "query": 110,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      111
+    ],
+    "essential": [
+      109
+    ],
+    "remaining": [],
+    "dc_after": [
+      109
+    ]
+  },
+  {
+    "input": [
+      118
+    ],
+    "dc": [
+      69,
+      102,
+      102
+    ],
+    "query": 103,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      102
+    ],
+    "essential": [
+      118
+    ],
+    "remaining": [],
+    "dc_after": [
+      69,
+      102,
+      102,
+      118
+    ]
+  },
+  {
+    "input": [
+      69,
+      41,
+      70,
+      90,
+      62,
+      110
+    ],
+    "dc": [],
+    "query": 123,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      93,
+      94,
+      58,
+      122
+    ],
+    "essential": [],
+    "remaining": [
+      69,
+      41,
+      70,
+      90,
+      62,
+      110
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      59,
+      69,
+      39,
+      41,
+      59,
+      58
+    ],
+    "dc": [
+      87,
+      127,
+      74
+    ],
+    "query": 93,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      121,
+      101,
+      105,
+      121
+    ],
+    "essential": [],
+    "remaining": [
+      59,
+      69,
+      39,
+      41,
+      59,
+      58
+    ],
+    "dc_after": [
+      87,
+      127,
+      74
+    ]
+  },
+  {
+    "input": [
+      113,
+      90,
+      47,
+      45,
+      95,
+      119,
+      127
+    ],
+    "dc": [
+      125,
+      83
+    ],
+    "query": 41,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      57,
+      41,
+      41,
+      105,
+      61,
+      41,
+      41
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      113,
+      90,
+      47,
+      45,
+      95,
+      119
+    ],
+    "dc_after": [
+      125,
+      83,
+      127
+    ]
+  },
+  {
+    "input": [
+      57,
+      121,
+      83,
+      43
+    ],
+    "dc": [],
+    "query": 117,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      1,
+      1
+    ],
+    "consensus": [
+      53,
+      117,
+      81,
+      61
+    ],
+    "essential": [
+      83,
+      43
+    ],
+    "remaining": [
+      57,
+      121
+    ],
+    "dc_after": [
+      83,
+      43
+    ]
+  },
+  {
+    "input": [
+      121,
+      107,
+      89
+    ],
+    "dc": [
+      79,
+      43,
+      51
+    ],
+    "query": 90,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      91,
+      74,
+      91
+    ],
+    "essential": [],
+    "remaining": [
+      121,
+      107,
+      89
+    ],
+    "dc_after": [
+      79,
+      43,
+      51
+    ]
+  },
+  {
+    "input": [
+      109,
+      126,
+      82
+    ],
+    "dc": [
+      55,
+      39,
+      125
+    ],
+    "query": 59,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      57,
+      41,
+      58,
+      58,
+      114
+    ],
+    "essential": [],
+    "remaining": [
+      109,
+      126,
+      82
+    ],
+    "dc_after": [
+      55,
+      39,
+      125
+    ]
+  },
+  {
+    "input": [
+      79
+    ],
+    "dc": [],
+    "query": 87,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      87
+    ],
+    "essential": [
+      79
+    ],
+    "remaining": [],
+    "dc_after": [
+      79
+    ]
+  },
+  {
+    "input": [
+      71,
+      79
+    ],
+    "dc": [
+      123,
+      103
+    ],
+    "query": 106,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0
+    ],
+    "consensus": [
+      78,
+      74
+    ],
+    "essential": [],
+    "remaining": [
+      71,
+      79
+    ],
+    "dc_after": [
+      123,
+      103
+    ]
+  },
+  {
+    "input": [
+      79,
+      47,
+      69
+    ],
+    "dc": [
+      83,
+      103
+    ],
+    "query": 102,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      70,
+      38,
+      71
+    ],
+    "essential": [],
+    "remaining": [
+      79,
+      47,
+      69
+    ],
+    "dc_after": [
+      83,
+      103
+    ]
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 109,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      117,
+      83
+    ],
+    "dc": [],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1
+    ],
+    "consensus": [
+      121,
+      81
+    ],
+    "essential": [
+      117
+    ],
+    "remaining": [
+      83
+    ],
+    "dc_after": [
+      117
+    ]
+  },
+  {
+    "input": [
+      49,
+      126,
+      126
+    ],
+    "dc": [
+      41,
+      37
+    ],
+    "query": 126,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      1,
+      1
+    ],
+    "consensus": [
+      51
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      49,
+      126
+    ],
+    "dc_after": [
+      41,
+      37,
+      126
+    ]
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 47,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      61,
+      102,
+      113
+    ],
+    "dc": [
+      51,
+      50,
+      69
+    ],
+    "query": 94,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      70,
+      83
+    ],
+    "essential": [
+      61
+    ],
+    "remaining": [
+      102,
+      113
+    ],
+    "dc_after": [
+      51,
+      50,
+      69,
+      61
+    ]
+  },
+  {
+    "input": [
+      106,
+      53
+    ],
+    "dc": [],
+    "query": 39,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1
+    ],
+    "consensus": [
+      46,
+      37
+    ],
+    "essential": [
+      106
+    ],
+    "remaining": [
+      53
+    ],
+    "dc_after": [
+      106
+    ]
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 91,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 58,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [],
+    "dc": [
+      50,
+      86,
+      109
+    ],
+    "query": 118,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      50,
+      86,
+      109
+    ]
+  },
+  {
+    "input": [
+      93
+    ],
+    "dc": [
+      117,
+      42,
+      79
+    ],
+    "query": 118,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [
+      87
+    ],
+    "essential": [],
+    "remaining": [
+      93
+    ],
+    "dc_after": [
+      117,
+      42,
+      79
+    ]
+  },
+  {
+    "input": [
+      127,
+      57,
+      102,
+      63,
+      85,
+      110,
+      122
+    ],
+    "dc": [],
+    "query": 103,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      103,
+      61,
+      39,
+      69,
+      102,
+      126
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      57,
+      102,
+      63,
+      85,
+      110,
+      122
+    ],
+    "dc_after": [
+      127
+    ]
+  },
+  {
+    "input": [
+      62,
+      75,
+      70,
+      114,
+      73
+    ],
+    "dc": [
+      70,
+      91,
+      39
+    ],
+    "query": 37,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      39
+    ],
+    "essential": [],
+    "remaining": [
+      62,
+      75,
+      70,
+      114,
+      73
+    ],
+    "dc_after": [
+      70,
+      91,
+      39
+    ]
+  },
+  {
+    "input": [],
+    "dc": [
+      115,
+      38,
+      79
+    ],
+    "query": 50,
+    "equivalent": 0,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": [
+      115,
+      38,
+      79
+    ]
+  },
+  {
+    "input": [
+      114,
+      93,
+      85,
+      83
+    ],
+    "dc": [
+      85
+    ],
+    "query": 121,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      115,
+      89,
+      89,
+      81
+    ],
+    "essential": [
+      114
+    ],
+    "remaining": [
+      93,
+      85,
+      83
+    ],
+    "dc_after": [
+      85,
+      114
+    ]
+  },
+  {
+    "input": [
+      37
+    ],
+    "dc": [],
+    "query": 70,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [],
+    "essential": [
+      37
+    ],
+    "remaining": [],
+    "dc_after": [
+      37
+    ]
+  },
+  {
+    "input": [
+      39,
+      58,
+      126,
+      50,
+      102
+    ],
+    "dc": [
+      77,
+      86,
+      47
+    ],
+    "query": 95,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      103,
+      122,
+      94,
+      114,
+      70
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      39,
+      58,
+      50,
+      102
+    ],
+    "dc_after": [
+      77,
+      86,
+      47,
+      126
+    ]
+  },
+  {
+    "input": [
+      119,
+      125,
+      51
+    ],
+    "dc": [
+      75
+    ],
+    "query": 122,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      1,
+      0
+    ],
+    "consensus": [
+      122,
+      123,
+      50
+    ],
+    "essential": [
+      119
+    ],
+    "remaining": [
+      125,
+      51
+    ],
+    "dc_after": [
+      75,
+      119
+    ]
+  },
+  {
+    "input": [
+      50
+    ],
+    "dc": [
+      75,
+      127
+    ],
+    "query": 61,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [
+      51
+    ],
+    "essential": [],
+    "remaining": [
+      50
+    ],
+    "dc_after": [
+      75,
+      127
+    ]
+  },
+  {
+    "input": [
+      51,
+      105,
+      115,
+      102
+    ],
+    "dc": [],
+    "query": 57,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      49,
+      41,
+      49
+    ],
+    "essential": [],
+    "remaining": [
+      51,
+      105,
+      115,
+      102
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      63,
+      83,
+      57,
+      107,
+      39,
+      85,
+      121,
+      54
+    ],
+    "dc": [
+      55
+    ],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      106,
+      90,
+      74,
+      75
+    ],
+    "essential": [],
+    "remaining": [
+      63,
+      83,
+      57,
+      107,
+      39,
+      85,
+      121,
+      54
+    ],
+    "dc_after": [
+      55
+    ]
+  },
+  {
+    "input": [
+      115,
+      121,
+      126,
+      54,
+      79,
+      45,
+      87,
+      82,
+      81
+    ],
+    "dc": [
+      51,
+      58,
+      62
+    ],
+    "query": 51,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      51,
+      49,
+      49,
+      50,
+      50,
+      50,
+      61,
+      115,
+      114,
+      113
+    ],
+    "essential": [],
+    "remaining": [
+      115,
+      121,
+      126,
+      54,
+      79,
+      45,
+      87,
+      82,
+      81
+    ],
+    "dc_after": [
+      51,
+      58,
+      62
+    ]
+  },
+  {
+    "input": [
+      62
+    ],
+    "dc": [
+      79,
+      91,
+      103
+    ],
+    "query": 71,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [
+      102
+    ],
+    "essential": [],
+    "remaining": [
+      62
+    ],
+    "dc_after": [
+      79,
+      91,
+      103
+    ]
+  },
+  {
+    "input": [
+      62
+    ],
+    "dc": [
+      114,
+      113,
+      41
+    ],
+    "query": 61,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      63
+    ],
+    "essential": [
+      62
+    ],
+    "remaining": [],
+    "dc_after": [
+      114,
+      113,
+      41,
+      62
+    ]
+  },
+  {
+    "input": [
+      87,
+      41,
+      122,
+      71,
+      102,
+      62,
+      90,
+      61,
+      121
+    ],
+    "dc": [
+      73,
+      105
+    ],
+    "query": 85,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      85,
+      83,
+      69,
+      71,
+      83,
+      117,
+      85,
+      81
+    ],
+    "essential": [],
+    "remaining": [
+      87,
+      41,
+      122,
+      71,
+      102,
+      62,
+      90,
+      61,
+      121
+    ],
+    "dc_after": [
+      73,
+      105
+    ]
+  },
+  {
+    "input": [
+      109,
+      93,
+      93,
+      59,
+      93,
+      101,
+      47,
+      39
+    ],
+    "dc": [
+      70,
+      102,
+      103
+    ],
+    "query": 46,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      47,
+      46,
+      39,
+      46,
+      38
+    ],
+    "essential": [],
+    "remaining": [
+      109,
+      93,
+      93,
+      59,
+      93,
+      101,
+      47,
+      39
+    ],
+    "dc_after": [
+      70,
+      102,
+      103
+    ]
+  },
+  {
+    "input": [
+      90
+    ],
+    "dc": [
+      82,
+      107,
+      63
+    ],
+    "query": 61,
+    "equivalent": 0,
+    "essential_cubes": [
+      0
+    ],
+    "consensus": [],
+    "essential": [],
+    "remaining": [
+      90
+    ],
+    "dc_after": [
+      82,
+      107,
+      63
+    ]
+  },
+  {
+    "input": [
+      81,
+      41,
+      57
+    ],
+    "dc": [
+      93,
+      117
+    ],
+    "query": 79,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      93,
+      105,
+      105
+    ],
+    "essential": [],
+    "remaining": [
+      81,
+      41,
+      57
+    ],
+    "dc_after": [
+      93,
+      117
+    ]
+  },
+  {
+    "input": [
+      61,
+      39,
+      43,
+      85,
+      62,
+      126,
+      49,
+      125,
+      115
+    ],
+    "dc": [
+      43
+    ],
+    "query": 107,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      41,
+      47,
+      93,
+      42,
+      106,
+      57,
+      105,
+      123
+    ],
+    "essential": [],
+    "remaining": [
+      61,
+      39,
+      43,
+      85,
+      62,
+      126,
+      49,
+      125,
+      115
+    ],
+    "dc_after": [
+      43
+    ]
+  },
+  {
+    "input": [
+      103
+    ],
+    "dc": [
+      82,
+      73,
+      78
+    ],
+    "query": 45,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      37
+    ],
+    "essential": [
+      103
+    ],
+    "remaining": [],
+    "dc_after": [
+      82,
+      73,
+      78,
+      103
+    ]
+  },
+  {
+    "input": [
+      117,
+      55,
+      47,
+      105,
+      81,
+      74,
+      94,
+      71,
+      90
+    ],
+    "dc": [
+      125,
+      111
+    ],
+    "query": 69,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      69,
+      69,
+      101,
+      101,
+      77,
+      85,
+      71,
+      69
+    ],
+    "essential": [],
+    "remaining": [
+      117,
+      55,
+      47,
+      105,
+      81,
+      74,
+      94,
+      71,
+      90
+    ],
+    "dc_after": [
+      125,
+      111
+    ]
+  },
+  {
+    "input": [
+      126,
+      54,
+      123,
+      74,
+      103,
+      107,
+      111
+    ],
+    "dc": [],
+    "query": 75,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      74,
+      74,
+      75,
+      75,
+      79,
+      75,
+      75,
+      75
+    ],
+    "essential": [],
+    "remaining": [
+      126,
+      54,
+      123,
+      74,
+      103,
+      107,
+      111
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      59,
+      74,
+      85,
+      109,
+      71,
+      111,
+      115,
+      89,
+      86
+    ],
+    "dc": [],
+    "query": 53,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      53,
+      117,
+      53,
+      37,
+      101,
+      53,
+      37,
+      49,
+      113
+    ],
+    "essential": [],
+    "remaining": [
+      59,
+      74,
+      85,
+      109,
+      71,
+      111,
+      115,
+      89,
+      86
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      86,
+      59,
+      94,
+      59,
+      51,
+      79,
+      43,
+      126
+    ],
+    "dc": [
+      37
+    ],
+    "query": 91,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "consensus": [
+      90,
+      123,
+      90,
+      123,
+      115,
+      91,
+      107,
+      90,
+      90
+    ],
+    "essential": [],
+    "remaining": [
+      86,
+      59,
+      94,
+      59,
+      51,
+      79,
+      43,
+      126
+    ],
+    "dc_after": [
+      37
+    ]
+  },
+  {
+    "input": [],
+    "dc": [],
+    "query": 79,
+    "equivalent": 1,
+    "essential_cubes": [],
+    "consensus": [],
+    "essential": [],
+    "remaining": [],
+    "dc_after": []
+  },
+  {
+    "input": [
+      53,
+      55,
+      119,
+      55,
+      75,
+      85
+    ],
+    "dc": [],
+    "query": 63,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      55,
+      107,
+      117
+    ],
+    "essential": [
+      119
+    ],
+    "remaining": [
+      53,
+      55,
+      55,
+      75,
+      85
+    ],
+    "dc_after": [
+      119
+    ]
+  },
+  {
+    "input": [
+      109,
+      46,
+      127,
+      61,
+      59,
+      47,
+      78,
+      77
+    ],
+    "dc": [],
+    "query": 114,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      62,
+      114,
+      51,
+      50,
+      62,
+      94
+    ],
+    "essential": [
+      127
+    ],
+    "remaining": [
+      109,
+      46,
+      61,
+      59,
+      47,
+      78,
+      77
+    ],
+    "dc_after": [
+      127
+    ]
+  },
+  {
+    "input": [
+      50,
+      42,
+      117,
+      109,
+      39
+    ],
+    "dc": [
+      58
+    ],
+    "query": 69,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      69,
+      69,
+      69,
+      69,
+      101
+    ],
+    "essential": [],
+    "remaining": [
+      50,
+      42,
+      117,
+      109,
+      39
+    ],
+    "dc_after": [
+      58
+    ]
+  },
+  {
+    "input": [
+      71,
+      49,
+      45,
+      102,
+      111,
+      75,
+      55
+    ],
+    "dc": [],
+    "query": 54,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "consensus": [
+      102,
+      51,
+      39,
+      38,
+      54,
+      38,
+      54
+    ],
+    "essential": [],
+    "remaining": [
+      71,
+      49,
+      45,
+      102,
+      111,
+      75,
+      55
+    ],
+    "dc_after": []
+  },
+  {
+    "input": [
+      117,
+      90,
+      74,
+      53,
+      61
+    ],
+    "dc": [
+      95,
+      45,
+      101
+    ],
+    "query": 125,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      91,
+      75
+    ],
+    "essential": [],
+    "remaining": [
+      117,
+      90,
+      74,
+      53,
+      61
+    ],
+    "dc_after": [
+      95,
+      45,
+      101
+    ]
+  },
+  {
+    "input": [
+      41,
+      101,
+      79,
+      78,
+      117,
+      93,
+      85,
+      50,
+      101
+    ],
+    "dc": [
+      107,
+      110,
+      91
+    ],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      74,
+      74,
+      75
+    ],
+    "essential": [],
+    "remaining": [
+      41,
+      101,
+      79,
+      78,
+      117,
+      93,
+      85,
+      50,
+      101
+    ],
+    "dc_after": [
+      107,
+      110,
+      91
+    ]
+  },
+  {
+    "input": [
+      103
+    ],
+    "dc": [
+      113,
+      63
+    ],
+    "query": 74,
+    "equivalent": 0,
+    "essential_cubes": [
+      1
+    ],
+    "consensus": [
+      78
+    ],
+    "essential": [
+      103
+    ],
+    "remaining": [],
+    "dc_after": [
+      113,
+      63,
+      103
+    ]
+  },
+  {
+    "input": [
+      107,
+      93
+    ],
+    "dc": [
+      118,
+      57
+    ],
+    "query": 125,
+    "equivalent": 0,
+    "essential_cubes": [
+      0,
+      0
+    ],
+    "consensus": [
+      105
+    ],
+    "essential": [],
+    "remaining": [
+      107,
+      93
+    ],
+    "dc_after": [
+      118,
+      57
+    ]
+  },
+  {
+    "input": [
+      126,
+      38,
+      37,
+      42
+    ],
+    "dc": [],
+    "query": 126,
+    "equivalent": 0,
+    "essential_cubes": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "consensus": [
+      39
+    ],
+    "essential": [
+      126
+    ],
+    "remaining": [
+      38,
+      37,
+      42
+    ],
+    "dc_after": [
+      126
+    ]
+  }
+]

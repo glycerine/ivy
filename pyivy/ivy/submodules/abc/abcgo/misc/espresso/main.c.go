@@ -1,758 +1,497 @@
 package espresso
 
 import (
+	"bufio"
 	"fmt"
+	"io"
+	"os"
 	"strconv"
 	"strings"
+	"sync"
 )
 
-import "os"
-
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-/*
- *  Main driver for espresso
- *
- *  Old style -do xxx, -out xxx, etc. are still supported.
- */
-
-//#include "espresso.h"
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-        /* table definitions for options */
-
-var last_fp *os.File;
-var input_type int32 = FD_type;
-
-
-main(argc, argv)
-var argc int32;
-var argv []string;
-{
-    int i, j, first, last, strategy, out_type, option;
-    pPLA PLA, PLA1;
-    pcover F, Fold, Dold;
-    pset last1, p;
-    cost_t cost;
-    bool error, exact_cover;
-    long start;
-    extern char *util_optarg;
-    extern int util_optind;
-
-    start = ptime();
-
-    error = FALSE;
-    init_runtime();
-#ifdef RANDOM
-    srandom(314973);
-#endif
-
-    option = 0;            /* default -D: ESPRESSO */
-    out_type = F_type;        /* default -o: default is ON-set only */
-    debug = 0;            /* default -d: no debugging info */
-    verbose_debug = FALSE;    /* default -v: not verbose */
-    print_solution = TRUE;    /* default -x: print the solution (!) */
-    summary = FALSE;        /* default -s: no summary */
-    trace = FALSE;        /* default -t: no trace information */
-    strategy = 0;        /* default -S: strategy number */
-    first = -1;            /* default -R: select range */
-    last = -1;
-    remove_essential = TRUE;    /* default -e: */
-    force_irredundant = TRUE;
-    unwrap_onset = TRUE;
-    single_expand = FALSE;
-    pos = FALSE;
-    recompute_onset = FALSE;
-    use_super_gasp = FALSE;
-    use_random_order = FALSE;
-    kiss = FALSE;
-    echo_comments = TRUE;
-    echo_unknown_commands = TRUE;
-    exact_cover = FALSE;    /* for -qm option, the default */
-
-    backward_compatibility_hack(&argc, argv, &option, &out_type);
-
-
-    /* parse command line options*/
-    while ((i = util_getopt(argc, argv, "D:S:de:o:r:stv:x")) != -1) {
-    switch i {
-        case 'D':        /* -Dcommand invokes a subcommand */
-        for j = 0; option_table[j].name != 0; j++ {
-            if int32(strings.Compare(util_optarg, option_table[j].name)) == 0 {
-            option = j;
-            break;
-            }
-        }
-        if option_table[j].name == 0 {
-            (void) fmt.Fprintf(os.Stderr, "%s: bad subcommand \"%s\"\n", argv[0], util_optarg);
-            os.Exit(int(1));
-        }
-        break;
-
-        case 'o':        /* -ooutput selects and output option */
-        for j = 0; pla_types[j].key != 0; j++ {
-            if int32(strings.Compare(util_optarg, pla_types[j].key+1)) == 0 {
-            out_type = pla_types[j].value;
-            break;
-            }
-        }
-        if pla_types[j].key == 0 {
-            (void) fmt.Fprintf(os.Stderr, "%s: bad output type \"%s\"\n", argv[0], util_optarg);
-            os.Exit(int(1));
-        }
-        break;
-
-        case 'e':        /* -eespresso selects an option for espresso */
-        for j = 0; esp_opt_table[j].name != 0; j++ {
-            if int32(strings.Compare(util_optarg, esp_opt_table[j].name)) == 0 {
-            *(esp_opt_table[j].variable) = esp_opt_table[j].value;
-            break;
-            }
-        }
-        if esp_opt_table[j].name == 0 {
-            (void) fmt.Fprintf(os.Stderr, "%s: bad espresso option \"%s\"\n", argv[0], util_optarg);
-            os.Exit(int(1));
-        }
-        break;
-
-        case 'd':        /* -d turns on (softly) all debug switches */
-        debug = debug_table[0].value;
-        trace = TRUE;
-        summary = TRUE;
-        break;
-
-        case 'v':        /* -vdebug invokes a debug option */
-        verbose_debug = TRUE;
-        for j = 0; debug_table[j].name != 0; j++ {
-            if int32(strings.Compare(util_optarg, debug_table[j].name)) == 0 {
-            debug |= debug_table[j].value;
-            break;
-            }
-        }
-        if debug_table[j].name == 0 {
-            (void) fmt.Fprintf(os.Stderr, "%s: bad debug type \"%s\"\n", argv[0], util_optarg);
-            os.Exit(int(1));
-        }
-        break;
-
-        case 't':
-        trace = TRUE;
-        break;
-
-        case 's':
-        summary = TRUE;
-        break;
-
-        case 'x':        /* -x suppress printing of results */
-        print_solution = FALSE;
-        break;
-
-        case 'S':        /* -S sets a strategy for several cmds */
-        strategy = strconv.Atoi(util_optarg);
-        break;
-
-        case 'r':        /* -r selects range (outputs or vars) */
-        if sscanf(util_optarg, "%d-%d", &first, &last) < 2 {
-            (void) fmt.Fprintf(os.Stderr, "%s: bad output range \"%s\"\n", argv[0], util_optarg);
-            os.Exit(int(1));
-        }
-        break;
-
-        default:
-        usage();
-        os.Exit(int(1));
-    }
-    }
-
-    /* provide version information and summaries */
-    if summary || trace {
-    /* echo command line and arguments */
-    fmt.Printf("#");
-    for i = 0; i < argc; i++ {
-        fmt.Printf(" %s", argv[i]);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("# %s\n", VERSION);
-    }
-
-    /* the remaining arguments are argv[util_optind ... argc-1] */
-    PLA = PLA1 = NIL(PLA_t);
-    switch option_table[option].num_plas {
-    case 2:
-        if (util_optind+2 < argc) fatal("trailing arguments on command line");
-        getPLA(util_optind++, argc, argv, option, &PLA, out_type);
-        getPLA(util_optind++, argc, argv, option, &PLA1, out_type);
-        break;
-    case 1:
-        if (util_optind+1 < argc) fatal("trailing arguments on command line");
-        getPLA(util_optind++, argc, argv, option, &PLA, out_type);
-        break;
-    }
-    if (util_optind < argc) fatal("trailing arguments on command line");
-
-    if summary || trace {
-    if (PLA != NIL(PLA_t)) PLA_summary(PLA);
-    if (PLA1 != NIL(PLA_t)) PLA_summary(PLA1);
-    }
-
-/*
- *  Now a case-statement to decide what to do
- */
-
-    switch option_table[option].key {
-
-
-/******************** Espresso operations ********************/
-
-    case KEY_ESPRESSO:
-    Fold = sf_save(PLA.F);
-    PLA.F = espresso(PLA.F, PLA.D, PLA.R);
-    EXECUTE(error=verify(PLA.F,Fold,PLA.D), VERIFY_TIME, PLA.F, cost);
-    if error {
-        print_solution = FALSE;
-        PLA.F = Fold;
-        (void) check_consistency(PLA);
-    } else {
-        free_cover(Fold);
-    }
-    break;
-
-    case KEY_MANY_ESPRESSO: {
-    int pla_type;
-    for {
-        EXEC(PLA.F=espresso(PLA.F,PLA.D,PLA.R),"ESPRESSO   ",PLA.F);
-        if print_solution {
-        fprint_pla(os.Stdout, PLA, out_type);
-        (void) fflush(os.Stdout);
-        }
-        pla_type = PLA.pla_type;
-        free_PLA(PLA);
-        setdown_cube();
-        FREE(cube.part_size);
-    
-if !(read_pla(last_fp, TRUE, TRUE, pla_type, &PLA) != -1) { break }
-} 
-    os.Exit(int(0));
-    }
-
-    fallthrough
-case KEY_simplify:
-    EXEC(PLA.F = simplify(cube1list(PLA.F)), "SIMPLIFY  ", PLA.F);
-    break;
-
-    case KEY_so:            /* minimize all functions as single-output */
-    if strategy < 0 || strategy > 1 {
-        strategy = 0;
-    }
-    so_espresso(PLA, strategy);
-    break;
-
-    case KEY_so_both:        /* minimize all functions as single-output */
-    if strategy < 0 || strategy > 1 {
-        strategy = 0;
-    }
-    so_both_espresso(PLA, strategy);
-    break;
-
-    case KEY_expand:            /* execute expand */
-    EXECUTE(PLA.F=expand(PLA.F,PLA.R,FALSE),EXPAND_TIME, PLA.F, cost);
-    break;
-
-    case KEY_irred:             /* extract minimal irredundant subset */
-    EXECUTE(PLA.F = irredundant(PLA.F, PLA.D), IRRED_TIME, PLA.F, cost);
-    break;
-
-    case KEY_reduce:            /* perform reduction */
-    EXECUTE(PLA.F = reduce(PLA.F, PLA.D), REDUCE_TIME, PLA.F, cost);
-    break;
-
-    case KEY_essen:             /* check for essential primes */
-    foreach_set(PLA.F, last1, p) {
-        SET(p, RELESSEN);
-        RESET(p, NONESSEN);
-    }
-    EXECUTE(F = essential(&(PLA.F), &(PLA.D)), ESSEN_TIME, PLA.F, cost);
-    free_cover(F);
-    break;
-
-    case KEY_super_gasp:
-    PLA.F = super_gasp(PLA.F, PLA.D, PLA.R, &cost);
-    break;
-
-    case KEY_gasp:
-    PLA.F = last_gasp(PLA.F, PLA.D, PLA.R, &cost);
-    break;
-
-    case KEY_make_sparse:       /* make_sparse step of Espresso */
-    PLA.F = make_sparse(PLA.F, PLA.D, PLA.R);
-    break;
-
-    case KEY_exact:
-    exact_cover = TRUE;
-
-    fallthrough
-case KEY_qm:
-    Fold = sf_save(PLA.F);
-    PLA.F = minimize_exact(PLA.F, PLA.D, PLA.R, exact_cover);
-    EXECUTE(error=verify(PLA.F,Fold,PLA.D), VERIFY_TIME, PLA.F, cost);
-    if error {
-        print_solution = FALSE;
-        PLA.F = Fold;
-        (void) check_consistency(PLA);
-    }
-    free_cover(Fold);
-    break;
-
-    case KEY_primes:            /* generate all prime implicants */
-    EXEC(PLA.F = primes_consensus(cube2list(PLA.F, PLA.D)), 
-                            "PRIMES     ", PLA.F);
-    break;
-
-    case KEY_map:               /* print out a Karnaugh map of function */
-    map(PLA.F);
-    print_solution = FALSE;
-    break;
-
-
-
-/******************** Output phase and bit pairing ********************/
-
-    case KEY_opo:               /* sasao output phase assignment */
-    phase_assignment(PLA, strategy);
-    break;
-
-    case KEY_opoall:        /* try all phase assignments (!) */
-    if first < 0 || first >= cube.part_size[cube.output] {
-        first = 0;
-    }
-    if last < 0 || last >= cube.part_size[cube.output] {
-        last = cube.part_size[cube.output] - 1;
-    }
-    opoall(PLA, first, last, strategy);
-    break;
-
-    case KEY_pair:              /* find an optimal pairing */
-    find_optimal_pairing(PLA, strategy);
-    break;
-
-    case KEY_pairall:        /* try all pairings !! */
-    pair_all(PLA, strategy);
-    break;
-
-
-
-/******************** Simple cover operations ********************/
-
-    case KEY_echo:                /* echo the PLA */
-    break;
-
-    case KEY_taut:                /* tautology check */
-    fmt.Printf("ON-set is%sa tautology\n", tautology(cube1list(PLA.F)) ? " " : " not ");
-    print_solution = FALSE;
-    break;
-
-    case KEY_contain:                /* single cube containment */
-    PLA.F = sf_contain(PLA.F);
-    break;
-
-    case KEY_intersect:                /* cover intersection */
-    PLA.F = cv_intersect(PLA.F, PLA1.F);
-    break;
-
-    case KEY_union:                /* cover union */
-    PLA.F = sf_union(PLA.F, PLA1.F);
-    break;
-
-    case KEY_disjoint:                /* make cover disjoint */
-    PLA.F = make_disjoint(PLA.F);
-    break;
-
-    case KEY_dsharp:                /* cover disjoint-sharp */
-    PLA.F = cv_dsharp(PLA.F, PLA1.F);
-    break;
-
-    case KEY_sharp:                /* cover sharp */
-    PLA.F = cv_sharp(PLA.F, PLA1.F);
-    break;
-
-    case KEY_lexsort:                /* lexical sort order */
-    PLA.F = lex_sort(PLA.F);
-    break;
-
-    case KEY_stats:                /* print info on size */
-    if (! summary) PLA_summary(PLA);
-    print_solution = FALSE;
-    break;
-
-    case KEY_minterms:                /* explode into minterms */
-    if first < 0 || first >= cube.num_vars {
-        first = 0;
-    }
-    if last < 0 || last >= cube.num_vars {
-        last = cube.num_vars - 1;
-    }
-    PLA.F = sf_dupl(unravel_range(PLA.F, first, last));
-    break;
-
-    case KEY_d1merge:                /* distance-1 merge */
-    if first < 0 || first >= cube.num_vars {
-        first = 0;
-    }
-    if last < 0 || last >= cube.num_vars {
-        last = cube.num_vars - 1;
-    }
-    for i = first; i <= last; i++ {
-        PLA.F = d1merge(PLA.F, i);
-    }
-    break;
-
-    case KEY_d1merge_in:        /* distance-1 merge inputs only */
-    for i = 0; i < cube.num_binary_vars; i++ {
-        PLA.F = d1merge(PLA.F, i);
-    }
-    break;
-
-    case KEY_PLA_verify:        /* check two PLAs for equivalence */
-    EXECUTE(error = PLA_verify(PLA, PLA1), VERIFY_TIME, PLA.F, cost);
-    if error {
-        fmt.Printf("PLA comparison failed; the PLA's are not equivalent\n");
-        os.Exit(int(1));
-    } else {
-        fmt.Printf("PLA's compared equal\n");
-        os.Exit(int(0));
-    }
-    break;    /* silly */
-
-    case KEY_verify:            /* check two covers for equivalence */
-    Fold = PLA.F;    Dold = PLA.D;    F = PLA1.F;
-    EXECUTE(error=verify(F, Fold, Dold), VERIFY_TIME, PLA.F, cost);
-    if error {
-        fmt.Printf("PLA comparison failed; the PLA's are not equivalent\n");
-        os.Exit(int(1));
-    } else {
-        fmt.Printf("PLA's compared equal\n");
-        os.Exit(int(0));
-    }    
-    break;    /* silly */
-
-    case KEY_check:            /* check consistency */
-    (void) check_consistency(PLA);
-    print_solution = FALSE;
-    break;
-
-    case KEY_mapdc:            /* compute don't care set */
-    map_dcset(PLA);
-    out_type = FD_type;
-    break;
-
-    case KEY_equiv:
-    find_equiv_outputs(PLA);
-    print_solution = FALSE;
-    break;
-
-    case KEY_separate:            /* remove PLA->D from PLA->F */
-    PLA.F = complement(cube2list(PLA.D, PLA.R));
-    break;
-
-    case KEY_xor: {
-    pcover T1 = cv_intersect(PLA.F, PLA1.R);
-    pcover T2 = cv_intersect(PLA1.F, PLA.R);
-    free_cover(PLA.F);
-    PLA.F = sf_contain(sf_join(T1, T2));
-    free_cover(T1);
-    free_cover(T2);
-    break;
-    }
-
-    fallthrough
-case KEY_fsm: {
-    disassemble_fsm(PLA, summary);
-    print_solution = FALSE;
-    break;
-    }
-
-    fallthrough
-case KEY_test: {
-    pcover T, E;
-    T = sf_join(PLA.D, PLA.R);
-    E = new_cover(10);
-    sf_free(PLA.F);
-    EXECUTE(PLA.F = complement(cube1list(T)), COMPL_TIME, PLA.F, cost);
-    EXECUTE(PLA.F = expand(PLA.F, T, FALSE), EXPAND_TIME, PLA.F, cost);
-    EXECUTE(PLA.F = irredundant(PLA.F, E), IRRED_TIME, PLA.F, cost);
-    sf_free(T);
-    T = sf_join(PLA.F, PLA.R);
-    EXECUTE(PLA.D = expand(PLA.D, T, FALSE), EXPAND_TIME, PLA.D, cost);
-    EXECUTE(PLA.D = irredundant(PLA.D, E), IRRED_TIME, PLA.D, cost);
-    sf_free(T);
-    sf_free(E);
-    break;
-    }
-
-
-    }
-
-    /* Print a runtime summary if trace mode enabled */
-    if trace {
-    runtime();
-    }
-
-    /* Print total runtime */
-    if summary || trace {
-    print_trace(PLA.F, option_table[option].name, ptime()-start);
-    }
-
-    /* Output the solution */
-    if print_solution {
-    EXECUTE(fprint_pla(os.Stdout, PLA, out_type), WRITE_TIME, PLA.F, cost);
-    }
-
-    /* Crash and burn if there was a verify error */
-    if error {
-    fatal("cover verification failed");
-    }
-
-    /* cleanup all used memory */
-    free_PLA(PLA);
-    FREE(cube.part_size);
-    setdown_cube();             /* free the cube/cdata structure data */
-    sf_cleanup();               /* free unused set structures */
-    sm_cleanup();               /* sparse matrix cleanup */
-
-    os.Exit(int(0));
+var espressoRunMutex sync.Mutex
+
+// Run executes the original Espresso subcommands. Arguments exclude argv[0].
+// PLA output is written to output; optional algorithm tracing and diagnostics
+// retain their traditional process-standard-output behavior. Like Espresso's
+// shared cube context, direct package algorithms must not run concurrently.
+func Run(args []string, input io.Reader, output io.Writer) (err error) {
+	espressoRunMutex.Lock()
+	defer espressoRunMutex.Unlock()
+	savedCube, savedCdata := cube, cdata
+	savedDebug, savedFilename := debug, filename
+	savedNames, savedTimes, savedCalls := total_name, total_time, total_calls
+	flags := []*bool{&verbose_debug, &echo_comments, &echo_unknown_commands, &force_irredundant, &skip_make_sparse, &kiss, &pos, &print_solution, &recompute_onset, &remove_essential, &single_expand, &summary, &trace, &unwrap_onset, &use_random_order, &use_super_gasp, &debug_exact_minimization}
+	savedFlags := make([]bool, len(flags))
+	for i, p := range flags {
+		savedFlags[i] = *p
+	}
+	defer func() {
+		cube, cdata = savedCube, savedCdata
+		debug, filename = savedDebug, savedFilename
+		total_name, total_time, total_calls = savedNames, savedTimes, savedCalls
+		for i, p := range flags {
+			*p = savedFlags[i]
+		}
+	}()
+	defer func() {
+		if value := recover(); value != nil {
+			err = fmt.Errorf("%v", value)
+		}
+		setdown_cube()
+		cube = cube_struct{}
+		sf_cleanup()
+	}()
+	if input == nil {
+		input = os.Stdin
+	}
+	if output == nil {
+		output = os.Stdout
+	}
+	cube = cube_struct{}
+	set_espresso_flags()
+	debug = 0
+	verbose_debug = false
+	print_solution = true
+	skip_make_sparse = false
+	kiss = false
+	echo_comments = true
+	echo_unknown_commands = true
+	init_runtimeSummary()
+	started := ptime()
+	command := option_table[0]
+	outType, inputType := int32(F_type), int32(FD_type)
+	strategy := int32(0)
+	first, last := int32(-1), int32(-1)
+	lookup := func(name string) (commandOption, bool) {
+		for _, entry := range option_table {
+			if name == entry.name {
+				return entry, true
+			}
+		}
+		return commandOption{}, false
+	}
+	outputKind := func(name string) (int32, bool) {
+		for _, entry := range pla_types {
+			if strings.TrimPrefix(entry.key, "-") == name && entry.key != "" {
+				return entry.value, true
+			}
+		}
+		return 0, false
+	}
+	// Normalize the compatibility spellings before parsing traditional options.
+	normalized := make([]string, 0, len(args))
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
+		switch arg {
+		case "-do", "-out":
+			if i+1 >= len(args) {
+				return fmt.Errorf("missing argument after %s", arg)
+			}
+			prefix := "-D"
+			if arg == "-out" {
+				prefix = "-o"
+			}
+			normalized = append(normalized, prefix+args[i+1])
+			i++
+		default:
+			if _, ok := esp_opt_table[strings.TrimPrefix(arg, "-")]; ok && strings.HasPrefix(arg, "-") {
+				normalized = append(normalized, "-e"+arg[1:])
+			} else {
+				normalized = append(normalized, arg)
+			}
+		}
+	}
+	var paths []string
+	for i := 0; i < len(normalized); i++ {
+		arg := normalized[i]
+		if arg == "--" {
+			paths = append(paths, normalized[i+1:]...)
+			break
+		}
+		if arg == "--help" || arg == "-h" {
+			usageTo(output)
+			return nil
+		}
+		switch arg {
+		case "-fdr":
+			inputType = FDR_type
+			continue
+		case "-fr":
+			inputType = FR_type
+			continue
+		case "-f":
+			inputType = F_type
+			continue
+		}
+		if arg == "-" || !strings.HasPrefix(arg, "-") {
+			paths = append(paths, normalized[i:]...)
+			break
+		}
+		for pos := 1; pos < len(arg); pos++ {
+			option := arg[pos]
+			value := ""
+			if strings.ContainsRune("DS eorv", rune(option)) && option != ' ' {
+				if pos+1 < len(arg) {
+					value = arg[pos+1:]
+					pos = len(arg)
+				} else {
+					if i+1 >= len(normalized) {
+						return fmt.Errorf("missing argument for -%c", option)
+					}
+					i++
+					value = normalized[i]
+				}
+			}
+			switch option {
+			case 'D':
+				entry, ok := lookup(value)
+				if !ok {
+					return fmt.Errorf("bad subcommand %q", value)
+				}
+				command = entry
+			case 'o':
+				kind, ok := outputKind(value)
+				if !ok {
+					return fmt.Errorf("bad output type %q", value)
+				}
+				outType = kind
+			case 'e':
+				entry, ok := esp_opt_table[value]
+				if !ok {
+					return fmt.Errorf("bad espresso option %q", value)
+				}
+				*entry.variable = entry.value
+			case 'd':
+				debug = debug_table[""]
+				trace, summary = true, true
+			case 'v':
+				value, ok := debug_table[value]
+				if !ok {
+					return fmt.Errorf("bad debug type")
+				}
+				verbose_debug = true
+				debug |= value
+			case 't':
+				trace = true
+			case 's':
+				summary = true
+			case 'x':
+				print_solution = false
+			case 'S':
+				n, e := strconv.ParseInt(value, 10, 32)
+				if e != nil {
+					return fmt.Errorf("bad strategy %q", value)
+				}
+				strategy = int32(n)
+			case 'r':
+				if _, e := fmt.Sscanf(value, "%d-%d", &first, &last); e != nil {
+					return fmt.Errorf("bad output range %q", value)
+				}
+			default:
+				return fmt.Errorf("unknown option -%c", option)
+			}
+		}
+	}
+	if len(paths) > int(command.num_plas) {
+		return fmt.Errorf("trailing arguments on command line")
+	}
+	if summary || trace {
+		fmt.Fprintf(output, "# espresso %s\n# %s\n", strings.Join(args, " "), VERSION)
+	}
+	stdin := bufio.NewReader(input)
+	var lastReader *bufio.Reader
+	var opened []*os.File
+	defer func() {
+		for _, file := range opened {
+			file.Close()
+		}
+	}()
+	load := func(index int) (pPLA, error) {
+		reader, name := stdin, "(stdin)"
+		if index < len(paths) && paths[index] != "-" {
+			name = paths[index]
+			file, e := os.Open(name)
+			if e != nil {
+				return nil, e
+			}
+			opened = append(opened, file)
+			reader = bufio.NewReader(file)
+		}
+		needsDC, needsOff := command.needs_dcset, command.needs_offset
+		if command.key == KEY_echo {
+			needsDC = outType&D_type != 0
+			needsOff = outType&R_type != 0
+		}
+		var pla pPLA
+		if read_pla(reader, needsDC, needsOff, inputType, &pla) < 0 {
+			return nil, fmt.Errorf("unable to find PLA on %s", name)
+		}
+		pla.filename = name
+		filename = name
+		lastReader = reader
+		return pla, nil
+	}
+	pla, e := load(0)
+	if e != nil {
+		return e
+	}
+	var second pPLA
+	if command.num_plas == 2 {
+		second, e = load(1)
+		if e != nil {
+			return e
+		}
+	}
+	if summary || trace {
+		PLA_summary(pla)
+		if second != nil {
+			PLA_summary(second)
+		}
+	}
+	if command.key == KEY_MANY_ESPRESSO {
+		for {
+			pla.F = espresso(pla.F, pla.D, pla.R)
+			if print_solution {
+				fprint_pla(output, pla, outType)
+			}
+			kind := pla.pla_type
+			setdown_cube()
+			cube = cube_struct{}
+			if read_pla(lastReader, true, true, kind, &pla) < 0 {
+				break
+			}
+		}
+		return nil
+	}
+	var cost cost_t
+	rangeBounds := func(limit int32) {
+		if first < 0 || first >= limit {
+			first = 0
+		}
+		if last < 0 || last >= limit {
+			last = limit - 1
+		}
+		if first > last {
+			fatal("range starts after its end")
+		}
+	}
+	verifyResult := func(original pcover) error {
+		start := ptime()
+		failed := verify(pla.F, original, pla.D)
+		totals(start, VERIFY_TIME, pla.F, &cost)
+		if failed {
+			pla.F = original
+			print_solution = false
+			check_consistency(pla)
+			return fmt.Errorf("cover verification failed")
+		}
+		return nil
+	}
+	switch command.key {
+	case KEY_ESPRESSO:
+		original := sf_save(pla.F)
+		pla.F = espresso(pla.F, pla.D, pla.R)
+		if e = verifyResult(original); e != nil {
+			return e
+		}
+	case KEY_exact, KEY_qm:
+		original := sf_save(pla.F)
+		pla.F = minimize_exact(pla.F, pla.D, pla.R, command.key == KEY_exact)
+		if e = verifyResult(original); e != nil {
+			return e
+		}
+	case KEY_simplify:
+		pla.F = simplify(cube1list(pla.F))
+	case KEY_so:
+		if strategy < 0 || strategy > 1 {
+			strategy = 0
+		}
+		so_espresso(pla, strategy)
+	case KEY_so_both:
+		if strategy < 0 || strategy > 1 {
+			strategy = 0
+		}
+		so_both_espresso(pla, strategy)
+	case KEY_expand:
+		pla.F = expand(pla.F, pla.R, false)
+	case KEY_irred:
+		pla.F = irredundant(pla.F, pla.D)
+	case KEY_reduce:
+		pla.F = reduce(pla.F, pla.D)
+	case KEY_essen:
+		for row := int32(0); row < pla.F.count; row++ {
+			p := GETSET(pla.F, row)
+			SET(p, RELESSEN)
+			RESET(p, NONESSEN)
+		}
+		essential(&pla.F, &pla.D)
+	case KEY_super_gasp:
+		pla.F = super_gasp(pla.F, pla.D, pla.R, &cost)
+	case KEY_gasp:
+		pla.F = last_gasp(pla.F, pla.D, pla.R, &cost)
+	case KEY_make_sparse:
+		pla.F = make_sparse(pla.F, pla.D, pla.R)
+	case KEY_primes:
+		pla.F = primes_consensus(cube2list(pla.F, pla.D))
+	case KEY_map:
+		mapCover(pla.F)
+		print_solution = false
+	case KEY_opo:
+		phase_assignment(pla, strategy)
+	case KEY_opoall:
+		rangeBounds(cube.part_size[cube.output])
+		opoall(pla, first, last, strategy)
+	case KEY_pair:
+		find_optimal_pairing(pla, strategy)
+	case KEY_pairall:
+		pair_all(pla, strategy)
+	case KEY_echo:
+	case KEY_taut:
+		word := " not "
+		if tautology(cube1list(pla.F)) {
+			word = " "
+		}
+		fmt.Fprintf(output, "ON-set is%sa tautology\n", word)
+		print_solution = false
+	case KEY_contain:
+		pla.F = sf_contain(pla.F)
+	case KEY_intersect:
+		pla.F = cv_intersect(pla.F, second.F)
+	case KEY_union:
+		pla.F = sf_union(sf_contain(pla.F), sf_contain(second.F))
+	case KEY_disjoint:
+		pla.F = make_disjoint(pla.F)
+	case KEY_dsharp:
+		pla.F = cv_dsharp(pla.F, second.F)
+	case KEY_sharp:
+		pla.F = cv_sharp(pla.F, second.F)
+	case KEY_lexsort:
+		pla.F = lex_sort(pla.F)
+	case KEY_stats:
+		if !summary {
+			PLA_summary(pla)
+		}
+		print_solution = false
+	case KEY_minterms:
+		rangeBounds(cube.num_vars)
+		pla.F = sf_dupl(unravel_range(pla.F, first, last))
+	case KEY_d1merge:
+		rangeBounds(cube.num_vars)
+		for v := first; v <= last; v++ {
+			pla.F = d1merge(pla.F, v)
+		}
+	case KEY_d1merge_in:
+		for v := int32(0); v < cube.num_binary_vars; v++ {
+			pla.F = d1merge(pla.F, v)
+		}
+	case KEY_PLA_verify, KEY_verify:
+		failed := false
+		if command.key == KEY_PLA_verify {
+			failed = PLA_verify(pla, second)
+		} else {
+			failed = verify(second.F, pla.F, pla.D)
+		}
+		if failed {
+			return fmt.Errorf("PLA comparison failed; the PLA's are not equivalent")
+		}
+		fmt.Fprintln(output, "PLA's compared equal")
+		return nil
+	case KEY_check:
+		check_consistency(pla)
+		print_solution = false
+	case KEY_mapdc:
+		map_dcset(pla)
+		outType = FD_type
+	case KEY_equiv:
+		find_equiv_outputs(pla)
+		print_solution = false
+	case KEY_separate:
+		pla.F = complement(cube2list(pla.D, pla.R))
+	case KEY_xor:
+		pla.F = sf_contain(sf_join(cv_intersect(pla.F, second.R), cv_intersect(second.F, pla.R)))
+	case KEY_fsm:
+		verbose := int32(0)
+		if summary {
+			verbose = 1
+		}
+		disassemble_fsm(pla, verbose)
+		print_solution = false
+	case KEY_test:
+		t := sf_join(pla.D, pla.R)
+		empty := new_cover(0)
+		pla.F = complement(cube1list(t))
+		pla.F = expand(pla.F, t, false)
+		pla.F = irredundant(pla.F, empty)
+		t = sf_join(pla.F, pla.R)
+		pla.D = expand(pla.D, t, false)
+		pla.D = irredundant(pla.D, empty)
+	default:
+		return fmt.Errorf("unsupported command %s", command.name)
+	}
+	if trace {
+		runtimeSummary()
+	}
+	if summary || trace {
+		print_trace(pla.F, command.name, ptime()-started)
+	}
+	if print_solution {
+		start := ptime()
+		fprint_pla(output, pla, outType)
+		totals(start, WRITE_TIME, pla.F, &cost)
+	}
+	return nil
 }
 
-
-getPLA(opt, argc, argv, option, PLA, out_type)
-var opt int32;
-var argc int32;
-var argv []string;
-var option int32;
-var PLA *pPLA;
-var out_type int32;
-{
-    FILE *fp;
-    int needs_dcset, needs_offset;
-    char *fname;
-
-    if opt >= argc {
-    fp = os.Stdin;
-    fname = "(stdin)";
-    } else {
-    fname = argv[opt];
-    if int32(strings.Compare(fname, "-")) == 0 {
-        fp = os.Stdin;
-    } else if (fp = os.Open(argv[opt])) == NULL {
-        (void) fmt.Fprintf(os.Stderr, "%s: Unable to open %s\n", argv[0], fname);
-        os.Exit(int(1));
-    }
-    }
-    if option_table[option].key == KEY_echo {
-    needs_dcset = (out_type & D_type) != 0;
-    needs_offset = (out_type & R_type) != 0;
-    } else {
-    needs_dcset = option_table[option].needs_dcset;
-    needs_offset = option_table[option].needs_offset;
-    }
-
-    if read_pla(fp, needs_dcset, needs_offset, input_type, PLA) == -1 {
-    (void) fmt.Fprintf(os.Stderr, "%s: Unable to find PLA on file %s\n", argv[0], fname);
-    os.Exit(int(1));
-    }
-    (*PLA).filename = util_strsav(fname);
-    filename = (*PLA).filename;
-/*    (void) fclose(fp);*/
-/* hackto support -Dmany */
-    last_fp = fp;
+// EspressoMain is a thin process adapter without os.Exit, allowing embedding.
+func EspressoMain(argv []string) int {
+	args := argv
+	if len(args) > 0 {
+		args = args[1:]
+	}
+	if err := Run(args, os.Stdin, os.Stdout); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+	return 0
 }
-
-
-runtime()
-{
-    int i;
-    long total = 1, temp;
-
-    for i = 0; i < TIME_COUNT; i++ {
-    total += total_time[i];
-    }
-    for i = 0; i < TIME_COUNT; i++ {
-    if total_calls[i] != 0 {
-        temp = 100 * total_time[i];
-        fmt.Printf("# %s\t%2d call(s) for %s (%2d.%01d%%)\n", total_name[i], total_calls[i], print_time(total_time[i]), temp/total, (10 * (temp%total)) / total);
-    }
-    }
+func runtimeSummary() {
+	total := int64(1)
+	for _, elapsed := range total_time {
+		total += elapsed
+	}
+	for i, calls := range total_calls {
+		if calls != 0 {
+			percent := 100 * total_time[i]
+			fmt.Printf("# %s\t%2d call(s) for %s (%2d.%01d%%)\n", total_name[i], calls, print_time(total_time[i]), percent/total, (10*(percent%total))/total)
+		}
+	}
 }
-
-
-init_runtime()
-{
-    total_name[READ_TIME] =     "READ       ";
-    total_name[WRITE_TIME] =    "WRITE      ";
-    total_name[COMPL_TIME] =    "COMPL      ";
-    total_name[REDUCE_TIME] =   "REDUCE     ";
-    total_name[EXPAND_TIME] =   "EXPAND     ";
-    total_name[ESSEN_TIME] =    "ESSEN      ";
-    total_name[IRRED_TIME] =    "IRRED      ";
-    total_name[GREDUCE_TIME] =  "REDUCE_GASP";
-    total_name[GEXPAND_TIME] =  "EXPAND_GASP";
-    total_name[GIRRED_TIME] =   "IRRED_GASP ";
-    total_name[MV_REDUCE_TIME] ="MV_REDUCE  ";
-    total_name[RAISE_IN_TIME] = "RAISE_IN   ";
-    total_name[VERIFY_TIME] =   "VERIFY     ";
-    total_name[PRIMES_TIME] =   "PRIMES     ";
-    total_name[MINCOV_TIME] =   "MINCOV     ";
+func init_runtimeSummary() {
+	total_time = [TIME_COUNT]int64{}
+	total_calls = [TIME_COUNT]int32{}
+	total_name = [TIME_COUNT]string{"READ       ", "WRITE      ", "COMPL      ", "REDUCE     ", "EXPAND     ", "ESSEN      ", "IRRED      ", "REDUCE_GASP", "EXPAND_GASP", "IRRED_GASP ", "MV_REDUCE  ", "RAISE_IN   ", "VERIFY     ", "PRIMES     ", "MINCOV     ", ""}
 }
-
-
-subcommands()
-{
-    int i, col;
-    fmt.Printf("                ");
-    col = 16;
-    for i = 0; option_table[i].name != 0; i++ {
-    if (col + len(option_table[i].name) + 1) > 76 {
-        fmt.Printf(",\n                ");
-        col = 16;
-    } else if i != 0 {
-        fmt.Printf(", ");
-    }
-    fmt.Printf("%s", option_table[i].name);
-    col += len(option_table[i].name) + 2;
-    }
-    fmt.Printf("\n");
+func subcommands() {
+	names := make([]string, len(option_table))
+	for i, entry := range option_table {
+		names[i] = entry.name
+	}
+	fmt.Println("                " + strings.Join(names, ", "))
 }
-
-
-usage()
-{
-    fmt.Printf("%s\n\n", VERSION);
-    fmt.Printf("SYNOPSIS: espresso [options] [file]\n\n");
-    fmt.Printf("  -d        Enable debugging\n");
-    fmt.Printf("  -e[opt]   Select espresso option:\n");
-    fmt.Printf("                fast, ness, nirr, nunwrap, onset, pos, strong,\n");
-    fmt.Printf("                eat, eatdots, kiss, random\n");
-    fmt.Printf("  -o[type]  Select output format:\n");
-    fmt.Printf("                f, fd, fr, fdr, pleasure, eqntott, kiss, cons\n");
-    fmt.Printf("  -rn-m     Select range for subcommands:\n");
-    fmt.Printf("                d1merge: first and last variables (0 ... m-1)\n");
-    fmt.Printf("                minterms: first and last variables (0 ... m-1)\n");
-    fmt.Printf("                opoall: first and last outputs (0 ... m-1)\n");
-    fmt.Printf("  -s        Provide short execution summary\n");
-    fmt.Printf("  -t        Provide longer execution trace\n");
-    fmt.Printf("  -x        Suppress printing of solution\n");
-    fmt.Printf("  -v[type]  Verbose debugging detail (-v '' for all)\n");
-    fmt.Printf("  -D[cmd]   Execute subcommand 'cmd':\n");
-    subcommands();
-    fmt.Printf("  -Sn       Select strategy for subcommands:\n");
-    fmt.Printf("                opo: bit2=exact bit1=repeated bit0=skip sparse\n");
-    fmt.Printf("                opoall: 0=minimize, 1=exact\n");
-    fmt.Printf("                pair: 0=algebraic, 1=strongd, 2=espresso, 3=exact\n");
-    fmt.Printf("                pairall: 0=minimize, 1=exact, 2=opo\n");
-    fmt.Printf("                so_espresso: 0=minimize, 1=exact\n");
-    fmt.Printf("                so_both: 0=minimize, 1=exact\n");
+func usageTo(w io.Writer) {
+	fmt.Fprintf(w, "%s\n\nSYNOPSIS: espresso [options] [file]\n\n", VERSION)
+	fmt.Fprintln(w, "  -Dcmd     Select subcommand (default ESPRESSO)")
+	fmt.Fprintln(w, "  -eopt     Select Espresso option: fast, ness, nirr, nunwrap, onset, pos, strong, eat, eatdots, kiss, random")
+	fmt.Fprintln(w, "  -otype    Select output: f, fd, fr, fdr, pleasure, eqntott, kiss, cons")
+	fmt.Fprintln(w, "  -rn-m     Select input/output range")
+	fmt.Fprintln(w, "  -Sn       Select subcommand strategy")
+	fmt.Fprintln(w, "  -d -vtype Enable debugging; -s summary; -t trace; -x suppress solution")
+	names := make([]string, len(option_table))
+	for i, entry := range option_table {
+		names[i] = entry.name
+	}
+	fmt.Fprintln(w, "  commands: "+strings.Join(names, ", "))
 }
-
-/*
- *  Hack for backward compatibility (ACK! )
- */
-
-backward_compatibility_hack(argc, argv, option, out_type)
-var argc *int32;
-var argv *string;
-var option *int32;
-var out_type *int32;
-{
-    int i, j;
-
-    /* Scan the argument list for something to do (default is ESPRESSO) */
-    *option = 0;
-    for i = 1; i < (*argc)-1; i++ {
-    if int32(strings.Compare(argv[i], "-do")) == 0 {
-        for(j = 0; option_table[j].name != 0; j++)
-        if int32(strings.Compare(argv[i+1], option_table[j].name)) == 0 {
-            *option = j;
-            delete_arg(argc, argv, i+1);
-            delete_arg(argc, argv, i);
-            break;
-        }
-        if option_table[j].name == 0 {
-        (void) fmt.Fprintf(os.Stderr, "espresso: bad keyword \"%s\" following -do\n", argv[i+1]);
-        os.Exit(int(1));
-        }
-        break;
-    }
-    }
-
-    for i = 1; i < (*argc)-1; i++ {
-    if int32(strings.Compare(argv[i], "-out")) == 0 {
-        for(j = 0; pla_types[j].key != 0; j++)
-        if int32(strings.Compare(pla_types[j].key+1, argv[i+1])) == 0 {
-            *out_type = pla_types[j].value;
-            delete_arg(argc, argv, i+1);
-            delete_arg(argc, argv, i);
-            break;
-        }
-        if pla_types[j].key == 0 {
-        (void) fmt.Fprintf(os.Stderr, "espresso: bad keyword \"%s\" following -out\n", argv[i+1]);
-        os.Exit(int(1));
-        }
-        break;
-    }
-    }
-
-    for i = 1; i < (*argc); i++ {
-    if argv[i][0] == '-' {
-        for j = 0; esp_opt_table[j].name != 0; j++ {
-        if int32(strings.Compare(argv[i]+1, esp_opt_table[j].name)) == 0 {
-            delete_arg(argc, argv, i);
-            *(esp_opt_table[j].variable) = esp_opt_table[j].value;
-            break;
-        }
-        }
-    }
-    }
-
-    if (check_arg(argc, argv, "-fdr")) input_type = FDR_type;
-    if (check_arg(argc, argv, "-fr")) input_type = FR_type;
-    if (check_arg(argc, argv, "-f")) input_type = F_type;
-}
-
-
-/* delete_arg -- delete an argument from the argument list */
-delete_arg(argc, argv, num)
-var argc *int32;
-var num int32;
-register char *argv[];
-{
-    register int i;
-    (*argc)--;
-    for i = num; i < *argc; i++ {
-    argv[i] = argv[i+1];
-    }
-}
-
-
-/* check_arg -- scan argv for an argument, and return TRUE if found */
-bool check_arg(argc, argv, s)
-var argc *int32;
-register char *argv[], *s;
-{
-    register int i;
-    for i = 1; i < *argc; i++ {
-    if int32(strings.Compare(argv[i], s)) == 0 {
-        delete_arg(argc, argv, i);
-        return TRUE;
-    }
-    }
-    return FALSE;
-}
-//ABC_NAMESPACE_IMPL_END
-
+func usage() { usageTo(os.Stdout) }

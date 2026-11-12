@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-//go:embed testdata/sparse_oracle.json
+//go:embed test_vectors/sparse_oracle.json
 var sparseOracleJSON []byte
 
 type sparseOracleExpected struct {

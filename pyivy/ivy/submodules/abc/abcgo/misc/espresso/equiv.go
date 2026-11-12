@@ -1,105 +1,63 @@
 package espresso
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-//#include "espresso.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-void find_equiv_outputs(PLA)
-var PLA pPLA;
-{
-    int i, j, ipart, jpart, some_equiv;
-    pcover *R, *F;
-
-    some_equiv = FALSE;
-
-    makeup_labels(PLA);
-
-    F = ALLOC(pcover, cube.part_size[cube.output]);
-    R = ALLOC(pcover, cube.part_size[cube.output]);
-
-    for i = 0; i < cube.part_size[cube.output]; i++ {
-    ipart = cube.first_part[cube.output] + i;
-    R[i] = cof_output(PLA.R, ipart);
-    F[i] = complement(cube1list(R[i]));
-    }
-    
-    for i = 0; i < cube.part_size[cube.output]-1; i++ {
-    for j = i+1; j < cube.part_size[cube.output]; j++ {
-        ipart = cube.first_part[cube.output] + i;
-        jpart = cube.first_part[cube.output] + j;
-
-        if check_equiv(F[i], F[j]) {
-        (void) fmt.Printf("# Outputs %d and %d (%s and %s) are equivalent\n", i, j, PLA.label[ipart], PLA.label[jpart]);
-        some_equiv = TRUE;
-        } else if check_equiv(F[i], R[j]) {
-        (void) fmt.Printf("# Outputs %d and NOT %d (%s and %s) are equivalent\n", i, j, PLA.label[ipart], PLA.label[jpart]);
-        some_equiv = TRUE;
-        } else if check_equiv(R[i], F[j]) {
-        (void) fmt.Printf("# Outputs NOT %d and %d (%s and %s) are equivalent\n", i, j, PLA.label[ipart], PLA.label[jpart]);
-        some_equiv = TRUE;
-        } else if check_equiv(R[i], R[j]) {
-        (void) fmt.Printf("# Outputs NOT %d and NOT %d (%s and %s) are equivalent\n", i, j, PLA.label[ipart], PLA.label[jpart]);
-        some_equiv = TRUE;
-        }
-    }
-    }
-
-    if ! some_equiv {
-    (void) fmt.Printf("# No outputs are equivalent\n");
-    }
-
-    for i = 0; i < cube.part_size[cube.output]; i++ {
-    // inlining of macro free_cover
-    sf_free(F[i]);
-    // inlining of macro free_cover
-    sf_free(R[i]);
-    }
-    FREE(F);
-    FREE(R);
+func find_equiv_outputs(pla pPLA) { writeEquivalentOutputs(os.Stdout, pla) }
+func writeEquivalentOutputs(w io.Writer, pla pPLA) {
+	makeup_labels(pla)
+	if cube.output < 0 {
+		return
+	}
+	count := cube.part_size[cube.output]
+	on, off := make([]pcover, count), make([]pcover, count)
+	for i := int32(0); i < count; i++ {
+		off[i] = cof_output(pla.R, cube.first_part[cube.output]+i)
+		on[i] = complement(cube1list(off[i]))
+	}
+	found := false
+	for i := int32(0); i < count-1; i++ {
+		for j := i + 1; j < count; j++ {
+			a, b := "", ""
+			switch {
+			case check_equiv(on[i], on[j]):
+			case check_equiv(on[i], off[j]):
+				b = "NOT "
+			case check_equiv(off[i], on[j]):
+				a = "NOT "
+			case check_equiv(off[i], off[j]):
+				a, b = "NOT ", "NOT "
+			default:
+				continue
+			}
+			fmt.Fprintf(w, "# Outputs %s%d and %s%d (%s and %s) are equivalent\n", a, i, b, j, pla.label[cube.first_part[cube.output]+i], pla.label[cube.first_part[cube.output]+j])
+			found = true
+		}
+	}
+	if !found {
+		fmt.Fprintln(w, "# No outputs are equivalent")
+	}
+	for i := range on {
+		free_cover(on[i])
+		free_cover(off[i])
+	}
 }
-
-
-
-int check_equiv(f1, f2)
-pcover f1, f2;
-{
-    register pcube *f1list, *f2list;
-    register pcube p, last;
-
-    f1list = cube1list(f1);
-    // inlining of macro foreach_set
-    for p=f2.data,last=p+f2.count*f2.wsize;p<last;p+=f2.wsize {
-    if ! cube_is_covered(f1list, p) {
-        return FALSE;
-    }
-    }
-    // inlining of macro free_cubelist
-    FREE(f1list[0]); FREE(f1list);;
-
-    f2list = cube1list(f2);
-    // inlining of macro foreach_set
-    for p=f1.data,last=p+f1.count*f1.wsize;p<last;p+=f1.wsize {
-    if ! cube_is_covered(f2list, p) {
-        return FALSE;
-    }
-    }
-    // inlining of macro free_cubelist
-    FREE(f2list[0]); FREE(f2list);;
-
-    return TRUE;
+func check_equiv(a, b pcover) bool {
+	left, right := cube1list(a), cube1list(b)
+	defer free_cubelist(left)
+	defer free_cubelist(right)
+	for _, pair := range []struct {
+		list  *cubeList
+		cover pcover
+	}{{left, b}, {right, a}} {
+		for i := int32(0); i < pair.cover.count; i++ {
+			if !cube_is_covered(pair.list, set_save(GETSET(pair.cover, i))) {
+				return false
+			}
+		}
+	}
+	return true
 }
-//ABC_NAMESPACE_IMPL_END
-

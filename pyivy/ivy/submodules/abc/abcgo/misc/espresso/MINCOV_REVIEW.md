@@ -22,7 +22,7 @@ Reviewed linked-list deletion iteration, solution ownership, matrix preservation
 
 ## C oracle and reproducibility
 
-`testdata/generate_mincov_oracle.py` compiles copies of the original C algorithm and sparse-family sources, then generates 1,000 deterministic cases covering unit/weighted and exact/heuristic modes. Only compatibility scaffolding is repaired in its temporary header copies: restore the missing `sorted_insert` macro declaration and provide standard ALLOC/REALLOC/FREE/NIL/MAX/MIN/WEIGHT, namespace and timing declarations. Algorithm C files are unchanged. The permanent compact `testdata/mincov_oracle.json` contains the first 120 cases; the generator also retains the full 1,000-case JSON in its printed temporary directory. Ordinary Go tests require neither Python nor a C compiler.
+`test_vectors/generate_mincov_oracle.py` compiles copies of the original C algorithm and sparse-family sources, then generates 1,000 deterministic cases covering unit/weighted and exact/heuristic modes. Only compatibility scaffolding is repaired in its temporary header copies: restore the missing `sorted_insert` macro declaration and provide standard ALLOC/REALLOC/FREE/NIL/MAX/MIN/WEIGHT, namespace and timing declarations. Algorithm C files are unchanged. The permanent compact `test_vectors/mincov_oracle.json` contains the first 120 cases; the generator also retains the full 1,000-case JSON in its printed temporary directory. Ordinary Go tests require neither Python nor a C compiler.
 
 `TestMinimumCoverCOracle` compares exact selected columns and costs. Set `ABC_MINCOV_ORACLE` to the full generated JSON path to run all 1,000 cases. All 1,000 matched the original C reference.
 

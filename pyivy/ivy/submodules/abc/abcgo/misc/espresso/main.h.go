@@ -1,172 +1,140 @@
 package espresso
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-type keys int32
-const  (
-    KEY_ESPRESSO keys = iota
- KEY_PLA_verify
- KEY_check
- KEY_contain
- KEY_d1merge
+type commandKey int32
 
-    KEY_disjoint
- KEY_dsharp
- KEY_echo
- KEY_essen
- KEY_exact
- KEY_expand
-
-    KEY_gasp
- KEY_intersect
- KEY_irred
- KEY_lexsort
- KEY_make_sparse
-
-    KEY_map
- KEY_mapdc
- KEY_minterms
- KEY_opo
- KEY_opoall
-
-    KEY_pair
- KEY_pairall
- KEY_primes
- KEY_qm
- KEY_reduce
- KEY_sharp
-
-    KEY_simplify
- KEY_so
- KEY_so_both
- KEY_stats
- KEY_super_gasp
- KEY_taut
-
-    KEY_test
- KEY_equiv
- KEY_union
- KEY_verify
- KEY_MANY_ESPRESSO
-
-    KEY_separate
- KEY_xor
- KEY_d1merge_in
- KEY_fsm
-
-    KEY_unknown
-
+const (
+	KEY_ESPRESSO commandKey = iota
+	KEY_PLA_verify
+	KEY_check
+	KEY_contain
+	KEY_d1merge
+	KEY_disjoint
+	KEY_dsharp
+	KEY_echo
+	KEY_essen
+	KEY_exact
+	KEY_expand
+	KEY_gasp
+	KEY_intersect
+	KEY_irred
+	KEY_lexsort
+	KEY_make_sparse
+	KEY_map
+	KEY_mapdc
+	KEY_minterms
+	KEY_opo
+	KEY_opoall
+	KEY_pair
+	KEY_pairall
+	KEY_primes
+	KEY_qm
+	KEY_reduce
+	KEY_sharp
+	KEY_simplify
+	KEY_so
+	KEY_so_both
+	KEY_stats
+	KEY_super_gasp
+	KEY_taut
+	KEY_test
+	KEY_equiv
+	KEY_union
+	KEY_verify
+	KEY_MANY_ESPRESSO
+	KEY_separate
+	KEY_xor
+	KEY_d1merge_in
+	KEY_fsm
+	KEY_unknown
 )
 
-
-/* Lookup table for program options */
-struct {
-    char *name;
-         keys key;
-    int num_plas;
-    bool needs_offset;
-    bool needs_dcset;
+type commandOption struct {
+	name                      string
+	key                       commandKey
+	num_plas                  int32
+	needs_offset, needs_dcset bool
 }
- option_table [] = {
-    /* ways to minimize functions */
-    "ESPRESSO", KEY_ESPRESSO, 1, TRUE, TRUE,    /* must be first */
-    "many", KEY_MANY_ESPRESSO, 1, TRUE, TRUE,
-    "exact", KEY_exact, 1, TRUE, TRUE,
-    "qm", KEY_qm, 1, TRUE, TRUE,
-    "single_output", KEY_so, 1, TRUE, TRUE,
-    "so", KEY_so, 1, TRUE, TRUE,
-    "so_both", KEY_so_both, 1, TRUE, TRUE,
-    "simplify", KEY_simplify, 1, FALSE, FALSE,
-    "echo", KEY_echo, 1, FALSE, FALSE,
 
-    /* output phase assignment and assignment of inputs to two-bit decoders */
-    "opo", KEY_opo, 1, TRUE, TRUE,
-    "opoall", KEY_opoall, 1, TRUE, TRUE,
-    "pair", KEY_pair, 1, TRUE, TRUE,
-    "pairall", KEY_pairall, 1, TRUE, TRUE,
-
-    /* Ways to check covers */
-    "check", KEY_check, 1, TRUE, TRUE,
-    "stats", KEY_stats, 1, FALSE, FALSE,
-    "verify", KEY_verify, 2, FALSE, TRUE,
-    "PLAverify", KEY_PLA_verify, 2, FALSE, TRUE,
-
-    /* hacks */
-    "equiv", KEY_equiv, 1, TRUE, TRUE,
-    "map", KEY_map, 1, FALSE, FALSE,
-    "mapdc", KEY_mapdc, 1, FALSE, FALSE,
-    "fsm", KEY_fsm, 1, FALSE, TRUE,
-
-    /* the basic boolean operations on covers */
-    "contain", KEY_contain, 1, FALSE, FALSE,
-    "d1merge", KEY_d1merge, 1, FALSE, FALSE,
-    "d1merge_in", KEY_d1merge_in, 1, FALSE, FALSE,
-    "disjoint", KEY_disjoint, 1, TRUE, FALSE,
-    "dsharp", KEY_dsharp, 2, FALSE, FALSE,
-    "intersect", KEY_intersect, 2, FALSE, FALSE,
-    "minterms", KEY_minterms, 1, FALSE, FALSE,
-    "primes", KEY_primes, 1, FALSE, TRUE,
-    "separate", KEY_separate, 1, TRUE, TRUE,
-    "sharp", KEY_sharp, 2, FALSE, FALSE,
-    "union", KEY_union, 2, FALSE, FALSE,
-    "xor", KEY_xor, 2, TRUE, TRUE,
-
-    /* debugging only -- call each step of the espresso algorithm */
-    "essen", KEY_essen, 1, FALSE, TRUE,
-    "expand", KEY_expand, 1, TRUE, FALSE,
-    "gasp", KEY_gasp, 1, TRUE, TRUE,
-    "irred", KEY_irred, 1, FALSE, TRUE,
-    "make_sparse", KEY_make_sparse, 1, TRUE, TRUE,
-    "reduce", KEY_reduce, 1, FALSE, TRUE,
-    "taut", KEY_taut, 1, FALSE, FALSE,
-    "super_gasp", KEY_super_gasp, 1, TRUE, TRUE,
-    "lexsort", KEY_lexsort, 1, FALSE, FALSE,
-    "test", KEY_test, 1, TRUE, TRUE,
-    0, KEY_unknown, 0, FALSE, FALSE             /* must be last */
-};
-
-
-struct {
-    char *name;
-    int value;
+var option_table = []commandOption{
+	{"ESPRESSO", KEY_ESPRESSO, 1, true, true},
+	{"many", KEY_MANY_ESPRESSO, 1, true, true},
+	{"exact", KEY_exact, 1, true, true},
+	{"qm", KEY_qm, 1, true, true},
+	{"single_output", KEY_so, 1, true, true},
+	{"so", KEY_so, 1, true, true},
+	{"so_both", KEY_so_both, 1, true, true},
+	{"simplify", KEY_simplify, 1, false, false},
+	{"echo", KEY_echo, 1, false, false},
+	{"opo", KEY_opo, 1, true, true},
+	{"opoall", KEY_opoall, 1, true, true},
+	{"pair", KEY_pair, 1, true, true},
+	{"pairall", KEY_pairall, 1, true, true},
+	{"check", KEY_check, 1, true, true},
+	{"stats", KEY_stats, 1, false, false},
+	{"verify", KEY_verify, 2, false, true},
+	{"PLAverify", KEY_PLA_verify, 2, false, true},
+	{"equiv", KEY_equiv, 1, true, true},
+	{"map", KEY_map, 1, false, false},
+	{"mapdc", KEY_mapdc, 1, false, false},
+	{"fsm", KEY_fsm, 1, false, true},
+	{"contain", KEY_contain, 1, false, false},
+	{"d1merge", KEY_d1merge, 1, false, false},
+	{"d1merge_in", KEY_d1merge_in, 1, false, false},
+	{"disjoint", KEY_disjoint, 1, true, false},
+	{"dsharp", KEY_dsharp, 2, false, false},
+	{"intersect", KEY_intersect, 2, false, false},
+	{"minterms", KEY_minterms, 1, false, false},
+	{"primes", KEY_primes, 1, false, true},
+	{"separate", KEY_separate, 1, true, true},
+	{"sharp", KEY_sharp, 2, false, false},
+	{"union", KEY_union, 2, false, false},
+	{"xor", KEY_xor, 2, true, true},
+	{"essen", KEY_essen, 1, false, true},
+	{"expand", KEY_expand, 1, true, false},
+	{"gasp", KEY_gasp, 1, true, true},
+	{"irred", KEY_irred, 1, false, true},
+	{"make_sparse", KEY_make_sparse, 1, true, true},
+	{"reduce", KEY_reduce, 1, false, true},
+	{"taut", KEY_taut, 1, false, false},
+	{"super_gasp", KEY_super_gasp, 1, true, true},
+	{"lexsort", KEY_lexsort, 1, false, false},
+	{"test", KEY_test, 1, true, true},
 }
- debug_table[] = {
-    "", EXPAND + ESSEN + IRRED + REDUCE + SPARSE + GASP + SHARP + MINCOV,
-    "compl",   COMPL,  "essen",       ESSEN,
-    "expand",  EXPAND, "expand1",     EXPAND1|EXPAND,
-    "irred",   IRRED,  "irred1",      IRRED1|IRRED,
-    "reduce",  REDUCE, "reduce1",     REDUCE1|REDUCE,
-    "mincov",  MINCOV, "mincov1",     MINCOV1|MINCOV,
-    "sparse",  SPARSE, "sharp",       SHARP,
-    "taut",    TAUT,   "gasp",        GASP,
-    "exact",   EXACT,
-    0,
-};
 
-
-struct {
-    char *name;
-    int *variable;
-    int value;
+var debug_table = map[string]uint32{
+	"":        EXPAND | ESSEN | IRRED | REDUCE | SPARSE | GASP | SHARP | MINCOV,
+	"compl":   COMPL,
+	"essen":   ESSEN,
+	"expand":  EXPAND,
+	"expand1": EXPAND1 | EXPAND,
+	"irred":   IRRED,
+	"irred1":  IRRED1 | IRRED,
+	"reduce":  REDUCE,
+	"reduce1": REDUCE1 | REDUCE,
+	"mincov":  MINCOV,
+	"mincov1": MINCOV1 | MINCOV,
+	"sparse":  SPARSE,
+	"sharp":   SHARP,
+	"taut":    TAUT,
+	"gasp":    GASP,
+	"exact":   EXACT,
 }
- esp_opt_table[] = {
-    "eat", &echo_comments, FALSE,
-    "eatdots", &echo_unknown_commands, FALSE,
-    "fast", &single_expand, TRUE,
-    "kiss", &kiss, TRUE,
-    "ness", &remove_essential, FALSE,
-    "nirr", &force_irredundant, FALSE,
-    "nunwrap", &unwrap_onset, FALSE,
-    "onset", &recompute_onset, TRUE,
-    "pos", &pos, TRUE,
-    "random", &use_random_order, TRUE,
-    "strong", &use_super_gasp, TRUE,
-    0,
-};
+
+type espressoOption struct {
+	variable *bool
+	value    bool
+}
+
+var esp_opt_table = map[string]espressoOption{
+	"eat":     {&echo_comments, false},
+	"eatdots": {&echo_unknown_commands, false},
+	"fast":    {&single_expand, true},
+	"kiss":    {&kiss, true},
+	"ness":    {&remove_essential, false},
+	"nirr":    {&force_irredundant, false},
+	"nunwrap": {&unwrap_onset, false},
+	"onset":   {&recompute_onset, true},
+	"pos":     {&pos, true},
+	"random":  {&use_random_order, true},
+	"strong":  {&use_super_gasp, true},
+}

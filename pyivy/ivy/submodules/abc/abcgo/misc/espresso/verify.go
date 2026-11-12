@@ -3,212 +3,98 @@ package espresso
 import (
 	"fmt"
 	"os"
-	"strings"
 )
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-/*
- */
-
-//#include "espresso.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/*
- *  verify -- check that all minterms of F are contained in (Fold u Dold)
- *  and that all minterms of Fold are contained in (F u Dold).
- */
-bool verify(F, Fold, Dold)
-pcover F, Fold, Dold;
-{
-    pcube p, last, *FD;
-    bool verify_error = FALSE;
-
-    /* Make sure the function didn't grow too large */
-    FD = cube2list(Fold, Dold);
-    // inlining of macro foreach_set
-    for(p=F.data,last=p+F.count*F.wsize;p<last;p+=F.wsize)
-    if ! cube_is_covered(FD, p) {
-        fmt.Printf("some minterm in F is not covered by Fold u Dold\n");
-        verify_error = TRUE;
-        if (verbose_debug) fmt.Printf("%s\n", pc1(p)); else break;
-    }
-    // inlining of macro free_cubelist
-    FREE(FD[0]); FREE(FD);;
-
-    /* Make sure minimized function covers the original function */
-    FD = cube2list(F, Dold);
-    // inlining of macro foreach_set
-    for(p=Fold.data,last=p+Fold.count*Fold.wsize;p<last;p+=Fold.wsize)
-    if ! cube_is_covered(FD, p) {
-        fmt.Printf("some minterm in Fold is not covered by F u Dold\n");
-        verify_error = TRUE;
-        if (verbose_debug) fmt.Printf("%s\n", pc1(p)); else break;
-    }
-    // inlining of macro free_cubelist
-    FREE(FD[0]); FREE(FD);;
-
-    return verify_error;
+// verify reports true on a verification error, retaining Espresso's API.
+func verify(f, original, dontCare pcover) bool {
+	failed := false
+	for direction, item := range []struct{ queries, a, b pcover }{{f, original, dontCare}, {original, f, dontCare}} {
+		list := cube2list(item.a, item.b)
+		for row := int32(0); row < item.queries.count; row++ {
+			p := GETSET(item.queries, row)
+			if !cube_is_covered(list, set_save(p)) {
+				if direction == 0 {
+					fmt.Println("some minterm in F is not covered by Fold u Dold")
+				} else {
+					fmt.Println("some minterm in Fold is not covered by F u Dold")
+				}
+				failed = true
+				if verbose_debug {
+					fmt.Println(pc1(p))
+				} else {
+					break
+				}
+			}
+		}
+		free_cubelist(list)
+	}
+	return failed
 }
-
-
-
-/*
- *  PLA_verify -- verify that two PLA's are identical
- *
- *  If names are given, row and column permutations are done to make
- *  the comparison meaningful.
- *
- */
-bool PLA_verify(PLA1, PLA2)
-var PLA1, PLA2 pPLA;
-{
-    /* Check if both have names given; if so, attempt to permute to
-     * match the names
-     */
-    if PLA1.label != NULL && PLA1.label[0] != NULL &&
-       PLA2.label != NULL && PLA2.label[0] != NULL {
-    PLA_permute(PLA1, PLA2);
-    } else {
-    (void) fmt.Fprintf(os.Stderr, "Warning: cannot permute columns without names\n");
-    return TRUE;
-    }
-
-    if PLA1.F.sf_size != PLA2.F.sf_size {
-    (void) fmt.Fprintf(os.Stderr, "PLA_verify: PLA's are not the same size\n");
-    return TRUE;
-    }
-
-    return verify(PLA2.F, PLA1.F, PLA1.D);
+func PLA_verify(first, second pPLA) bool {
+	if len(first.label) == 0 || first.label[0] == "" || len(second.label) == 0 || second.label[0] == "" {
+		fmt.Fprintln(os.Stderr, "Warning: cannot permute columns without names")
+		return true
+	}
+	PLA_permute(first, second)
+	if first.F.sf_size != second.F.sf_size {
+		fmt.Fprintln(os.Stderr, "PLA_verify: PLA's are not the same size")
+		return true
+	}
+	return verify(second.F, first.F, first.D)
 }
-
-
-
-/*
- *  Permute the columns of PLA1 so that they match the order of PLA2
- *  Discard any columns of PLA1 which are not in PLA2
- *  Association is strictly by the names of the columns of the cover.
- */
-void PLA_permute(PLA1, PLA2)
-var PLA1, PLA2 pPLA;
-{
-    register int i, j, *permute, npermute;
-    register char *labi;
-    char **label;
-
-    /* determine which columns of PLA1 to save, and place these in the list
-     * "permute"; the order in this list is the final output order
-     */
-    npermute = 0;
-    permute = ALLOC(int, PLA2.F.sf_size);
-    for i = 0; i < PLA2.F.sf_size; i++ {
-    labi = PLA2.label[i];
-    for j = 0; j < PLA1.F.sf_size; j++ {
-        if int32(strings.Compare(labi, PLA1.label[j])) == 0 {
-        permute[npermute++] = j;
-        break;
-        }
-    }
-    }
-
-    /* permute columns */
-    if PLA1.F != NULL {
-    PLA1.F = sf_permute(PLA1.F, permute, npermute);
-    }
-    if PLA1.R != NULL {
-    PLA1.R = sf_permute(PLA1.R, permute, npermute);
-    }
-    if PLA1.D != NULL {
-    PLA1.D = sf_permute(PLA1.D, permute, npermute);
-    }
-
-    /* permute the labels */
-    label = ALLOC(char *, cube.size);
-    for i = 0; i < npermute; i++ {
-    label[i] = PLA1.label[permute[i]];
-    }
-    for i = npermute; i < cube.size; i++ {
-    label[i] = NULL;
-    }
-    FREE(PLA1.label);
-    PLA1.label = label;
-
-    FREE(permute);
+func PLA_permute(first, second pPLA) {
+	var permutation []int32
+	for i := int32(0); i < second.F.sf_size; i++ {
+		if int(i) >= len(second.label) {
+			break
+		}
+		for j := int32(0); j < first.F.sf_size && int(j) < len(first.label); j++ {
+			if second.label[i] == first.label[j] {
+				permutation = append(permutation, j)
+				break
+			}
+		}
+	}
+	labels := make([]string, cube.size)
+	for i, j := range permutation {
+		labels[i] = first.label[j]
+	}
+	if first.F != nil {
+		first.F = sf_permute(first.F, permutation, int32(len(permutation)))
+	}
+	if first.R != nil {
+		first.R = sf_permute(first.R, permutation, int32(len(permutation)))
+	}
+	if first.D != nil {
+		first.D = sf_permute(first.D, permutation, int32(len(permutation)))
+	}
+	first.label = labels
 }
-
-
-
-/*
- *  check_consistency -- test that the ON-set, OFF-set and DC-set form
- *  a partition of the boolean space.
- */
-bool check_consistency(PLA)
-var PLA pPLA;
-{
-    bool verify_error = FALSE;
-    pcover T;
-
-    T = cv_intersect(PLA.F, PLA.D);
-    if (T.count == 0)
-    fmt.Printf("ON-SET and DC-SET are disjoint\n");
-    else {
-    fmt.Printf("Some minterm(s) belong to both the ON-SET and DC-SET !\n");
-    if (verbose_debug)
-        cprint(T);
-    verify_error = TRUE;
-    }
-    (void) fflush(os.Stdout);
-    // inlining of macro free_cover
-    sf_free(T);
-
-    T = cv_intersect(PLA.F, PLA.R);
-    if (T.count == 0)
-    fmt.Printf("ON-SET and OFF-SET are disjoint\n");
-    else {
-    fmt.Printf("Some minterm(s) belong to both the ON-SET and OFF-SET !\n");
-    if (verbose_debug)
-        cprint(T);
-    verify_error = TRUE;
-    }
-    (void) fflush(os.Stdout);
-    // inlining of macro free_cover
-    sf_free(T);
-
-    T = cv_intersect(PLA.D, PLA.R);
-    if (T.count == 0)
-    fmt.Printf("DC-SET and OFF-SET are disjoint\n");
-    else {
-    fmt.Printf("Some minterm(s) belong to both the OFF-SET and DC-SET !\n");
-    if (verbose_debug)
-        cprint(T);
-    verify_error = TRUE;
-    }
-    (void) fflush(os.Stdout);
-    // inlining of macro free_cover
-    sf_free(T);
-
-    if (tautology(cube3list(PLA.F, PLA.D, PLA.R)))
-    fmt.Printf("Union of ON-SET, OFF-SET and DC-SET is the universe\n");
-    else {
-    T = complement(cube3list(PLA.F, PLA.D, PLA.R));
-    fmt.Printf("There are minterms left unspecified !\n");
-    if (verbose_debug)
-        cprint(T);
-    verify_error = TRUE;
-    // inlining of macro free_cover
-    sf_free(T);
-    }
-    (void) fflush(os.Stdout);
-    return verify_error;
+func check_consistency(pla pPLA) bool {
+	failed := false
+	for _, item := range []struct {
+		a, b          pcover
+		first, second string
+	}{{pla.F, pla.D, "ON-SET", "DC-SET"}, {pla.F, pla.R, "ON-SET", "OFF-SET"}, {pla.D, pla.R, "DC-SET", "OFF-SET"}} {
+		intersection := cv_intersect(item.a, item.b)
+		if intersection.count == 0 {
+			fmt.Printf("%s and %s are disjoint\n", item.first, item.second)
+		} else {
+			fmt.Printf("Some minterm(s) belong to both the %s and %s !\n", item.first, item.second)
+			if verbose_debug {
+				cprint(intersection)
+			}
+			failed = true
+		}
+	}
+	if tautology(cube3list(pla.F, pla.D, pla.R)) {
+		fmt.Println("Union of ON-SET, OFF-SET and DC-SET is the universe")
+	} else {
+		fmt.Println("There are minterms left unspecified !")
+		if verbose_debug {
+			cprint(complement(cube3list(pla.F, pla.D, pla.R)))
+		}
+		failed = true
+	}
+	return failed
 }
-//ABC_NAMESPACE_IMPL_END
-

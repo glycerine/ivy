@@ -53,7 +53,7 @@ independent set primitives do not share scratch storage.
 
 ## Differential fixture and validation
 
-`testdata/set_oracle.c` compiles the actual original src/misc/espresso/set.c,
+`test_vectors/set_oracle.c` compiles the actual original src/misc/espresso/set.c,
 with the original 32-bit packed layout and minimal allocation/platform macros.
 It exercises set metadata/algebra, cardinality/intersection/first-bit results,
 serialization, column insertion/deletion and transpose. The checked Go fixture

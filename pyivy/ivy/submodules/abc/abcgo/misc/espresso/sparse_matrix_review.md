@@ -25,7 +25,7 @@ Partition traversal is iterative. It completes scratch marking even when the gra
 ## Evidence
 
 - 6,000 randomized matrix mutations check sorted forward/back links, identical shared elements, owner identity, counts, and an independent coordinate-map model after every operation.
-- 160 reproducible original-C fixtures cover 12,800 mutations plus set operations, hashing, dominance, and partition output. `testdata/generate_sparse_oracle.py` rebuilds the oracle; tests use the checked-in fixture without requiring a C compiler. The generator only restores the missing `sorted_insert` macro declaration in this checkout's malformed header, retaining its original replacement body.
+- 160 reproducible original-C fixtures cover 12,800 mutations plus set operations, hashing, dominance, and partition output. `test_vectors/generate_sparse_oracle.py` rebuilds the oracle; tests use the checked-in fixture without requiring a C compiler. The generator only restores the missing `sorted_insert` macro declaration in this checkout's malformed header, retaining its original replacement body.
 - 500 independent exhaustive small-cover comparisons verify unit/weighted dominance optimum preservation and additive partition costs, including zero weights.
 - Combined sparse and minimum-cover family tests pass under the race detector and `go vet`. Minimum-cover's separate C oracle also exercises this representation through full exact and heuristic searches.
 

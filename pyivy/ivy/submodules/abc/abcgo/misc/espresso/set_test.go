@@ -218,7 +218,7 @@ func TestSetOriginalCDifferentialFixture(t *testing.T) {
 	pkg := filepath.Dir(file)
 	root := filepath.Clean(filepath.Join(pkg, "../../.."))
 	binary := filepath.Join(t.TempDir(), "set_oracle")
-	command := exec.Command(compiler, "-std=gnu89", "-O0", "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "testdata/set_oracle.c"), "-o", binary)
+	command := exec.Command(compiler, "-std=gnu89", "-O0", "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/set_oracle.c"), "-o", binary)
 	if result, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("C oracle compile: %v\n%s", err, result)
 	}

@@ -49,7 +49,7 @@ func mincovCost(row *sm_row, weights []int32) int32 {
 func TestMinimumCoverCOracle(t *testing.T) {
 	path := os.Getenv("ABC_MINCOV_ORACLE")
 	if path == "" {
-		path = "testdata/mincov_oracle.json"
+		path = "test_vectors/mincov_oracle.json"
 	}
 	data, err := os.ReadFile(path)
 	if err != nil {
