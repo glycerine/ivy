@@ -83,42 +83,6 @@ type Seg_Man_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Seg_ManCountIntEdges(p *Gia_Man_t, vPolars *Vec_Int_t, vToSkip *Vec_Int_t, nFanouts int32) *Vec_Int_t {
-    var i, iLut, iFanin int32;
-    var vEdges *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    assert(Gia_ManHasMapping(p), "Gia_ManHasMapping(p)");
-    Vec_IntClear( vPolars );
-    Vec_IntClear( vToSkip );
-    if nFanouts != 0 {
-        Gia_ManSetLutRefs( p ); }
-    // inlining of macro Gia_ManForEachLut
-    for  iLut = 1; iLut < Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {
-        // inlining of macro Gia_LutForEachFanin
-        for  i = 0; i < Gia_ObjLutSize(p,iLut) && ((iFanin = Gia_ObjLutFanins(p,iLut)[i]),1); i++  {
-            if Gia_ObjIsAnd(Gia_ManObj(p, iFanin)) {
-                if p.vEdge1 && Gia_ObjCheckEdge(p, iFanin, iLut) {
-                    Vec_IntPush( vPolars, Vec_IntSize(vEdges)/2 ); }
-                if (nFanouts != 0) && Gia_ObjLutRefNumId(p, iFanin) >= nFanouts {
-                    Vec_IntPush( vToSkip, Vec_IntSize(vEdges)/2 ); }
-                Vec_IntPushTwo( vEdges, iFanin, iLut );
-            }
-        } }
-    }
-    if nFanouts != 0 {
-        // inlining of macro ABC_FREE
-        p.pLutRefs = nil; }
-    return vEdges;
-}
-func Seg_ManCollectObjEdges(vEdges *Vec_Int_t, nObjs int32) *Vec_Wec_t {
-    var iFanin, iObj, i int32;
-    var vRes *Vec_Wec_t  = Vec_WecStart( nObjs );
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(vEdges)) && (((iFanin) = Vec_IntEntry(vEdges, i)), 1) && (((iObj) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {
-        Vec_WecPush( vRes, iFanin, i/2 );
-        Vec_WecPush( vRes, iObj, i/2 );
-    }
-    return vRes;
-}
 func Seg_ManCountIntLevels(p *Seg_Man_t, iStartVar int32) int32 {
     var pObj *Gia_Obj_t;
     var iLut, nVars int32;
