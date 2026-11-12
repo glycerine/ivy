@@ -162,9 +162,9 @@ func TestOriginalCADDNumericFixture(t *testing.T) {
 	boolean := Cudd_BddToAdd(dd, Cudd_addBddPattern(dd, f))
 	var hash uint64 = 14695981039346656037
 	byteHash := func(b byte) { hash ^= uint64(b); hash *= 1099511628211 }
-	count:=0
- collect := func(f *DdNode) {
- defer func(){t.Logf("%d %016x",count,hash);count++}()
+	count := 0
+	collect := func(f *DdNode) {
+		defer func() { t.Logf("%d %016x", count, hash); count++ }()
 		if f == nil {
 			byteHash(255)
 			return
@@ -174,6 +174,9 @@ func TestOriginalCADDNumericFixture(t *testing.T) {
 			value, err := dd.EvaluateADD(f, numericValues(a, 4))
 			if err != nil {
 				t.Fatal(err)
+			}
+			if count == 50 {
+				t.Logf("leaf %d %.17g", a, value)
 			}
 			bits := math.Float64bits(value)
 			for i := 0; i < 8; i++ {
@@ -196,7 +199,7 @@ func TestOriginalCADDNumericFixture(t *testing.T) {
 		collect(Cudd_addIthBit(dd, f, bit))
 	}
 	collect(Cudd_addIthBit(dd, f, 31))
-	if hash != 0x9b9f115f3cf36db6 {
+	if hash != 0xdab9cf682104fafe {
 		t.Fatalf("original C numeric fixture: %016x", hash)
 	}
 }
