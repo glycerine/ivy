@@ -62,8 +62,8 @@ func NewTimingManager(lib *SC_Lib, network TimingNetwork) (*SC_Man, error) {
 	if lib == nil || network == nil || network.SclMapping() == nil {
 		return nil, fmt.Errorf("SCL: timing requires a library and mapped network")
 	}
-	if err := ensureSclMapping(lib, network); err != nil {
-		return nil, err
+	if lib.UnitTime != 12 || lib.UnitCapExponent != 15 || lib.UnitCapMultiplier != 1 {
+		return nil, fmt.Errorf("SCL: timing library must use normalized ps/fF units")
 	}
 	maxID := -1
 	for _, id := range network.SclObjectIDs() {
@@ -71,6 +71,9 @@ func NewTimingManager(lib *SC_Lib, network TimingNetwork) (*SC_Man, error) {
 			return nil, fmt.Errorf("SCL: negative object ID")
 		}
 		maxID = max(maxID, id)
+	}
+	if err := ensureSclMapping(lib, network); err != nil {
+		return nil, err
 	}
 	p := &SC_Man{Lib: lib, Network: network, Mapping: network.SclMapping(), Output: os.Stdout, inputIndex: make(map[int]int), outputIndex: make(map[int]int)}
 	p.ensureCapacity(maxID + 1)

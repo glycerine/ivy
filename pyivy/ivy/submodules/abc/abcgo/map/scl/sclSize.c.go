@@ -24,6 +24,20 @@ func (p *SC_Man) rebuildOrder() error {
 		maximum = max(maximum, id)
 	}
 	p.ensureCapacity(maximum + 1)
+	inputs, outputs := make(map[int]bool), make(map[int]bool)
+	for _, id := range p.Network.SclInputs() {
+		if !known[id] || inputs[id] || len(p.Network.SclFanins(id)) != 0 {
+			return fmt.Errorf("SCL: invalid input %d", id)
+		}
+		inputs[id] = true
+	}
+	for _, id := range p.Network.SclOutputs() {
+		if !known[id] || outputs[id] || inputs[id] || len(p.Network.SclFanins(id)) != 1 {
+			return fmt.Errorf("SCL: invalid output %d", id)
+		}
+		outputs[id] = true
+	}
+
 	incoming := make(map[int]int, len(ids))
 	reverse := make(map[int][]int, len(ids))
 	for _, id := range ids {
@@ -283,7 +297,19 @@ func Abc_SclDeptObj(p *SC_Man, id int) error {
 			if timing == nil {
 				return fmt.Errorf("SCL: missing departure timing arc")
 			}
+			load, departure := p.Loads[fanout], p.Departures[fanout]
+			if p.EstLoadMax > 0 && p.EstLoadAve > 0 {
+				value := SC_PairAve(&load) / (p.EstLoadMax * p.EstLoadAve)
+				if value > 1 {
+					cap := p.EstLoadMax * p.EstLoadAve
+					p.Loads[fanout] = SC_Pair{cap, cap}
+					delta := p.EstLinear * float32(math.Log(float64(value)))
+					p.Departures[fanout].Rise += delta
+					p.Departures[fanout].Fall += delta
+				}
+			}
 			Abc_SclDeptFanin(p, timing, fanout, id)
+			p.Loads[fanout], p.Departures[fanout] = load, departure
 		}
 	}
 	return nil
@@ -297,8 +323,12 @@ func Abc_SclTimeIncUpdate(p *SC_Man) (int, error) {
 		return 0, err
 	}
 	scheduled := make(map[int]bool)
+	known := make(map[int]bool, len(p.order))
+	for _, id := range p.order {
+		known[id] = true
+	}
 	for _, id := range p.Changed {
-		if id < 0 || id >= len(p.Times) {
+		if id < 0 || id >= len(p.Times) || !known[id] {
 			return 0, fmt.Errorf("SCL: invalid changed object %d", id)
 		}
 		scheduled[id] = true
@@ -313,6 +343,11 @@ func Abc_SclTimeIncUpdate(p *SC_Man) (int, error) {
 			continue
 		}
 		updates++
+		// A changed arc can alter a fanin's departure even when this node's
+		// departure remains unchanged (for example after its output load changes).
+		for _, fanin := range p.Network.SclFanins(id) {
+			scheduled[fanin] = true
+		}
 		oldTime, oldSlew := p.Times[id], p.Slews[id]
 		if err := Abc_SclTimeNode(p, id, 0); err != nil {
 			return updates, err
@@ -343,12 +378,19 @@ func Abc_SclTimeIncUpdate(p *SC_Man) (int, error) {
 	p.SumArea = Abc_SclGetTotalArea(p.Network)
 	return updates, nil
 }
-func Abc_SclTimeIncCheckLevel(network TimingNetwork) error {
-	manager, err := NewTimingManager(network.SclMapping().Lib, network)
-	if err != nil {
-		return err
+func Abc_SclTimeIncCheckLevel(p *SC_Man) error {
+	for _, id := range p.Network.SclObjectIDs() {
+		expected := 0
+		for _, fanin := range p.Network.SclFanins(id) {
+			if fanin < 0 || fanin >= len(p.Levels) {
+				return fmt.Errorf("SCL: invalid fanin level")
+			}
+			expected = max(expected, p.Levels[fanin]+1)
+		}
+		if id < 0 || id >= len(p.Levels) || p.Levels[id] != expected {
+			return fmt.Errorf("SCL: object %d level is stale", id)
+		}
 	}
-	_ = manager
 	return nil
 }
 func Abc_SclTimeIncUpdateLevel(p *SC_Man, id int) error     { return p.rebuildOrder() }

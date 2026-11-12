@@ -1,0 +1,14 @@
+{
+  "name": "sparse-chain",
+  "ids": [17, 4, 31, 1],
+  "inputs": [1],
+  "outputs": [31],
+  "fanins": {"4": [1], "17": [4], "31": [17]},
+  "nodes": [4, 17],
+  "rise_cap": 2,
+  "fall_cap": 3,
+  "output_rise_load": 4,
+  "output_fall_load": 6,
+  "expected_rise": 5,
+  "expected_fall": 6.25
+}

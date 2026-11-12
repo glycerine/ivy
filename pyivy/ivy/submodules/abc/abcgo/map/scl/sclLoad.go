@@ -85,6 +85,9 @@ func Abc_SclComputeLoad(p *SC_Man) error {
 			return fmt.Errorf("SCL: object %d cell fanin mismatch", id)
 		}
 		for pin, fanin := range fans {
+			if cell.Pins[pin] == nil || !sclFinite(cell.Pins[pin].RiseCap) || !sclFinite(cell.Pins[pin].FallCap) || cell.Pins[pin].RiseCap < 0 || cell.Pins[pin].FallCap < 0 {
+				return fmt.Errorf("SCL: invalid capacitance in cell %s", cell.Name)
+			}
 			p.Loads[fanin].Rise += cell.Pins[pin].RiseCap
 			p.Loads[fanin].Fall += cell.Pins[pin].FallCap
 		}

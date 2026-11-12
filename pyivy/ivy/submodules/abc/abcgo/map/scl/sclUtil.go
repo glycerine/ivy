@@ -32,10 +32,13 @@ func ensureSclMapping(lib *SC_Lib, network TimingNetwork) error {
 			return fmt.Errorf("SCL: assignment belongs to a different library")
 		}
 		for _, id := range sclMappedNodes(network) {
-			if id >= len(mapping.GateIDs) || mapping.GateIDs[id] < 0 || int(mapping.GateIDs[id]) >= len(lib.Cells) {
+			if id < 0 || id >= len(mapping.GateIDs) || mapping.GateIDs[id] < 0 || int(mapping.GateIDs[id]) >= len(lib.Cells) {
 				return fmt.Errorf("SCL: object %d has no valid cell", id)
 			}
 			cell := lib.Cells[mapping.GateIDs[id]]
+			if cell == nil || cell.Inputs < 0 || cell.Outputs != 1 || len(cell.Pins) < cell.Inputs+1 {
+				return fmt.Errorf("SCL: malformed cell at object %d", id)
+			}
 			if cell.Inputs != len(network.SclFanins(id)) {
 				return fmt.Errorf("SCL: object %d fanin count differs from cell %s", id, cell.Name)
 			}
@@ -98,7 +101,16 @@ func Abc_SclSclGates2MioGates(lib *SC_Lib, network TimingNetwork) error {
 		}
 		gates[id] = gate
 	}
+	previous := mapping.MioGates
 	mapping.MioGates = gates
+	// A host adapter commits the vector to its own object function storage.
+	// Implementations must validate before changing host state.
+	if host, ok := network.(interface{ SclCommitMapping() error }); ok {
+		if err := host.SclCommitMapping(); err != nil {
+			mapping.MioGates = previous
+			return err
+		}
+	}
 	return nil
 }
 
