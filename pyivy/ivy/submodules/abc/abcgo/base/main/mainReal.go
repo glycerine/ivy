@@ -1,11 +1,3 @@
-package main
-
-import (
-	"fmt"
-	"os"
-	"strings"
-)
-
 /*////////////////////////////////////////////////////////////////////////////
 
 ABC: System for Sequential Synthesis and Verification
@@ -32,383 +24,188 @@ SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 ////////////////////////////////////////////////////////////////////////////*/
 
-/**CFile****************************************************************
+package abcmain
 
-  FileName    [main.c]
+import (
+	"flag"
+	"fmt"
+	"io"
+	"strconv"
+	"strings"
+	"time"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [The main package.]
-
-  Synopsis    [Here everything starts.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: main.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-#ifndef WIN32
-#include <sys/time.h>    
-#include <sys/times.h>   
-#include <sys/resource.h>
-#include <unistd.h>      
-#include <signal.h>      
-#include <stdlib.h>
-#endif
-
-//#include "base/abc/abc.h"
-//#include "mainInt.h"
-//#include "base/wlc/wlc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int TypeCheck( Abc_Frame_t * pAbc, const char * s);
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-var enable_dbg_outs uint32 = 1;  
-
-/**Function*************************************************************
-
-  Synopsis    [The main() procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_RealMain(argc int32, argv []string) int32 {
-    var pAbc *Abc_Frame_t;
-    var sCommandUsr *Vec_Str_t  = Vec_StrAlloc(1000);
-    var sCommandTmp [ABC_MAX_STR]byte;
-    var sReadCmd string // was [1000]byte in C
-
-    var sWriteCmd string // was [1000]byte in C
-
-    char * sOutFile, * sInFile;
-    var sCommand string;
-    var fStatus int32;
-    var c, fInitSource, fInitRead, fFinalWrite int32;
-
-    enum {
-        INTERACTIVE, // interactive mode
-        BATCH, // batch mode, run a command and quit
-        BATCH_THEN_INTERACTIVE, // run a command, then back to interactive mode
-        BATCH_QUIET, // as in batch mode, but don't echo the command
-        BATCH_QUIET_THEN_INTERACTIVE, // as in batch then interactive mode, but don't echo the command
-        BATCH_SMT // special batch mode, which expends SMTLIB problem via stdin
-    }
- fBatch;
-
-    // added to detect memory leaks
-    // watch for {,,msvcrtd.dll}*__p__crtBreakAlloc()
-    // (http://support.microsoft.com/kb/151585)
-#if defined(_DEBUG) && defined(_MSC_VER)
-    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-#endif
-
-    // get global frame (singleton pattern)
-    // will be initialized on first call
-    pAbc = Abc_FrameGetGlobalFrame();
-    pAbc.sBinary = argv[0];
-
-    // default options
-    fBatch      = INTERACTIVE;
-    fInitSource = 1;
-    fInitRead   = 0;
-    fFinalWrite = 0;
-    sInFile = sOutFile = nil;
-    sReadCmd = fmt.Sprintf("read");
-    sWriteCmd = fmt.Sprintf("write");
-
-    Extra_UtilGetoptReset();
-    for (c = Extra_UtilGetopt(argc, argv, "dm:l:c:q:C:Q:S:hf:F:o:st:T:xb")) != -1 {
-        switch c {
-
-            case 'd':                                          
-                enable_dbg_outs ^= 1;                            
-                break;                                          
-
-            case 'm': {
-#if !defined(WIN32) && !defined(ABC_NO_RLIMIT)
-                int maxMb = atoi(globalUtilOptarg);             
-                printf("Limiting memory use to %d MB\n", maxMb);
-                struct rlimit limit = {                         
-                    maxMb * (1llu << 20), /* soft limit */      
-                    maxMb * (1llu << 20)  /* hard limit */      
-                };                                              
-                setrlimit(RLIMIT_AS, &limit);                   
-#endif
-                break; 
-            }                                         
-            fallthrough
-case 'l': {
-#if !defined(WIN32) && !defined(ABC_NO_RLIMIT)
-                rlim_t maxTime = atoi(globalUtilOptarg);           
-                printf("Limiting time to %d seconds\n", (int)maxTime);
-                struct rlimit limit = {                         
-                    maxTime,             /* soft limit */       
-                    maxTime              /* hard limit */       
-                };                                              
-                setrlimit(RLIMIT_CPU, &limit);                  
-#endif
-                break; 
-            }                                         
-            fallthrough
-case 'c':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrAppend(sCommandUsr, globalUtilOptarg );
-                fBatch = BATCH;
-                break;
-
-            case 'q':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrAppend(sCommandUsr, globalUtilOptarg );
-                fBatch = BATCH_QUIET;
-                break;
-
-            case 'Q':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrAppend(sCommandUsr, globalUtilOptarg );
-                fBatch = BATCH_QUIET_THEN_INTERACTIVE;
-                break;
-
-            case 'C':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrAppend(sCommandUsr, globalUtilOptarg );
-                fBatch = BATCH_THEN_INTERACTIVE;
-                break;
-
-            case 'S':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrAppend(sCommandUsr, globalUtilOptarg );
-                fBatch = BATCH_SMT;
-                break;
-
-            case 'f':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrPrintF(sCommandUsr, "source %s", globalUtilOptarg );
-                fBatch = BATCH;
-                break;
-
-            case 'F':
-                if Vec_StrSize(sCommandUsr) > 0 {
-                    Vec_StrAppend(sCommandUsr, " ; ");
-                }
-                Vec_StrPrintF(sCommandUsr, "source -x %s", globalUtilOptarg );
-                fBatch = BATCH;
-                break;
-
-            case 'h':
-                goto usage;
-                break;
-
-            case 'o':
-                sOutFile = globalUtilOptarg;
-                fFinalWrite = 1;
-                break;
-
-            case 's':
-                fInitSource = 0;
-                break;
-
-            case 't':
-                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {
-                    if (!int32(strings.Compare(globalUtilOptarg, "none"))) == 0 {
-                        fInitRead = 1;
-                        sReadCmd = fmt.Sprintf("read_%s", globalUtilOptarg);
-                    }
-                
-                } else {
-                    goto usage;
-                }
-                fBatch = BATCH;
-                break;
-
-            case 'T':
-                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {
-                    if (!int32(strings.Compare(globalUtilOptarg, "none"))) == 0 {
-                        fFinalWrite = 1;
-                        sWriteCmd = fmt.Sprintf("write_%s", globalUtilOptarg);
-                    }
-                
-                } else {
-                    goto usage;
-                }
-                fBatch = BATCH;
-                break;
-
-            case 'x':
-                fFinalWrite = 0;
-                fInitRead   = 0;
-                fBatch = BATCH;
-                break;
-
-            case 'b':
-                Abc_FrameSetBridgeMode();
-                break;
-
-            default:
-                goto usage;
-        }
-    }
-
-    Vec_StrPush(sCommandUsr, '\0');
-
-    if fBatch == BATCH_SMT {
-        Wlc_StdinProcessSmt( pAbc, Vec_StrArray(sCommandUsr) );
-        Abc_Stop();
-        return 0;
-    }
-
-    if Abc_FrameIsBridgeMode() {
-        extern Gia_Man_t * Gia_ManFromBridge( FILE * pFile, Vec_Int_t ** pvInit );
-        pAbc.pGia = Gia_ManFromBridge( os.Stdin, nil );
-    
-    } else if fBatch!=INTERACTIVE && fBatch!=BATCH_QUIET && fBatch!=BATCH_QUIET_THEN_INTERACTIVE && Vec_StrSize(sCommandUsr)>0 {
-        Abc_Print( 1, "ABC command line: \"%s\".\n\n", Vec_StrArray(sCommandUsr) ); }
-
-    if fBatch!=INTERACTIVE {
-        pAbc.fBatchMode = 1;
-
-        if argc - globalUtilOptind == 0 {
-            sInFile = nil;
-        
-        } else if argc - globalUtilOptind == 1 {
-            fInitRead = 1;
-            sInFile = argv[globalUtilOptind];
-        
-        } else {
-            Abc_UtilsPrintUsage( pAbc, argv[0] );
-        }
-
-        // source the resource file
-        if fInitSource {
-            Abc_UtilsSource( pAbc );
-        }
-
-        fStatus = 0;
-        if fInitRead && sInFile {
-            sprintf( sCommandTmp, "%s %s", sReadCmd, sInFile );
-            fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );
-        }
-
-        if fStatus == 0 {
-            /* cmd line contains `source <file>' */
-            fStatus = Cmd_CommandExecute( pAbc, Vec_StrArray(sCommandUsr) );
-            if (fStatus == 0 || fStatus == -1) && (fFinalWrite != 0) && sOutFile {
-                sprintf( sCommandTmp, "%s %s", sWriteCmd, sOutFile );
-                fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );
-            }
-        }
-
-        if fBatch == BATCH_THEN_INTERACTIVE || fBatch == BATCH_QUIET_THEN_INTERACTIVE{
-            fBatch = INTERACTIVE;
-            pAbc.fBatchMode = 0;
-        }
-    }
-
-    Vec_StrFreeP(&sCommandUsr);
-
-    if fBatch==INTERACTIVE {
-        // start interactive mode
-
-        // print the hello line
-        Abc_UtilsPrintHello( pAbc );
-        // print history of the recent commands
-        Cmd_HistoryPrint( pAbc, 10 );
-
-        // source the resource file
-        if fInitSource {
-            Abc_UtilsSource( pAbc );
-        }
-
-        // execute commands given by the user
-        for  !feof(os.Stdin)  {
-            // print command line prompt and
-            // get the command from the user
-            sCommand = Abc_UtilsGetUsersInput( pAbc );
-
-            // execute the user's command
-            fStatus = Cmd_CommandExecute( pAbc, sCommand );
-
-            // stop if the user quitted or an error occurred
-            if fStatus == -1 || fStatus == -2 {
-                break; }
-        }
-    }
-
-    // if the memory should be freed, quit packages
-//    if ( fStatus < 0 ) 
-    {
-        Abc_Stop();
-    }
-    return 0;
-
-usage:
-    Abc_UtilsPrintHello( pAbc );
-    Abc_UtilsPrintUsage( pAbc, argv[0] );
-    return 1;
+func strconvQuote(text string) string { return strconv.Quote(text) }
+func firstArg(args []string) string {
+	if len(args) == 0 {
+		return "abc"
+	}
+	return args[0]
 }
 
-/**Function********************************************************************
-
-  Synopsis    [Returns 1 if s is a file type recognized, else returns 0.]
-
-  Description [Returns 1 if s is a file type recognized by ABC, else returns 0. 
-  Recognized types are "blif", "bench", "pla", and "none".]
-
-  SideEffects []
-
-******************************************************************************/
-func TypeCheck(pAbc *Abc_Frame_t, s string) int32 {
-    if int32(strings.Compare(s, "blif")) == 0 {
-        return 1;
-    } else if int32(strings.Compare(s, "bench")) == 0 {
-        return 1;
-    } else if int32(strings.Compare(s, "pla")) == 0 {
-        return 1;
-    } else if int32(strings.Compare(s, "none")) == 0 {
-        return 1;
-    } else {
-        fmt.Fprintf(pAbc.Err, "unknown type %s\n", s);
-        return 0;
-    }
+// Abc_RealMain is the command interpreter entry point; args includes argv[0].
+func Abc_RealMain(args []string) int32 {
+	f := Abc_FrameGetGlobalFrame()
+	defer Abc_Stop()
+	f.Binary = firstArg(args)
+	if len(args) == 0 {
+		args = []string{f.Binary}
+	}
+	flags := flag.NewFlagSet(f.Binary, flag.ContinueOnError)
+	flags.SetOutput(f.Err)
+	var commands []string
+	batch, interactiveAfter, quiet := false, false, false
+	for _, name := range []string{"c", "q", "C", "Q", "S"} {
+		name := name
+		flags.Func(name, "commands", func(value string) error {
+			commands = append(commands, value)
+			batch = true
+			quiet = name == "q" || name == "Q"
+			interactiveAfter = name == "C" || name == "Q"
+			if name == "S" {
+				commands[len(commands)-1] = "read_smt " + strconvQuote(value)
+			}
+			return nil
+		})
+	}
+	flags.Func("f", "script", func(value string) error {
+		commands = append(commands, "source "+strconvQuote(value))
+		batch = true
+		return nil
+	})
+	flags.Func("F", "echoed script", func(value string) error {
+		commands = append(commands, "source -e "+strconvQuote(value))
+		batch = true
+		return nil
+	})
+	skipSource := flags.Bool("s", false, "skip startup scripts")
+	help := flags.Bool("h", false, "usage")
+	output := flags.String("o", "", "output file")
+	inputType := flags.String("t", "", "input format")
+	outputType := flags.String("T", "", "output format")
+	noIO := flags.Bool("x", false, "disable initial/final IO")
+	bridge := flags.Bool("b", false, "bridge mode")
+	debug := flags.Bool("d", false, "debug output")
+	memory := flags.Int64("m", 0, "memory limit in MiB")
+	cpu := flags.Int64("l", 0, "CPU time limit in seconds")
+	if err := flags.Parse(args[1:]); err != nil {
+		return 1
+	}
+	if *help {
+		Abc_UtilsPrintHello(f)
+		Abc_UtilsPrintUsage(f, f.Binary)
+		return 1
+	}
+	if *inputType != "" && TypeCheck(f, *inputType) == 0 {
+		return 1
+	}
+	if *outputType != "" && TypeCheck(f, *outputType) == 0 {
+		return 1
+	}
+	if len(flags.Args()) > 1 {
+		Abc_UtilsPrintUsage(f, f.Binary)
+		return 1
+	}
+	if *memory < 0 || *cpu < 0 {
+		fmt.Fprintln(f.Err, "abcmain: resource limits cannot be negative")
+		return 1
+	}
+	if *memory > 0 || *cpu > 0 {
+		if f.Limits == nil {
+			fmt.Fprintln(f.Err, "abcmain: OS resource limits require a ResourceLimits adapter")
+			return 1
+		}
+		if *memory > 0 {
+			if err := f.Limits.SetMemoryLimit(*memory << 20); err != nil {
+				fmt.Fprintln(f.Err, err)
+				return 1
+			}
+		}
+		if *cpu > 0 {
+			if err := f.Limits.SetCPULimit(time.Duration(*cpu) * time.Second); err != nil {
+				fmt.Fprintln(f.Err, err)
+				return 1
+			}
+		}
+	}
+	if *debug {
+		f.SetFlag("debug", "1")
+	}
+	f.BridgeMode = *bridge
+	if *inputType != "" || *outputType != "" || *noIO || len(flags.Args()) != 0 || *output != "" {
+		batch = true
+	}
+	f.BatchMode = batch
+	if !*skipSource {
+		if status := f.SourceResourceFiles(); status != 0 {
+			return status
+		}
+	}
+	if *bridge {
+		if err := f.Import("stdin-bridge", f.In); err != nil {
+			fmt.Fprintln(f.Err, err)
+			return 1
+		}
+	}
+	if !*noIO && *inputType != "none" && len(flags.Args()) == 1 {
+		command := "read"
+		if *inputType != "" {
+			command += "_" + *inputType
+		}
+		if status := f.Execute(command + " " + strconvQuote(flags.Arg(0))); status != 0 {
+			return normalizeExit(status)
+		}
+	}
+	if len(commands) != 0 {
+		line := strings.Join(commands, " ; ")
+		if !quiet {
+			fmt.Fprintf(f.Out, "ABC command line: %q.\n\n", line)
+		}
+		if status := f.Execute(line); status > 0 {
+			return status
+		} else if status < 0 && !interactiveAfter {
+			return 0
+		}
+	}
+	if !*noIO && *outputType != "none" && *output != "" {
+		command := "write"
+		if *outputType != "" {
+			command += "_" + *outputType
+		}
+		if status := f.Execute(command + " " + strconvQuote(*output)); status != 0 {
+			return normalizeExit(status)
+		}
+	}
+	if batch && !interactiveAfter {
+		return 0
+	}
+	f.BatchMode = false
+	Abc_UtilsPrintHello(f)
+	for {
+		f.mu.RLock()
+		step := f.steps
+		f.mu.RUnlock()
+		fmt.Fprintf(f.Out, "abc %02d> ", step)
+		line, err := f.ReadLine()
+		if line != "" {
+			f.AppendHistory(line)
+			status := f.Execute(line)
+			if status == -1 || status == -2 {
+				return 0
+			}
+		}
+		if err == io.EOF {
+			return 0
+		}
+		if err != nil {
+			fmt.Fprintln(f.Err, err)
+			return 1
+		}
+	}
 }
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
+func normalizeExit(status int32) int32 {
+	if status < 0 {
+		return 0
+	}
+	return status
+}
