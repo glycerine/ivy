@@ -22,7 +22,7 @@ static int conditional = 0;
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"var nThreadsRunning int32;", "var mutex pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;", "var first, second int32;", "var nonzero int32 = 4;", "// int prototype(int x);", "var local int32;", "#if MODE\nstatic int conditional = 0;\n#endif"} {
+	for _, want := range []string{"var nThreadsRunning int32;", "var mutex sync.Mutex", "var first, second int32;", "var nonzero int32 = 4;", "// int prototype(int x);", "var local int32;", "#if MODE\nstatic int conditional = 0;\n#endif"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q:\n%s", want, r.Draft)
 		}
@@ -38,7 +38,7 @@ func TestStarterPackageVariables(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"var nThreadsRunning int32;", "var mutex pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;"} {
+	for _, want := range []string{"var nThreadsRunning int32;", "var mutex sync.Mutex"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q", want)
 		}

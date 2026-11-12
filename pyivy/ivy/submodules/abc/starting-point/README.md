@@ -182,7 +182,7 @@ Go calls may intentionally leave return-value/type errors for downstream repair;
 calls that require structural adaptation remain review sites (prototype-43).
 
 
-The library pass now has a documented catalog of 302 C-library names, classified
+The library pass now has a documented catalog of 310 C-library names, classified
 as implemented, conditional on recognizable argument shapes/types, or retained
 for review. See [STDLIB.md](STDLIB.md) for the C11 header survey, references,
 conversion policy, full rule table, and validation details.

@@ -17,6 +17,9 @@ func buildLibraryCatalog() []LibraryRule {
 			out = append(out, LibraryRule{name, header, mode, target, note})
 		}
 	}
+	add("pthread_mutex_t PTHREAD_MUTEX_INITIALIZER", "pthread.h", "convert", "sync.Mutex zero value", "Zero-value mutex; review attributes and copying after use.")
+	add("pthread_mutex_lock pthread_mutex_unlock", "pthread.h", "convert", "Mutex.Lock / Mutex.Unlock", "Go methods return no status; repair uses of the C integer result downstream.")
+	add("pthread_mutex_init pthread_mutex_destroy pthread_mutex_trylock pthread_mutex_timedlock", "pthread.h", "review", "sync.Mutex", "Initialization attributes, destruction, try-lock status and timeouts require surrounding-code repair.")
 	add("stdin stdout stderr EOF", "stdio.h", "convert", "os standard streams / -1", "Stream objects and the selected conventional EOF sentinel; source overrides are protected.")
 	add("EXIT_SUCCESS EXIT_FAILURE", "stdlib.h", "convert", "0 / 1", "Conventional process status constants; source overrides are protected.")
 	add("printf fprintf sprintf", "stdio.h", "conditional", "fmt.Printf / fmt.Fprintf / fmt.Sprintf", "C format verbs, result arity and mutable destinations need review; existing draft rules retained.")

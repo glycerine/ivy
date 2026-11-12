@@ -1648,3 +1648,32 @@ function instead of main.go:6. This supersedes prototype-47's frame choice.
 
 Validation: all Go tests pass, including the exact immediate call-site check.
 Installed prototype-48; regenerate outputs to update existing helper files.
+
+
+## Prototype 49: attached namespace terminators
+
+Split top-level }ABC_NAMESPACE_IMPL_END (and HEADER_END) into a closing brace,
+newline, and commented marker. Use token identity so comments and string literals
+remain unchanged. If code follows the marker on the same line, add another newline
+so it is not swallowed by the generated comment. Standalone marker handling
+remains idempotent. Added real aigTest.c coverage and marker/collision regressions.
+
+Validation: all Go tests pass, including the actual aigTest.c input.
+Installed prototype-49; existing output files are unchanged until regeneration.
+
+
+## Prototype 50: POSIX mutex declarations and methods
+
+Translate pthread_mutex_t to sync.Mutex with automatic deduplicated imports and
+remove PTHREAD_MUTEX_INITIALIZER on declarations. Translate pthread_mutex_lock
+and pthread_mutex_unlock to Lock/Unlock methods, stripping address-of from a
+receiver such as &mutex. Pointer receivers, grouped arguments and member access
+work as well. Apply the pass consistently to full drafts and function metadata.
+No closure/status adapters: integer result checks remain downstream repair.
+Record init/destroy/trylock/timedlock as review sites rather than guessing
+attribute, lifetime, timeout or return-value semantics.
+
+Validation: all Go tests pass, including actual starter.c, import alias/name
+collisions, source-defined function protection, nested assertions and an
+executed generated program using four concurrent workers to increment a shared
+counter under the translated mutex. Installed prototype-50; regenerate outputs.

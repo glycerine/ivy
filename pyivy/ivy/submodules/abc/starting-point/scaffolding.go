@@ -50,6 +50,23 @@ func commentScaffolding(source string) (string, error) {
 		} else {
 			end += t.End
 		}
+		// ABC sometimes places its namespace terminator directly after a closing
+		// brace. Split it off before applying the standalone-word heuristic.
+		if t.Text == "ABC_NAMESPACE_IMPL_END" || t.Text == "ABC_NAMESPACE_HEADER_END" {
+			previous := i - 1
+			for previous >= 0 && (ts[previous].Kind == "space" || ts[previous].Kind == "comment") {
+				previous--
+			}
+			if previous >= 0 && ts[previous].Text == "}" && strings.TrimSpace(source[start:t.Start]) != "" {
+				text := "\n//" + t.Text
+				// Keep any following code out of the new line comment as well.
+				if strings.TrimSpace(source[t.End:end]) != "" {
+					text += "\n"
+				}
+				edits = append(edits, Edit{t.Start, t.End, text})
+				continue
+			}
+		}
 		if strings.TrimSpace(source[start:t.Start]) != "" || strings.TrimSpace(source[t.End:end]) != "" {
 			continue
 		}

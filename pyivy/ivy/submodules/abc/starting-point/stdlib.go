@@ -162,6 +162,17 @@ func (p *libraryPass) rewrite(lo, hi, start, end int) (string, error) {
 		if t.Kind != "word" || member {
 			continue
 		}
+		if t.Text == "pthread_mutex_t" && !p.shadowed[t.Text] {
+			edits = append(edits, Edit{t.Start - start, t.End - start, p.imports.use("sync") + "Mutex"})
+			p.record(t.Text, "converted", "Go zero-value sync.Mutex; do not copy after use. Review nondefault pthread attributes.", t.Start)
+			if i+2 < hi && p.ts[i+1].Text == "=" && p.ts[i+2].Text == "PTHREAD_MUTEX_INITIALIZER" && !p.shadowed["PTHREAD_MUTEX_INITIALIZER"] {
+				// Delete syntax tokens individually to preserve intervening comments.
+				edits = append(edits, Edit{p.ts[i+1].Start - start, p.ts[i+1].End - start, ""}, Edit{p.ts[i+2].Start - start, p.ts[i+2].End - start, ""})
+				p.record("PTHREAD_MUTEX_INITIALIZER", "converted", "The zero value of sync.Mutex is ready to use.", p.ts[i+2].Start)
+				i += 2
+			}
+			continue
+		}
 		if replacement, ok := map[string]string{"stdin": "Stdin", "stdout": "Stdout", "stderr": "Stderr"}[t.Text]; ok && !p.shadowed[t.Text] {
 			// Declaration names are not the standard stream object.
 			if i+1 < hi && (p.ts[i+1].Text == "*" || p.ts[i+1].Text == "string") {
@@ -369,6 +380,9 @@ func (p *libraryPass) text(expr string) (string, bool) {
 	return "", false
 }
 func (p *libraryPass) convert(c libraryCall) (string, string, bool) {
+	if result, note, ok := p.convertMutex(c); ok || note != "" {
+		return result, note, ok
+	}
 	if result, note, ok := p.convertFormatted(c); ok || note != "" {
 		return result, note, ok
 	}

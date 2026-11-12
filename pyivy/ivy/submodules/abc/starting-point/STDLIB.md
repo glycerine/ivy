@@ -545,3 +545,20 @@ preprocessor regions remain protected by the existing library-pass rules.
 Prototype-48 uses runtime.Caller(1) to report the immediate assertion call site.
 The filename is reduced with path.Base; unavailable caller information leaves
 the prefix empty. Successful assertions return before collecting stack data.
+
+
+## POSIX mutexes (prototype-50)
+
+- pthread_mutex_t becomes sync.Mutex, including pointer parameters and fields.
+- The declaration initializer PTHREAD_MUTEX_INITIALIZER is removed: Go's zero
+  value is ready for use. Comments between initializer tokens are retained.
+- pthread_mutex_lock(&mutex) becomes mutex.Lock().
+- pthread_mutex_unlock(&mutex) becomes mutex.Unlock(). Pointer arguments also
+  use method calls; grouped operands and member access are supported.
+- The sync import is added only when a mutex type needs it; existing aliases and
+  import-name collisions use the shared import planner.
+
+No closures or status adapters are emitted. Integer-return checks are left for
+compiler-guided repair because Lock and Unlock return no value. Initialization
+attributes, destruction, trylock and timedlock remain review cases. Non-default
+pthread mutex semantics and copying a Go mutex after use require review.
