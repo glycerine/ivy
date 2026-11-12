@@ -171,3 +171,31 @@ func Dar_LibPrintStats(lib *Library) string {
 	}
 	return fmt.Sprintf("DAR library: %d internal nodes, %d roots, %d NPN classes", len(lib.nodes)-4, roots, len(lib.canonical.representatives))
 }
+
+// CutNode describes an AND node in a prepared four-input implementation.
+// Fanins use ABC literals referring to terminals 0..3 or prior nodes.
+type CutNode struct{ Fanins [2]uint32 }
+
+// CutRoot identifies an implementation root and its canonical output phase.
+type CutRoot struct {
+	Index      int
+	Complement bool
+}
+
+// CutImplementations returns snapshots of a prepared class and its NPN transform.
+func (p *PreparedLibrary) CutImplementations(truth uint16) (NPNMatch, []CutNode, []CutRoot) {
+	if p == nil || p.library == nil {
+		panic("dar: nil prepared library")
+	}
+	match := p.library.canonical.Lookup(truth)
+	class := p.classes[match.Class]
+	nodes := make([]CutNode, len(class.nodes))
+	for i, node := range class.nodes {
+		nodes[i] = CutNode{Fanins: node.fanins}
+	}
+	roots := make([]CutRoot, len(class.roots))
+	for i, root := range class.roots {
+		roots[i] = CutRoot{Index: root.index, Complement: root.complement}
+	}
+	return match, nodes, roots
+}

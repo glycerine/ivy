@@ -47,3 +47,30 @@ func TestLibraryClassPrioritiesAndPreparation(t *testing.T) {
 		t.Fatal("immutable preparation not reused")
 	}
 }
+
+func TestPreparedCutImplementations(t *testing.T) {
+	prepared := Dar_LibPrepare(5)
+	for _, truth := range []uint16{0x6996, 0x8888, 0xf0aa, 0xffff} {
+		match, nodes, roots := prepared.CutImplementations(truth)
+		values := []uint16{0xaaaa, 0xcccc, 0xf0f0, 0xff00}
+		for _, node := range nodes {
+			read := func(lit uint32) uint16 {
+				v := values[lit>>1]
+				if lit&1 != 0 {
+					v = ^v
+				}
+				return v
+			}
+			values = append(values, read(node.Fanins[0])&read(node.Fanins[1]))
+		}
+		for _, root := range roots {
+			value := values[root.Index]
+			if root.Complement {
+				value = ^value
+			}
+			if value != match.Canonical {
+				t.Fatalf("truth %04x canonical %04x root %04x", truth, match.Canonical, value)
+			}
+		}
+	}
+}
