@@ -31,15 +31,12 @@ func (p *nfMatcher) mappingRefs(iteration int32) *nfMappingRefs {
 		phase := Gia_ObjFaninC0(co)
 		r.delay = max(r.delay, p.objects[fanin][phase][0].delay)
 	}
-	r.delay = max(r.delay, p.cuts.pars.MapDelay)
-	for _, id := range vec.Vec_IntArray(g.vCos) {
+	r.delay = p.delayTarget(max(r.delay, p.cuts.pars.MapDelay))
+	for outputIndex, id := range vec.Vec_IntArray(g.vCos) {
 		co := Gia_ManObj(g, id)
 		fanin := Gia_ObjFaninId0(co, id)
 		phase := Gia_ObjFaninC0(co)
-		req := r.delay
-		if p.cuts.pars.fDoAverage != 0 {
-			req = p.objects[fanin][phase][0].delay * (100 + p.cuts.pars.nRelaxRatio) / 100
-		}
+		req := p.outputRequired(outputIndex, p.objects[fanin][phase][0].delay, r.delay)
 		r.refs[fanin][phase]++
 		p.updateRequired(fanin, phase, req)
 	}

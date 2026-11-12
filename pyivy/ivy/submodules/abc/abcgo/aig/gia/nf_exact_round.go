@@ -9,17 +9,14 @@ func (p *nfMatcher) exactAreaRound(r *nfMappingRefs) int {
 	for i := range p.required {
 		p.required[i] = [2]int32{nfInfinity, nfInfinity}
 	}
-	for _, id := range vec.Vec_IntArray(g.vCos) {
+	for outputIndex, id := range vec.Vec_IntArray(g.vCos) {
 		co := Gia_ManObj(g, id)
 		fanin, phase := Gia_ObjFaninId0(co, id), Gia_ObjFaninC0(co)
-		required := r.delay
-		if p.cuts.pars.fDoAverage != 0 {
-			kind := r.selected[fanin][phase]
-			if kind < 0 {
-				kind = 0
-			}
-			required = p.objects[fanin][phase][kind].delay * (100 + p.cuts.pars.nRelaxRatio) / 100
+		kind := r.selected[fanin][phase]
+		if kind < 0 {
+			kind = 0
 		}
+		required := p.outputRequired(outputIndex, p.objects[fanin][phase][kind].delay, r.delay)
 		p.updateRequired(fanin, phase, required)
 	}
 	changed := 0

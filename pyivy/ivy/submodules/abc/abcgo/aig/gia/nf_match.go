@@ -1,6 +1,10 @@
 package gia
 
-import "math"
+import (
+	"github.com/glycerine/abcgo/map/scl"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math"
+)
 
 const nfInfinity int32 = 0x3fffffff
 
@@ -147,10 +151,18 @@ func (p *nfMatcher) matchObject(id int32) {
 // computeMapping performs the first timing/area-flow match pass over the graph.
 // Subsequent required-time and exact-area rounds are handled separately.
 func (p *nfMatcher) computeMapping() {
+	ciIndex := 0
 	for _, obj := range p.cuts.graph.pObjs {
 		id := obj.id
 		if Gia_ObjIsCi(obj) != 0 {
-			p.prepareInput(id, 0)
+			var arrival int32
+			if scl.Scl_ConIsRunning() {
+				arrival = scl.Scl_ConGetInArr(ciIndex)
+			} else if p.cuts.graph.vInArrs != nil {
+				arrival = scl.Scl_Flt2Int(vec.Vec_FltEntry(p.cuts.graph.vInArrs, ciIndex))
+			}
+			ciIndex++
+			p.prepareInput(id, arrival)
 			continue
 		}
 		if Gia_ObjIsAnd(obj) == 0 {
