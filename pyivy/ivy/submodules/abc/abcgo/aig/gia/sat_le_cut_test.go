@@ -148,3 +148,26 @@ func TestSleCNFCover(t *testing.T) {
 		t.Fatal("two cuts cannot both be selected")
 	}
 }
+
+func TestSleDeriveResult(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	m := Sle_ManAlloc(p, 0, 0)
+	Sle_ManMarkupVariables(m)
+	Sle_ManDeriveCnf(m, 0, 1)
+	if m.pSat.Solve() != bsat.Satisfiable {
+		t.Fatal("expected satisfiable mapping")
+	}
+	edges, mapping := vec.Vec_IntAlloc(4), vec.Vec_IntAlloc(16)
+	Sle_ManDeriveResult(m, edges, mapping)
+	p.vMapping = mapping
+	if Gia_ObjIsLut(p, y>>1) == 0 || Gia_ObjLutSize(p, y>>1) < 2 {
+		t.Fatal("output LUT not mapped")
+	}
+	if old := m.nEdgeClas2; Sle_ManAddEdgeConstraints(m, 1) != 0 || m.nEdgeClas2 != old {
+		t.Fatal("unexpected edge violations")
+	}
+}
