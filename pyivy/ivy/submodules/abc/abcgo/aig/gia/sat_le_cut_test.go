@@ -2,6 +2,7 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
 
@@ -124,5 +125,26 @@ func TestSleInitialMapping(t *testing.T) {
 		if vec.Vec_IntFind(m.vPolars, expected) < 0 {
 			t.Fatalf("missing %d in %v", expected, polar)
 		}
+	}
+}
+
+func TestSleCNFCover(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	m := Sle_ManAlloc(p, 0, 0)
+	Sle_ManMarkupVariables(m)
+	Sle_ManDeriveCnf(m, 0, 0)
+	if m.pSat.Solve() != bsat.Satisfiable {
+		t.Fatal("mapping formula should be satisfiable")
+	}
+	if m.pSat.Solve(bsat.Negative(y>>1)) != bsat.Unsatisfiable {
+		t.Fatal("output driver must be mapped")
+	}
+	base := vec.Vec_IntEntry(m.vCutFirst, int(y>>1))
+	if m.pSat.Solve(bsat.Positive(base), bsat.Positive(base+1)) != bsat.Unsatisfiable {
+		t.Fatal("two cuts cannot both be selected")
 	}
 }
