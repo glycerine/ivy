@@ -121,33 +121,6 @@ SAT sweeping/equivalence checking requires the following steps:
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SweeperSweep(p *Gia_Man_t, vProbeOuts *Vec_Int_t, nWords int32, nConfs int32, fVerify int32, fVerbose int32) *Gia_Man_t {
-    var vProbeConds *Vec_Int_t;
-    var pGiaCond, pGiaOuts, pGiaRes *Gia_Man_t;
-    var Pars Ssc_Pars_t;
-    var pPars *Ssc_Pars_t = &Pars;
-    Ssc_ManSetDefaultParams( pPars );
-    pPars.nWords   = nWords;
-    pPars.nBTLimit = nConfs;
-    pPars.fVerify  = fVerify;
-    pPars.fVerbose = fVerbose;
-    // sweeper is running
-    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
-    // extract conditions and logic cones
-    vProbeConds = Gia_SweeperCondVector( p );
-    pGiaCond = Gia_SweeperExtractUserLogic( p, vProbeConds, nil, nil );
-    pGiaOuts = Gia_SweeperExtractUserLogic( p, vProbeOuts, nil, nil );
-    Gia_ManSetPhase( pGiaOuts );
-    // if there is no conditions, define constant true constraint (constant 0 output)
-    if Gia_ManPoNum(pGiaCond) == 0 {
-        Gia_ManAppendCo( pGiaCond, Gia_ManConst0Lit() ); }
-    // perform sweeping under constraints
-    pGiaRes = Ssc_PerformSweeping( pGiaOuts, pGiaCond, pPars );
-    Gia_ManStop( pGiaCond );
-    Gia_ManStop( pGiaOuts );
-    return pGiaRes;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Procedure to perform conditional fraig sweeping on separate logic cones.]
