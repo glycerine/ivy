@@ -225,41 +225,8 @@ func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigSuperGates_rec(p *Mini_Aig_t, iObj int32, vRes *Vec_Int_t, vMap *Vec_Int_t) {
-    var iFan0, iFan1 int32;
-    if Mini_AigNodeIsPi(p, iObj) {
-        assert(Vec_IntEntry(vMap, iObj) >= 0, "Vec_IntEntry(vMap, iObj) >= 0");
-        Vec_IntPush( vRes, Vec_IntEntry(vMap, iObj) );
-        return;
-    }
-    iFan0 = Mini_AigNodeFanin0( p, iObj );
-    iFan1 = Mini_AigNodeFanin1( p, iObj );
-    assert(!Abc_LitIsCompl(iFan0), "!Abc_LitIsCompl(iFan0)");
-    assert(!Abc_LitIsCompl(iFan1), "!Abc_LitIsCompl(iFan1)");
-    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), vRes, vMap );
-    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan1), vRes, vMap );
-}
-func Gia_MiniAigSuperGates(p *Mini_Aig_t) *Vec_Wec_t {
-    var vRes *Vec_Wec_t  = Vec_WecStart( Mini_AigPoNum(p) );
-    var vMap *Vec_Int_t  = Vec_IntStartFull( Mini_AigNodeNum(p) );
-    var i, Index int32;
-    // inlining of macro Mini_AigForEachPi
-    for i = 1; i < Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPi(p, i) {} else { 
-        Vec_IntWriteEntry( vMap, i, Index++ ); }
-    }
-    assert(Index == Mini_AigPiNum(p), "Index == Mini_AigPiNum(p)");
-    Index = 0;
-    // inlining of macro Mini_AigForEachPo
-    for i = 1; i < Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPo(p, i) {} else {
-        var iFan0 int32  = Mini_AigNodeFanin0( p, i );
-        assert(!Abc_LitIsCompl(iFan0), "!Abc_LitIsCompl(iFan0)");
-        Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), Vec_WecEntry(vRes, Index++), vMap );
-    }
-    }
-    assert(Index == Mini_AigPoNum(p), "Index == Mini_AigPoNum(p)");
-    Vec_IntFree( vMap );
-    return vRes;
-}
+
+
 
 /**Function*************************************************************
 
@@ -272,59 +239,9 @@ func Gia_MiniAigSuperGates(p *Mini_Aig_t) *Vec_Wec_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigSuperPrintDouble(p *Vec_Int_t, nPis int32) {
-    var i, Entry int32;
-    fmt.Printf("\n");
-    Vec_IntForEachEntry( p, Entry, i )
-        fmt.Printf("%d(%d) ", Entry%nPis, Entry/nPis);
-    fmt.Printf("  Total = %d\n", Vec_IntSize(p));
-}
-func Gia_MiniAigSuperMerge(p *Vec_Int_t, nPis int32) int32 {
-    var i int32;
-    var k int32;
-    var This int32;
-    var Prev int32 = -1;
-    var fChange int32;
-    Vec_IntForEachEntry( p, This, i )
-    {
-        if Prev == This {
-            Vec_IntWriteEntry( p, k++, (This/nPis+1)*nPis + This%nPis );
-            Prev = -1;
-            fChange = 1;
-        
-        } else {
-            if Prev != -1 { 
-                Vec_IntWriteEntry( p, k++, Prev ); }
-            Prev = This;
-        }
-    }
-    if Prev != -1 {
-        Vec_IntWriteEntry( p, k++, Prev ); }
-    Vec_IntShrink( p, k );
-    return fChange;
-}
-func Gia_MiniAigSuperPreprocess(p *Mini_Aig_t, vSuper *Vec_Wec_t, nPis int32, fVerbose int32) int32 {
-    var vRes *Vec_Int_t;
-    var i int32;
-    var nIters int32;
-    var Multi int32 = 1;
-    Vec_WecForEachLevel( vSuper, vRes, i )
-    {
-        Vec_IntSort( vRes, 0 );
-        if fVerbose != 0 { 
-            fmt.Printf("\nOutput %d\n", i); }
-        if fVerbose != 0 {
-            Gia_MiniAigSuperPrintDouble( vRes, nPis ); }
-        for  nIters = 1; (Gia_MiniAigSuperMerge(vRes, nPis) != 0); nIters++  {
-            if fVerbose != 0 {
-                Gia_MiniAigSuperPrintDouble( vRes, nPis ); }
-        }
-        Multi = Abc_MaxInt( Multi, nIters );
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Multi = %d.\n", Multi); }
-    return Multi;
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -337,48 +254,8 @@ func Gia_MiniAigSuperPreprocess(p *Mini_Aig_t, vSuper *Vec_Wec_t, nPis int32, fV
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigSuperDeriveGia(p *Vec_Wec_t, nPis int32, Multi int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var vTemp *Vec_Int_t;
-    var vLits *Vec_Int_t = Vec_IntAlloc( 100 );
-    var vDrivers *Vec_Int_t  = Vec_IntAlloc(100);
-    var i int32;
-    var k int32;
-    var iObj int32;
-    var iLit int32;
-    var nInputs int32 = nPis*Multi;
-    pNew = Gia_ManStart( 1000 );
-    pNew.pName = Abc_UtilStrsav( "tree" );
-    for  i = 0; i < nInputs; i++  {
-        Gia_ManAppendCi( pNew );
-    }
-    Gia_ManHashAlloc( pNew );
-    Vec_WecForEachLevel( p, vTemp, i )
-    {
-        Vec_IntClear( vLits );
-        Vec_IntForEachEntry( vTemp, iObj, k )
-        {
-            assert(iObj < nInputs, "iObj < nInputs");
-            Vec_IntPush( vLits, 2+2*((iObj%nPis)*Multi+iObj/nPis) );
-        }
-        Vec_IntPush( vDrivers, Gia_ManHashAndMulti2(pNew, vLits) );
-    }
-    Gia_ManHashStop( pNew );
-    Vec_IntFree( vLits );
-    Vec_IntForEachEntry( vDrivers, iLit, i )
-        Gia_ManAppendCo( pNew, iLit );
-    Vec_IntFree( vDrivers );
-    return pNew;
-}
-func Gia_MiniAigSuperDerive(pFileName string, fVerbose int32) *Gia_Man_t {
-    var p *Mini_Aig_t      = Mini_AigLoad( pFileName );
-    var vSuper *Vec_Wec_t  = Gia_MiniAigSuperGates( p );
-    var Multi int32           = Gia_MiniAigSuperPreprocess( p, vSuper, Mini_AigPiNum(p), fVerbose );
-    var pNew *Gia_Man_t    = Gia_MiniAigSuperDeriveGia( vSuper, Mini_AigPiNum(p), Multi );
-    Vec_WecFree( vSuper );
-    Mini_AigStop( p );
-    return pNew;
-}
+
+
 
 /**Function*************************************************************
 
