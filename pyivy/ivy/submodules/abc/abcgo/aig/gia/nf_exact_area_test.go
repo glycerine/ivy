@@ -136,3 +136,46 @@ GATE and3 1 O=a*b*c; PIN * NONINV 1 999 5 0 5 0
 		t.Fatal("incorrect optimized fanins")
 	}
 }
+
+func TestNfExactRoundRespectsOutputDelay(t *testing.T) {
+	const genlib = `GATE zero 0 O=CONST0;
+GATE one 0 O=CONST1;
+GATE buf 1 O=a; PIN * NONINV 1 999 1 0 1 0
+GATE inv 1 O=!a; PIN * INV 1 999 1 0 1 0
+GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 1 0
+GATE and3 1 O=a*b*c; PIN * NONINV 1 999 5 0 5 0
+.end
+`
+	lib, err := mio.ReadLibrary("nf", genlib, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	library := nfPrepareLibrary(mio.Mio_CollectRootsNew2(lib, 6, nil, 0), false, true, false)
+	for _, relaxed := range []bool{false, true} {
+		g := Gia_ManStart(10)
+		a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+		x := Gia_ManAppendAnd(g, a, b)
+		out := Gia_ManAppendAnd(g, x, c)
+		Gia_ManAppendCo(g, out)
+		var pars Jf_Par_t
+		Mf_ManSetDefaultPars(&pars)
+		cuts := newNfCutManager(g, &pars, library)
+		cuts.computeCuts()
+		matcher := newNfMatcher(cuts)
+		matcher.computeMapping()
+		refs := matcher.mappingRefs(0)
+		if relaxed {
+			for _, cell := range library.cells {
+				if cell.Name() == "and3" {
+					refs.delay = cell.Delay(0)
+				}
+			}
+		}
+		matcher.exactAreaRound(refs)
+		matcher.deriveMapping(refs)
+		gate := library.cells[Gia_ObjCellId(g, out)].Name()
+		if relaxed && gate != "and3" || !relaxed && gate != "and2" {
+			t.Fatalf("relaxed=%t gate=%s", relaxed, gate)
+		}
+	}
+}
