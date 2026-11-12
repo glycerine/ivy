@@ -67,3 +67,32 @@ func TestSblManagerCutMerge(t *testing.T) {
 		t.Fatal("missing merged or unit cut")
 	}
 }
+
+func TestSblComputeWindowCuts(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, y)
+	g.vMapping2 = vec.Vec_WecStart(int(g.nObjs))
+	vec.Vec_WecPush(g.vMapping2, int(y>>1), a>>1)
+	vec.Vec_WecPush(g.vMapping2, int(y>>1), b>>1)
+	vec.Vec_WecPush(g.vMapping2, int(y>>1), c>>1)
+	p := Sbl_ManAlloc(g, 4)
+	p.LutSize = 4
+	for _, id := range []int32{a >> 1, b >> 1, c >> 1} {
+		vec.Vec_IntPush(p.vLeaves, id)
+	}
+	vec.Vec_IntPush(p.vAnds, x>>1)
+	vec.Vec_IntPush(p.vAnds, y>>1)
+	vec.Vec_IntPush(p.vRoots, y>>1)
+	if n := Sbl_ManComputeCuts(p); n != 8 {
+		t.Fatalf("got %d cuts", n)
+	}
+	if Sbl_ManFindCut(p, 4, 7, 0, 0, 0) < 0 || vec.Vec_IntSize(p.vRootVars) != 1 || vec.Vec_IntSize(p.vSolInit) != 1 || vec.Vec_IntSize(p.vPolar) != 2 {
+		t.Fatal("missing window cut or initial mapping")
+	}
+	if Gia_ManObj(g, y>>1).Value != ^uint32(0) {
+		t.Fatal("temporary object values not cleared")
+	}
+}
