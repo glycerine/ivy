@@ -190,29 +190,7 @@ func Abc_FrameReadMiniLutNameMapping(pAbc *Abc_Frame_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {
-    var pEquivs *int32;
-    var pGia *Gia_Man_t;
-    var pFileMiter string    = "mini_aig_miter.aig";
-    var pFileReduced string  = "mini_aig_reduced.aig";
-    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );
-    Abc_FrameGiaInputMiniAig( pAbc, p );
-    Cmd_CommandExecute( pAbc, "&ps; &scorr; &ps" );
-    pEquivs = Abc_FrameReadMiniAigEquivClasses( pAbc );
-    // dump miter for verification
-    pGia = Gia_MiniAigMiter( p, pEquivs );
-    Gia_AigerWrite( pGia, pFileMiter, 0, 0, 0 );
-    fmt.Printf("Dumped miter AIG in file \"%s\".\n", pFileMiter);
-    Gia_ManStop( pGia );
-    // dump reduced AIG
-    pGia = Gia_MiniAigReduce( p, pEquivs );
-    Gia_AigerWrite( pGia, pFileReduced, 0, 0, 0 );
-    fmt.Printf("Dumped reduced AIG in file \"%s\".\n", pFileReduced);
-    Gia_ManStop( pGia );
-    // cleanup
-    pEquivs = nil;
-    Mini_AigStop( p );
-}
+
 
 /**Function*************************************************************
 
