@@ -1,291 +1,209 @@
+// Truth-table simulation, ported from ABC hopTruth.c (Alan Mishchenko).
 package hop
 
-/**CFile****************************************************************
+import "github.com/glycerine/abcgo/misc/vec"
 
-  FileName    [hopTruth.c]
+type Vec_Int_t = vec.Vec_Int_t
+type word = uint64
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Minimalistic And-Inverter Graph package.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: hopTruth.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "hop.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Hop_ManTruthWordNum(nVars int32) int32 { if nVars <= 5 {
-    return 1;
-} else {
-    return (1 << (nVars - 5));
-} }
-
-func Hop_ManTruthCopy(pOut *uint32, pIn *uint32, nVars int32) {
-    var w int32;
-    for  w = Hop_ManTruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn[w];
-    }
+func Hop_ManTruthWordNum(n int32) int32 { return Hop_TruthWordNum(n) }
+func Hop_ManTruthCopy(out, in []uint32, n int32) {
+	copy(out[:Hop_TruthWordNum(n)], in[:Hop_TruthWordNum(n)])
 }
-func Hop_ManTruthClear(pOut *uint32, nVars int32) {
-    var w int32;
-    for  w = Hop_ManTruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = 0;
-    }
+func Hop_ManTruthClear(out []uint32, n int32) { clear(out[:Hop_TruthWordNum(n)]) }
+func Hop_ManTruthFill(out []uint32, n int32) {
+	for i := int32(0); i < Hop_TruthWordNum(n); i++ {
+		out[i] = ^uint32(0)
+	}
 }
-func Hop_ManTruthFill(pOut *uint32, nVars int32) {
-    var w int32;
-    for  w = Hop_ManTruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~uint32(0);
-    }
+func Hop_ManTruthNot(out, in []uint32, n int32) {
+	for i := int32(0); i < Hop_TruthWordNum(n); i++ {
+		out[i] = ^in[i]
+	}
 }
-func Hop_ManTruthNot(pOut *uint32, pIn *uint32, nVars int32) {
-    var w int32;
-    for  w = Hop_ManTruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~pIn[w];
-    }
+func Hop_ManConvertAigToTruth_rec1(o *Hop_Obj_t) int32 {
+	if Hop_ObjIsNode(o) == 0 || o.fMarkA != 0 {
+		return 0
+	}
+	n := Hop_ManConvertAigToTruth_rec1(Hop_ObjFanin0(o)) + Hop_ManConvertAigToTruth_rec1(Hop_ObjFanin1(o))
+	o.fMarkA = 1
+	return n + 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Construct BDDs and mark AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ManConvertAigToTruth_rec1(pObj *Hop_Obj_t) int32 {
-    var Counter int32;
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return 0; }
-    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin0(pObj) ); 
-    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin1(pObj) );
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
-    return Counter + 1;
+func Hop_ManConvertAigToTruth_rec2(o *Hop_Obj_t, scratch *Vec_Int_t, n int32) []uint32 {
+	if Hop_ObjIsNode(o) == 0 || o.fMarkA == 0 {
+		return o.pData.([]uint32)
+	}
+	a, b := Hop_ManConvertAigToTruth_rec2(Hop_ObjFanin0(o), scratch, n), Hop_ManConvertAigToTruth_rec2(Hop_ObjFanin1(o), scratch, n)
+	out := make([]uint32, n)
+	for i := range out {
+		x, y := a[i], b[i]
+		if Hop_ObjFaninC0(o) != 0 {
+			x = ^x
+		}
+		if Hop_ObjFaninC1(o) != 0 {
+			y = ^y
+		}
+		if o.Type == AIG_EXOR {
+			out[i] = x ^ y
+		} else {
+			out[i] = x & y
+		}
+	}
+	o.pData = out
+	o.fMarkA = 0
+	return out
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ManConvertAigToTruth_rec2(pObj *Hop_Obj_t, vTruth *Vec_Int_t, nWords int32) *uint32 {
-    var pTruth, pTruth0, pTruth1 *uint32;
-    var i int32;
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {
-        return (unsigned *)pObj.pData; }
-    // compute the truth tables of the fanins
-    pTruth0 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin0(pObj), vTruth, nWords );
-    pTruth1 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin1(pObj), vTruth, nWords );
-    // creat the truth table of the node
-    pTruth  = Vec_IntFetch( vTruth, nWords );
-    if Hop_ObjIsExor(pObj) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] ^ pTruth1[i];
-        }
-    } else if !Hop_ObjFaninC0(pObj) && !Hop_ObjFaninC1(pObj) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] & pTruth1[i];
-        }
-    } else if !Hop_ObjFaninC0(pObj) && Hop_ObjFaninC1(pObj) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] & ~pTruth1[i];
-        }
-    } else if Hop_ObjFaninC0(pObj) && !Hop_ObjFaninC1(pObj) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = ~pTruth0[i] & pTruth1[i];
-        }
-    } else { // if ( Hop_ObjFaninC0(pObj) && Hop_ObjFaninC1(pObj) )
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = ~pTruth0[i] & ~pTruth1[i];
-        } }
-    assert(Hop_ObjIsMarkA(pObj), "Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjClearMarkA( pObj );
-    pObj.pData = pTruth;
-    return pTruth;
+func Hop_ManConvertAigToTruth(p *Hop_Man_t, root *Hop_Obj_t, n int32, scratch *Vec_Int_t, msb int32) []uint32 {
+	if n < 0 || n > 30 || (Hop_Regular(root) != p.pConst1 && n > Hop_ManPiNum(p)) {
+		panic("invalid truth-table variable count")
+	}
+	words := Hop_TruthWordNum(n)
+	if Hop_Regular(root) == p.pConst1 {
+		out := make([]uint32, words)
+		if Hop_IsComplement(root) == 0 {
+			for i := range out {
+				out[i] = ^uint32(0)
+			}
+		}
+		hopTruthSaveScratch(scratch, out)
+		return out
+	}
+	hopValidateTruthSupport(p, root, n)
+	for i := int32(0); i < n; i++ {
+		table := make([]uint32, words)
+		bit := i
+		if msb != 0 {
+			bit = n - 1 - i
+		}
+		patterns := [...]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
+		for k := int32(0); k < words; k++ {
+			if bit < 5 {
+				table[k] = patterns[bit]
+			} else if k&(1<<uint(bit-5)) != 0 {
+				table[k] = ^uint32(0)
+			}
+		}
+		Hop_ManPi(p, i).pData = table
+	}
+	constant := make([]uint32, words)
+	for i := range constant {
+		constant[i] = ^uint32(0)
+	}
+	p.pConst1.pData = constant
+	Hop_ManConvertAigToTruth_rec1(Hop_Regular(root))
+	data := Hop_ManConvertAigToTruth_rec2(Hop_Regular(root), scratch, words)
+	out := append([]uint32(nil), data...)
+	if Hop_IsComplement(root) != 0 {
+		for i := range out {
+			out[i] = ^out[i]
+		}
+	}
+	hopTruthSaveScratch(scratch, out)
+	return out
 }
 
-/**Function*************************************************************
+var hopElementary = [8]uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000, 0, ^uint64(0)}
 
-  Synopsis    [Computes truth table of the node.]
-
-  Description [Assumes that the structural support is no more than 8 inputs.
-  Uses array vTruth to store temporary truth tables. The returned pointer should 
-  be used immediately.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ManConvertAigToTruth(p *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, fMsbFirst int32) *uint32 {
-    static unsigned uTruths[8][8] = { // elementary truth tables
-        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },
-        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },
-        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },
-        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },
-        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, 
-        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, 
-        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, 
-        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } 
-    };
-    var pObj *Hop_Obj_t;
-    var pTruth, pTruth2 *uint32;
-    var i, nWords, nNodes int32;
-    var vTtElems *Vec_Ptr_t;
-
-    // if the number of variables is more than 8, allocate truth tables
-    if nVars > 8 {
-        vTtElems = Vec_PtrAllocTruthTables( nVars );
-    } else {
-        vTtElems = nil; }
-
-    // clear the data fields and set marks
-    nNodes = Hop_ManConvertAigToTruth_rec1( Hop_Regular(pRoot) );
-    // prepare memory
-    nWords = Hop_TruthWordNum( nVars );
-    Vec_IntClear( vTruth );
-    Vec_IntGrow( vTruth, nWords * (nNodes+1) );
-    pTruth = Vec_IntFetch( vTruth, nWords );
-    // check the case of a constant
-    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {
-        assert(nNodes == 0, "nNodes == 0");
-        if Hop_IsComplement(pRoot) {
-            Hop_ManTruthClear( pTruth, nVars );
-        } else {
-            Hop_ManTruthFill( pTruth, nVars ); }
-        return pTruth;
-    }
-    // set elementary truth tables at the leaves
-    assert(nVars <= Hop_ManPiNum(p), "nVars <= Hop_ManPiNum(p)");
-//    assert( Hop_ManPiNum(p) <= 8 ); 
-    if fMsbFirst != 0 {
-//        Hop_ManForEachPi( p, pObj, i )
-        for  i = 0; i < nVars; i++  {
-            pObj = Hop_ManPi( p, i );
-            if vTtElems != nil {
-                pObj.pData = Vec_PtrEntry(vTtElems, nVars-1-i);
-            } else {               
-                pObj.pData = (void *)uTruths[nVars-1-i]; }
-        }
-    
-    } else {
-//        Hop_ManForEachPi( p, pObj, i )
-        for  i = 0; i < nVars; i++  {
-            pObj = Hop_ManPi( p, i );
-            if vTtElems != nil {
-                pObj.pData = Vec_PtrEntry(vTtElems, i);
-            } else {               
-                pObj.pData = (void *)uTruths[i]; }
-        }
-    }
-    // clear the marks and compute the truth table
-    pTruth2 = Hop_ManConvertAigToTruth_rec2( Hop_Regular(pRoot), vTruth, nWords );
-    // copy the result
-    Hop_ManTruthCopy( pTruth, pTruth2, nVars );
-    if Hop_IsComplement(pRoot) {
-        Hop_ManTruthNot( pTruth, pTruth, nVars ); }
-    if vTtElems != nil {
-        Vec_PtrFree( vTtElems ); }
-    return pTruth;
+func Hop_ManComputeTruth6_rec(p *Hop_Man_t, o *Hop_Obj_t) word {
+	return hopComputeTruth6Memo(o, make(map[*Hop_Obj_t]uint64))
+}
+func hopComputeTruth6Memo(o *Hop_Obj_t, memo map[*Hop_Obj_t]uint64) uint64 {
+	if v, ok := memo[o]; ok {
+		return v
+	}
+	var value uint64
+	switch o.Type {
+	case AIG_CONST1:
+		value = ^uint64(0)
+	case AIG_PI:
+		value = hopElementary[o.iData]
+	case AIG_AND, AIG_EXOR:
+		a, b := hopComputeTruth6Memo(Hop_ObjFanin0(o), memo), hopComputeTruth6Memo(Hop_ObjFanin1(o), memo)
+		if Hop_ObjFaninC0(o) != 0 {
+			a = ^a
+		}
+		if Hop_ObjFaninC1(o) != 0 {
+			b = ^b
+		}
+		if o.Type == AIG_EXOR {
+			value = a ^ b
+		} else {
+			value = a & b
+		}
+	default:
+		panic("invalid Hop truth6 node")
+	}
+	memo[o] = value
+	return value
+}
+func Hop_ManComputeTruth6(p *Hop_Man_t, o *Hop_Obj_t, n int32) word {
+	if n < 0 || n > 6 || (Hop_Regular(o) != p.pConst1 && n > Hop_ManPiNum(p)) {
+		panic("truth6 requires at most six variables")
+	}
+	if Hop_Regular(o) == p.pConst1 {
+		if Hop_IsComplement(o) != 0 {
+			return 0
+		}
+		return ^uint64(0)
+	}
+	hopValidateTruthSupport(p, o, n)
+	for i := int32(0); i < n; i++ {
+		Hop_ManPi(p, i).iData = i
+	}
+	v := Hop_ManComputeTruth6_rec(p, Hop_Regular(o))
+	if Hop_IsComplement(o) != 0 {
+		return ^v
+	}
+	return v
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Compute truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var Truth [8]word = [8]word{
-    ABC_CONST(0xAAAAAAAAAAAAAAAA),
-    ABC_CONST(0xCCCCCCCCCCCCCCCC),
-    ABC_CONST(0xF0F0F0F0F0F0F0F0),
-    ABC_CONST(0xFF00FF00FF00FF00),
-    ABC_CONST(0xFFFF0000FFFF0000),
-    ABC_CONST(0xFFFFFFFF00000000),
-    ABC_CONST(0x0000000000000000),
-    ABC_CONST(0xFFFFFFFFFFFFFFFF),
-};
-func Hop_ManComputeTruth6_rec(p *Hop_Man_t, pObj *Hop_Obj_t) word {
-    var Truth0, Truth1 word;
-    if Hop_ObjIsPi(pObj) {
-        return Truth[pObj.iData]; }
-    assert(Hop_ObjIsNode(pObj), "Hop_ObjIsNode(pObj)");
-    Truth0 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin0(pObj) );
-    Truth1 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin1(pObj) );
-    if Hop_ObjFaninC0(pObj) {
-        Truth0 = ~Truth0;
-    } else {
-        Truth0 = Truth0;
-    }
-    if Hop_ObjFaninC1(pObj) {
-        Truth1 = ~Truth1;
-    } else {
-        Truth1 = Truth1;
-    }
-    return Truth0 & Truth1;
+// Validate support before mutating scratch fields so repeated calls cannot use
+// stale PI truth tables when n omits a reachable input. Also reject cycles.
+func hopValidateTruthSupport(p *Hop_Man_t, root *Hop_Obj_t, n int32) {
+	allowed := make(map[*Hop_Obj_t]bool, n)
+	for i := int32(0); i < n; i++ {
+		allowed[Hop_ManPi(p, i)] = true
+	}
+	state := map[*Hop_Obj_t]uint8{}
+	var visit func(*Hop_Obj_t)
+	visit = func(edge *Hop_Obj_t) {
+		o := Hop_Regular(edge)
+		if o == nil {
+			panic("nil Hop truth-table fanin")
+		}
+		if state[o] == 1 {
+			panic("cycle in Hop truth-table support")
+		}
+		if state[o] == 2 {
+			return
+		}
+		switch o.Type {
+		case AIG_CONST1:
+			state[o] = 2
+			return
+		case AIG_PI:
+			if !allowed[o] {
+				panic("Hop truth-table support exceeds variable count")
+			}
+			state[o] = 2
+			return
+		case AIG_AND, AIG_EXOR:
+		default:
+			panic("invalid Hop truth-table object")
+		}
+		state[o] = 1
+		visit(o.pFanin0)
+		visit(o.pFanin1)
+		state[o] = 2
+	}
+	visit(root)
 }
-func Hop_ManComputeTruth6(p *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) word {
-    var Truth word;
-    var i int32;
-    if Hop_ObjIsConst1( Hop_Regular(pObj) ) {
-        if Hop_IsComplement(pObj) {
-            return 0;
-        } else {
-            return ~(word)0;
-        } }
-    for  i = 0; i < nVars; i++  {
-        Hop_ManPi( p, i ).iData = i;
-    }
-    Truth = Hop_ManComputeTruth6_rec( p, Hop_Regular(pObj) );
-    if Hop_IsComplement(pObj) {
-        return ~Truth;
-    } else {
-        return Truth;
-    }
+func hopTruthSaveScratch(scratch *Vec_Int_t, out []uint32) {
+	if scratch == nil {
+		return
+	}
+	vec.Vec_IntClear(scratch)
+	for _, v := range out {
+		vec.Vec_IntPush(scratch, int32(v))
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

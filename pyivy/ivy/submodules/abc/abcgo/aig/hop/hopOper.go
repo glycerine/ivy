@@ -1,379 +1,111 @@
+// Boolean constructors, ported from ABC hopOper.c (Alan Mishchenko).
 package hop
 
-/**CFile****************************************************************
-
-  FileName    [hopOper.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Minimalistic And-Inverter Graph package.]
-
-  Synopsis    [AIG operations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: hopOper.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "hop.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// procedure to detect an EXOR gate
-func Hop_ObjIsExorType(p0 *Hop_Obj_t, p1 *Hop_Obj_t, ppFan0 **Hop_Obj_t, ppFan1 **Hop_Obj_t) int32 {
-    if !Hop_IsComplement(p0) || !Hop_IsComplement(p1) {
-        return 0; }
-    p0 = Hop_Regular(p0);
-    p1 = Hop_Regular(p1);
-    if !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) {
-        return 0; }
-    if Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) {
-        return 0; }
-    if Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) {
-        return 0; }
-    *ppFan0 = Hop_ObjChild0(p0);
-    *ppFan1 = Hop_ObjChild1(p0);
-    return 1;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns i-th elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Hop_IthVar(p *Hop_Man_t, i int32) *Hop_Obj_t {
-    var v int32;
-    for  v = Hop_ManPiNum(p); v <= i; v++  {
-        Hop_ObjCreatePi( p );
-    }
-    assert(i < Vec_PtrSize(p.vPis), "i < Vec_PtrSize(p.vPis)");
-    return Hop_ManPi( p, i );
+	if i < 0 {
+		panic("negative variable")
+	}
+	for Hop_ManPiNum(p) <= i {
+		Hop_ObjCreatePi(p)
+	}
+	return Hop_ManPi(p, i)
+}
+func Hop_Oper(p *Hop_Man_t, a, b *Hop_Obj_t, t Hop_Type_t) *Hop_Obj_t {
+	switch t {
+	case AIG_AND:
+		return Hop_And(p, a, b)
+	case AIG_EXOR:
+		return Hop_Exor(p, a, b)
+	}
+	panic("unsupported Hop operation")
+}
+func Hop_And(p *Hop_Man_t, a, b *Hop_Obj_t) *Hop_Obj_t {
+	if a == b {
+		return a
+	}
+	if a == Hop_Not(b) {
+		return Hop_ManConst0(p)
+	}
+	if Hop_Regular(a) == p.pConst1 {
+		if a == p.pConst1 {
+			return b
+		}
+		return a
+	}
+	if Hop_Regular(b) == p.pConst1 {
+		if b == p.pConst1 {
+			return a
+		}
+		return b
+	}
+	ghost := Hop_ObjCreateGhost(p, a, b, AIG_AND)
+	if node := Hop_TableLookup(p, ghost); node != nil {
+		return node
+	}
+	return Hop_ObjCreate(p, ghost)
+}
+func Hop_Exor(p *Hop_Man_t, a, b *Hop_Obj_t) *Hop_Obj_t {
+	return Hop_Or(p, Hop_And(p, a, Hop_Not(b)), Hop_And(p, Hop_Not(a), b))
+}
+func Hop_Or(p *Hop_Man_t, a, b *Hop_Obj_t) *Hop_Obj_t {
+	return Hop_Not(Hop_And(p, Hop_Not(a), Hop_Not(b)))
+}
+func Hop_Mux(p *Hop_Man_t, c, a, b *Hop_Obj_t) *Hop_Obj_t {
+	return Hop_Or(p, Hop_And(p, c, a), Hop_And(p, Hop_Not(c), b))
+}
+func Hop_Maj(p *Hop_Man_t, a, b, c *Hop_Obj_t) *Hop_Obj_t {
+	return Hop_Or(p, Hop_And(p, a, b), Hop_And(p, c, Hop_Or(p, a, b)))
+}
+func Hop_Multi_rec(p *Hop_Man_t, args []*Hop_Obj_t, n int32, t Hop_Type_t) *Hop_Obj_t {
+	if n <= 0 || int(n) > len(args) {
+		panic("invalid multi-input count")
+	}
+	if n == 1 {
+		return args[0]
+	}
+	half := n / 2
+	return Hop_Oper(p, Hop_Multi_rec(p, args[:half], half, t), Hop_Multi_rec(p, args[half:n], n-half, t), t)
+}
+func Hop_Multi(p *Hop_Man_t, args []*Hop_Obj_t, n int32, t Hop_Type_t) *Hop_Obj_t {
+	return Hop_Multi_rec(p, args, n, t)
+}
+func Hop_Miter(p *Hop_Man_t, v *Vec_Ptr_t) *Hop_Obj_t {
+	if v.nSize == 0 || v.nSize%2 != 0 {
+		panic("miter requires pairs")
+	}
+	args := make([]*Hop_Obj_t, v.nSize/2)
+	for i := int32(0); i < v.nSize; i += 2 {
+		args[i/2] = Hop_Not(Hop_Exor(p, v.pArray[i].(*Hop_Obj_t), v.pArray[i+1].(*Hop_Obj_t)))
+	}
+	v.nSize /= 2
+	for i, a := range args {
+		v.pArray[i] = a
+	}
+	return Hop_Not(Hop_Multi_rec(p, args, int32(len(args)), AIG_AND))
+}
+func Hop_CreateAnd(p *Hop_Man_t, n int32) *Hop_Obj_t {
+	r := Hop_ManConst1(p)
+	for i := int32(0); i < n; i++ {
+		r = Hop_And(p, r, Hop_IthVar(p, i))
+	}
+	return r
+}
+func Hop_CreateOr(p *Hop_Man_t, n int32) *Hop_Obj_t {
+	r := Hop_ManConst0(p)
+	for i := int32(0); i < n; i++ {
+		r = Hop_Or(p, r, Hop_IthVar(p, i))
+	}
+	return r
+}
+func Hop_CreateExor(p *Hop_Man_t, n int32) *Hop_Obj_t {
+	r := Hop_ManConst0(p)
+	for i := int32(0); i < n; i++ {
+		r = Hop_Exor(p, r, Hop_IthVar(p, i))
+	}
+	return r
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Perform one operation.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Oper(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t, Type Hop_Type_t) *Hop_Obj_t {
-    if Type == AIG_AND {
-        return Hop_And( p, p0, p1 ); }
-    if Type == AIG_EXOR {
-        return Hop_Exor( p, p0, p1 ); }
-    assert(false, "0");
-    return nil;
+func Hop_ObjIsExorType(a, b *Hop_Obj_t, x, y **Hop_Obj_t) int32 {
+	ghost := &Hop_Obj_t{Type: AIG_AND, pFanin0: a, pFanin1: b}
+	return Hop_ObjRecognizeExor(ghost, x, y)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs canonicization step.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_And(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {
-    var pGhost, pResult *Hop_Obj_t;
-//    Hop_Obj_t * pFan0, * pFan1;
-    // check trivial cases
-    if p0 == p1 {
-        return p0; }
-    if p0 == Hop_Not(p1) {
-        return Hop_Not(p.pConst1); }
-    if Hop_Regular(p0) == p.pConst1 {
-        if p0 == p.pConst1 {
-            return p1;
-        } else {
-            return Hop_Not(p.pConst1);
-        } }
-    if Hop_Regular(p1) == p.pConst1 {
-        if p1 == p.pConst1 {
-            return p0;
-        } else {
-            return Hop_Not(p.pConst1);
-        } }
-    // check if it can be an EXOR gate
-//    if ( Hop_ObjIsExorType( p0, p1, &pFan0, &pFan1 ) )
-//        return Hop_Exor( p, pFan0, pFan1 );
-    // check the table
-    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_AND );
-    if pResult = Hop_TableLookup( p, pGhost ) {
-        return pResult; }
-    return Hop_ObjCreate( p, pGhost );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs canonicization step.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Exor(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {
-/*
-    Hop_Obj_t * pGhost, * pResult;
-    // check trivial cases
-    if ( p0 == p1 )
-        return Hop_Not(p->pConst1);
-    if ( p0 == Hop_Not(p1) )
-        return p->pConst1;
-    if ( Hop_Regular(p0) == p->pConst1 )
-        return Hop_NotCond( p1, p0 == p->pConst1 );
-    if ( Hop_Regular(p1) == p->pConst1 )
-        return Hop_NotCond( p0, p1 == p->pConst1 );
-    // check the table
-    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_EXOR );
-    if ( pResult = Hop_TableLookup( p, pGhost ) )
-        return pResult;
-    return Hop_ObjCreate( p, pGhost );
-*/
-    return Hop_Or( p, Hop_And(p, p0, Hop_Not(p1)), Hop_And(p, Hop_Not(p0), p1) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements Boolean OR.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Or(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {
-    return Hop_Not( Hop_And( p, Hop_Not(p0), Hop_Not(p1) ) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Mux(p *Hop_Man_t, pC *Hop_Obj_t, p1 *Hop_Obj_t, p0 *Hop_Obj_t) *Hop_Obj_t {
-/*    
-    Hop_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;
-    int Count0, Count1;
-    // consider trivial cases
-    if ( p0 == Hop_Not(p1) )
-        return Hop_Exor( p, pC, p0 );
-    // other cases can be added
-    // implement the first MUX (F = C * x1 + C' * x0)
-
-    // check for constants here!!!
-
-    pTempA1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          p1, AIG_AND) );
-    pTempA2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), p0, AIG_AND) );
-    if ( pTempA1 && pTempA2 )
-    {
-        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempA1), Hop_Not(pTempA2), AIG_AND) );
-        if ( pTemp ) return Hop_Not(pTemp);
-    }
-    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);
-    // implement the second MUX (F' = C * x1' + C' * x0')
-    pTempB1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          Hop_Not(p1), AIG_AND) );
-    pTempB2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), Hop_Not(p0), AIG_AND) );
-    if ( pTempB1 && pTempB2 )
-    {
-        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempB1), Hop_Not(pTempB2), AIG_AND) );
-        if ( pTemp ) return pTemp;
-    }
-    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);
-    // compare and decide which one to implement
-    if ( Count0 >= Count1 )
-    {
-        pTempA1 = pTempA1? pTempA1 : Hop_And(p, pC,          p1);
-        pTempA2 = pTempA2? pTempA2 : Hop_And(p, Hop_Not(pC), p0);
-        return Hop_Or( p, pTempA1, pTempA2 );
-    }
-    pTempB1 = pTempB1? pTempB1 : Hop_And(p, pC,          Hop_Not(p1));
-    pTempB2 = pTempB2? pTempB2 : Hop_And(p, Hop_Not(pC), Hop_Not(p0));
-    return Hop_Not( Hop_Or( p, pTempB1, pTempB2 ) );
-*/
-    return Hop_Or( p, Hop_And(p, pC, p1), Hop_And(p, Hop_Not(pC), p0) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Maj(p *Hop_Man_t, pA *Hop_Obj_t, pB *Hop_Obj_t, pC *Hop_Obj_t) *Hop_Obj_t {
-    return Hop_Or( p, Hop_Or(p, Hop_And(p, pA, pB), Hop_And(p, pA, pC)), Hop_And(p, pB, pC) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Constructs the well-balanced tree of gates.]
-
-  Description [Disregards levels and possible logic sharing.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Multi_rec(p *Hop_Man_t, ppObjs **Hop_Obj_t, nObjs int32, Type Hop_Type_t) *Hop_Obj_t {
-    var pObj1, pObj2 *Hop_Obj_t;
-    if nObjs == 1 {
-        return ppObjs[0]; }
-    pObj1 = Hop_Multi_rec( p, ppObjs,           nObjs/2,         Type );
-    pObj2 = Hop_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );
-    return Hop_Oper( p, pObj1, pObj2, Type );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Old code.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Multi(p *Hop_Man_t, pArgs **Hop_Obj_t, nArgs int32, Type Hop_Type_t) *Hop_Obj_t {
-    assert(Type == AIG_AND || Type == AIG_EXOR, "Type == AIG_AND || Type == AIG_EXOR");
-    assert(nArgs > 0, "nArgs > 0");
-    return Hop_Multi_rec( p, pArgs, nArgs, Type );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements the miter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_Miter(p *Hop_Man_t, vPairs *Vec_Ptr_t) *Hop_Obj_t {
-    var i int32;
-    assert(vPairs.nSize > 0, "vPairs.nSize > 0");
-    assert(vPairs.nSize % 2 == 0, "vPairs.nSize % 2 == 0");
-    // go through the cubes of the node's SOP
-    for  i = 0; i < vPairs.nSize; i += 2  {
-        vPairs.pArray[i/2] = Hop_Not( Hop_Exor( p, (Hop_Obj_t *)vPairs.pArray[i], (Hop_Obj_t *)vPairs.pArray[i+1] ) );
-    }
-    vPairs.nSize = vPairs.nSize/2;
-    return Hop_Not( Hop_Multi_rec( p, (Hop_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_AND ) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_CreateAnd(p *Hop_Man_t, nVars int32) *Hop_Obj_t {
-    var pFunc *Hop_Obj_t;
-    var i int32;
-    pFunc = Hop_ManConst1( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Hop_And( p, pFunc, Hop_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_CreateOr(p *Hop_Man_t, nVars int32) *Hop_Obj_t {
-    var pFunc *Hop_Obj_t;
-    var i int32;
-    pFunc = Hop_ManConst0( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Hop_Or( p, pFunc, Hop_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_CreateExor(p *Hop_Man_t, nVars int32) *Hop_Obj_t {
-    var pFunc *Hop_Obj_t;
-    var i int32;
-    pFunc = Hop_ManConst0( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Hop_Exor( p, pFunc, Hop_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
