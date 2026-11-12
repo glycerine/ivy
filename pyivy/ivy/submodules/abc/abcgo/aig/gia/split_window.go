@@ -1,6 +1,9 @@
 package gia
 
-import "github.com/glycerine/abcgo/misc/vec"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 func Spl_ManFindOne(p *Spl_Man_t) int32 {
 	g := p.pGia
@@ -151,4 +154,18 @@ func Gia_ManComputeOneWinStart(g *Gia_Man_t, limit, reverse int32) {
 		panic("gia: window manager already exists")
 	}
 	g.pSatlutWinman = Spl_ManAlloc(g, limit, reverse)
+}
+
+func Spl_ManComputeOneTest(g *Gia_Man_t) {
+	Gia_ManComputeOneWinStart(g, 64, 0)
+	defer Gia_ManComputeOneWin(g, -1, nil, nil, nil, nil)
+	for id := int32(1); id < g.nObjs; id++ {
+		if Gia_ObjIsLut2(g, id) != 0 {
+			var roots, nodes, leaves, ands *Vec_Int_t
+			count := Gia_ManComputeOneWin(g, id, &roots, &nodes, &leaves, &ands)
+			if count > 0 {
+				fmt.Printf("Obj = %6d : Leaf = %2d. Node = %2d. Root = %2d. AND = %3d.\n", id, vec.Vec_IntSize(leaves), vec.Vec_IntSize(nodes), vec.Vec_IntSize(roots), count)
+			}
+		}
+	}
 }
