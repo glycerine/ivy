@@ -1,429 +1,320 @@
 package extra
 
+// Majority-function enumeration by majority-gate expansion and variable
+// identification. Canonicalization changes only variable order, preserving the
+// positive-unate function family and original insertion order.
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"os"
+	"slices"
+	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/opt/dau/canon"
 )
 
-/**CFile****************************************************************
-
-  FileName    [extraUtilMaj.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [extra]
-
-  Synopsis    [Path enumeration.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: extraUtilMaj.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "misc/vec/vec.h"
-//#include "misc/vec/vecMem.h"
-//#include "misc/extra/extra.h"
-//#include "misc/util/utilTruth.h"
-//#include "opt/dau/dau.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-type Gem_Man_t =  Gem_Man_t_;
-type Gem_Obj_t =  Gem_Obj_t_;
-
-type Gem_Man_t_ struct {
-    nVars          int32;         // max variable count
-    nWords          int32;        // truth tabel word count
-    nObjsAlloc          int32;    // allocated objects
-    nObjs          int32;         // used objects
-    pObjs   *Gem_Obj_t;         // function objects
-    vTtMem   *Vec_Mem_t;        // truth table memory and hash table
-    pTtElems       **word;      // elementary truth tables
-    fVerbose          int32;
+type Gem_Obj_t struct {
+	nVars, nNodes, History, Groups, Predec int32
+}
+type Gem_Man_t struct {
+	nVars, nWords, nObjsAlloc, nObjs int32
+	pObjs                            []Gem_Obj_t
+	truths                           [][]uint64
+	index                            map[string]int32
+	pTtElems                         [][]uint64
+	fVerbose                         int32
 }
 
-type Gem_Obj_t_ struct { // 8 bytes
-
-    nVars uint32; /* C bitfield: 4 bits; review packing and truncation */  // variable count
-    nNodes uint32; /* C bitfield: 4 bits; review packing and truncation */  // node count
-    History uint32; /* C bitfield: 8 bits; review packing and truncation */  // (i < j) ? {vi, vj} : {vi, 0}
-    Groups uint32; /* C bitfield: 16 bits; review packing and truncation */  // mask with last vars in each symmetric group
-    Predec          int32;        // predecessor 
+func gemTruthKey(truth []uint64) string {
+	key := make([]byte, 8*len(truth))
+	for i, w := range truth {
+		binary.LittleEndian.PutUint64(key[8*i:], w)
+	}
+	return string(key)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gem_PrintNode(p *Gem_Man_t, f int32, pLabel string, fUpdate int32) {
-    var pObj *Gem_Obj_t  = p.pObjs + f; 
-    var GroupsMod int32  = pObj.Groups;
-    if !p.fVerbose {
-        return; }
-    fmt.Printf("Node %6d : %s  Pred = %6d  Vars = %d  Nodes = %d  History = %d%d  Profile: ", f, pLabel, pObj.Predec, pObj.nVars, pObj.nNodes, pObj.History & 0xF, pObj.History >> 4);
-    Extra_PrintBinary2( os.Stdout, (unsigned*)&GroupsMod, p.nVars ); fmt.Printf("%s\n", fUpdate?" *":"");
+func Gem_PrintNode(p *Gem_Man_t, f int32, label string, update int32) {
+	if p.fVerbose == 0 {
+		return
+	}
+	obj := p.pObjs[f]
+	fmt.Printf("Node %6d : %s  Pred = %6d  Vars = %d  Nodes = %d  History = %d%d  Profile: ", f, label, obj.Predec, obj.nVars, obj.nNodes, obj.History&15, obj.History>>4)
+	for i := p.nVars - 1; i >= 0; i-- {
+		fmt.Printf("%d", obj.Groups>>i&1)
+	}
+	if update != 0 {
+		fmt.Print(" *")
+	}
+	fmt.Println()
 }
-func Gem_ManAlloc(nVars int32, fVerbose int32) *Gem_Man_t {
-    
-    assert(nVars <= 16, "nVars <= 16");
-    // inlining of macro ABC_CALLOC
-    p := &Gem_Man_t{};
-    p.nVars      = nVars;
-    p.nWords     = Abc_TtWordNum( nVars );
-    p.nObjsAlloc = 10000000;
-    p.nObjs      = 2;
-    // inlining of macro ABC_CALLOC
-    p.pObjs      = ((Gem_Obj_t *) calloc((size_t)(p.nObjsAlloc), sizeof(Gem_Obj_t)));
-    p.pObjs[1].nVars = p.pObjs[1].Groups = 1; // buffer
-    p.vTtMem     = Vec_MemAllocForTT( nVars, 0 );
-    p.pTtElems   = (word **)Extra_ArrayAlloc( nVars + 4, p.nWords, sizeof(word) );
-    p.fVerbose   = fVerbose;
-    Abc_TtElemInit( p.pTtElems, nVars );
-    Gem_PrintNode( p, 1, "Original", 0 );
-    return p;
+func Gem_ManAlloc(nVars, verbose int32) *Gem_Man_t {
+	if nVars < 1 || nVars > 16 {
+		panic("majority enumeration requires 1..16 variables")
+	}
+	words := util.Abc_TtWordNum(nVars)
+	p := &Gem_Man_t{nVars: nVars, nWords: words, nObjs: 2, nObjsAlloc: 16, pObjs: make([]Gem_Obj_t, 2, 16), index: map[string]int32{}, fVerbose: verbose}
+	p.pObjs[1] = Gem_Obj_t{nVars: 1, Groups: 1}
+	p.pTtElems = make([][]uint64, nVars+4)
+	for v := range p.pTtElems {
+		p.pTtElems[v] = make([]uint64, words)
+	}
+	for v := int32(0); v < nVars; v++ {
+		for bit := int32(0); bit < 64*words; bit++ {
+			if bit>>v&1 != 0 {
+				p.pTtElems[v][bit>>6] |= uint64(1) << uint(bit&63)
+			}
+		}
+	}
+	p.truths = [][]uint64{make([]uint64, words), slices.Clone(p.pTtElems[0])}
+	for i, t := range p.truths {
+		p.index[gemTruthKey(t)] = int32(i)
+	}
+	Gem_PrintNode(p, 1, "Original", 0)
+	return p
 }
 func Gem_ManFree(p *Gem_Man_t) int32 {
-    Vec_MemHashFree( p.vTtMem );
-    Vec_MemFree( p.vTtMem );
-    p.pTtElems = nil;
-    p.pObjs = nil;
-    p = nil;
-    return 1;
+	if p != nil {
+		*p = Gem_Man_t{}
+	}
+	return 1
 }
 func Gem_ManRealloc(p *Gem_Man_t) {
-    var nObjNew int32  = Abc_MinInt( 2 * p.nObjsAlloc, 0x7FFFFFFF );
-    assert(p.nObjs == p.nObjsAlloc, "p.nObjs == p.nObjsAlloc");
-    if p.nObjs == 0x7FFFFFFF {
-        fmt.Printf("Hard limit on the number of nodes (0x7FFFFFFF) is reached. Quitting...\n");
-os.Exit(int(1)); }
-    assert(p.nObjs < nObjNew, "p.nObjs < nObjNew");
-    fmt.Printf("Extending object storage: %d -> %d.\n", p.nObjsAlloc, nObjNew);
-    // inlining of macro ABC_REALLOC
-    
-    if p.pObjs {
-        p.pObjs = ((Gem_Obj_t *) realloc((char *)(p.pObjs), sizeof(Gem_Obj_t) * (size_t)(nObjNew)));
-    } else {
-        p.pObjs = ((Gem_Obj_t *) malloc(sizeof(Gem_Obj_t) * (size_t)(nObjNew)));
-    }
-    memset( p.pObjs + p.nObjsAlloc, 0, sizeof(Gem_Obj_t) * (nObjNew - p.nObjsAlloc) );
-    p.nObjsAlloc = nObjNew;
+	if p.nObjs != p.nObjsAlloc {
+		panic("majority storage is not full")
+	}
+	if p.nObjs == 1<<31-1 {
+		panic("majority node limit reached")
+	}
+	size := min(int64(p.nObjsAlloc)*2, int64(1<<31-1))
+	objects := make([]Gem_Obj_t, len(p.pObjs), int(size))
+	copy(objects, p.pObjs)
+	p.pObjs = objects
+	p.nObjsAlloc = int32(size)
+}
+func Gem_GroupsDerive(truth []uint64, nVars int32, cof0, cof1 []uint64) int32 {
+	if nVars < 1 || nVars > 16 {
+		panic("invalid majority group width")
+	}
+	result := int32(1) << (nVars - 1)
+	for v := int32(0); v < nVars-1; v++ {
+		if util.Abc_TtVarsAreSymmetric(truth, nVars, v, v+1, cof0, cof1) == 0 {
+			result |= 1 << v
+		}
+	}
+	return result
+}
+func Gem_GroupVarRemove(groups, i int32) int32 {
+	if i < 0 || i > 15 || groups>>i&1 == 0 {
+		panic("invalid removed group boundary")
+	}
+	mask := int32(1)<<i - 1
+	return groups&mask | (groups&^mask)>>1
+}
+func Gem_GroupVarsInsert1(groups, i, group int32) int32 {
+	if i < -1 || i > 15 || group < 0 || group > 1 || group != 0 && i != -1 && groups>>i&1 == 0 {
+		panic("invalid inserted group boundary")
+	}
+	mask := int32(1)<<(i+1) - 1
+	return groups&mask | (groups&^mask)<<1 | group<<(i+1)
+}
+func Gem_GroupVarsInsert3(groups, i int32) int32 {
+	if i < -1 || i > 15 || i != -1 && groups>>i&1 == 0 {
+		panic("invalid inserted symmetric group")
+	}
+	mask := int32(1)<<(i+1) - 1
+	return groups&mask | (groups&^mask)<<3 | 4<<(i+1)
+}
+func Gem_GroupUnpack(groups int32, vars []int32) int32 {
+	if groups < 0 || groups > 65535 {
+		panic("invalid group mask")
+	}
+	n := int32(0)
+	for v := int32(0); groups != 0; v, groups = v+1, groups>>1 {
+		if groups&1 != 0 {
+			vars[n] = v
+			n++
+		}
+	}
+	return n
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derive groups using symmetry info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gem_GroupsDerive(pTruth *word, nVars int32, pCof0 *word, pCof1 *word) int32 {
-    var v int32;
-    var Res int32 = 1 << (nVars-1);
-    for  v = 0; v < nVars-1; v++  {
-        if !Abc_TtVarsAreSymmetric(pTruth, nVars, v, v+1, pCof0, pCof1) {
-            Res |= (1 << v); }
-    }
-    return Res;
+// The C algorithm compares raw bytes. Explicit little-endian encoding preserves
+// that ordering independently of the host architecture.
+func Gem_FuncFindPlace(truth []uint64, words, groups int32, best []uint64, oneVar int32) int32 {
+	truth = truth[:words]
+	best = best[:words]
+	var last [16]int32
+	n := Gem_GroupUnpack(groups, last[:])
+	place := int32(-1)
+	if n > 0 {
+		place = last[n-1]
+	}
+	copy(best, truth)
+	for g := n - 1; g >= 0; g-- {
+		limit := int32(-1)
+		if g > 0 {
+			limit = last[g-1]
+		}
+		for v := last[g]; v > limit; v-- {
+			util.Abc_TtSwapAdjacent(truth, words, v)
+			if oneVar == 0 {
+				util.Abc_TtSwapAdjacent(truth, words, v+1)
+				util.Abc_TtSwapAdjacent(truth, words, v+2)
+			}
+		}
+		if bytes.Compare([]byte(gemTruthKey(best)), []byte(gemTruthKey(truth))) < 0 {
+			copy(best, truth)
+			place = limit
+		}
+	}
+	return place
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Extends function f by replacing var i with a new gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Gem_GroupVarRemove( int Groups, int i ) // remove i-th var
-{
-    var Mask int32;
-    if i != 0 {
-        Mask = Abc_InfoMask( i );
-    } else {
-        Mask = 0;
-    }
-    assert(i >= 0, "i >= 0");
-    assert((Groups >> i) & 1, "(Groups >> i) & 1");
-    return (Groups & Mask) | ((Groups & ~Mask) >> 1);
+func gemInsert(p *Gem_Man_t, truth []uint64, obj Gem_Obj_t, label string) bool {
+	key := gemTruthKey(truth)
+	if _, ok := p.index[key]; ok {
+		return false
+	}
+	if p.nObjs == p.nObjsAlloc {
+		Gem_ManRealloc(p)
+	}
+	index := p.nObjs
+	p.index[key] = index
+	p.truths = append(p.truths, slices.Clone(truth))
+	p.pObjs = append(p.pObjs, obj)
+	p.nObjs++
+	Gem_PrintNode(p, index, label, 0)
+	return true
 }
-int Gem_GroupVarsInsert1( int Groups, int i, int fGroup ) // insert one bit after i
-{
-    var Mask int32;
-    if i+1 {
-        Mask = Abc_InfoMask( i+1 );
-    } else {
-        Mask = 0;
-    }
-    assert(i+1 >= 0, "i+1 >= 0");
-    assert(!fGroup || i == -1 || ((Groups >> i) & 1), "!fGroup || i == -1 || ((Groups >> i) & 1)");
-    assert(fGroup == 0 || fGroup == 1, "fGroup == 0 || fGroup == 1");
-    return (Groups & Mask) | ((Groups & ~Mask) << 1) | (fGroup << (i+1));
+func Gem_FuncExpand(p *Gem_Man_t, f, i int32) {
+	obj := p.pObjs[f]
+	if i < 0 || i >= obj.nVars || obj.nVars+2 > p.nVars {
+		panic("invalid majority expansion")
+	}
+	result := slices.Clone(p.truths[f])
+	cof0, cof1 := make([]uint64, p.nWords), make([]uint64, p.nWords)
+	for v := i; v < obj.nVars-1; v++ {
+		util.Abc_TtSwapAdjacent(result, p.nWords, v)
+	}
+	v := obj.nVars - 1
+	util.Abc_TtCofactor0p(cof0, result, p.nWords, v)
+	util.Abc_TtCofactor1p(cof1, result, p.nWords, v)
+	util.Abc_TtMaj(result, p.pTtElems[v], p.pTtElems[v+1], p.pTtElems[v+2], p.nWords)
+	util.Abc_TtMux(result, result, cof1, cof0, p.nWords)
+	var perm [16]byte
+	canon.CanonicalizePermutation(result, obj.nVars+2, perm[:])
+	util.Abc_TtStretch6(result, max(6, obj.nVars+2), max(6, p.nVars))
+	next := Gem_Obj_t{nVars: obj.nVars + 2, nNodes: obj.nNodes + 1, Groups: Gem_GroupsDerive(result, obj.nVars+2, cof0, cof1), Predec: f, History: i}
+	gemInsert(p, result, next, "Expand  ")
 }
-int Gem_GroupVarsInsert3( int Groups, int i ) // insert group of 3 bits after i
-{
-    var Mask int32;
-    if i+1 {
-        Mask = Abc_InfoMask( i+1 );
-    } else {
-        Mask = 0;
-    }
-    assert(i+1 >= 0, "i+1 >= 0");
-    assert(i == -1 || (Groups >> i) & 1, "i == -1 || (Groups >> i) & 1");
-    return (Groups & Mask) | ((Groups & ~Mask) << 3) | (0x4 << (i+1));
-}
-func Gem_GroupUnpack(Groups int32, pVars *int32) int32 {
-    var v, nGroups int32;
-    for  v = 0; Groups; v++, Groups >>= 1  {
-        if Groups & 1 {
-            pVars[nGroups++] = v; }
-    }
-    return nGroups;
-}
-func Gem_FuncFindPlace(pTruth *word, nWords int32, Groups int32, pBest *word, fOneVar int32) int32 {
-    var pLast [16]int32;
-    var nGroups int32 = Gem_GroupUnpack( Groups, pLast );
-    var g int32;
-    var v int32;
-    var Value int32;
-    var BestPlace int32;
-    if nGroups != 0 {
-        BestPlace = pLast[nGroups - 1];
-    } else {
-        BestPlace = -1;
-    }
-    assert(nGroups >= 0, "nGroups >= 0");
-    Abc_TtCopy( pBest, pTruth, nWords, 0 );
-    for  g = nGroups - 1; g >= 0; g--  {
-        var Limit int32;
-        if g != 0 {
-            Limit = pLast[g-1];
-        } else {
-            Limit = -1;
-        }
-        for  v = pLast[g]; v > Limit; v--  {
-            Abc_TtSwapAdjacent( pTruth, nWords, v+0 );
-            if fOneVar != 0 { 
-                continue; }
-            Abc_TtSwapAdjacent( pTruth, nWords, v+1 );
-            Abc_TtSwapAdjacent( pTruth, nWords, v+2 );
-        }
-        Value = memcmp(pBest, pTruth, sizeof(word)*nWords);
-        if Value < 0 {
-            Abc_TtCopy( pBest, pTruth, nWords, 0 );
-            BestPlace = Limit;
-        }
-    }
-    return BestPlace;
-}
-func Gem_FuncExpand(p *Gem_Man_t, f int32, i int32) {
-    var pNew *Gem_Obj_t = p.pObjs + p.nObjs;
-    var pObj *Gem_Obj_t = p.pObjs + f; 
-    var pTruth *word    = Vec_MemReadEntry( p.vTtMem, f );
-    var pResult *word   = p.pTtElems[p.nVars];
-    var pCofs [2]*word = [2]*word{ p.pTtElems[p.nVars+2], p.pTtElems[p.nVars+3] };
-    var v, iFunc int32;
-    var pCanonPermC [16]byte;
-    assert(i < int32(pObj.nVars), "i < int32(pObj.nVars)");
-    assert(int32(pObj.nVars) + 2 <= p.nVars, "int32(pObj.nVars) + 2 <= p.nVars");
-    Abc_TtCopy( pResult, pTruth, p.nWords, 0 );
-    // move i variable to the end
-    for  v = i; v < int32(pObj.nVars)-1; v++  {
-        Abc_TtSwapAdjacent( pResult, p.nWords, v );
-    }
-    // create new symmetric group
-    assert(v == int32(pObj.nVars)-1, "v == int32(pObj.nVars)-1");
-    Abc_TtCofactor0p( pCofs[0], pResult, p.nWords, v );
-    Abc_TtCofactor1p( pCofs[1], pResult, p.nWords, v );
-    Abc_TtMaj( pResult, p.pTtElems[v], p.pTtElems[v+1], p.pTtElems[v+2], p.nWords );
-    Abc_TtMux( pResult, pResult, pCofs[1], pCofs[0], p.nWords );
-    // canonicize
-    //Extra_PrintHex( stdout, (unsigned*)pResult, pObj->nVars + 2 ); printf("\n");
-    Abc_TtCanonicizePerm( pResult, pObj.nVars + 2, pCanonPermC );
-    Abc_TtStretch6( pResult, Abc_MaxInt(6, pObj.nVars+2), p.nVars );
-    //Extra_PrintHex( stdout, (unsigned*)pResult, pObj->nVars + 2 ); printf("\n\n");
-    iFunc = Vec_MemHashInsert( p.vTtMem, pResult );
-    if iFunc < p.nObjs {
-        return; }
-    assert(iFunc == p.nObjs, "iFunc == p.nObjs");
-    pNew.nVars   = pObj.nVars + 2;
-    pNew.nNodes  = pObj.nNodes + 1;
-    pNew.Groups  = Gem_GroupsDerive( pResult, pNew.nVars, pCofs[0], pCofs[1] );
-    pNew.Predec  = f;
-    pNew.History = i; 
-    Gem_PrintNode( p, iFunc, "Expand  ", 0 );
-
-    assert(p.nObjs < p.nObjsAlloc, "p.nObjs < p.nObjsAlloc");
-    if ++p.nObjs == p.nObjsAlloc {
-        Gem_ManRealloc( p ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Reduces function f by crossbaring variables i and j.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gem_FuncCheckMajority(p *Gem_Man_t, f int32) int32 {
-    var pObj *Gem_Obj_t  = p.pObjs + f;
-    var pTruth *word  = Vec_MemReadEntry( p.vTtMem, f );
-    var Polar int32  = Abc_TtIsFullySymmetric( pTruth, pObj.nVars );
-    if Polar != -1 {
-        var nHalfVars int32  = (pObj.nVars+1) >> 1;
-        var Mask int32  = Abc_Tt6Mask( nHalfVars );
-        fmt.Printf("Found symmetric %d-variable function: ", pObj.nVars);
-        Extra_PrintBinary2( os.Stdout, (unsigned *)&Polar, pObj.nVars + 1 );
-        fmt.Printf("   ");
-        if (pObj.nVars & 1) && Polar == (Mask << nHalfVars) {
-            fmt.Printf("This is majority-%d.\n", pObj.nVars);
-            return 0;
-        }
-        fmt.Printf("\n");
-    }
-    return 0;
+	obj := p.pObjs[f]
+	polar := util.Abc_TtIsFullySymmetric(p.truths[f], obj.nVars)
+	if polar != -1 {
+		fmt.Printf("Found symmetric %d-variable function: ", obj.nVars)
+		for bit := obj.nVars; bit >= 0; bit-- {
+			fmt.Printf("%d", polar>>bit&1)
+		}
+		fmt.Print("   ")
+		half := (obj.nVars + 1) >> 1
+		mask := int32(1)<<half - 1
+		if obj.nVars&1 != 0 && polar == mask<<half {
+			fmt.Printf("This is majority-%d.\n", obj.nVars)
+		} else {
+			fmt.Println()
+		}
+	}
+	return 0
 }
-func Gem_FuncReduce(p *Gem_Man_t, f int32, i int32, j int32) int32 {
-    var pNew *Gem_Obj_t = p.pObjs + p.nObjs;
-    var pObj *Gem_Obj_t = p.pObjs + f; 
-    var pTruth *word    = Vec_MemReadEntry( p.vTtMem, f );
-    var pResult *word   = p.pTtElems[p.nVars];
-    var pCofs [2]*word = [2]*word{ p.pTtElems[p.nVars+2], p.pTtElems[p.nVars+3] };
-    var v, iFunc int32;
-    var pCanonPermC [16]byte;
-    assert(i < j && j < 16, "i < j && j < 16");
-    Abc_TtCopy( pResult, pTruth, p.nWords, 0 );
-    // move j variable to the end
-    for  v = j; v < int32(pObj.nVars)-1; v++  {
-        Abc_TtSwapAdjacent( pResult, p.nWords, v );
-    }
-    assert(v == int32(pObj.nVars)-1, "v == int32(pObj.nVars)-1");
-    // move i variable to the end
-    for  v = i; v < int32(pObj.nVars)-2; v++  {
-        Abc_TtSwapAdjacent( pResult, p.nWords, v );
-    }
-    assert(v == int32(pObj.nVars)-2, "v == int32(pObj.nVars)-2");
-    // create new variable
-    Abc_TtCofactor0p( pCofs[0], pResult, p.nWords, v+1 );
-    Abc_TtCofactor1p( pCofs[1], pResult, p.nWords, v+1 );
-    Abc_TtCofactor0( pCofs[0], p.nWords, v );
-    Abc_TtCofactor1( pCofs[1], p.nWords, v );
-    Abc_TtMux( pResult, p.pTtElems[v], pCofs[1], pCofs[0], p.nWords );
-    // canonicize
-    //Extra_PrintHex( stdout, (unsigned*)pResult, pObj->nVars - 1 ); printf("\n");
-    Abc_TtCanonicizePerm( pResult, pObj.nVars - 1, pCanonPermC );
-    Abc_TtStretch6( pResult, Abc_MaxInt(6, pObj.nVars-1), p.nVars );
-    //Extra_PrintHex( stdout, (unsigned*)pResult, pObj->nVars - 1 ); printf("\n\n");
-    iFunc = Vec_MemHashInsert( p.vTtMem, pResult );
-    if iFunc < p.nObjs {
-        return 0; }
-    assert(iFunc == p.nObjs, "iFunc == p.nObjs");
-    pNew.nVars   = pObj.nVars - 1;
-    pNew.nNodes  = pObj.nNodes;
-    pNew.Groups  = Gem_GroupsDerive( pResult, pNew.nVars, pCofs[0], pCofs[1] );
-    pNew.Predec  = f;
-    pNew.History = (j << 4) | i;
-    Gem_PrintNode( p, iFunc, "Crossbar", 0 );
-    Gem_FuncCheckMajority( p, iFunc );
-
-    assert(p.nObjs < p.nObjsAlloc, "p.nObjs < p.nObjsAlloc");
-    if ++p.nObjs == p.nObjsAlloc {
-        Gem_ManRealloc( p ); }
-    return 0;
+func Gem_FuncReduce(p *Gem_Man_t, f, i, j int32) int32 {
+	obj := p.pObjs[f]
+	if i < 0 || i >= j || j >= obj.nVars {
+		panic("invalid majority variable identification")
+	}
+	result := slices.Clone(p.truths[f])
+	cof0, cof1 := make([]uint64, p.nWords), make([]uint64, p.nWords)
+	for v := j; v < obj.nVars-1; v++ {
+		util.Abc_TtSwapAdjacent(result, p.nWords, v)
+	}
+	for v := i; v < obj.nVars-2; v++ {
+		util.Abc_TtSwapAdjacent(result, p.nWords, v)
+	}
+	v := obj.nVars - 2
+	util.Abc_TtCofactor0p(cof0, result, p.nWords, v+1)
+	util.Abc_TtCofactor1p(cof1, result, p.nWords, v+1)
+	util.Abc_TtCofactor0(cof0, p.nWords, v)
+	util.Abc_TtCofactor1(cof1, p.nWords, v)
+	util.Abc_TtMux(result, p.pTtElems[v], cof1, cof0, p.nWords)
+	var perm [16]byte
+	canon.CanonicalizePermutation(result, obj.nVars-1, perm[:])
+	util.Abc_TtStretch6(result, max(6, obj.nVars-1), max(6, p.nVars))
+	next := Gem_Obj_t{nVars: obj.nVars - 1, nNodes: obj.nNodes, Groups: Gem_GroupsDerive(result, obj.nVars-1, cof0, cof1), Predec: f, History: j<<4 | i}
+	if gemInsert(p, result, next, "Crossbar") {
+		Gem_FuncCheckMajority(p, p.nObjs-1)
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gem_Enumerate(nVars int32, fDump int32, fVerbose int32) int32 {
-    var clk abctime  = Abc_Clock();
-    var p *Gem_Man_t  = Gem_ManAlloc( nVars, fVerbose );
-    var v int32;
-    var f int32;
-    var i int32;
-    var j int32;
-    var nObjsStop int32 = 1;
-    for  v = 1; v <= nVars-2; v++  {
-        // expand functions by adding a gate
-        var nObjsStopPrev int32  = nObjsStop;
-        nObjsStop = p.nObjs;
-        fmt.Printf("Expanding  var %2d (functions = %10d)  ", v, p.nObjs);
-        Abc_PrintTime( 0, "Time", Abc_Clock() - clk );
-        for  f = 0; f < nObjsStop; f++  {
-            if v == int32(p.pObjs[f].nVars) || (v > int32(p.pObjs[f].nVars) && f >= nObjsStopPrev) {
-                for  i = 0; i < v; i++  {
-                    if int32(p.pObjs[f].Groups) & (1 << i) {
-                        Gem_FuncExpand( p, f, i ); }
-                } }
-        }
-        // reduce functions by adding a crossbar
-        fmt.Printf("Connecting var %2d (functions = %10d)  ", v, p.nObjs);
-        Abc_PrintTime( 0, "Time", Abc_Clock() - clk );
-        for  f = nObjsStop; f < p.nObjs; f++  {
-            for  i = 0; i < int32(p.pObjs[f].nVars); i++  {
-                if int32(p.pObjs[f].Groups) & (1 << i) {
-                    for  j = i+1; j < int32(p.pObjs[f].nVars); j++  {
-                        if int32(p.pObjs[f].Groups) & (1 << j) {
-                            if Gem_FuncReduce( p, f, i, j ) != 0 {
-                                return Gem_ManFree( p ); } }
-                    } }
-            }
-        }
-    }
-    fmt.Printf("Finished          (functions = %10d)  ", p.nObjs);
-    Abc_PrintTime( 0, "Time", Abc_Clock() - clk );
-    if fDump != 0 { Vec_MemDumpTruthTables( p.vTtMem, "enum", nVars ); }
-    Gem_ManFree( p );
-    return 0;
+func gemEnumerate(p *Gem_Man_t, progress bool) {
+	started := time.Now()
+	stop := int32(1)
+	for v := int32(1); v <= p.nVars-2; v++ {
+		previous := stop
+		stop = p.nObjs
+		if progress {
+			fmt.Printf("Expanding  var %2d (functions = %10d)  Time = %v\n", v, p.nObjs, time.Since(started))
+		}
+		for f := int32(0); f < stop; f++ {
+			obj := p.pObjs[f]
+			if v == obj.nVars || v > obj.nVars && f >= previous {
+				for i := int32(0); i < v; i++ {
+					if obj.Groups>>i&1 != 0 {
+						Gem_FuncExpand(p, f, i)
+					}
+				}
+			}
+		}
+		if progress {
+			fmt.Printf("Connecting var %2d (functions = %10d)  Time = %v\n", v, p.nObjs, time.Since(started))
+		}
+		for f := stop; f < p.nObjs; f++ {
+			obj := p.pObjs[f]
+			for i := int32(0); i < obj.nVars; i++ {
+				if obj.Groups>>i&1 == 0 {
+					continue
+				}
+				for j := i + 1; j < obj.nVars; j++ {
+					if obj.Groups>>j&1 != 0 {
+						Gem_FuncReduce(p, f, i, j)
+					}
+				}
+			}
+		}
+	}
+	if progress {
+		fmt.Printf("Finished          (functions = %10d)  Time = %v\n", p.nObjs, time.Since(started))
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Gem_Enumerate(nVars, dump, verbose int32) int32 {
+	p := Gem_ManAlloc(nVars, verbose)
+	defer Gem_ManFree(p)
+	gemEnumerate(p, true)
+	if dump != 0 {
+		file, err := os.Create(fmt.Sprintf("tt_enum_%02d.txt", nVars))
+		if err != nil {
+			panic(err)
+		}
+		for _, truth := range p.truths {
+			for w := len(truth) - 1; w >= 0; w-- {
+				if _, err = fmt.Fprintf(file, "%016x", truth[w]); err != nil {
+					file.Close()
+					panic(err)
+				}
+			}
+			fmt.Fprintln(file)
+		}
+		if err = file.Close(); err != nil {
+			panic(err)
+		}
+	}
+	return 0
+}

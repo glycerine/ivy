@@ -313,3 +313,70 @@ including Enum and Macc, pass the combined race test in 9.398 seconds. Full
 `go -C abcgo test ./misc/extra` was rerun and now stops at the active
 `extraUtilMaj.go` draft. Remaining drafts are Maj, Misc, Mult, Path, Prime, Supp,
 and extraZddTrunc; no file has been excluded from the full package build.
+
+### Majority enumeration (`extraUtilMaj.go`)
+
+Ported all Gem manager/group/expansion/identification/enumeration APIs. The native
+manager owns truth slices and a hash map; objects grow on demand instead of
+reserving ten million entries. Uses the exact phase-preserving original
+`canon.CanonicalizePermutation` and util truth primitives. Dump output retains
+full-width hexadecimal truth words. Full package compilation now reaches Misc.
+
+Readability review: separated truth interning from expand/reduce transformations;
+kept predecessor/history/group metadata and original traversal order. Explicit
+little-endian byte comparison preserves the source memcmp placement ordering.
+Group removal retains the shortened group's boundary; tests document this
+non-obvious distinction from removing an arbitrary bit. No bitfields or unsafe
+pointer casts remain.
+
+Bug review: fixed the source's four-bit nVars field overflow at 16, allocation
+size doubling overflow, and reversed stretch for manager widths below six.
+Sub-six-variable functions still occupy one repeated 64-bit truth word. Copying
+an object before appending prevents slice-growth invalidation. Free is
+idempotent; group/dimension checks prevent negative shifts and invalid indices.
+
+Validation: compiled original extraUtilMaj.c with original dauCanon.c, comparing
+all truth words and all five metadata fields for every enumerated object at
+6/7/8 variables (9/26/146 objects). SHA256 is
+`ae9fa3827204b3b30afbbf26fc23c7919bf750868d41540850151e64c6528d70`.
+Exhaustive three-input symmetry groups, group boundary properties, majority
+expansion/identification/deduplication at widths 3..6, and 16-variable manager
+storage/lifecycle tests pass. Focused race test passes:
+`go -C abcgo/misc/extra test -race extraUtilMaj.go extraUtilMaj_test.go`.
+
+### Simple BDDs (`extraUtilMult.go`)
+
+Ported the full complemented-edge ROBDD manager: unique construction, direct
+mapped computed cache, AND/OR, marking/counting shared and separate root cones,
+path printing, and Gia diagnostics. Literal and insertion ordering match the
+original. Typed map keys replace hash-chain pointers, and sparse cache slots
+preserve the original replacement policy without mandatory dense allocation.
+Nodes grow lazily up to the requested hard limit. Gia adapters consume a neutral
+interface with complemented object-ID literals; Gia provides matching methods.
+
+Readability review: documented literal/else-edge invariants and isolated graph
+conversion from the BDD recursion. Structured node fields replace parallel raw
+arrays; literal complement propagation remains explicit. The original diagnostic
+named "Shared nodes" still invokes the original independent-cone sum API;
+the actual shared and separate count APIs are both retained and tested.
+
+Bug review: validate dimensions, literal references and topological AIG edges;
+fixed source mark-storage leak through ordinary Go ownership. Complementary
+operands reduce directly to zero. Terminal variable 255 bounds supported input
+counts to 254. Node limit checks happen before insertion; Free is idempotent.
+The graph boundary preserves input/output complement bits and reports unsupported
+or non-topological edges rather than substituting a result.
+
+Validation: all 65,536 pairs of three-variable functions produce exactly the
+same canonical literals and reachable counts as compiled original C, SHA256
+`ddf6c982094073310b2ad4621532ef2cd85979e691ac3b634bcfbccb86ada9d5`.
+Independent assignment evaluation checks all 256 functions. Shared/separate
+counting, mark restoration, path printing, complemented graph boundaries,
+constants, hard limits and malformed inputs have focused regressions. Race test:
+`go -C abcgo/misc/extra test -race extraUtilMult.go extraUtilMult_test.go`.
+
+Integration checkpoint after Maj/Mult: all completed native group tests pass
+`together` under the race detector (9.577 seconds). The full package was rerun
+and still fails first at `extraUtilMisc.go:113`; remaining active draft groups
+are Misc, Path, Prime, Supp, and extraZddTrunc. These remain visible product
+sources and have not been excluded from builds. No experiment tests were run.
