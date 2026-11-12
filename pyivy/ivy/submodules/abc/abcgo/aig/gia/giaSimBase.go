@@ -465,113 +465,10 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimQualityOne(p *Gia_Man_t, vPat *Vec_Int_t, fPoOnly int32) *Vec_Int_t {
-    var i int32;
-    var Id int32;
-    var Value int32;
-    var nWords int32 = Abc_Bit6WordNum( 1+Gia_ManCiNum(p) );
-    var vTemp *Vec_Wrd_t;
-    var vSims *Vec_Wrd_t;
-    var vSimsPi *Vec_Wrd_t = Vec_WrdStart( Gia_ManCiNum(p) * nWords );
-    var vRes *Vec_Int_t;
-    assert(Vec_IntSize(vPat) == Gia_ManCiNum(p), "Vec_IntSize(vPat) == Gia_ManCiNum(p)");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPat)) && (((Value) = Vec_IntEntry(vPat, i)), 1); i++  {
-        var pSim *word  = Vec_WrdEntryP( vSimsPi, i*nWords );
-        if Value != 0 {
-            Abc_TtFill( pSim, nWords ); }
-        Abc_TtXorBit( pSim, i+1 );
-    }
-    vTemp = p.vSimsPi;
-    p.vSimsPi = vSimsPi;
-    vSims = Gia_ManSimPatSim( p );
-    p.vSimsPi = vTemp;
-    if fPoOnly != 0 {
-        vRes = Vec_IntStart( Gia_ManCoNum(p) );
-        // inlining of macro Gia_ManForEachCoId
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
-            var pSim *word  = Vec_WrdEntryP( vSims, Id*nWords );
-            if pSim[0] & 1 {
-                Abc_TtNot( pSim, nWords ); }
-            Vec_IntWriteEntry( vRes, i, Abc_TtCountOnesVec(pSim, nWords) );
-        }
-        assert(Vec_IntSize(vRes) == Gia_ManCoNum(p), "Vec_IntSize(vRes) == Gia_ManCoNum(p)");
-    
-    } else {
-        vRes = Vec_IntStart( Gia_ManObjNum(p) );
-        // inlining of macro Gia_ManForEachAndId
-        for  Id = 0; (Id < p.nObjs); Id++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, Id)) {} else {
-            var pSim *word  = Vec_WrdEntryP( vSims, Id*nWords );
-            if pSim[0] & 1 {
-                Abc_TtNot( pSim, nWords ); }
-            Vec_IntWriteEntry( vRes, Id, Abc_TtCountOnesVec(pSim, nWords) );
-        }
-        }
-        assert(Vec_IntSize(vRes) == Gia_ManObjNum(p), "Vec_IntSize(vRes) == Gia_ManObjNum(p)");
-    }
-    Vec_WrdFree( vSims );
-    Vec_WrdFree( vSimsPi );
-    return vRes;
-}
-func Gia_SimQualityTest(p *Gia_Man_t) {
-    var vPat, vRes *Vec_Int_t;
-    var k int32;
-    var m int32;
-    var nMints int32 = (1 << Gia_ManCiNum(p));
-    assert(Gia_ManCiNum(p) <= 10, "Gia_ManCiNum(p) <= 10");
-    for  m = 0; m < nMints; m++  {
-        fmt.Printf("%d : ", m);
-        Extra_PrintBinary( os.Stdout, (unsigned*)&m, Gia_ManCiNum(p) );
-        fmt.Printf(" ");
-        vPat = Vec_IntAlloc( Gia_ManCiNum(p) );
-        for  k = 0; k < Gia_ManCiNum(p); k++  {
-            Vec_IntPush( vPat, (m >> k) & 1 );
-        }
-        vRes = Gia_SimQualityOne( p, vPat, 1 );
-        fmt.Printf("%d ", Vec_IntSum(vRes));
-        Vec_IntFree( vRes );
-        Vec_IntFree( vPat );
-        fmt.Printf("\n");
-    }
-}
-func Gia_SimGenerateStats(p *Gia_Man_t) *Vec_Int_t {
-    var vTotal *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var vRes, vPat *Vec_Int_t;
-    var i, k, Value int32;
-    Abc_Random(1);
-    for  i = 0; i < 1000; i++  {
-        vPat = Vec_IntAlloc( Gia_ManCiNum(p) );
-        for  k = 0; k < Gia_ManCiNum(p); k++  {
-            Vec_IntPush( vPat, Abc_Random(0) & 1 );
-        }
-        vRes = Gia_SimQualityOne( p, vPat, 0 );
-        assert(Vec_IntSize(vRes) == Gia_ManObjNum(p), "Vec_IntSize(vRes) == Gia_ManObjNum(p)");
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vRes)) && (((Value) = Vec_IntEntry(vRes, k)), 1); k++  {
-            Vec_IntAddToEntry( vTotal, k, Value );
-        }
-        Vec_IntFree( vRes );
-        Vec_IntFree( vPat );
-    }
-    //Vec_IntPrint( vTotal );
-    return vTotal;
-}   
-func Gia_SimComputeScore(p *Gia_Man_t, vTotal *Vec_Int_t, vThis *Vec_Int_t) float64 {
-    var TotalScore float64;
-    var i, Total, This int32; 
-    assert(Vec_IntSize(vTotal) == Vec_IntSize(vThis), "Vec_IntSize(vTotal) == Vec_IntSize(vThis)");
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  i = 0; (i < Vec_IntSize(vTotal)) && (((Total) = Vec_IntEntry(vTotal, i)), 1) && (((This) = Vec_IntEntry(vThis, i)), 1); i++  {
-        if Total == 0 { 
-            Total = 1; }
-        TotalScore += 1000.0*This/Total;
-    }
-    if TotalScore == 0 {
-        return 1.0;
-    } else {
-        return TotalScore/Gia_ManAndNum(p);
-    }
-}
+
+
+   
+
 func Gia_SimQualityPatternsMax(p *Gia_Man_t, vPat *Vec_Int_t, Iter int32, fVerbose int32, vStats *Vec_Int_t) int32 {
     var k int32;
     var MaxIn int32 = -1;
@@ -614,22 +511,8 @@ func Gia_SimQualityPatternsMax(p *Gia_Man_t, vPat *Vec_Int_t, Iter int32, fVerbo
     Vec_IntFree( vTries );
     return MaxIn;
 }
-func Gia_ManPatCollectOne(p *Gia_Man_t, vPatterns *Vec_Wrd_t, n int32, nWords int32) *Vec_Int_t {
-    var vPat *Vec_Int_t  = Vec_IntAlloc( Gia_ManCiNum(p) ); var k int32;
-    for  k = 0; k < Gia_ManCiNum(p); k++  {
-        Vec_IntPush( vPat, Abc_TtGetBit( Vec_WrdEntryP(vPatterns, k*nWords), n ) );
-    }
-    return vPat;
-}
-func Gia_ManPatUpdateOne(p *Gia_Man_t, vPatterns *Vec_Wrd_t, n int32, nWords int32, vPat *Vec_Int_t) {
-    var k, Value int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  k = 0; (k < Vec_IntSize(vPat)) && (((Value) = Vec_IntEntry(vPat, k)), 1); k++  {
-        var pSim *word  = Vec_WrdEntryP( vPatterns, k*nWords );
-        if Abc_TtGetBit(pSim, n) != Value {
-            Abc_TtXorBit( pSim, n ); }
-    }
-}
+
+
 func Gia_ManPatDistImprove(p *Gia_Man_t, fVerbose int32) {
     var n int32;
     var k int32;
