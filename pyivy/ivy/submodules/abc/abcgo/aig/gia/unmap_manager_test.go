@@ -27,3 +27,43 @@ func TestUnmapUsedTruth(t *testing.T) {
 	}
 	Unm_ManFree(p)
 }
+
+func TestUnmapRepeatedDecomposablePairs(t *testing.T) {
+	g := Gia_ManStart(12)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, x)
+	Gia_ManAppendCo(g, y)
+	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	for _, lut := range []struct {
+		id   int32
+		fans []int32
+	}{
+		{x >> 1, []int32{a >> 1, b >> 1}},
+		{y >> 1, []int32{a >> 1, b >> 1, c >> 1}},
+	} {
+		vec.Vec_IntWriteEntry(g.vMapping, int(lut.id), int32(vec.Vec_IntSize(g.vMapping)))
+		vec.Vec_IntPush(g.vMapping, int32(len(lut.fans)))
+		for _, fan := range lut.fans {
+			vec.Vec_IntPush(g.vMapping, fan)
+		}
+		vec.Vec_IntPush(g.vMapping, lut.id)
+	}
+	p := Unm_ManAlloc(g)
+	defer Unm_ManFree(p)
+	pairs := Unm_ManComputePairs(p, 0)
+	if vec.Vec_IntSize(pairs) != 6 {
+		t.Fatalf("expected two repeated pairs, got %v", vec.Vec_IntArray(pairs))
+	}
+	p.vUsed = Unm_ManFindUsedNodes(pairs, g.nObjs)
+	p.vId2Used = vec.Vec_IntStartFull(int(g.nObjs))
+	for i, id := range vec.Vec_IntArray(p.vUsed) {
+		vec.Vec_IntWriteEntry(p.vId2Used, int(id), int32(i))
+	}
+	p.vTruths = Unm_ManComputeTruths(p)
+	decomp := Unm_ManCollectDecomp(p, pairs, 0)
+	if vec.Vec_IntSize(decomp) != 6 {
+		t.Fatalf("expected two decomposable pairs, got %v", vec.Vec_IntArray(decomp))
+	}
+}
