@@ -1805,3 +1805,94 @@ Regression tests use both real headers and verify IBM_WATC, IBMPC and BPI remain
 in the template. Existing Glucose tests and guard-boundary tests continue to pass.
 Library/CLI tests pass; experiments excluded. Installed prototype-54. Existing
 templates are still not overwritten automatically.
+
+
+## Prototype 55: decimal and scientific literal defines
+
+Extend the existing numeric #define pass to complete decimal/scientific literals:
+1.15, .5, 1., 1e-3, 2.5E+12, and signed forms become untyped Go constants while
+preserving their textual values and comments. C f/F suffixes become explicit
+float32 constants. Long-double suffixes, malformed literals, expressions and
+function macros remain for their existing handling; no float64 rounding step is
+introduced into the translator. Existing integer suffix behavior is unchanged.
+
+Tests type-check the generated constants (including exact rational values and
+float32 typing), cover malformed/expression/string forms, preserve opaque regions,
+check function metadata, and verify the actual REO_REORDER_LIMIT in reo.h.
+Library/CLI tests pass; experiments excluded. Installed prototype-55. Regenerate
+output files to apply the new literal conversion.
+
+
+## Prototype 56: short declarations use int16
+
+Add short -> int16 to the shared C-to-Go type mapping. This fixes reo_unit's
+lev, TopRef, TopRefNew and n fields and consistently handles short parameters,
+returns, pointers, globals, locals and arrays. Scalar casts already used int16.
+Regression tests cover the actual reo.h output and the shared declaration paths.
+Library/CLI tests pass; experiments excluded. Installed prototype-56.
+
+
+## Prototype 57: macro results, condition-only loops and string defines
+
+Per the user's updated macro policy, every generated macro function has a result
+(default int, or the explicitly configured result type). Expression replacements
+lose only parentheses enclosing their whole value and receive a return statement.
+C cast/grouping parentheses inside the value remain. Original macro comments are
+unchanged. Leading comments remain before return so embedded newlines cannot
+insert a Go semicolon between return and its operand. Comma expressions evaluate
+earlier operands as ordered statements and return their final value. Statement-
+style/empty macros retain their statements and append a clearly marked placeholder
+return 0; no invalid return-for/return-if or anonymous-function adapter is emitted.
+
+For headers with empty init and post clauses, remove both semicolons and extra
+whitespace: for ; condition; becomes for condition, and for ;; becomes for {}.
+Keep comments and preserve either nonempty init or post clause. The rule applies
+to ordinary functions and generated macros; actual reoSift.c is regression-tested.
+
+Object-like quoted string defines become const declarations with literal spelling
+and comments preserved. Adjacent C string literals become Go concatenation. Do not
+misclassify char/wide literals, function macros or general expressions as ordinary
+string constants. Unknown preprocessor branches remain opaque.
+
+Tests cover the actual Unit_Regular macro, typed/default results, statement macros,
+comment placement, comma evaluation, numeric/string constant cross-talk, literals
+and escapes, loop runtime behavior, function metadata and the actual REO sources.
+Only library and CLI tests are run; experiments remain excluded.
+
+Validation: library and CLI tests pass (`go -C starting-point test . ./cmd/starting-point`).
+The configured full ABC translation processed 1625 files with 0 source-preserving
+fallbacks in 118.35 seconds, in /tmp/starting-point-v57-src. Verified the emitted
+Unit_Regular return and reoSift condition-only loop at the reported locations.
+Installed prototype-57; existing user output is unchanged until regeneration.
+
+### Prototype 58: control statements after labels
+
+Reproduced the missing braces at reoShuffle.c's finish label with a minimal
+failing unit test before changing the implementation. The statement walker had
+treated the label and following if as one ordinary statement through its first
+semicolon. Recognize a label prefix and recursively process its statement,
+preserving labels and comments while adding the required control-flow braces.
+
+Validation: the minimal test now passes, as do regression checks for stacked
+labels with nested if/for/else and translation of the actual reoShuffle.c cleanup.
+Library and CLI tests pass; experiments are excluded. Existing out/ is left
+unchanged and must be regenerated to receive the fix.
+
+### Prototype 59: preserve other transformations after named labels
+
+The bracing fix alone was insufficient: red comparison tests showed that named
+labels also prevented local declarations (including arrays and initializers),
+whole-statement ternaries and discarded comma expressions from being lowered.
+Added shared token-based label-boundary recognition to these passes and the
+statement walker. Labels and comments remain in place; ternary colons, bitfields
+and C++ scope operators are not treated as label boundaries.
+
+Regression coverage compares translation with and without stacked labels for
+21 statement forms: declarations, pointers, arrays, aggregates, local statics,
+ternary assignments/returns/initializers, comma expressions, control flow,
+assertions, printf and casts. This checks that labels do not change the existing
+transformation result, without claiming unsupported C constructs now compile.
+Boundary tests also cover labels after control headers and non-label colons.
+Validation uses library and CLI tests only; experiments and existing out/ are
+untouched.
+Library and CLI tests pass; installed prototype-59. Regenerate output to apply.

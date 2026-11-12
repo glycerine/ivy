@@ -93,9 +93,14 @@ func lowerConditionals(body string) (string, error) {
 	}
 	mask := Mask(ts)
 	var edits []Edit
+	labelEnds := statementLabelEnds(ts)
 	start, depth := 0, 0
 	for i, c := range mask {
 		switch c {
+		case ':':
+			if depth == 0 && labelEnds[i+1] {
+				start = i + 1
+			}
 		case '(', '[':
 			depth++
 		case ')', ']':

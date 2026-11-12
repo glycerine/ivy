@@ -35,7 +35,7 @@ func TestPackageAndMacroFunctions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"package example\n", "func twice(x int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n((x) + (x))\n}", "func choose(x int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n((x)>0 ? /* yes */ (x) : /* no */ -(x))\n}"} {
+	for _, want := range []string{"package example\n", "func twice(x int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\nreturn (x) + (x)\n}", "func choose(x int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\nreturn (x)>0 ? /* yes */ (x) : /* no */ -(x)\n}"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q in %s", want, r.Draft)
 		}
@@ -49,7 +49,7 @@ func TestPackageAndMacroFunctions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(typed.Draft, "func twice(x uint32) uint32 {\nreturn ((x)+(x));\n}") {
+	if !strings.Contains(typed.Draft, "func twice(x uint32) uint32 {\nreturn (x)+(x)\n}") {
 		t.Fatal(typed.Draft)
 	}
 }
@@ -111,7 +111,7 @@ func TestIteratorMacroMechanicalFunction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "func vec_uint_foreach(vec int, entry int, i int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n" + "for " + strings.TrimSuffix(strings.TrimPrefix(body, "for ("), ")") + " {}\n}"
+	want := "func vec_uint_foreach(vec int, entry int, i int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\n" + "for " + strings.TrimSuffix(strings.TrimPrefix(body, "for ("), ")") + " {}\nreturn 0 //TODO: statement-style macro; review placeholder result.\n}"
 	if !strings.Contains(r.Draft, want) {
 		t.Fatal(r.Draft)
 	}
@@ -120,14 +120,21 @@ func TestIteratorMacroMechanicalFunction(t *testing.T) {
 	}
 }
 
-func TestMacroReplacementCopiedVerbatim(t *testing.T) {
+func TestMacroReplacementTokensPreserved(t *testing.T) {
 	for _, body := range []string{"do { /* keep */ x++; } while (0)", "x ## suffix", "#x", "call(x)", "", "x ? yes() : no()"} {
 		r, err := Analyze("macros/file.h", "#define M(x) "+body+"\n")
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(r.Draft, "func M(x int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n"+body+"\n}") {
-			t.Fatalf("replacement changed: %q\n%s", body, r.Draft)
+		if !strings.Contains(r.Draft, "func M(x int) int {") {
+			t.Fatal(r.Draft)
+		}
+		if body == "" || strings.HasPrefix(body, "do ") {
+			if !strings.Contains(r.Draft, body+"\nreturn 0") {
+				t.Fatal(r.Draft)
+			}
+		} else if !strings.Contains(r.Draft, "return "+body) {
+			t.Fatal(r.Draft)
 		}
 	}
 }

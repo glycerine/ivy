@@ -23,12 +23,13 @@ func lowerDeclarations(source string, types map[string]bool, allInitializers boo
 	if err != nil {
 		return "", err
 	}
+	labelEnds := statementLabelEnds(ts)
 	var edits []Edit
 	for i, t := range ts {
 		if t.Kind != "word" || !isDeclarationType(t.Text, types) {
 			continue
 		}
-		if i == 0 || (ts[i-1].Text != "{" && ts[i-1].Text != "}" && ts[i-1].Text != ";") {
+		if i == 0 || (ts[i-1].Text != "{" && ts[i-1].Text != "}" && ts[i-1].Text != ";" && !labelEnds[ts[i-1].End]) {
 			continue
 		}
 		// Only statement declarations; for-header declarations need separate lowering.

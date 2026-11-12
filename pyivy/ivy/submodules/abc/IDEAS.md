@@ -63,8 +63,9 @@ The original examples remain useful as regression targets.
 - [x] Ordinary file/local enum definitions, tag references and separate tag aliases
   convert; explicit resets and implicit successors retain their values. C++
   scoped enums and trailing variable declarators remain unsupported.
-- [x] Expression macros with supplied result types receive return statements;
-  untyped expression macros receive specific result-type repair guidance.
+- [x] Expression macros return values with an int result placeholder unless a
+  result type is supplied. Whole-expression parentheses are removed; statement-
+  style macros use a marked return 0 for review.
 - [x] Whole-object memset(p, 0, sizeof(T)) becomes *p = T{} only when p is a known
   pointer to a known struct of exactly that type. Unknown layouts remain intact.
 - [x] Union, pointer-cast, sizeof, allocation, thread and unsupported control-flow

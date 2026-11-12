@@ -24,7 +24,7 @@ func TestIntegerDefines(t *testing.T) {
 }
 
 func TestNonLiteralDefinesUnchanged(t *testing.T) {
-	source := "#define F(x) x\n#define EMPTY\n#define EXPR (1 << 4)\n#define TEXT \"123u\"\n#define INVALID 09u\n// #define FAKE 4u\n"
+	source := "#define F(x) x\n#define EMPTY\n#define EXPR (1 << 4)\n#define INVALID 09u\n// #define FAKE 4u\n"
 	got, err := integerDefines(source)
 	if err != nil {
 		t.Fatal(err)

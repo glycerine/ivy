@@ -298,3 +298,22 @@ header-specific marker definitions used by irregular ABC headers (including
 markers defined before their later guard test). Valued or unrelated feature
 macros remain configuration candidates; this filtering does not select source
 branches automatically.
+
+
+Object-like numeric defines support integer, decimal and scientific literals.
+For example, `#define REO_REORDER_LIMIT 1.15` becomes
+`const REO_REORDER_LIMIT = 1.15`, and `#define EPSILON 1e-9` becomes
+`const EPSILON = 1e-9`. An f/F suffix produces a float32 constant; unsuffixed
+floating literals remain untyped. Comments and original numeric spelling are
+preserved. Long-double literals and nonliteral expressions remain for review.
+
+
+Function macros now default to an int result and return expression values after
+removing whole-expression parentheses. Explicit MacroTypes.Result overrides the
+placeholder. Statement-style macros append a marked return 0 for downstream
+result/control-flow repair. The original macro remains in a comment.
+
+Empty init/post for clauses simplify to condition-only loops (or `for {}` when
+all clauses are empty). Object-like quoted string defines become Go constants;
+adjacent literals use `+`. Literal spelling and comments are preserved, so C-only
+escape conventions can still need downstream repair.

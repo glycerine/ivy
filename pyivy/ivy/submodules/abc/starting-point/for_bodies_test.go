@@ -38,7 +38,7 @@ func TestNullLoopInFunctionDraft(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "for ;; {}") {
+	if !strings.Contains(r.Draft, "for {}") {
 		t.Fatal(r.Draft)
 	}
 }

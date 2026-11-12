@@ -75,6 +75,7 @@ func lowerCommaExpressions(source string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	labelEnds := statementLabelEnds(ts)
 	var edits []Edit
 	for i, t := range ts {
 		if t.Text == "for" {
@@ -101,7 +102,7 @@ func lowerCommaExpressions(source string) (string, error) {
 				}
 			}
 		}
-		if i > 0 && t.Kind == "word" && i+1 < len(ts) && (ts[i-1].Text == "{" || ts[i-1].Text == ";" || ts[i-1].Text == "}") && (ts[i+1].Text == "=" || ts[i+1].Text == "(") && t.Text != "if" && t.Text != "for" && t.Text != "switch" && t.Text != "while" {
+		if i > 0 && t.Kind == "word" && i+1 < len(ts) && (ts[i-1].Text == "{" || ts[i-1].Text == ";" || ts[i-1].Text == "}" || labelEnds[ts[i-1].End]) && (ts[i+1].Text == "=" || ts[i+1].Text == "(") && t.Text != "if" && t.Text != "for" && t.Text != "switch" && t.Text != "while" {
 			end := i + 1
 			for end < len(ts) && ts[end].Text != ";" && ts[end].Text != "{" && ts[end].Text != "}" {
 				if close, ok := pairs[end]; ok && close > end {
@@ -116,7 +117,7 @@ func lowerCommaExpressions(source string) (string, error) {
 			}
 		}
 		// Parenthesized, discarded comma expressions at statement boundaries.
-		if t.Text != "(" || i == 0 || (ts[i-1].Text != "{" && ts[i-1].Text != ";" && ts[i-1].Text != "}") {
+		if t.Text != "(" || i == 0 || (ts[i-1].Text != "{" && ts[i-1].Text != ";" && ts[i-1].Text != "}" && !labelEnds[ts[i-1].End]) {
 			continue
 		}
 		end := pairs[i]

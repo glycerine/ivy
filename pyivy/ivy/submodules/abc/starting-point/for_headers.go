@@ -46,3 +46,59 @@ func unwrapControlHeaders(source string) (string, error) {
 	}
 	return ApplyEdits(source, edits)
 }
+
+// simplifyConditionOnlyFor drops empty init/post clauses, retaining trivia.
+func simplifyConditionOnlyFor(source string) (string, error) {
+	ts, pairs, err := significantTokens(source)
+	if err != nil {
+		return "", err
+	}
+	var edits []Edit
+	for i, t := range ts {
+		if t.Text != "for" {
+			continue
+		}
+		start, end := i+1, i+1
+		var semis []int
+		for end < len(ts) && ts[end].Text != "{" {
+			if ts[end].Text == ";" {
+				semis = append(semis, end)
+			}
+			if close, ok := pairs[end]; ok && close > end {
+				end = close
+			}
+			end++
+		}
+		if end >= len(ts) || len(semis) != 2 || semis[0] != start || semis[1] != end-1 {
+			continue
+		}
+		first, last := semis[0], semis[1]
+		if first+1 == last {
+			// for (;;) is simply for {}, but comments in the empty clauses survive.
+			gap := source[t.End:ts[end].Start]
+			if !strings.Contains(gap, "/*") && !strings.Contains(gap, "//") {
+				edits = append(edits, Edit{t.End, ts[end].Start, " "})
+				continue
+			}
+		}
+		leftStart, leftEnd := ts[first].Start, ts[first].End
+		rightStart, rightEnd := ts[last].Start, ts[last].End
+		if strings.TrimSpace(source[t.End:leftStart]) == "" && first+1 < last && strings.TrimSpace(source[leftEnd:ts[first+1].Start]) == "" {
+			leftStart = t.End
+			leftEnd = ts[first+1].Start
+		}
+		if strings.TrimSpace(source[rightEnd:ts[end].Start]) == "" && first+1 < last && strings.TrimSpace(source[ts[last-1].End:rightStart]) == "" {
+			rightStart = ts[last-1].End
+			rightEnd = ts[end].Start
+		}
+		leftText, rightText := "", ""
+		if leftStart == t.End {
+			leftText = " "
+		}
+		if rightEnd == ts[end].Start {
+			rightText = " "
+		}
+		edits = append(edits, Edit{leftStart, leftEnd, leftText}, Edit{rightStart, rightEnd, rightText})
+	}
+	return ApplyEdits(source, edits)
+}

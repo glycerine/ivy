@@ -156,7 +156,7 @@ int main(void) { item *p; p=ABC_CALLOC(item,1); p->data[1]=ADD(2,3); printf("%d\
 		t.Fatal(err)
 	}
 	output, _ := runLibraryProgram(t, r.Draft)
-	if output != "5\n" || !strings.Contains(r.Draft, "return ((a)+(b));") {
+	if output != "5\n" || !strings.Contains(r.Draft, "return (a)+(b)") {
 		t.Fatal(output, r.Draft)
 	}
 }

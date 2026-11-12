@@ -88,6 +88,8 @@ func goType(s string) string {
 		return "uint32"
 	case "int":
 		return "int32"
+	case "short":
+		return "int16"
 	case "void":
 		return ""
 	case "sdbl_t":
@@ -397,12 +399,15 @@ func rewriteBody(body string, localTypes map[string]bool) (string, error) {
 	var edits []Edit
 	covered := map[int]bool{}
 	statementStart := map[int]bool{}
+	labelEnds := statementLabelEnds(ts)
+	afterLabel := false
 	previous, beforePrevious := "", ""
 	for _, tok := range ts {
 		if tok.Kind == "space" || tok.Kind == "comment" {
 			continue
 		}
-		statementStart[tok.Start] = previous == "" || previous == "{" || previous == "}" || previous == ";" || (previous == "(" && beforePrevious == "for")
+		statementStart[tok.Start] = afterLabel || previous == "" || previous == "{" || previous == "}" || previous == ";" || (previous == "(" && beforePrevious == "for")
+		afterLabel = labelEnds[tok.End]
 		beforePrevious, previous = previous, tok.Text
 	}
 	for _, loc := range declaration.FindAllStringSubmatchIndex(mask, -1) {

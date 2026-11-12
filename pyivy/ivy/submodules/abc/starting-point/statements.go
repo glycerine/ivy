@@ -19,11 +19,17 @@ func braceStatements(source string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	labelEnds := statementLabelEnds(ts)
 	var edits []Edit
 	var statement func(int) (int, bool)
 	statement = func(i int) (int, bool) {
 		if i >= len(ts) {
 			return i, false
+		}
+		// A label prefixes a statement; it must not hide that statement's
+		// control flow from the walker. Recursion also handles stacked labels.
+		if i+1 < len(ts) && labelEnds[ts[i+1].End] {
+			return statement(i + 2)
 		}
 		switch ts[i].Text {
 		case "{":

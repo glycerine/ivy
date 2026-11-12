@@ -9,9 +9,11 @@ import (
 var objectDefine = regexp.MustCompile(`^#\s*define[ \t]+([A-Za-z_]\w*)([ \t]+)([\s\S]*)$`)
 var integerLiteral = regexp.MustCompile(`^\s*([+-]?\s*(?:0[xX][0-9a-fA-F]+|0[bB][01]+|0[0-7]*|[1-9][0-9]*))((?:[uU](?:ll|LL|[lL])?|(?:ll|LL|[lL])[uU]?)?)\s*$`)
 
+var decimalFloatLiteral = regexp.MustCompile(`^\s*([+-]?\s*(?:(?:[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+))([fF]?)\s*$`)
+
 // integerDefines runs after C qualifier stripping so generated Go const keywords
-// survive. Only complete integer literal replacements are converted; expressions
-// and function-like macros are left for their respective passes.
+// survive. Complete integer, decimal, scientific and string literals convert;
+// expressions and function-like macros are left for their respective passes.
 func integerDefines(source string) (string, error) {
 	if !strings.Contains(source, "#") {
 		return source, nil
@@ -34,16 +36,29 @@ func integerDefines(source string) (string, error) {
 		if err != nil {
 			continue
 		}
+		if stringValue, ok := stringDefineValue(value, tokens); ok {
+			edits = append(edits, Edit{t.Start, t.End, "const " + parts[1] + " =" + parts[2] + stringValue})
+			continue
+		}
 		literal := integerLiteral.FindStringSubmatchIndex(Mask(tokens))
-		if literal == nil {
-			continue
+		typ, replacement := "", ""
+		if literal != nil {
+			var ok bool
+			typ, replacement, ok = suffixedInteger(value[literal[2]:literal[3]], value[literal[4]:literal[5]])
+			if !ok {
+				continue
+			}
+		} else {
+			literal = decimalFloatLiteral.FindStringSubmatchIndex(Mask(tokens))
+			if literal == nil {
+				continue
+			}
+			replacement = value[literal[2]:literal[3]]
+			if value[literal[4]:literal[5]] != "" {
+				typ = "float32"
+			}
 		}
-		suffix := value[literal[4]:literal[5]]
-		number := value[literal[2]:literal[3]]
-		typ, replacement, ok := suffixedInteger(number, suffix)
-		if !ok {
-			continue
-		}
+
 		value = value[:literal[2]] + replacement + value[literal[5]:]
 		if typ != "" {
 			typ = " " + typ
@@ -94,4 +109,28 @@ func suffixedInteger(number, suffix string) (typ, replacement string, ok bool) {
 		replacement = strconv.FormatUint(wrapped, 10)
 	}
 	return typ, replacement, true
+}
+
+// Adjacent C string literals concatenate. Insert + between tokens, leaving
+// original literal spelling and intervening comments untouched.
+func stringDefineValue(source string, tokens []Token) (string, bool) {
+	var literals []Token
+	for _, t := range tokens {
+		if t.Kind == "space" || t.Kind == "comment" {
+			continue
+		}
+		if t.Kind != "string" || !strings.HasPrefix(t.Text, `"`) {
+			return "", false
+		}
+		literals = append(literals, t)
+	}
+	if len(literals) == 0 {
+		return "", false
+	}
+	var edits []Edit
+	for _, t := range literals[:len(literals)-1] {
+		edits = append(edits, Edit{t.End, t.End, " +"})
+	}
+	value, err := ApplyEdits(source, edits)
+	return value, err == nil
 }
