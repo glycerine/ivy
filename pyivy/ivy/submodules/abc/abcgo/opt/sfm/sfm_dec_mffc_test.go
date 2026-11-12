@@ -80,7 +80,7 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if err != nil || changed != 1 || !reflect.DeepEqual(coreTable(t, p), want) {
 		t.Fatalf("reverse area driver: changed=%d err=%v", changed, err)
 	}
-	pars.MoreEffort = true
+	pars.DecMax = 2
 	if _, err := sfmOptimizeMappedArea(p, pars, prepared, handles); err == nil {
 		t.Fatal("unsupported option was silently ignored")
 	}

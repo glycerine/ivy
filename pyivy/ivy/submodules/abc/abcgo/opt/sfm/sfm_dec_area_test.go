@@ -20,6 +20,23 @@ func TestSfmDecomposeAreaNode(t *testing.T) {
 			t.Fatalf("assignment %d", a)
 		}
 	}
+	for _, forced := range []int{0, 1} {
+		truth, support, order, ok := sfmDecomposeAreaNodeForced(p, 3, pars, forced)
+		if !ok {
+			t.Fatalf("forced divisor %d failed", forced)
+		}
+		for a := 0; a < 4; a++ {
+			index := 0
+			for i, id := range support {
+				if a&(1<<uint(order[id])) != 0 {
+					index |= 1 << uint(i)
+				}
+			}
+			if (truth[0]&(1<<uint(index)) != 0) != (a == 3) {
+				t.Fatalf("forced divisor %d assignment %d", forced, a)
+			}
+		}
+	}
 	pars.WinSizeMax = 1
 	if _, _, _, ok := sfmDecomposeAreaNode(p, 3, pars); ok {
 		t.Fatal("oversized window accepted")

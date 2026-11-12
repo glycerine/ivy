@@ -2,14 +2,21 @@ package sfm
 
 // sfmDecomposeWindow derives a local replacement from a prepared gate window.
 func sfmDecomposeWindow(window *sfmDecWindow, gateCNFs [][][]int, divisors int, pars Sfm_Par_t, care, target uint64, sim []uint64, fallback []int) ([]uint64, []int32, bool) {
+	return sfmDecomposeWindowForced(window, gateCNFs, divisors, pars, care, target, sim, fallback, -1)
+}
+
+func sfmDecomposeWindowForced(window *sfmDecWindow, gateCNFs [][][]int, divisors int, pars Sfm_Par_t, care, target uint64, sim []uint64, fallback []int, forced int) ([]uint64, []int32, bool) {
 	if divisors < 0 || divisors > window.pivot || len(sim) != divisors || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX {
 		panic("sfm: invalid decomposition parameters")
+	}
+	if forced < -1 || forced >= divisors {
+		panic("sfm: invalid forced divisor")
 	}
 	solver, ok := window.prepareSolver(gateCNFs)
 	if !ok {
 		return nil, nil, false
 	}
-	s := sfmDecSearch{solver: solver, target: window.pivot, limit: pars.VarMax, conflictLimit: pars.BTLimit, useAndOr: pars.UseAndOr, fallback: fallback, forced: -1}
+	s := sfmDecSearch{solver: solver, target: window.pivot, limit: pars.VarMax, conflictLimit: pars.BTLimit, useAndOr: pars.UseAndOr, fallback: fallback, forced: forced}
 	s.patterns.setupSimulation(care, target, sim, pars.UseSim)
 	var masks [2][SFM_SIM_WORDS]uint64
 	for set := 0; set < 2; set++ {

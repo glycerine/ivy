@@ -11,7 +11,7 @@ func sfmOptimizeMappedArea(p *Sfm_Ntk_t, pars Sfm_Par_t, library *Sfm_Lib_t, han
 	if p == nil || library == nil || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX || pars.MffcMax < 1 {
 		return 0, fmt.Errorf("sfm: invalid mapped area parameters")
 	}
-	if pars.MoreEffort || pars.DecMax > 1 {
+	if pars.DecMax > 1 {
 		return 0, fmt.Errorf("sfm: requested mapped area option is not yet implemented")
 	}
 	if err := p.refresh(); err != nil {
@@ -34,6 +34,15 @@ func sfmOptimizeMappedArea(p *Sfm_Ntk_t, pars Sfm_Par_t, library *Sfm_Lib_t, han
 			}
 		}
 		gates, fanins, order, cone, ok := sfmFindAreaNodeMatch(p, id, pars, library)
+		if !ok && pars.MoreEffort {
+			window := sfmExtractAreaWindow(p, id, pars)
+			for i := len(window.mffcInputs) - 1; i >= 0; i-- {
+				gates, fanins, order, cone, ok = sfmFindAreaNodeMatchForced(p, id, pars, library, window.mffcInputs[i])
+				if ok {
+					break
+				}
+			}
+		}
 		if ok && sfmInsertAreaMatch(p, id, gates, fanins, order, cone, handles) {
 			changed++
 			return len(p.Fanins) - p.Pos - 1

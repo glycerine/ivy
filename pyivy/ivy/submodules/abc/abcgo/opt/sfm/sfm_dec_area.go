@@ -4,6 +4,10 @@ package sfm
 // the SAT-backed decomposition search. The returned support contains local
 // window indices; order translates them back to network IDs.
 func sfmDecomposeAreaNode(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) (truth []uint64, support []int32, order []int, ok bool) {
+	return sfmDecomposeAreaNodeForced(p, pivot, pars, -1)
+}
+
+func sfmDecomposeAreaNodeForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, forcedNode int) (truth []uint64, support []int32, order []int, ok bool) {
 	w := sfmExtractAreaWindow(p, pivot, pars)
 	if pars.WinSizeMax > 0 && len(w.order) > pars.WinSizeMax {
 		return nil, nil, nil, false
@@ -50,6 +54,14 @@ func sfmDecomposeAreaNode(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) (truth []uint
 	for i, id := range w.mffcInputs {
 		fallback[i] = local[id]
 	}
-	truth, support, ok = sfmDecomposeWindow(window, cnfs, w.divisors, pars, care, normal[window.pivot], normal[:w.divisors], fallback)
+	forced := -1
+	if forcedNode >= 0 {
+		var found bool
+		forced, found = local[forcedNode]
+		if !found || forced >= w.divisors {
+			return nil, nil, nil, false
+		}
+	}
+	truth, support, ok = sfmDecomposeWindowForced(window, cnfs, w.divisors, pars, care, normal[window.pivot], normal[:w.divisors], fallback, forced)
 	return truth, support, w.order, ok
 }

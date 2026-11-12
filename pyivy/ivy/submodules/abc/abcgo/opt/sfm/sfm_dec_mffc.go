@@ -42,7 +42,11 @@ func sfmMappedMffcArea(p *Sfm_Ntk_t, pivot int, cut []int) (int, []int) {
 // sfmFindAreaNodeMatch returns a library implementation if decomposition reduces
 // the true removable cone area. Gate fanins remain local window indices.
 func sfmFindAreaNodeMatch(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_t) (gates []int32, fanins [][]int32, order, cone []int, ok bool) {
-	truth, support, order, ok := sfmDecomposeAreaNode(p, pivot, pars)
+	return sfmFindAreaNodeMatchForced(p, pivot, pars, lib, -1)
+}
+
+func sfmFindAreaNodeMatchForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_t, forced int) (gates []int32, fanins [][]int32, order, cone []int, ok bool) {
+	truth, support, order, ok := sfmDecomposeAreaNodeForced(p, pivot, pars, forced)
 	if !ok {
 		return nil, nil, nil, nil, false
 	}
