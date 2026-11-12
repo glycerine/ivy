@@ -8,11 +8,8 @@ import (
 
 // sfmOptimizeMappedArea runs the native mapped-network area pass.
 func sfmOptimizeMappedArea(p *Sfm_Ntk_t, pars Sfm_Par_t, library *Sfm_Lib_t, handles []*mio.Mio_Gate_t) (int, error) {
-	if p == nil || library == nil || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX || pars.MffcMax < 1 {
+	if p == nil || library == nil || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX || pars.MffcMax < 1 || pars.DecMax < 0 || pars.DecMax > SFM_DEC_MAX {
 		return 0, fmt.Errorf("sfm: invalid mapped area parameters")
-	}
-	if pars.DecMax > 1 {
-		return 0, fmt.Errorf("sfm: requested mapped area option is not yet implemented")
 	}
 	if err := p.refresh(); err != nil {
 		return 0, err

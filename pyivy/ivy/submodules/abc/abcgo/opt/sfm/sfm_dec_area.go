@@ -8,9 +8,31 @@ func sfmDecomposeAreaNode(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) (truth []uint
 }
 
 func sfmDecomposeAreaNodeForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, forcedNode int) (truth []uint64, support []int32, order []int, ok bool) {
+	session, w, ok := sfmPrepareAreaSession(p, pivot, pars)
+	if !ok {
+		return nil, nil, nil, false
+	}
+	forced := -1
+	if forcedNode >= 0 {
+		forced = -1
+		for i, id := range w.order[:w.divisors] {
+			if id == forcedNode {
+				forced = i
+				break
+			}
+		}
+		if forced < 0 {
+			return nil, nil, nil, false
+		}
+	}
+	truth, support, ok = session.attempt(forced)
+	return truth, support, w.order, ok
+}
+
+func sfmPrepareAreaSession(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) (*sfmDecSearch, sfmAreaWindow, bool) {
 	w := sfmExtractAreaWindow(p, pivot, pars)
 	if pars.WinSizeMax > 0 && len(w.order) > pars.WinSizeMax {
-		return nil, nil, nil, false
+		return nil, w, false
 	}
 	window, cnfs := sfmDecWindowFromNetwork(p, w.order, w.roots, w.boundary, pivot, w.divisors)
 	normal, flipped := make([]uint64, len(w.order)), make([]uint64, len(w.order))
@@ -54,14 +76,6 @@ func sfmDecomposeAreaNodeForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, forcedN
 	for i, id := range w.mffcInputs {
 		fallback[i] = local[id]
 	}
-	forced := -1
-	if forcedNode >= 0 {
-		var found bool
-		forced, found = local[forcedNode]
-		if !found || forced >= w.divisors {
-			return nil, nil, nil, false
-		}
-	}
-	truth, support, ok = sfmDecomposeWindowForced(window, cnfs, w.divisors, pars, care, normal[window.pivot], normal[:w.divisors], fallback, forced)
-	return truth, support, w.order, ok
+	session, ok := sfmNewDecSession(window, cnfs, w.divisors, pars, care, normal[window.pivot], normal[:w.divisors], fallback)
+	return session, w, ok
 }

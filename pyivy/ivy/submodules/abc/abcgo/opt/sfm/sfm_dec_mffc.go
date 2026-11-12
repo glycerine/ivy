@@ -46,23 +46,57 @@ func sfmFindAreaNodeMatch(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_
 }
 
 func sfmFindAreaNodeMatchForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_t, forced int) (gates []int32, fanins [][]int32, order, cone []int, ok bool) {
-	truth, support, order, ok := sfmDecomposeAreaNodeForced(p, pivot, pars, forced)
+	session, window, ok := sfmPrepareAreaSession(p, pivot, pars)
 	if !ok {
 		return nil, nil, nil, nil, false
 	}
-	cut := make([]int, len(support))
-	for i, id := range support {
-		cut[i] = order[id]
+	order = window.order
+	forceIndex := -1
+	if forced >= 0 {
+		for i, id := range order[:window.divisors] {
+			if id == forced {
+				forceIndex = i
+				break
+			}
+		}
+		if forceIndex < 0 {
+			return nil, nil, nil, nil, false
+		}
 	}
-	oldArea, cone := sfmMappedMffcArea(p, pivot, cut)
-	if len(support) < 2 {
-		gates, fanins = Sfm_LibImplementSimple(lib, truth, support)
-		return gates, fanins, order, cone, true
+	bestGain, bestID := -1, int32(-1)
+	var bestSupport []int32
+	previous := 0
+	for i := 0; i < max(1, pars.DecMax); i++ {
+		if len(session.history) > previous {
+			session.history = session.history[:previous]
+		}
+		previous = len(session.history) + 1
+		truth, support, found := session.attempt(forceIndex)
+		forceIndex = -1
+		if !found {
+			continue
+		}
+		cut := make([]int, len(support))
+		for j, id := range support {
+			cut[j] = order[id]
+		}
+		oldArea, candidateCone := sfmMappedMffcArea(p, pivot, cut)
+		if len(support) < 2 {
+			gates, fanins = Sfm_LibImplementSimple(lib, truth, support)
+			return gates, fanins, order, candidateCone, true
+		}
+		area, id := Sfm_LibFindAreaMatch(lib, truth)
+		if area < 0 || int(area) > oldArea || (!pars.ZeroCost && int(area) == oldArea) {
+			continue
+		}
+		if gain := oldArea - int(area); gain > bestGain {
+			bestGain, bestID, cone = gain, id, candidateCone
+			bestSupport = append(bestSupport[:0], support...)
+		}
 	}
-	area, id := Sfm_LibFindAreaMatch(lib, truth)
-	if area < 0 || int(area) > oldArea || (!pars.ZeroCost && int(area) == oldArea) {
+	if bestID < 0 {
 		return nil, nil, nil, nil, false
 	}
-	gates, fanins = Sfm_LibImplementGatesArea(lib, support, id)
+	gates, fanins = Sfm_LibImplementGatesArea(lib, bestSupport, bestID)
 	return gates, fanins, order, cone, true
 }
