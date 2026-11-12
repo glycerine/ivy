@@ -2019,3 +2019,41 @@ function metadata, label and comment handling, decrement, conservative boundary
 cases and a compiled runtime test combining arrays, macro expansion and an if
 body. Library and CLI tests run without experiments. Existing out/ is untouched.
 Library and CLI suites pass. Installed prototype-64; regenerate output to apply.
+
+### Prototype 65: local feature switches and C++ function signatures
+
+The AbcGlucose2.cpp case was a local feature switch, not an include guard:
+#define USE_SIMP_SOLVER 1 precedes #ifdef USE_SIMP_SOLVER. Guard stripping already
+runs before constant conversion. The selector previously considered only config
+values, leaving the entire function branch opaque. Added source-order tracking
+of active local definitions/undefs before projection and constant conversion.
+Local presence and numeric truth are distinct (#define X 0 is defined); explicit
+configuration retains its documented override/zero-disabled semantics. Unknown
+branch modifications and include boundaries invalidate affected local knowledge.
+No source-coordinate shifts: removed branches are still blanked. Unsupported
+expressions and unresolved branches remain opaque. Existing incomplete-guard
+and shared-delimiter recovery tests remain intact.
+
+Comment C++ using-namespace directives, including qualified, multiline, local and
+opaque-region cases. Preserve original text and following same-line code; leave
+aliases, using declarations, strings and existing comments alone. This pass uses
+lexing without delimiter matching, since restored opaque branches may each have
+unbalanced delimiters.
+
+Resolving the branch exposed additional retained signatures. Added qualified
+parameter types, reference-to-pointer drafts, balanced argument splitting and
+ordinary function-pointer parameter conversion to Go func types. Qualified
+spellings map :: to .; no anonymous adapters are introduced. C++ namespace
+organization, reference call-site adaptation and unsupported body syntax remain
+second-pass work.
+
+Validation: observed minimal feature-switch and using-namespace regressions fail
+before the fix, then a real-source test exposed 17 retained C++ signatures.
+All 61 functions in AbcGlucose2.cpp now have Go func signatures, regression-
+checked using the real source. Tests also cover local zero/empty/function defines,
+undef/redefinition, config precedence, unknown branches/includes, coordinate
+preservation, namespace protections/idempotence, qualified/reference/callback
+signatures and compiled callback behavior. Library and CLI suites exclude
+experiments. A fresh flat output is in /tmp/starting-point-glucose2-v65; existing
+out/ was not changed. README documents branch selection and C++ draft mappings.
+Library and CLI suites pass. Installed prototype-65; regenerate output to apply.

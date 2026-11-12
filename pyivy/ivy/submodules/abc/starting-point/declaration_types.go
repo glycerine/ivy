@@ -27,7 +27,8 @@ func declarationTypes(mask string, signatures [][]int) map[string]bool {
 		if err != nil {
 			continue
 		}
-		for _, arg := range strings.Split(args, ",") {
+		arguments, _ := splitExpressions(args)
+		for _, arg := range arguments {
 			if match := namedType.FindStringSubmatch(arg); match != nil {
 				add(match[1])
 			}

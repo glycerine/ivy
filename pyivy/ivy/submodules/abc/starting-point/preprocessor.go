@@ -83,6 +83,10 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		return r, transformedDiagnostic(path, "library metadata", r.Draft, err)
 	}
 	r.Draft = restoreRegions(r.Draft, regions)
+	r.Draft, err = commentUsingNamespaces(r.Draft)
+	if err != nil {
+		return r, err
+	}
 	r.Draft, err = commentPthreadIncludes(r.Draft)
 	if err != nil {
 		return r, err
@@ -103,6 +107,10 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		}
 		f.Draft = formatted
 		f.Draft = restoreRegions(f.Draft, regions)
+		f.Draft, err = commentUsingNamespaces(f.Draft)
+		if err != nil {
+			return r, err
+		}
 		f.Draft, err = commentPthreadIncludes(f.Draft)
 		if err != nil {
 			return r, err

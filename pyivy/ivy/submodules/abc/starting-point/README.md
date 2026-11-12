@@ -283,7 +283,8 @@ read configuration from disk. Settings are saved in result/tree metadata.
 These are explicit platform choices: **zero disables a symbol**, including
 `#ifdef`/`defined`, while nonzero enables it. This differs from C's distinction
 between an undefined macro and a defined macro whose value is zero. Unlisted
-symbols remain unknown. Supported conditions include integer constants, names,
+symbols can be resolved from earlier local definitions; otherwise they remain
+unknown. Supported conditions include integer constants, names,
 parentheses, `defined`, `!`, `&&`, `||`, and comparisons. Support covers `#if`,
 `#ifdef`, `#ifndef`, `#elif`/`#elseif`, `#else`, and `#endif`.
 
@@ -292,9 +293,19 @@ processed recursively, including inside ordinary header guards. If an enclosing
 choice remains unknown, its whole block remains opaque. Unsupported expressions
 are also preserved. Removed bytes are blanked internally to retain original
 line/column/offset reporting. This is not a full C macro preprocessor: configured
-values are authoritative, and source #define expansion is not implemented.
+values are authoritative. Earlier active local `#define` and `#undef` directives
+also inform branch selection, before any constant conversion. Local C definitions
+retain the distinction between presence and numeric truth: `#define X 0` satisfies
+`#ifdef X` but not `#if X`. Literal integer replacements inform numeric tests;
+unsupported replacement expressions stay unknown. Definitions possibly changed
+by unknown branches or intervening includes are conservatively forgotten.
+Function-like macro expansion is described above.
 
-Includes of pthread.h are commented even in preserved conditional blocks.
+Includes of pthread.h and C++ `using namespace ...;` directives are commented
+even in preserved conditional blocks. Simple qualified parameter types become
+Go selectors (`Gluco2::SimpSolver*` → `*Gluco2.SimpSolver`); C++ references become
+pointer drafts, and ordinary function-pointer parameters become Go `func` types.
+Namespace/package organization and reference call sites still need porting review.
 Other contents of unresolved blocks remain untouched.
 
 Standalone file-scope `enum` and `typedef enum` definitions now become Go

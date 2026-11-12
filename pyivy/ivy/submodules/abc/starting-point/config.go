@@ -171,9 +171,6 @@ func evalConfigExpr(expr ast.Expr, values map[string]int64) (int64, bool) {
 // selectConfiguredBranches blanks removed bytes rather than deleting them, so
 // original line/column/byte coordinates remain valid throughout analysis.
 func selectConfiguredBranches(source string, values map[string]int64) (string, error) {
-	if len(values) == 0 {
-		return source, nil
-	}
 	ts, err := Lex(source)
 	if err != nil {
 		return "", err
@@ -196,11 +193,13 @@ func selectConfiguredBranches(source string, values map[string]int64) (string, e
 			}
 		}
 	}
+	local := newLocalPreprocessor()
 	var walk func(int, int) error
 	walk = func(lo, hi int) error {
 		for i := lo; i < hi; i++ {
 			kind := directiveName(directives[i])
 			if kind != "if" && kind != "ifdef" && kind != "ifndef" {
+				local.observe(directives[i])
 				continue
 			}
 			depth, end := 1, -1
@@ -224,6 +223,11 @@ func selectConfiguredBranches(source string, values map[string]int64) (string, e
 				}
 			}
 			if end < 0 {
+				// With no explicit choices, preserve incomplete scaffolding for
+				// the existing opaque-region recovery instead of rejecting it here.
+				if len(values) == 0 {
+					return nil
+				}
 				return &syntaxError{"unclosed conditional", directives[i].Start}
 			}
 			selected, known := -1, true
@@ -232,7 +236,7 @@ func selectConfiguredBranches(source string, values map[string]int64) (string, e
 					selected = b
 					break
 				}
-				take, ok := configCondition(directives[at], values)
+				take, ok := local.condition(directives[at], values)
 				if !ok {
 					known = false
 					break
@@ -256,6 +260,12 @@ func selectConfiguredBranches(source string, values map[string]int64) (string, e
 					}
 				}
 				blank(directives[end].Start, directives[end].End)
+			}
+			if !known {
+				// A branch may redefine or undefine a previously known symbol.
+				for j := i + 1; j < end; j++ {
+					local.forget(directives[j])
+				}
 			}
 			// Unknown enclosing choices remain intact, including their nested branches.
 			i = end

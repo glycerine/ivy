@@ -59,10 +59,13 @@ type Result struct {
 var signature = regexp.MustCompile(`\b([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
 var osFileReference = regexp.MustCompile(`\bos\.File\b`)
 var declaration = regexp.MustCompile(`\b([A-Za-z_]\w*)(\s*\*+|\s+)\s*([A-Za-z_]\w*)\s*(=|;)`)
-var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\**)\s*([A-Za-z_]\w*)((?:\s*\[[^\[\]]*\])*)\s*$`)
+var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)\s*(\**&?)\s*([A-Za-z_]\w*)((?:\s*\[[^\[\]]*\])*)\s*$`)
 
 func goType(s string) string {
-	s = strings.TrimSpace(s)
+	s = strings.ReplaceAll(strings.TrimSpace(s), "::", ".")
+	if strings.HasSuffix(s, "&") {
+		return "*" + goType(strings.TrimSuffix(s, "&"))
+	}
 	if strings.HasSuffix(s, "*") {
 		base := strings.TrimSpace(strings.TrimSuffix(s, "*"))
 		if base == "FILE" {
@@ -243,13 +246,14 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		var params []string
 		valid := true
 		if strings.TrimSpace(args) != "" && strings.TrimSpace(args) != "void" {
-			for _, arg := range strings.Split(args, ",") {
-				m := namedType.FindStringSubmatch(arg)
-				if m == nil {
+			arguments, _ := splitExpressions(args)
+			for _, arg := range arguments {
+				param, ok := goParameter(arg)
+				if !ok {
 					valid = false
 					break
 				}
-				params = append(params, m[3]+" "+arrayType(goType(m[1]+m[2]), m[4], true))
+				params = append(params, param)
 			}
 		}
 		// A comment inside a signature must not disappear through regeneration.
