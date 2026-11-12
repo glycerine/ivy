@@ -347,3 +347,10 @@ MUX reports have been ported. The focused core suite passes; the full package
 still fails to parse the unported giaMf.go. Switching statistics currently use
 LfSwitchingProvider and will require the native simulator to be connected when
 giaSwitch.go is ported. Full-package tests and both final reviews remain open.
+
+`giaProp.c` is an unfinished experiment excluded from ABC's GIA build list
+(`src/aig/gia/module.make`): its masks and path-unbind function are empty,
+its object-state accessors are placeholders, and its path helpers are
+undefined. No other source calls these functions. The generated `giaProp.go`
+draft was removed; the original C remains in `src/aig/gia/giaProp.c` for any
+future design work. This does not port or enable the experimental algorithm.
