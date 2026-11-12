@@ -171,3 +171,19 @@ func TestSleDeriveResult(t *testing.T) {
 		t.Fatal("unexpected edge violations")
 	}
 }
+
+func TestSleExplore(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	Sle_ManExplore(p, 0, 0, 1, 0, 0)
+	if p.vMapping == nil || Gia_ObjIsLut(p, y>>1) == 0 {
+		t.Fatal("SAT mapping not produced")
+	}
+	leaves := Gia_ObjLutFanins(p, y>>1)
+	if len(leaves) != 3 || leaves[0] != a>>1 || leaves[1] != b>>1 || leaves[2] != c>>1 {
+		t.Fatalf("unexpected LUT leaves %v", leaves)
+	}
+}
