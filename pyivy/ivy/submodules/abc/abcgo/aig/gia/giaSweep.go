@@ -156,47 +156,6 @@ func Gia_ManFraigCreateGia(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjFanin0CopyRepr(p *Gia_Man_t, pObj *Gia_Obj_t, pReprs *int32) int32 {
-    var fanId int32  = Gia_ObjFaninId0p( p, pObj );
-    if pReprs[fanId] == -1 {
-        return Gia_ObjFanin0Copy( pObj ); }
-    assert(Abc_Lit2Var(pReprs[fanId]) < Gia_ObjId(p, pObj), "Abc_Lit2Var(pReprs[fanId]) < Gia_ObjId(p, pObj)");
-    return Abc_LitNotCond( Gia_ObjValue(Gia_ManObj(p, Abc_Lit2Var(pReprs[fanId]))), Gia_ObjFaninC0(pObj) ^ Abc_LitIsCompl(pReprs[fanId]) );
-}
-func Gia_ObjFanin1CopyRepr(p *Gia_Man_t, pObj *Gia_Obj_t, pReprs *int32) int32 {
-    var fanId int32  = Gia_ObjFaninId1p( p, pObj );
-    if pReprs[fanId] == -1 {
-        return Gia_ObjFanin1Copy( pObj ); }
-    assert(Abc_Lit2Var(pReprs[fanId]) < Gia_ObjId(p, pObj), "Abc_Lit2Var(pReprs[fanId]) < Gia_ObjId(p, pObj)");
-    return Abc_LitNotCond( Gia_ObjValue(Gia_ManObj(p, Abc_Lit2Var(pReprs[fanId]))), Gia_ObjFaninC1(pObj) ^ Abc_LitIsCompl(pReprs[fanId]) );
-}
-func Gia_ManFraigReduceGia(p *Gia_Man_t, pReprs *int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(pReprs != nil, "pReprs != nil");
-    assert(Gia_ManRegNum(p) == 0, "Gia_ManRegNum(p) == 0");
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManFillValue( p );
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0CopyRepr(p, pObj, pReprs), Gia_ObjFanin1CopyRepr(p, pObj, pReprs) );
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0CopyRepr(p, pObj, pReprs) );
-        } else if Gia_ObjIsConst0(pObj) {
-            pObj.Value = 0;
-        } else { assert(false, "0"); }
-    }
-    Gia_ManHashStop( pNew );
-    return pNew;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Compute the set of CIs representing carry-outs of boxes.]
