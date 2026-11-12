@@ -200,86 +200,10 @@ func Mf_ManProfileTruths(p *Mf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_CutPrintOne(pCut *int32) {
-    var i int32; 
-    fmt.Printf("%d {", Mf_CutSize(pCut));
-    for  i = 1; i <= Mf_CutSize(pCut); i++  {
-        fmt.Printf(" %d", pCut[i]);
-    }
-    fmt.Printf(" }\n");
-}
-func Mf_CubeLit(Cube int32, iVar int32) int32 { return (Cube >> (iVar << 1)) & 3; }
-func Mf_ManCountLits(pCnf *int32, nCubes int32, nVars int32) int32 {
-    var i int32;
-    var k int32;
-    var nLits int32 = nCubes;
-    for  i = 0; i < nCubes; i++  {
-        for  k = 0; k < nVars; k++  {
-            if Mf_CubeLit(pCnf[i], k) != 0 {
-                nLits++; }
-        }
-    }
-    return nLits;
-}
-func Mf_ManDeriveCnfs(p *Mf_Man_t, pnVars *int32, pnClas *int32, pnLits *int32) *Vec_Int_t {
-    var i int32;
-    var k int32;
-    var iFunc int32;
-    var nCubes int32;
-    var nLits int32;
-    var pCut *int32;
-    var pCnf [512]int32;
-    var vLits *Vec_Int_t  = Vec_IntStart( Vec_IntSize(&p.vCnfSizes) );
-    var vCnfs *Vec_Int_t  = Vec_IntAlloc( 3 * Vec_IntSize(&p.vCnfSizes) );
-    Vec_IntFill( vCnfs, Vec_IntSize(&p.vCnfSizes), -1 );
-    assert(p.pPars.nLutSize <= 8, "p.pPars.nLutSize <= 8");
-    // constant/buffer
-    for  iFunc = 0; iFunc < 2; iFunc++  {
-        if p.pPars.nLutSize <= 6 {
-            nCubes = Abc_Tt6Cnf( *Vec_MemReadEntry(p.vTtMem, iFunc), iFunc, pCnf );
-        } else {
-            nCubes = Abc_Tt8Cnf( Vec_MemReadEntry(p.vTtMem, iFunc), iFunc, pCnf ); }
-        nLits = Mf_ManCountLits( pCnf, nCubes, iFunc );
-        Vec_IntWriteEntry( vLits, iFunc, nLits );
-        Vec_IntWriteEntry( vCnfs, iFunc, Vec_IntSize(vCnfs) );
-        Vec_IntPush( vCnfs, nCubes );
-        for  k = 0; k < nCubes; k++  {
-            Vec_IntPush( vCnfs, pCnf[k] );
-        }
-    }
-    // other functions
-    *pnVars = 1 + Gia_ManCiNum(p.pGia) + Gia_ManCoNum(p.pGia);
-    *pnClas = 1 + 2 * Gia_ManCoNum(p.pGia);
-    *pnLits = 1 + 4 * Gia_ManCoNum(p.pGia);
-    Gia_ManForEachAndId( p.pGia, i )
-    {
-        if !(Mf_ObjMapRefNum(p, i) != 0) {
-            continue; }
-        pCut = Mf_ObjCutBest( p, i );
-        //Mf_CutPrintOne( pCut );
-        iFunc = Abc_Lit2Var( Mf_CutFunc(pCut) );
-        if Vec_IntEntry(vCnfs, iFunc) == -1 {
-            if p.pPars.nLutSize <= 6 {
-                nCubes = Abc_Tt6Cnf( *Vec_MemReadEntry(p.vTtMem, iFunc), Mf_CutSize(pCut), pCnf );
-            } else {
-                nCubes = Abc_Tt8Cnf( Vec_MemReadEntry(p.vTtMem, iFunc), Mf_CutSize(pCut), pCnf ); }
-            assert(nCubes == Vec_IntEntry(&p.vCnfSizes, iFunc), "nCubes == Vec_IntEntry(&p.vCnfSizes, iFunc)");
-            nLits = Mf_ManCountLits( pCnf, nCubes, Mf_CutSize(pCut) );
-            // save CNF
-            Vec_IntWriteEntry( vLits, iFunc, nLits );
-            Vec_IntWriteEntry( vCnfs, iFunc, Vec_IntSize(vCnfs) );
-            Vec_IntPush( vCnfs, nCubes );
-            for  k = 0; k < nCubes; k++  {
-                Vec_IntPush( vCnfs, pCnf[k] );
-            }
-        }
-        *pnVars += 1;
-        *pnClas += Vec_IntEntry(&p.vCnfSizes, iFunc);
-        *pnLits += Vec_IntEntry(vLits, iFunc);
-    }
-    Vec_IntFree( vLits );
-    return vCnfs;
-}
+
+
+
+
 
 /**Function*************************************************************
 
