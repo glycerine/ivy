@@ -151,55 +151,8 @@ type Gia_SimAbsMan_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimPatHashPatterns(p *Gia_Man_t, nWords int32, vSims *Vec_Wrd_t, pnC0 *int32, pnC1 *int32) int32 {
-    var pObj *Gia_Obj_t; 
-    var i, nUnique int32;
-    var vStore *Vec_Mem_t;
-    vStore = Vec_MemAlloc( nWords, 12 ); // 2^12 N-word entries per page
-    Vec_MemHashAlloc( vStore, 1 << 12 );
-    // inlining of macro Gia_ManForEachCand
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {
-        var pSim *word  = Vec_WrdEntryP(vSims, i*nWords);
-        if (pnC0 != nil) && Abc_TtIsConst0(pSim, nWords) {
-            (*pnC0)++; }
-        if (pnC1 != nil) && Abc_TtIsConst1(pSim, nWords) {
-            (*pnC1)++; }
-        Vec_MemHashInsert( vStore, pSim );
-    }
-    }
-    nUnique = Vec_MemEntryNum( vStore );
-    Vec_MemHashFree( vStore );
-    Vec_MemFree( vStore );
-    return nUnique;
-}
-func Gia_ManSimPatGenMiter(p *Gia_Man_t, vSims *Vec_Wrd_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var nWords int32 = Vec_WrdSize(vSims) / Gia_ManObjNum(p);
-    pNew = Gia_ManStart( Gia_ManObjNum(p) + Gia_ManCoNum(p) );
-    Gia_ManHashStart( pNew );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi( pNew );
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        var pSim *word  = Vec_WrdEntryP(vSims, i*nWords);
-        if Abc_TtIsConst0(pSim, nWords) {
-            Gia_ManAppendCo( pNew, Abc_LitNotCond(pObj.Value, 0) ); }
-        if Abc_TtIsConst1(pSim, nWords) {
-            Gia_ManAppendCo( pNew, Abc_LitNotCond(pObj.Value, 1) ); }
-    }
-    }
-    Gia_ManHashStop( pNew );
-    return pNew;
-}
+
+
 
 
 
@@ -214,15 +167,7 @@ func Gia_ManSimPatGenMiter(p *Gia_Man_t, vSims *Vec_Wrd_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimProfile(pGia *Gia_Man_t) {
-    var vSims *Vec_Wrd_t  = Gia_ManSimPatSim( pGia );
-    var nWords int32  = Vec_WrdSize(vSims) / Gia_ManObjNum(pGia);
-    var nC0s int32;
-    var nC1s int32;
-    var nUnique int32 = Gia_ManSimPatHashPatterns( pGia, nWords, vSims, &nC0s, &nC1s );
-    fmt.Printf("Simulating %d patterns leads to %d unique objects (%.2f %% out of %d), Const0 = %d. Const1 = %d.\n", 64*nWords, nUnique, 100.0*nUnique/Gia_ManCandNum(pGia), Gia_ManCandNum(pGia), nC0s, nC1s);
-    Vec_WrdFree( vSims );
-}
+
 func Gia_ManPatSatImprove(p *Gia_Man_t, nWords0 int32, fVerbose int32) {
     extern Vec_Int_t * Cbs2_ManSolveMiterNc( Gia_Man_t * pAig, int nConfs, Vec_Str_t ** pvStatus, int fVerbose );
     var i int32;
