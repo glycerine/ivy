@@ -19,6 +19,7 @@ type nfMatcher struct {
 	cuts     *nfCutManager
 	objects  []nfObjectMatches
 	required [][2]int32
+	flowRefs [][2]float32
 	invDelay int32
 	invArea  float32
 }
@@ -27,9 +28,10 @@ func newNfMatcher(cuts *nfCutManager) *nfMatcher {
 	if len(cuts.library.cells) < 4 {
 		panic("gia: Nf library lacks constant, buffer or inverter cells")
 	}
-	p := &nfMatcher{cuts: cuts, objects: make([]nfObjectMatches, len(cuts.sets)), required: make([][2]int32, len(cuts.sets)), invDelay: cuts.library.cells[3].Delay(0), invArea: cuts.library.cells[3].AreaF}
+	p := &nfMatcher{cuts: cuts, objects: make([]nfObjectMatches, len(cuts.sets)), required: make([][2]int32, len(cuts.sets)), flowRefs: make([][2]float32, len(cuts.sets)), invDelay: cuts.library.cells[3].Delay(0), invArea: cuts.library.cells[3].AreaF}
 	for i := range p.required {
 		p.required[i] = [2]int32{nfInfinity, nfInfinity}
+		p.flowRefs[i] = [2]float32{cuts.refs[i] / 2, cuts.refs[i] / 2}
 	}
 	for phase := 0; phase < 2; phase++ {
 		for kind := 0; kind < 2; kind++ {
@@ -123,7 +125,7 @@ func (p *nfMatcher) matchObject(id int32) {
 	}
 	for phase := 0; phase < 2; phase++ {
 		for kind := 0; kind < 2; kind++ {
-			p.objects[id][phase][kind].flow /= p.cuts.refs[id] / 2
+			p.objects[id][phase][kind].flow /= p.flowRefs[id][phase]
 		}
 	}
 	// An inverter can provide an output phase absent from the library or improve
