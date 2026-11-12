@@ -39,3 +39,115 @@ packages and full-module tests are still incomplete; no completion claim is made
 Whole-module `go test ./...` still fails. Latest log: /tmp/abcgo-integration-current.log.
 Reported passing packages: 10; failing packages: 101.
 These counts describe build/test results, not semantic completion.
+
+## Foundation race check
+
+Main-thread `go test -race` passes for the ten integrated packages.
+TIM package builds; manager/serialization tests are being expanded before
+commit. Original TIM referenced API inventory missing from Go definitions: Tim_ManBoxForEachInput, Tim_ManBoxForEachOutput, Tim_ManForEachBox, Tim_ManForEachCi, Tim_ManForEachCo, Tim_ManForEachPi, Tim_ManForEachPo, Tim_ManForEachTable.
+The eight TIM inventory names above are C traversal macros, rather than missing
+functions; callers must use Go iteration over the corresponding slices.
+
+## Latest dependency integration
+
+Main-thread tests confirm misc/parse, misc/tim and aig/miniaig pass; their race
+checks pass too. Git staging of this next group was rejected by automatic
+approval review due to the earlier no-git instruction; clarification is pending.
+Porting work continues without repository mutations by workers.
+
+CUDD now has a tested concrete parser adapter, while original CUDD type/API
+integration remains incomplete. ABC network core implements the decomposition
+network interface but its original package algorithms still require migration.
+MVC and DEC are being verified together; DEC additionally needs Extra NPN tables.
+Truth-table work is split by non-overlapping source families between three
+workers to unblock vector/graph consumers sooner.
+
+Main-thread integration now also passes `go test ./sat/satoko/...`,
+`./misc/extra/npn`, `./misc/mvc` and `./bool/dec`. MVC currently reports no tests;
+its dedicated algorithm tests are still required before treating it as verified.
+Satoko's original heuristic/limit fidelity audit continues despite passing SAT
+correctness tests. DEC passes package tests through the new NPN/MVC dependencies.
+
+## BBL and latest module checkpoint
+
+Main-thread BBL package and race tests pass, including bidirectional original-C
+binary interoperability checks. Committed independently as 4ec722484, with the
+requested single-sentence commit message under 60 characters.
+Latest full-module test log reports 18 passing and 94 failing packages; the full
+port remains incomplete. Hop implementations now await vector dependency builds.
+Truth and ISOP work has additional nonoverlapping workers to unblock util/GIA.
+
+## Solver fidelity and vector dependency checkpoint
+
+Committed tested Satoko root learning/limit corrections independently as
+4f40f0e77. Worker reports 900 freshly compiled C versus Go SAT/assumption results
+matched; documented legacy conflict-reporting quirks remain intentional API
+behavior decisions. Full subtree tests remain green.
+Hop now passes the owner's isolated integration of actual converted dependencies;
+workspace package build still requires the four remaining vector files. Hash,
+Hsh, Mem and Set have separate owners; completed core vectors are shared rather
+than copied into consumers. Truth-table cofactor/count families are implemented
+and integrated by their foundation owner; other truth/ISOP families continue.
+
+## Cross-package graph/SAT verification
+
+Added integration/aig_sat_test.go exercising public MiniAIG and Satoko APIs.
+All 256 three-input functions are synthesized, Tseitin-encoded and checked under
+all eight assignments and both requested output values (4096 queries). The
+integration package passes. This verifies these connected implementations only;
+it does not stand in for the remaining ABC algorithms or full-module build.
+
+## Full vector and Hop integration
+
+Main-thread full-workspace package and race tests pass for misc/vec and aig/hop.
+Committed separately as b65aa8965 and b9e00e9fb. Hop now uses the actual shared
+vector package, without isolated dependency copies. Remaining AIG algorithms are
+split between the core owner and dedicated dominator/MFFC/duplication workers.
+Utility ISOP finalization and remaining GIA/CUDD algorithms continue; the whole
+ABC port is still incomplete.
+
+Latest module audit: 22 passing packages and 91 failing packages. Log: /tmp/abcgo-integration-current.log. BDC and IOA now have owners to unblock canonical recording. Standard-library zlib port is assigned. Full scope remains incomplete.
+
+## Mandatory design and bug review
+
+User requested a distinct idiomatic/compactness review and bug-review pass for
+every package, including prior ports. All twenty workers were notified; fixes and
+regressions must precede further integration. See REVIEW.md for required evidence.
+
+## Reviewed Hop integration
+
+Committed reviewed Hop simplification and cleanup invariants as 5a5869431.
+Main-thread race checks passed Hop, vectors, BDC, IOA and zlib at that snapshot.
+The newer BDC/IOA/zlib packages still await complete two-pass review sign-offs
+before their integration commits. Vector owner continues live slice cleanup;
+consumer builds must be rerun after those additional edits. AIG output/fanout
+representation review found and corrected direct-output reference mismatches;
+whole AIG is still incomplete due remaining algorithm dependencies.
+
+## Current reviewed integrations
+
+Integrated individually on the current branch: standard-library zlib, BDC and
+SPFD, IOA/AIGER I/O, MiniAIG, AVL, MVC, NM, ST, parser, TIM, vectors and DEC.
+Each package passed its focused race tests before its package-scoped commit.
+The GIA owner also converted the null-safe `ABC_FREE` expansion directly in
+`abcgo/aig/gia`: 373 sites now clear pointer/slice fields to nil, with string
+fields cleared to empty strings and a lexical regression that rejects remaining
+live C `free` tokens. GIA as a whole still cannot compile because unrelated
+generated drafts such as `giaAgi.go` remain unported.
+
+The latest full `go test ./...` still fails across many unfinished packages
+(including espresso, place, bzlib, several SAT solvers, CUDD root APIs, and
+large AIG/BDD/Boolean/optimization areas). This does not affect the focused
+green package commits above. The active work remains the `abcgo/` port; no
+further starting-point changes are in scope.
+
+## Null-safe free lowering
+
+The starting-point translator now lowers the exact null-safe free-and-clear
+macro expansion to `lvalue = nil`, after pointer syntax conversion. It only
+accepts a repeated simple lvalue (including selectors/indexing), verifies that
+the tested, freed, and cleared expressions match, and leaves comments and
+unrelated ownership patterns alone. Regression tests cover a GIA-style field,
+indexed lvalues, mismatched expressions, comments, and the full mechanical
+draft pipeline. The GIA owner reports applying the equivalent cleanup to 373
+sites and adding a package-wide regression against live `free` expansions.
