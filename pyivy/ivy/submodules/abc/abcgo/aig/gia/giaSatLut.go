@@ -107,26 +107,6 @@ import (
 
 ***********************************************************************/
 
-func Sbl_ManWindow2(p *Sbl_Man_t, iPivot int32) int32 {
-    var clk abctime  = Abc_Clock();
-    var vRoots, vNodes, vLeaves, vAnds *Vec_Int_t;
-    var Count int32  = Gia_ManComputeOneWin( p.pGia, iPivot, &vRoots, &vNodes, &vLeaves, &vAnds );
-    p.timeWin += Abc_Clock() - clk;
-    if Count == 0 {
-        return 0; }
-    Vec_IntClear( p.vRoots );   Vec_IntAppend( p.vRoots,  vRoots );
-    Vec_IntClear( p.vNodes );   Vec_IntAppend( p.vNodes,  vNodes );
-    Vec_IntClear( p.vLeaves );  Vec_IntAppend( p.vLeaves, vLeaves );
-    Vec_IntClear( p.vAnds );    Vec_IntAppend( p.vAnds,   vAnds );
-//Vec_IntPrint( vRoots );
-//Vec_IntPrint( vAnds );
-//Vec_IntPrint( vLeaves );
-    // recompute internal nodes
-//    Gia_ManIncrementTravId( p->pGia );
-//    Gia_ManCollectAnds( p->pGia, Vec_IntArray(p->vRoots), Vec_IntSize(p->vRoots), p->vAnds, p->vLeaves );
-    return Count;
-}
-
 func Sbl_ManTestSat(p *Sbl_Man_t, iPivot int32) int32 {
     var fKeepTrying int32  = 1;
     var clk abctime = Abc_Clock();

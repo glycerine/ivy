@@ -76,3 +76,32 @@ func TestSplitWindowBoundary(t *testing.T) {
 		t.Fatal("bad LUT fanouts")
 	}
 }
+
+func TestSplitComputePivotWindow(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	for _, lut := range []struct {
+		id int32
+		in []int32
+	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
+		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
+		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		for _, id := range lut.in {
+			vec.Vec_IntPush(p.vMapping, id)
+		}
+		vec.Vec_IntPush(p.vMapping, lut.id)
+	}
+	Gia_ManComputeOneWinStart(p, 8, 0)
+	var roots, nodes, leaves, ands *Vec_Int_t
+	if n := Gia_ManComputeOneWin(p, y>>1, &roots, &nodes, &leaves, &ands); n != 2 || vec.Vec_IntSize(leaves) != 3 || vec.Vec_IntSize(roots) != 1 || vec.Vec_IntEntry(roots, 0) != y>>1 {
+		t.Fatalf("window n=%d roots=%v leaves=%v", n, vec.Vec_IntArray(roots), vec.Vec_IntArray(leaves))
+	}
+	Gia_ManComputeOneWin(p, -1, nil, nil, nil, nil)
+	if p.vMapping == nil || p.pSatlutWinman != nil {
+		t.Fatal("window manager not closed")
+	}
+}
