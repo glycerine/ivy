@@ -844,62 +844,9 @@ func Gia_RsbWindowCompute(p *Gia_Man_t, iObj int32, nInputsMax int32, nLevelsMax
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_RsbFindOutputs(p *Gia_Man_t, vWin *Vec_Int_t, vIns *Vec_Int_t, vRefs *Vec_Int_t) *Vec_Int_t {
-    var vOuts *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pObj *Gia_Obj_t; var i int32;
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vIns)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vIns,i))); i++  { 
-        Gia_ObjSetTravIdCurrent( p, pObj );
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  { 
-        if !Gia_ObjIsTravIdCurrent(p, pObj) && Gia_ObjIsAnd(pObj) {
-            Vec_IntAddToEntry( vRefs, Gia_ObjFaninId0p(p, pObj), 1 );
-            Vec_IntAddToEntry( vRefs, Gia_ObjFaninId1p(p, pObj), 1 );
-        }
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  {
-        if !Gia_ObjIsTravIdCurrent(p, pObj) && Gia_ObjFanoutNum(p, pObj) != Vec_IntEntry(vRefs, Gia_ObjId(p, pObj)) {
-            Vec_IntPush( vOuts, Gia_ObjId(p, pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  {
-        if !Gia_ObjIsTravIdCurrent(p, pObj) && Gia_ObjIsAnd(pObj) {
-            Vec_IntAddToEntry( vRefs, Gia_ObjFaninId0p(p, pObj), -1 );
-            Vec_IntAddToEntry( vRefs, Gia_ObjFaninId1p(p, pObj), -1 );
-        }
-    }
-    return vOuts;
-}
 
-func Gia_RsbDeriveGiaFromWindows(p *Gia_Man_t, vWin *Vec_Int_t, vIns *Vec_Int_t, vOuts *Vec_Int_t) *Gia_Man_t {
-    var pNew *Gia_Man_t; 
-    var pObj *Gia_Obj_t;
-    var i int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManHashAlloc( pNew );
-    Gia_ManFillValue( p );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vIns)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vIns,i))); i++  {
-        pObj.Value = Gia_ManAppendCi( pNew );
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  {
-        if !~pObj.Value {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vOuts)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vOuts,i))); i++  {
-        Gia_ManAppendCo( pNew, pObj.Value );
-    }
-    Gia_ManHashStop( pNew );
-    return pNew;
-}
+
+
 
 /**Function*************************************************************
 
@@ -912,44 +859,8 @@ func Gia_RsbDeriveGiaFromWindows(p *Gia_Man_t, vWin *Vec_Int_t, vIns *Vec_Int_t,
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_LutComputeTruth66_rec(p *Gia_Man_t, pObj *Gia_Obj_t) word {
-    var Truth0, Truth1 word;
-    if Gia_ObjIsCi(pObj) {
-        return s_Truths6[Gia_ObjCioId(pObj)]; }
-    if Gia_ObjIsConst0(pObj) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Truth0 = Gia_LutComputeTruth66_rec( p, Gia_ObjFanin0(pObj) );
-    Truth1 = Gia_LutComputeTruth66_rec( p, Gia_ObjFanin1(pObj) );
-    if Gia_ObjFaninC0(pObj) {
-        Truth0 = ~Truth0; }
-    if Gia_ObjFaninC1(pObj) {
-        Truth1 = ~Truth1; }
-    return Truth0 & Truth1;
-}
-func Gia_ManVerifyTwoTruths(p1 *Gia_Man_t, p2 *Gia_Man_t) int32 {
-    var i, fFailed int32;
-    assert(Gia_ManCoNum(p1) == Gia_ManCoNum(p2), "Gia_ManCoNum(p1) == Gia_ManCoNum(p2)");
-    for  i = 0; i < Gia_ManCoNum(p1); i++  {
-        var pPo1 *Gia_Obj_t  = Gia_ManCo(p1, i);
-        var pPo2 *Gia_Obj_t  = Gia_ManCo(p2, i);
-        var word1 word  = Gia_LutComputeTruth66_rec( p1, Gia_ObjFanin0(pPo1) );
-        var word2 word  = Gia_LutComputeTruth66_rec( p2, Gia_ObjFanin0(pPo2) );
-        if Gia_ObjFaninC0(pPo1) {
-            word1 = ~word1; }
-        if Gia_ObjFaninC0(pPo2) {
-            word2 = ~word2; }
-        if word1 != word2 {
-            //Dau_DsdPrintFromTruth( &word1, 6 );
-            //Dau_DsdPrintFromTruth( &word2, 6 );
-            fmt.Printf("Verification failed for output %d (out of %d).\n", i, Gia_ManCoNum(p1));
-            fFailed = 1;
-        }
-    }
-//    if ( !fFailed )
-//        printf( "Verification succeeded for %d outputs.\n", Gia_ManCoNum(p1) );
-    return !fFailed;
-}
+
+
 
 
 
