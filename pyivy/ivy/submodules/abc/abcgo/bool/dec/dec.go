@@ -7,6 +7,7 @@ type Dec_Edge_t struct {
 	Node   uint32
 }
 type Dec_Node_t struct {
+	index                     int32
 	eEdge0, eEdge1            Dec_Edge_t
 	iFunc                     int32
 	pFunc                     any
@@ -51,7 +52,7 @@ func Dec_GraphCreate(leaves int32) *Dec_Graph_t {
 	}
 	g := &Dec_Graph_t{nLeaves: leaves, nSize: leaves, nCap: 2*leaves + 50, pNodes: make([]*Dec_Node_t, leaves, 2*leaves+50)}
 	for i := range g.pNodes {
-		g.pNodes[i] = new(Dec_Node_t)
+		g.pNodes[i] = &Dec_Node_t{index: int32(i)}
 	}
 	return g
 }
@@ -84,6 +85,9 @@ func Dec_GraphNodeNum(g *Dec_Graph_t) int32             { return g.nSize - g.nLe
 func Dec_GraphNode(g *Dec_Graph_t, i int32) *Dec_Node_t { return g.pNodes[i] }
 func Dec_GraphNodeLast(g *Dec_Graph_t) *Dec_Node_t      { return g.pNodes[g.nSize-1] }
 func Dec_GraphNodeInt(g *Dec_Graph_t, n *Dec_Node_t) int32 {
+	if n != nil && n.index >= 0 && int(n.index) < len(g.pNodes) && g.pNodes[n.index] == n {
+		return n.index
+	}
 	for i, p := range g.pNodes {
 		if p == n {
 			return int32(i)
@@ -99,7 +103,7 @@ func Dec_GraphVar(g *Dec_Graph_t) *Dec_Node_t       { return Dec_GraphNode(g, in
 func Dec_GraphVarInt(g *Dec_Graph_t) int32          { return int32(g.eRoot.Node) }
 func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t) { g.eRoot = e }
 func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
-	n := new(Dec_Node_t)
+	n := &Dec_Node_t{index: g.nSize}
 	g.pNodes = append(g.pNodes, n)
 	g.nSize = int32(len(g.pNodes))
 	g.nCap = int32(cap(g.pNodes))

@@ -91,3 +91,16 @@ func TestNetworkCountingLimits(t *testing.T) {
 		t.Fatal(got)
 	}
 }
+
+func TestMalformedSOPRejected(t *testing.T) {
+	for _, sop := range []string{"11 1 extra\n", "11 1\n0\n", "0z 1\n", "11 1\n1 0\n"} {
+		t.Run(sop, func(t *testing.T) {
+			defer func() {
+				if recover() == nil {
+					t.Fatal("accepted malformed SOP")
+				}
+			}()
+			Dec_Factor(sop)
+		})
+	}
+}

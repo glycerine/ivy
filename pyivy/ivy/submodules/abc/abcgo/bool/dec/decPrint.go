@@ -9,7 +9,11 @@ func Dec_GraphPrint(file *os.File, g *Dec_Graph_t, names []string, out string) {
 	if names == nil {
 		names = make([]string, g.nLeaves)
 		for i := range names {
-			names[i] = fmt.Sprintf("x%d", i)
+			if len(names) < 26 {
+				names[i] = string(rune('a' + i))
+			} else {
+				names[i] = fmt.Sprintf("%c%d", 'a'+i%26, i/26)
+			}
 		}
 	}
 	if len(names) < int(g.nLeaves) {

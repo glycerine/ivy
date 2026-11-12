@@ -1,8 +1,9 @@
 package dec
 
 import (
-	"github.com/glycerine/abcgo/misc/mvc"
 	"strings"
+
+	"github.com/glycerine/abcgo/misc/mvc"
 )
 
 func sopRows(sop string) ([]string, int, bool) {
@@ -15,6 +16,9 @@ func sopRows(sop string) ([]string, int, bool) {
 			continue
 		}
 		if len(fields) == 1 {
+			if len(cubes) != 0 {
+				panic("dec: mixed constant and cube SOP")
+			}
 			if fields[0] == "0" {
 				return nil, 0, false
 			}
@@ -22,6 +26,9 @@ func sopRows(sop string) ([]string, int, bool) {
 				return []string{""}, 0, false
 			}
 			panic("dec: invalid SOP")
+		}
+		if len(fields) != 2 {
+			panic("dec: malformed SOP row")
 		}
 		cube, out := fields[0], fields[1]
 		if out != "0" && out != "1" {

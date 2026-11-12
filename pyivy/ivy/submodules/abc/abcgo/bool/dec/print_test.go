@@ -25,3 +25,21 @@ func TestPrintGraph(t *testing.T) {
 		t.Fatal(string(data))
 	}
 }
+
+func TestPrintDefaultNames(t *testing.T) {
+	g := Dec_GraphCreateLeaf(1, 2, 0)
+	path := filepath.Join(t.TempDir(), "names")
+	file, err := os.Create(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	Dec_GraphPrint(file, g, nil, "")
+	file.Close()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "F = b\n") {
+		t.Fatal(string(data))
+	}
+}
