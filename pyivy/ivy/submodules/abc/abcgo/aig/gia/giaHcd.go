@@ -1,10 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"time"
-)
-
 /**CFile****************************************************************
 
   FileName    [giaHcd.c]
@@ -16,7 +11,7 @@ import (
   Synopsis    [New choice computation package.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -32,11 +27,8 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
 // choicing parameters
-   
-

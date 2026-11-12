@@ -1,10 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"time"
-)
-
 /**CFile****************************************************************
 
   FileName    [giaGlitch.c]
@@ -16,7 +11,7 @@ import (
   Synopsis    [Glitch simulation.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -29,18 +24,16 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
 /**Function*************************************************************
 
   Synopsis    [Sets random info at the PIs and collects changed PIs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -51,6 +44,4 @@ import (
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

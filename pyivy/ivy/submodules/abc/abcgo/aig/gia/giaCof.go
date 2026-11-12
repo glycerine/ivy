@@ -1,11 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"math"
-	"time"
-)
-
 /**CFile****************************************************************
 
   FileName    [giaCof.c]

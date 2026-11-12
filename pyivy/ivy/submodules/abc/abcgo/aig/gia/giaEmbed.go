@@ -1,7 +1,5 @@
 package gia
 
-import "os"
-
 /**CFile****************************************************************
 
   FileName    [giaEmbed.c]

@@ -1,10 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"os"
-)
-
 /**CFile****************************************************************
 
   FileName    [giaCone.c]

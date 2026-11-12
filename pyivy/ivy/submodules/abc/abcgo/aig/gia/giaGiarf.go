@@ -1,10 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"time"
-)
-
 /**CFile****************************************************************
 
   FileName    [gia.c]
@@ -16,7 +11,7 @@ import (
   Synopsis    []
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -34,14 +29,14 @@ import (
 ////////////////////////////////////////////////////////////////////////
 
 // combinational simulation manager
-   
+
 /**Function*************************************************************
 
   Synopsis    [Returns temporary representative of the node.]
 
   Description [The temp repr is the first node among the nodes in the class that
   (a) precedes the given node, and (b) whose level is lower than the given node.]
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -52,7 +47,7 @@ import (
   Synopsis    [Performs computation of AIGs with choices.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -63,6 +58,4 @@ import (
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-
