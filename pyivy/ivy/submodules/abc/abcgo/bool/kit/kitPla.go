@@ -1,522 +1,245 @@
 package kit
 
-import "fmt"
+import "strings"
 
-/**CFile****************************************************************
-
-  FileName    [kitPla.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Manipulating SOP in the form of a C-string.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitPla.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-//#include "aig/aig/aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cover is constant 0.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaIsConst0(pSop string) int32 {
-    return pSop[0] == ' ' && pSop[1] == '0';
+func kitPlaString(s string) string {
+	if end := strings.IndexByte(s, 0); end >= 0 {
+		return s[:end]
+	}
+	return s
+}
+func Kit_PlaIsConst0(s string) int32 {
+	if strings.HasPrefix(s, " 0") {
+		return 1
+	}
+	return 0
+}
+func Kit_PlaIsConst1(s string) int32 {
+	if strings.HasPrefix(s, " 1") {
+		return 1
+	}
+	return 0
+}
+func Kit_PlaIsBuf(s string) int32 {
+	s = kitPlaString(s)
+	if s == "1 1\n" || s == "0 0\n" {
+		return 1
+	}
+	return 0
+}
+func Kit_PlaIsInv(s string) int32 {
+	s = kitPlaString(s)
+	if s == "0 1\n" || s == "1 0\n" {
+		return 1
+	}
+	return 0
+}
+func Kit_PlaGetVarNum(s string) int32 {
+	end := strings.IndexByte(kitPlaString(s), '\n')
+	if end < 2 {
+		return -1
+	}
+	return int32(end - 2)
+}
+func Kit_PlaGetCubeNum(s string) int32 { return int32(strings.Count(kitPlaString(s), "\n")) }
+func Kit_PlaIsComplement(s string) int32 {
+	end := strings.IndexByte(s, '\n')
+	if end <= 0 {
+		panic("kit: malformed PLA row")
+	}
+	if s[end-1] == '0' || s[end-1] == 'n' {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cover is constant 1.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaIsConst1(pSop string) int32 {
-    return pSop[0] == ' ' && pSop[1] == '1';
+// Go strings are immutable; return the cover with its output polarity toggled.
+func Kit_PlaComplement(s string) string {
+	out := []byte(kitPlaString(s))
+	for i, c := range out {
+		if c != '\n' {
+			continue
+		}
+		if i == 0 {
+			panic("kit: malformed PLA row")
+		}
+		switch out[i-1] {
+		case '0':
+			out[i-1] = '1'
+		case '1':
+			out[i-1] = '0'
+		case 'x':
+			out[i-1] = 'n'
+		case 'n':
+			out[i-1] = 'x'
+		default:
+			panic("kit: invalid PLA output")
+		}
+	}
+	return string(out)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cover is a buffer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaIsBuf(pSop string) int32 {
-    if pSop[4] != 0 {
-        return 0; }
-    if (pSop[0] == '1' && pSop[2] == '1') || (pSop[0] == '0' && pSop[2] == '0') {
-        return 1; }
-    return 0;
+func Kit_PlaStart(pool any, nCubes, nVars int32) string {
+	if nCubes < 0 || nVars < 0 {
+		panic("kit: negative PLA dimensions")
+	}
+	return strings.Repeat(strings.Repeat("-", int(nVars))+" 1\n", int(nCubes))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cover is an inverter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaIsInv(pSop string) int32 {
-    if pSop[4] != 0 {
-        return 0; }
-    if (pSop[0] == '0' && pSop[2] == '1') || (pSop[0] == '1' && pSop[2] == '0') {
-        return 1; }
-    return 0;
+func Kit_PlaCreateFromIsop(pool any, nVars int32, cover []uint32) string {
+	if nVars < 0 || nVars > 16 {
+		panic("kit: unsupported PLA dimension")
+	}
+	var out strings.Builder
+	for _, cube := range cover {
+		for v := int32(0); v < nVars; v++ {
+			switch cube >> uint(2*v) & 3 {
+			case 0:
+				out.WriteByte('-')
+			case 1:
+				out.WriteByte('0')
+			case 2:
+				out.WriteByte('1')
+			default:
+				panic("kit: contradictory ISOP cube")
+			}
+		}
+		out.WriteString(" 1\n")
+	}
+	return out.String()
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the number of variables in the cover.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaGetVarNum(pSop string) int32 {
-    var pCur string;
-    for  pCur = pSop; *pCur != '\n'; pCur++  {
-        if *pCur == 0 {
-            return -1; }
-    }
-    return pCur - pSop - 2;
+func Kit_PlaToIsop(s string, cover *[]uint32) {
+	s = kitPlaString(s)
+	nVars := Kit_PlaGetVarNum(s)
+	if nVars < 0 || nVars > 16 {
+		panic("kit: malformed PLA cover")
+	}
+	*cover = (*cover)[:0]
+	width := int(nVars) + 3
+	if len(s)%width != 0 {
+		panic("kit: truncated PLA cover")
+	}
+	for start := 0; start < len(s); start += width {
+		var cube uint32
+		for v := int32(0); v < nVars; v++ {
+			switch s[start+int(v)] {
+			case '-':
+			case '0':
+				cube |= 1 << uint(2*v)
+			case '1':
+				cube |= 2 << uint(2*v)
+			default:
+				panic("kit: invalid PLA literal")
+			}
+		}
+		if s[start+int(nVars)] != ' ' || s[start+width-1] != '\n' {
+			panic("kit: malformed PLA delimiter")
+		}
+		*cover = append(*cover, cube)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the number of cubes in the cover.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaGetCubeNum(pSop string) int32 {
-    var pCur string;
-    var nCubes int32;
-    if pSop == nil {
-        return 0; }
-    for  pCur = pSop; *pCur; pCur++  {
-        nCubes += (*pCur == '\n');
-    }
-    return nCubes;
+func Kit_PlaStoreSop(pool any, s string) string { return strings.Clone(kitPlaString(s)) }
+func Kit_PlaFromTruth(pool any, truth []uint32, nVars int32, cover *[]uint32) string {
+	if Kit_TruthIsConst0(truth, nVars) != 0 {
+		return " 0\n"
+	}
+	if Kit_TruthIsConst1(truth, nVars) != 0 {
+		return " 1\n"
+	}
+	phase := Kit_TruthIsop(truth, nVars, cover, 0)
+	if phase < 0 {
+		panic("kit: ISOP memory limit exceeded")
+	}
+	s := Kit_PlaCreateFromIsop(pool, nVars, *cover)
+	if phase != 0 {
+		s = Kit_PlaComplement(s)
+	}
+	return s
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaIsComplement(pSop string) int32 {
-    var pCur string;
-    for  pCur = pSop; *pCur; pCur++  {
-        if *pCur == '\n' {
-            return int32((*(pCur - 1) == '0' || *(pCur - 1) == 'n')); }
-    }
-    assert(false, "0");
-    return 0;
+func Kit_PlaFromIsop(buffer *[]byte, nVars int32, cover []uint32) string {
+	s := Kit_PlaCreateFromIsop(nil, nVars, cover)
+	if buffer != nil {
+		*buffer = append((*buffer)[:0], s...)
+	}
+	return s
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaComplement(pSop string) {
-    var pCur string;
-    for  pCur = pSop; *pCur; pCur++  {
-        if *pCur == '\n' {
-            if *(pCur - 1) == '0' {
-                *(pCur - 1) = '1';
-            } else if *(pCur - 1) == '1' {
-                *(pCur - 1) = '0';
-            } else if *(pCur - 1) == 'x' {
-                *(pCur - 1) = 'n';
-            } else if *(pCur - 1) == 'n' {
-                *(pCur - 1) = 'x';
-            } else {
-                assert(false, "0"); }
-        }
-    }
+func Kit_PlaFromTruthNew(truth []uint32, nVars int32, cover *[]uint32, buffer *[]byte) string {
+	phase := Kit_TruthIsop(truth, nVars, cover, 1)
+	if phase < 0 {
+		panic("kit: ISOP memory limit exceeded")
+	}
+	s := ""
+	if len(*cover) == 0 {
+		s = " 0\n"
+	} else if len(*cover) == 1 && (*cover)[0] == 0 {
+		s = " 1\n"
+	} else {
+		s = Kit_PlaCreateFromIsop(nil, nVars, *cover)
+	}
+	if phase != 0 {
+		s = Kit_PlaComplement(s)
+	}
+	if buffer != nil {
+		*buffer = append((*buffer)[:0], s...)
+	}
+	return s
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the constant 1 cover with the given number of variables and cubes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaStart(p any, nCubes int32, nVars int32) string {
-    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;
-    var pSopCover, pCube string;
-    var i, Length int32;
-
-    Length = nCubes * (nVars + 3);
-    pSopCover = Aig_MmFlexEntryFetch( pMan, Length + 1 );
-    memset( pSopCover, '-', (size_t)Length );
-    pSopCover[Length] = 0;
-
-    for  i = 0; i < nCubes; i++  {
-        pCube = pSopCover + i * (nVars + 3);
-        pCube[nVars + 0] = ' ';
-        pCube[nVars + 1] = '1';
-        pCube[nVars + 2] = '\n';
-    }
-    return pSopCover;
+func Kit_PlaToTruth6(s string, nVars int32) uint64 {
+	if nVars < 0 || nVars > 6 {
+		panic("kit: single-word PLA supports at most six variables")
+	}
+	vars := make([][]uint32, nVars)
+	n := max(nVars, 6)
+	for i := range vars {
+		vars[i] = make([]uint32, 2)
+		Kit_TruthIthVar(vars[i], n, int32(i))
+	}
+	out, temp := make([]uint32, 2), make([]uint32, 2)
+	Kit_PlaToTruth(s, nVars, vars, temp, out)
+	if nVars < 6 {
+		return uint64(out[0]) | uint64(out[0])<<32
+	}
+	return uint64(out[0]) | uint64(out[1])<<32
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the cover from the ISOP computed from TT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaCreateFromIsop(p any, nVars int32, vCover *Vec_Int_t) string {
-    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;
-    var pSop, pCube string;
-    var i, k, Entry, Literal int32;
-    assert(Vec_IntSize(vCover) > 0, "Vec_IntSize(vCover) > 0");
-    if Vec_IntSize(vCover) == 0 {
-        return nil; }
-    // start the cover
-    pSop = Kit_PlaStart( pMan, Vec_IntSize(vCover), nVars );
-    // create cubes
-    Vec_IntForEachEntry( vCover, Entry, i )
-    {
-        pCube = pSop + i * (nVars + 3);
-        for  k = 0; k < nVars; k++  {
-            Literal = 3 & (Entry >> (k << 1));
-            if Literal == 1 {
-                pCube[k] = '0';
-            } else if Literal == 2 {
-                pCube[k] = '1';
-            } else if Literal != 0 {
-                assert(false, "0"); }
-        }
-    }
-    return pSop;
+func Kit_PlaToTruth(s string, nVars int32, vars [][]uint32, temp, out []uint32) {
+	s = kitPlaString(s)
+	if nVars < 0 || nVars > 16 {
+		panic("kit: unsupported PLA variable count")
+	}
+	if Kit_PlaIsConst0(s) != 0 {
+		Kit_TruthClear(out, nVars)
+		return
+	}
+	if Kit_PlaIsConst1(s) != 0 {
+		Kit_TruthFill(out, nVars)
+		return
+	}
+	width := int(nVars) + 3
+	if len(s) == 0 || len(s)%width != 0 {
+		panic("kit: malformed PLA representation")
+	}
+	if len(vars) < int(nVars) {
+		panic("kit: missing elementary PLA truth tables")
+	}
+	Kit_TruthClear(out, nVars)
+	phase := Kit_PlaIsComplement(s)
+	for start := 0; start < len(s); start += width {
+		if s[start+int(nVars)] != ' ' || s[start+width-1] != '\n' {
+			panic("kit: malformed PLA row")
+		}
+		Kit_TruthFill(temp, nVars)
+		for v := int32(0); v < nVars; v++ {
+			switch s[start+int(v)] {
+			case '1':
+				Kit_TruthAnd(temp, temp, vars[v], nVars)
+			case '0':
+				Kit_TruthSharp(temp, temp, vars[v], nVars)
+			case '-':
+			default:
+				panic("kit: invalid PLA literal")
+			}
+		}
+		Kit_TruthOr(out, out, temp, nVars)
+	}
+	if phase != 0 {
+		Kit_TruthNot(out, out, nVars)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the cover from the ISOP computed from TT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaToIsop(pSop string, vCover *Vec_Int_t) {
-    var pCube string;
-    var k, nVars, Entry int32;
-    nVars = Kit_PlaGetVarNum( pSop );
-    assert(nVars > 0, "nVars > 0");
-    // create cubes
-    Vec_IntClear( vCover );
-    for  pCube = pSop; *pCube; pCube += nVars + 3  {
-        Entry = 0;
-        for  k = nVars - 1; k >= 0; k--  {
-            if pCube[k] == '0' {
-                Entry = (Entry << 2) | 1;
-            } else if pCube[k] == '1' {
-                Entry = (Entry << 2) | 2;
-            } else if pCube[k] == '-' {
-                Entry = (Entry << 2);
-            } else { 
-                assert(false, "0"); }
-        }
-        Vec_IntPush( vCover, Entry );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates memory and copies the SOP into it.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaStoreSop(p any, pSop string) string {
-    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;
-    var pStore string;
-    pStore = Aig_MmFlexEntryFetch( pMan, len(pSop) + 1 );
-    pStore = pSop;
-    return pStore;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transforms truth table into the SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaFromTruth(p any, pTruth *uint32, nVars int32, vCover *Vec_Int_t) string {
-    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;
-    var pSop string;
-    var RetValue int32;
-    if Kit_TruthIsConst0(pTruth, nVars) {
-        return Kit_PlaStoreSop( pMan, " 0\n" ); }
-    if Kit_TruthIsConst1(pTruth, nVars) {
-        return Kit_PlaStoreSop( pMan, " 1\n" ); }
-    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 ); // 1 );
-    assert(RetValue == 0 || RetValue == 1, "RetValue == 0 || RetValue == 1");
-    pSop = Kit_PlaCreateFromIsop( pMan, nVars, vCover );
-    if RetValue != 0 {
-        Kit_PlaComplement( pSop ); }
-    return pSop;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the cover from the ISOP computed from TT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaFromIsop(vStr *Vec_Str_t, nVars int32, vCover *Vec_Int_t) string {
-    var i, k, Entry, Literal int32;
-    assert(Vec_IntSize(vCover) > 0, "Vec_IntSize(vCover) > 0");
-    if Vec_IntSize(vCover) == 0 {
-        return nil; }
-    Vec_StrClear( vStr );
-    Vec_IntForEachEntry( vCover, Entry, i )
-    {
-        for  k = 0; k < nVars; k++  {
-            Literal = 3 & (Entry >> (k << 1));
-            if Literal == 1 {
-                Vec_StrPush( vStr, '0' );
-            } else if Literal == 2 {
-                Vec_StrPush( vStr, '1' );
-            } else if Literal == 0 {
-                Vec_StrPush( vStr, '-' );
-            } else {
-                assert(false, "0"); }
-        }
-        Vec_StrPush( vStr, ' ' );
-        Vec_StrPush( vStr, '1' );
-        Vec_StrPush( vStr, '\n' );
-    }
-    Vec_StrPush( vStr, '\0' );
-    return Vec_StrArray( vStr );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the SOP from TT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaFromTruthNew(pTruth *uint32, nVars int32, vCover *Vec_Int_t, vStr *Vec_Str_t) string {
-    var pResult string;
-    // transform truth table into the SOP
-    var RetValue int32  = Kit_TruthIsop( pTruth, nVars, vCover, 1 );
-    assert(RetValue == 0 || RetValue == 1, "RetValue == 0 || RetValue == 1");
-    // check the case of constant cover
-    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 && Vec_IntEntry(vCover,0) == 0) {
-        assert(RetValue == 0, "RetValue == 0");
-        Vec_StrClear( vStr );
-        Vec_StrAppend( vStr, (Vec_IntSize(vCover) == 0) ? " 0\n" : " 1\n" );
-        Vec_StrPush( vStr, '\0' );
-        return Vec_StrArray( vStr );
-    }
-    pResult = Kit_PlaFromIsop( vStr, nVars, vCover );
-    if RetValue != 0 {
-        Kit_PlaComplement( pResult ); }
-    if nVars < 6 {
-        assert(pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars)), "pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars))");
-    } else if nVars == 6 {
-        assert(*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars), "*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars)"); }
-    return pResult;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts SOP into a truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaToTruth6(pSop string, nVars int32) ABC_UINT64_T {
-    static ABC_UINT64_T Truth[8] = {
-        ABC_CONST(0xAAAAAAAAAAAAAAAA),
-        ABC_CONST(0xCCCCCCCCCCCCCCCC),
-        ABC_CONST(0xF0F0F0F0F0F0F0F0),
-        ABC_CONST(0xFF00FF00FF00FF00),
-        ABC_CONST(0xFFFF0000FFFF0000),
-        ABC_CONST(0xFFFFFFFF00000000),
-        ABC_CONST(0x0000000000000000),
-        ABC_CONST(0xFFFFFFFFFFFFFFFF)
-    };
-    var valueAnd ABC_UINT64_T;
-    var valueOr ABC_UINT64_T = Truth[6];
-    var v, lit int32;
-    assert(nVars < 7, "nVars < 7");
-    for {
-        valueAnd = Truth[7];
-        for  v = 0; v < nVars; v, lit = v+1, lit+1  {
-            if pSop[lit] == '1' {
-                valueAnd &=  Truth[v];
-            } else if pSop[lit] == '0' {
-                valueAnd &= ~Truth[v];
-            } else if pSop[lit] != '-' {
-                assert(false, "0"); }
-        }
-        valueOr |= valueAnd;
-        assert(pSop[lit] == ' ', "pSop[lit] == ' '");
-        lit++;
-        lit++;
-        assert(pSop[lit] == '\n', "pSop[lit] == '\\n'");
-        lit++;
-    
-if !( pSop[lit] ) { break }
-} 
-    if Kit_PlaIsComplement(pSop) != 0 {
-        valueOr = ~valueOr; }
-    return valueOr;
-}
-
-/**Fnction*************************************************************
-
-  Synopsis    [Converting SOP into a truth table.]
-
-  Description [The SOP is represented as a C-string, as documented in 
-  file "bblif.h". The truth table is returned as a bit-string composed 
-  of 2^nVars bits. For functions of less than 6 variables, the full
-  machine word is returned. (The truth table looks as if the function
-  had 5 variables.) The use of this procedure should be limited to 
-  Boolean functions with no more than 16 inputs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_PlaToTruth(pSop string, nVars int32, vVars *Vec_Ptr_t, pTemp *uint32, pTruth *uint32) {
-    var v, c, nCubes, fCompl int32;
-    assert(pSop != nil, "pSop != nil");
-    assert(nVars >= 0, "nVars >= 0");
-    if len(pSop) % (nVars + 3) != 0 {
-        fmt.Printf("Kit_PlaToTruth(): SOP is represented incorrectly.\n");
-        return;
-    }
-    // iterate through the cubes
-    Kit_TruthClear( pTruth, nVars );
-    nCubes =  len(pSop) / (nVars + 3);
-    for  c = 0; c < nCubes; c++  {
-        fCompl = (pSop[nVars+1] == '0');
-        Kit_TruthFill( pTemp, nVars );
-        // iterate through the literals of the cube
-        for  v = 0; v < nVars; v++  {
-            if pSop[v] == '1' {
-                Kit_TruthAnd( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars );
-            } else if pSop[v] == '0' {
-                Kit_TruthSharp( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars ); }
-        }
-        // add cube to storage
-        Kit_TruthOr( pTruth, pTruth, pTemp, nVars );
-        // go to the next cube
-        pSop += (nVars + 3);
-    }
-    if fCompl != 0 {
-        Kit_TruthNot( pTruth, pTruth, nVars ); }
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1,222 +1,90 @@
 package kit
 
-import "fmt"
+import "github.com/glycerine/abcgo/aig/hop"
 
-/**CFile****************************************************************
-
-  FileName    [kitHop.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Procedures involving AIGs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitHop.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-//#include "aig/hop/hop.h"
-//#include "aig/gia/gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Transforms the decomposition graph into the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_GraphToGiaInternal(pMan *Gia_Man_t, pGraph *Kit_Graph_t, fHash int32) int32 {
-    var pNode *Kit_Node_t  = nil;
-    var i, pAnd0, pAnd1 int32;
-    // check for constant function
-    if Kit_GraphIsConst(pGraph) {
-        return Abc_LitNotCond( 1, Kit_GraphIsComplement(pGraph) ); }
-    // check for a literal
-    if Kit_GraphIsVar(pGraph) {
-        return Abc_LitNotCond( Kit_GraphVar(pGraph).iFunc, Kit_GraphIsComplement(pGraph) ); }
-    // build the AIG nodes corresponding to the AND gates of the graph
-    // inlining of macro Kit_GraphForEachNode
-    for  i = (pGraph).nLeaves; (i < (pGraph).nSize) && (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {
-        pAnd0 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge0.Node).iFunc, pNode.eEdge0.fCompl ); 
-        pAnd1 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge1.Node).iFunc, pNode.eEdge1.fCompl ); 
-        if fHash != 0 {
-            pNode.iFunc = Gia_ManHashAnd( pMan, pAnd0, pAnd1 );
-        } else {
-            pNode.iFunc = Gia_ManAppendAnd2( pMan, pAnd0, pAnd1 ); }
-    }
-    // complement the result if necessary
-    return Abc_LitNotCond( pNode.iFunc, Kit_GraphIsComplement(pGraph) );
-}
-func Kit_GraphToGia(pMan *Gia_Man_t, pGraph *Kit_Graph_t, vLeaves *Vec_Int_t, fHash int32) int32 {
-    var pNode *Kit_Node_t  = nil;
-    var i int32;
-    // collect the fanins
-    // inlining of macro Kit_GraphForEachLeaf
-    for  i = 0; (i < (pGraph).nLeaves) && (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {
-        if vLeaves != nil {
-            pNode.iFunc = Vec_IntEntry(vLeaves, i);
-        } else {
-            pNode.iFunc = Gia_Obj2Lit(pMan, Gia_ManPi(pMan, i));
-        }
-    }
-    // perform strashing
-    return Kit_GraphToGiaInternal( pMan, pGraph, fHash );
-}
-func Kit_TruthToGia(pMan *Gia_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {
-    var iLit int32;
-    var pGraph *Kit_Graph_t;
-    // transform truth table into the decomposition tree
-    if vMemory == nil {
-        vMemory = Vec_IntAlloc( 0 );
-        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );
-        Vec_IntFree( vMemory );
-    
-    } else {
-        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }
-    if pGraph == nil {
-        fmt.Printf("Kit_TruthToGia(): Converting truth table to AIG has failed for function:\n");
-        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf("\n");
-    }
-    // derive the AIG for the decomposition tree
-    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );
-    Kit_GraphFree( pGraph );
-    return iLit;
-}
-func Kit_TruthToGia2(pMan *Gia_Man_t, pTruth0 *uint32, pTruth1 *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {
-    var iLit int32;
-    var pGraph *Kit_Graph_t;
-    // transform truth table into the decomposition tree
-    if vMemory == nil {
-        vMemory = Vec_IntAlloc( 0 );
-        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory );
-        Vec_IntFree( vMemory );
-    
-    } else {
-        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory ); }
-    if pGraph == nil {
-        fmt.Printf("Kit_TruthToGia2(): Converting truth table to AIG has failed for function:\n");
-        Kit_DsdPrintFromTruth( pTruth0, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( pTruth1, nVars ); fmt.Printf("\n");
-    }
-    // derive the AIG for the decomposition tree
-    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );
-    Kit_GraphFree( pGraph );
-    return iLit;
+type kitGiaManager interface {
+	Const1() int32
+	InputLiteral(int32) int32
+	AndLiteral(int32, int32, bool) int32
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms the decomposition graph into the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_GraphToHopInternal(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {
-    var pNode *Kit_Node_t  = nil;
-    var pAnd0, pAnd1 *Hop_Obj_t;
-    var i int32;
-    // check for constant function
-    if Kit_GraphIsConst(pGraph) {
-        return Hop_NotCond( Hop_ManConst1(pMan), Kit_GraphIsComplement(pGraph) ); }
-    // check for a literal
-    if Kit_GraphIsVar(pGraph) {
-        return Hop_NotCond( (Hop_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }
-    // build the AIG nodes corresponding to the AND gates of the graph
-    // inlining of macro Kit_GraphForEachNode
-    for  i = (pGraph).nLeaves; (i < (pGraph).nSize) && (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {
-        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); 
-        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); 
-        pNode.pFunc = Hop_And( pMan, pAnd0, pAnd1 );
-    }
-    // complement the result if necessary
-    return Hop_NotCond( (Hop_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );
+func Kit_GraphToGiaInternal(manager kitGiaManager, g *Kit_Graph_t, hash int32) int32 {
+	if g.fConst != 0 {
+		return manager.Const1() ^ int32(g.eRoot.fCompl)
+	}
+	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
+		node := g.pNodes[i]
+		a := g.pNodes[node.eEdge0.Node].iFunc ^ int32(node.eEdge0.fCompl)
+		b := g.pNodes[node.eEdge1.Node].iFunc ^ int32(node.eEdge1.fCompl)
+		node.iFunc = manager.AndLiteral(a, b, hash != 0)
+	}
+	return g.pNodes[g.eRoot.Node].iFunc ^ int32(g.eRoot.fCompl)
 }
-func Kit_GraphToHop(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {
-    var pNode *Kit_Node_t  = nil;
-    var i int32;
-    // collect the fanins
-    // inlining of macro Kit_GraphForEachLeaf
-    for  i = 0; (i < (pGraph).nLeaves) && (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {
-        pNode.pFunc = Hop_IthVar( pMan, i );
-    }
-    // perform strashing
-    return Kit_GraphToHopInternal( pMan, pGraph );
+func Kit_GraphToGia(manager kitGiaManager, g *Kit_Graph_t, leaves []int32, hash int32) int32 {
+	if leaves != nil && len(leaves) < int(g.nLeaves) {
+		panic("kit: insufficient GIA leaves")
+	}
+	for i := int32(0); i < g.nLeaves; i++ {
+		if leaves == nil {
+			g.pNodes[i].iFunc = manager.InputLiteral(i)
+		} else {
+			g.pNodes[i].iFunc = leaves[i]
+		}
+	}
+	return Kit_GraphToGiaInternal(manager, g, hash)
 }
-func Kit_TruthToHop(pMan *Hop_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {
-    var pObj *Hop_Obj_t;
-    var pGraph *Kit_Graph_t;
-    // transform truth table into the decomposition tree
-    if vMemory == nil {
-        vMemory = Vec_IntAlloc( 0 );
-        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );
-        Vec_IntFree( vMemory );
-    
-    } else {
-        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }
-    if pGraph == nil {
-        fmt.Printf("Kit_TruthToHop(): Converting truth table to AIG has failed for function:\n");
-        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf("\n");
-    }
-    // derive the AIG for the decomposition tree
-    pObj = Kit_GraphToHop( pMan, pGraph );
-    Kit_GraphFree( pGraph );
-    return pObj;
+func Kit_TruthToGia(manager kitGiaManager, truth []uint32, nVars int32, memory *[]uint32, leaves []int32, hash int32) int32 {
+	g := Kit_TruthToGraph(truth, nVars, memory)
+	if g == nil {
+		panic("kit: truth-to-GIA factoring failed")
+	}
+	return Kit_GraphToGia(manager, g, leaves, hash)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Strashes one logic node using its SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_CoverToHop(pMan *Hop_Man_t, vCover *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {
-    var pGraph *Kit_Graph_t;
-    var pFunc *Hop_Obj_t;
-    // perform factoring
-    Vec_IntClear( vMemory );
-    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );
-    // convert graph to the AIG
-    pFunc = Kit_GraphToHop( pMan, pGraph );
-    Kit_GraphFree( pGraph );
-    return pFunc;
+func Kit_TruthToGia2(manager kitGiaManager, off, on []uint32, nVars int32, memory *[]uint32, leaves []int32, hash int32) int32 {
+	g := Kit_TruthToGraph2(off, on, nVars, memory)
+	if g == nil {
+		panic("kit: care-set truth-to-GIA factoring failed")
+	}
+	return Kit_GraphToGia(manager, g, leaves, hash)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Kit_GraphToHopInternal(manager *hop.Hop_Man_t, g *Kit_Graph_t) *hop.Hop_Obj_t {
+	if g.fConst != 0 {
+		return hop.Hop_NotCond(hop.Hop_ManConst1(manager), int32(g.eRoot.fCompl))
+	}
+	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
+		node := g.pNodes[i]
+		a, ok := g.pNodes[node.eEdge0.Node].pFunc.(*hop.Hop_Obj_t)
+		if !ok {
+			panic("kit: missing first Hop fanin")
+		}
+		b, ok := g.pNodes[node.eEdge1.Node].pFunc.(*hop.Hop_Obj_t)
+		if !ok {
+			panic("kit: missing second Hop fanin")
+		}
+		node.pFunc = hop.Hop_And(manager, hop.Hop_NotCond(a, int32(node.eEdge0.fCompl)), hop.Hop_NotCond(b, int32(node.eEdge1.fCompl)))
+	}
+	root, ok := g.pNodes[g.eRoot.Node].pFunc.(*hop.Hop_Obj_t)
+	if !ok {
+		panic("kit: missing Hop root")
+	}
+	return hop.Hop_NotCond(root, int32(g.eRoot.fCompl))
+}
+func Kit_GraphToHop(manager *hop.Hop_Man_t, g *Kit_Graph_t) *hop.Hop_Obj_t {
+	for i := int32(0); i < g.nLeaves; i++ {
+		g.pNodes[i].pFunc = hop.Hop_IthVar(manager, i)
+	}
+	return Kit_GraphToHopInternal(manager, g)
+}
+func Kit_TruthToHop(manager *hop.Hop_Man_t, truth []uint32, nVars int32, memory *[]uint32) *hop.Hop_Obj_t {
+	g := Kit_TruthToGraph(truth, nVars, memory)
+	if g == nil {
+		panic("kit: truth-to-Hop factoring failed")
+	}
+	return Kit_GraphToHop(manager, g)
+}
+func Kit_CoverToHop(manager *hop.Hop_Man_t, cover []uint32, nVars int32, memory *[]uint32) *hop.Hop_Obj_t {
+	if memory != nil {
+		*memory = (*memory)[:0]
+	}
+	return Kit_GraphToHop(manager, Kit_SopFactor(cover, 0, nVars, memory))
+}

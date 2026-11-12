@@ -1,377 +1,188 @@
 package kit
 
-import "fmt"
+// Packed MUX records have fixed portable bit positions, replacing the C union.
+type Kit_Mux_t struct{ v, t, e, c, i uint32 }
 
-/**CFile****************************************************************
-
-  FileName    [kitCloud.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Procedures using BDD package CLOUD.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitCloud.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// internal representation of the function to be decomposed
-   
-type Kit_Mux_t struct {
-    v uint32; /* C bitfield: 5 bits; review packing and truncation */          // variable 
-    t uint32; /* C bitfield: 12 bits; review packing and truncation */          // then edge
-    e uint32; /* C bitfield: 12 bits; review packing and truncation */          // else edge
-    c uint32; /* C bitfield: 1 bits; review packing and truncation */          // complemented attr of else edge
-    i uint32; /* C bitfield: 1 bits; review packing and truncation */          // complemented attr of top node
+func Kit_Mux2Int(m Kit_Mux_t) int32 {
+	if m.v >= 32 || m.t >= 4096 || m.e >= 4096 || m.c > 1 || m.i > 1 {
+		panic("kit: MUX field overflow")
+	}
+	return int32(m.v | m.t<<5 | m.e<<17 | m.c<<29 | m.i<<30)
 }
-
-func Kit_Mux2Int(m Kit_Mux_t) int32 { union { var x Kit_Mux_t; var y int32; }
- v; v.x = m; return v.y;  }
-func Kit_Int2Mux(m int32) Kit_Mux_t { union { var x Kit_Mux_t; var y int32; }
- v; v.y = m; return v.x;  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derive BDD from the truth table for 5 variable functions.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Kit_TruthToCloud5_rec_uVars [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
-func Kit_TruthToCloud5_rec(dd *CloudManager, uTruth uint32, nVars int32, nVarsAll int32) *CloudNode {
-    
-    var pCof0, pCof1 *CloudNode;
-    var uCof0, uCof1 uint32;
-    assert(nVars <= 5, "nVars <= 5");
-    if uTruth == 0 {
-        return dd.zero; }
-    if uTruth == ~0 {
-        return dd.one; }
-    if nVars == 1 {
-        if uTruth == spStatic_Kit_TruthToCloud5_rec_uVars[0] {
-            return dd.vars[nVarsAll-1]; }
-        if uTruth == ~spStatic_Kit_TruthToCloud5_rec_uVars[0] {
-            return Cloud_Not(dd.vars[nVarsAll-1]); }
-        assert(false, "0");
-    }
-//    Count++;
-    assert(nVars > 1, "nVars > 1");
-    uCof0 = uTruth & ~spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];
-    uCof1 = uTruth &  spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];
-    uCof0 |= uCof0 << (1<<(nVars-1));
-    uCof1 |= uCof1 >> (1<<(nVars-1));
-    if uCof0 == uCof1 {
-        return Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll ); }
-    if uCof0 == ~uCof1 {
-        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );
-        pCof1 = Cloud_Not( pCof0 );
-    
-    } else {
-        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );
-        pCof1 = Kit_TruthToCloud5_rec( dd, uCof1, nVars - 1, nVarsAll );
-    }
-    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );
+func Kit_Int2Mux(value int32) Kit_Mux_t {
+	v := uint32(value)
+	return Kit_Mux_t{v & 31, v >> 5 & 4095, v >> 17 & 4095, v >> 29 & 1, v >> 30 & 1}
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Compute BDD for the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Kit_TruthToCloud_rec(dd *CloudManager, pTruth *uint32, nVars int32, nVarsAll int32) *CloudNode {
-    var pCof0, pCof1 *CloudNode;
-    var pTruth0, pTruth1 *uint32;
-    if nVars <= 5 {
-        return Kit_TruthToCloud5_rec( dd, pTruth[0], nVars, nVarsAll ); }
-    if Kit_TruthIsConst0(pTruth, nVars) {
-        return dd.zero; }
-    if Kit_TruthIsConst1(pTruth, nVars) {
-        return dd.one; }
-//    Count++;
-    pTruth0 = pTruth;
-    pTruth1 = pTruth + Kit_TruthWordNum(nVars-1);
-    if Kit_TruthIsEqual( pTruth0, pTruth1, nVars - 1 ) {
-        return Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll ); }
-    if Kit_TruthIsOpposite( pTruth0, pTruth1, nVars - 1 ) {
-        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );
-        pCof1 = Cloud_Not( pCof0 );
-    
-    } else {
-        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );
-        pCof1 = Kit_TruthToCloud_rec( dd, pTruth1, nVars - 1, nVarsAll );
-    }
-    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );
+func Kit_TruthToCloud5_rec(dd *CloudManager, truth uint32, nVars, total int32) *CloudNode {
+	return Kit_TruthToCloud_rec(dd, []uint32{truth}, nVars, total)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Compute BDD for the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Kit_TruthToCloud(dd *CloudManager, pTruth *uint32, nVars int32) *CloudNode {
-    var pRes *CloudNode;
-    pRes = Kit_TruthToCloud_rec( dd, pTruth, nVars, nVars );
-//    printf( "%d/%d  ", Count, Cloud_DagSize(dd, pRes) );
-    return pRes;
+func Kit_TruthToCloud_rec(dd *CloudManager, truth []uint32, nVars, total int32) *CloudNode {
+	if Kit_TruthIsConst0(truth, nVars) != 0 {
+		return dd.zero
+	}
+	if Kit_TruthIsConst1(truth, nVars) != 0 {
+		return dd.one
+	}
+	if nVars == 0 {
+		panic("kit: nonconstant zero-variable truth table")
+	}
+	low, high := kitIsopCofs(truth, nVars-1)
+	if Kit_TruthIsEqual(low, high, nVars-1) != 0 {
+		return Kit_TruthToCloud_rec(dd, low, nVars-1, total)
+	}
+	a := Kit_TruthToCloud_rec(dd, low, nVars-1, total)
+	if a == nil {
+		return nil
+	}
+	var b *CloudNode
+	if Kit_TruthIsOpposite(low, high, nVars-1) != 0 {
+		b = Cloud_Not(a)
+	} else {
+		b = Kit_TruthToCloud_rec(dd, high, nVars-1, total)
+	}
+	if b == nil {
+		return nil
+	}
+	return Cloud_MakeNode(dd, uint32(total-nVars), b, a)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Transforms the array of BDDs into the integer array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Kit_CreateCloud(dd *CloudManager, pFunc *CloudNode, vNodes *Vec_Int_t) int32 {
-    var Mux Kit_Mux_t;
-    var nNodes, i int32;
-    // collect BDD nodes
-    nNodes = Cloud_DagCollect( dd, pFunc );
-    if nNodes >= (1<<12) { // because in Kit_Mux_t edge is 12 bit
-        return 0; }
-    assert(nNodes == Cloud_DagSize( dd, pFunc ), "nNodes == Cloud_DagSize( dd, pFunc )");
-    assert(nNodes < dd.nNodesLimit, "nNodes < dd.nNodesLimit");
-    Vec_IntClear( vNodes );
-    Vec_IntPush( vNodes, 0 ); // const1 node
-    dd.ppNodes[0].s = 0;
-    for  i = 1; i < nNodes; i++  {
-        dd.ppNodes[i].s = i;
-        Mux.v = dd.ppNodes[i].v;
-        Mux.t = dd.ppNodes[i].t.s;
-        Mux.e = Cloud_Regular(dd.ppNodes[i].e).s;
-        Mux.c = Cloud_IsComplement(dd.ppNodes[i].e); 
-        if i == nNodes - 1 {
-            Mux.i = Cloud_IsComplement(pFunc);
-        } else {
-            Mux.i = 0;
-        }
-        // put the MUX into the array
-        Vec_IntPush( vNodes, Kit_Mux2Int(Mux) );
-    }
-    assert(Vec_IntSize(vNodes) == nNodes, "Vec_IntSize(vNodes) == nNodes");
-    // reset signatures
-    for  i = 0; i < nNodes; i++  {
-        dd.ppNodes[i].s = dd.nSignCur;
-    }
-    return 1;
+func Kit_TruthToCloud(dd *CloudManager, truth []uint32, nVars int32) *CloudNode {
+	if nVars < 0 || nVars > dd.nVars {
+		panic("kit: cloud variable count out of bounds")
+	}
+	return Kit_TruthToCloud_rec(dd, truth, nVars, nVars)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Transforms the array of BDDs into the integer array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Kit_CreateCloudFromTruth(dd *CloudManager, pTruth *uint32, nVars int32, vNodes *Vec_Int_t) int32 {
-    var pFunc *CloudNode;
-    Cloud_Restart( dd );
-    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );
-    Vec_IntClear( vNodes );
-    return Kit_CreateCloud( dd, pFunc, vNodes );
+func Kit_CreateCloud(dd *CloudManager, function *CloudNode, nodes *[]int32) int32 {
+	if function == nil {
+		return 0
+	}
+	n := Cloud_DagCollect(dd, function)
+	if n >= 4096 {
+		return 0
+	}
+	*nodes = (*nodes)[:0]
+	indices := map[*CloudNode]uint32{}
+	for i, node := range dd.ppNodes {
+		indices[node] = uint32(i)
+		if i == 0 {
+			record := Kit_Mux_t{}
+			if n == 1 && Cloud_IsComplement(function) {
+				record.i = 1
+			}
+			*nodes = append(*nodes, Kit_Mux2Int(record))
+			continue
+		}
+		record := Kit_Mux_t{v: Cloud_V(node), t: indices[Cloud_Regular(node.t)], e: indices[Cloud_Regular(node.e)]}
+		if Cloud_IsComplement(node.e) {
+			record.c = 1
+		}
+		if i == int(n)-1 && Cloud_IsComplement(function) {
+			record.i = 1
+		}
+		*nodes = append(*nodes, Kit_Mux2Int(record))
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes composition of truth tables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_CloudToTruth(vNodes *Vec_Int_t, nVars int32, vStore *Vec_Ptr_t, fInv int32) *uint32 {
-    var pThis, pFan0, pFan1 *uint32;
-    var Mux Kit_Mux_t;
-    var i, Entry int32;
-    assert(Vec_IntSize(vNodes) <= Vec_PtrSize(vStore), "Vec_IntSize(vNodes) <= Vec_PtrSize(vStore)");
-    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );
-    Kit_TruthFill( pThis, nVars );
-    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )
-    {
-        Mux = Kit_Int2Mux(Entry);
-        assert(int32(Mux.e) < i && int32(Mux.t) < i && int32(Mux.v) < nVars, "int32(Mux.e) < i && int32(Mux.t) < i && int32(Mux.v) < nVars");          
-        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );
-        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );
-        pThis = (unsigned *)Vec_PtrEntry( vStore, i );
-        Kit_TruthMuxVarPhase( pThis, pFan0, pFan1, nVars, fInv? Mux.v : nVars-1-Mux.v, Mux.c );
-    } 
-    // complement the result
-    if Mux.i {
-        Kit_TruthNot( pThis, pThis, nVars ); }
-    return pThis;
+func Kit_CreateCloudFromTruth(dd *CloudManager, truth []uint32, nVars int32, nodes *[]int32) int32 {
+	Cloud_Restart(dd)
+	function := Kit_TruthToCloud(dd, truth, nVars)
+	*nodes = (*nodes)[:0]
+	return Kit_CreateCloud(dd, function, nodes)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes composition of truth tables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_TruthCompose(dd *CloudManager, pTruth *uint32, nVars int32, pInputs **uint32, nVarsAll int32, vStore *Vec_Ptr_t, vNodes *Vec_Int_t) *uint32 {
-    var pFunc *CloudNode;
-    var pThis, pFan0, pFan1 *uint32;
-    var Mux Kit_Mux_t;
-    var i, Entry, RetValue int32;
-    // derive BDD from truth table
-    Cloud_Restart( dd );
-    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );
-    // convert it into nodes
-    RetValue = Kit_CreateCloud( dd, pFunc, vNodes );
-    if RetValue == 0 {
-        fmt.Printf("Kit_TruthCompose(): Internal failure!!!\n"); }
-    // verify the result
-//    pFan0 = Kit_CloudToTruth( vNodes, nVars, vStore, 0 );
-//    if ( !Kit_TruthIsEqual( pTruth, pFan0, nVars ) )
-//        printf( "Failed!\n" );
-    // compute truth table from the BDD
-    assert(Vec_IntSize(vNodes) <= Vec_PtrSize(vStore), "Vec_IntSize(vNodes) <= Vec_PtrSize(vStore)");
-    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );
-    Kit_TruthFill( pThis, nVarsAll );
-    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )
-    {
-        Mux = Kit_Int2Mux(Entry);
-        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );
-        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );
-        pThis = (unsigned *)Vec_PtrEntry( vStore, i );
-        Kit_TruthMuxPhase( pThis, pFan0, pFan1, pInputs[nVars-1-Mux.v], nVarsAll, Mux.c );
-    }
-    // complement the result
-    if Mux.i {
-        Kit_TruthNot( pThis, pThis, nVarsAll ); }
-    return pThis;
+func kitCloudStore(store *[][]uint32, count int, nVars int32) {
+	words := int(Kit_TruthWordNum(nVars))
+	for len(*store) < count {
+		*store = append(*store, nil)
+	}
+	for i := 0; i < count; i++ {
+		if cap((*store)[i]) < words {
+			(*store)[i] = make([]uint32, words)
+		} else {
+			(*store)[i] = (*store)[i][:words]
+		}
+	}
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Compute BDD for the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Kit_TruthCofSupports(vBddDir *Vec_Int_t, vBddInv *Vec_Int_t, nVars int32, vMemory *Vec_Int_t, puSupps *uint32) {
-    var Mux Kit_Mux_t;
-    var puSuppAll *uint32;
-    var pThis *uint32  = nil; // Suppress "might be used uninitialized"
-    var pFan0, pFan1 *uint32;
-    var i, v, Var, Entry, nSupps int32;
-    nSupps = 2 * nVars;
-
-    // extend storage
-    if Vec_IntSize( vMemory ) < nSupps * Vec_IntSize(vBddDir) {
-        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddDir) ); }
-    puSuppAll = (unsigned *)Vec_IntArray( vMemory );
-    // clear storage for the const node
-    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );
-    // compute supports from nodes
-    Vec_IntForEachEntryStart( vBddDir, Entry, i, 1 )
-    {
-        Mux = Kit_Int2Mux(Entry);
-        Var = nVars - 1 - Mux.v;
-        pFan0 = puSuppAll + nSupps * Mux.e;
-        pFan1 = puSuppAll + nSupps * Mux.t;
-        pThis = puSuppAll + nSupps * i;
-        for  v = 0; v < nSupps; v++  {
-            pThis[v] = pFan0[v] | pFan1[v] | (1<<Var);
-        }
-        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], "pFan0[2*Var + 0] == pFan0[2*Var + 1]");
-        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], "pFan1[2*Var + 0] == pFan1[2*Var + 1]");
-        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];
-        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];
-    }
-    // copy the result
-    memcpy( puSupps, pThis, sizeof(unsigned) * nSupps );
-    // compute the inverse
-
-    // extend storage
-    if Vec_IntSize( vMemory ) < nSupps * Vec_IntSize(vBddInv) {
-        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddInv) ); }
-    puSuppAll = (unsigned *)Vec_IntArray( vMemory );
-    // clear storage for the const node
-    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );
-    // compute supports from nodes
-    Vec_IntForEachEntryStart( vBddInv, Entry, i, 1 )
-    {
-        Mux = Kit_Int2Mux(Entry);
-//        Var = nVars - 1 - Mux.v;
-        Var = Mux.v;
-        pFan0 = puSuppAll + nSupps * Mux.e;
-        pFan1 = puSuppAll + nSupps * Mux.t;
-        pThis = puSuppAll + nSupps * i;
-        for  v = 0; v < nSupps; v++  {
-            pThis[v] = pFan0[v] | pFan1[v] | (1<<Var);
-        }
-        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], "pFan0[2*Var + 0] == pFan0[2*Var + 1]");
-        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], "pFan1[2*Var + 0] == pFan1[2*Var + 1]");
-        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];
-        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];
-    }
-
-    // merge supports
-    for  Var = 0; Var < nSupps; Var++  {
-        puSupps[Var] = (puSupps[Var] & Kit_BitMask(Var/2)) | (pThis[Var] & ~Kit_BitMask(Var/2));
-    }
+func Kit_CloudToTruth(nodes []int32, nVars int32, store *[][]uint32, inverse int32) []uint32 {
+	if len(nodes) == 0 {
+		panic("kit: empty MUX program")
+	}
+	kitCloudStore(store, len(nodes), nVars)
+	Kit_TruthFill((*store)[0], nVars)
+	last := Kit_Int2Mux(nodes[0])
+	for i := 1; i < len(nodes); i++ {
+		m := Kit_Int2Mux(nodes[i])
+		if int(m.e) >= i || int(m.t) >= i || m.v >= uint32(nVars) {
+			panic("kit: invalid MUX topology")
+		}
+		v := nVars - 1 - int32(m.v)
+		if inverse != 0 {
+			v = int32(m.v)
+		}
+		Kit_TruthMuxVarPhase((*store)[i], (*store)[m.e], (*store)[m.t], nVars, v, int32(m.c))
+		last = m
+	}
+	out := (*store)[len(nodes)-1]
+	if last.i != 0 {
+		Kit_TruthNot(out, out, nVars)
+	}
+	return out
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Kit_TruthCompose(dd *CloudManager, truth []uint32, nVars int32, inputs [][]uint32, total int32, store *[][]uint32, nodes *[]int32) []uint32 {
+	if len(inputs) < int(nVars) {
+		panic("kit: insufficient composition inputs")
+	}
+	if Kit_CreateCloudFromTruth(dd, truth, nVars, nodes) == 0 {
+		return nil
+	}
+	kitCloudStore(store, len(*nodes), total)
+	Kit_TruthFill((*store)[0], total)
+	last := Kit_Int2Mux((*nodes)[0])
+	for i := 1; i < len(*nodes); i++ {
+		m := Kit_Int2Mux((*nodes)[i])
+		Kit_TruthMuxPhase((*store)[i], (*store)[m.e], (*store)[m.t], inputs[nVars-1-int32(m.v)], total, int32(m.c))
+		last = m
+	}
+	out := (*store)[len(*nodes)-1]
+	if last.i != 0 {
+		Kit_TruthNot(out, out, total)
+	}
+	return out
+}
+func Kit_TruthCofSupports(direct, inverse []int32, nVars int32, memory *[]uint32, supports []uint32) {
+	width := 2 * nVars
+	if len(supports) < int(width) {
+		panic("kit: short cofactor support output")
+	}
+	run := func(nodes []int32, reverse bool) []uint32 {
+		if len(nodes) == 0 {
+			panic("kit: empty cofactor MUX program")
+		}
+		*memory = make([]uint32, int(width)*len(nodes))
+		var out []uint32
+		if width == 0 {
+			return nil
+		}
+		out = (*memory)[:width]
+		for i := 1; i < len(nodes); i++ {
+			m := Kit_Int2Mux(nodes[i])
+			v := int32(m.v)
+			if reverse {
+				v = nVars - 1 - v
+			}
+			lo := (*memory)[width*int32(m.e) : width*(int32(m.e)+1)]
+			hi := (*memory)[width*int32(m.t) : width*(int32(m.t)+1)]
+			out = (*memory)[width*int32(i) : width*int32(i+1)]
+			for j := range out {
+				out[j] = lo[j] | hi[j] | 1<<uint(v)
+			}
+			out[2*v] = lo[2*v]
+			out[2*v+1] = hi[2*v]
+		}
+		return append([]uint32(nil), out...)
+	}
+	copy(supports, run(direct, true))
+	other := run(inverse, false)
+	for v := int32(0); v < width; v++ {
+		mask := Kit_BitMask(v / 2)
+		supports[v] = supports[v]&mask | other[v]&^mask
+	}
+}

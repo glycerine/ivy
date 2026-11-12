@@ -2,352 +2,123 @@ package kit
 
 import "fmt"
 
-/**CFile****************************************************************
+const KIT_FACTOR_MEM_LIMIT = 1 << 20
 
-  FileName    [kitFactor.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Algebraic factoring.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitFactor.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// factoring fails if intermediate memory usage exceed this limit
-#define KIT_FACTOR_MEM_LIMIT  (1<<20)
-
-// static Kit_Edge_t  Kit_SopFactor_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits, Vec_Int_t * vMemory );
-
-// static Kit_Edge_t  Kit_SopFactorLF_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, Kit_Sop_t * cSimple, int nLits, Vec_Int_t * vMemory );
-
-// static Kit_Edge_t  Kit_SopFactorTrivial( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits );
-
-// static Kit_Edge_t  Kit_SopFactorTrivialCube( Kit_Graph_t * pFForm, unsigned uCube, int nLits );
-
-
-// extern int         Kit_SopFactorVerify( Vec_Int_t * cSop, Kit_Graph_t * pFForm, int nVars );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Factors the cover.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactor(vCover *Vec_Int_t, fCompl int32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {
-    var Sop Kit_Sop_t;
-    var cSop *Kit_Sop_t = &Sop;
-    var pFForm *Kit_Graph_t;
-    var eRoot Kit_Edge_t;
-//    int nCubes;
-
-    // works for up to 15 variables because division procedure
-    // used the last bit for marking the cubes going to the remainder
-    assert(nVars < 16, "nVars < 16");
-
-    // check for trivial functions
-    if Vec_IntSize(vCover) == 0 {
-        return Kit_GraphCreateConst0(); }
-    if Vec_IntSize(vCover) == 1 && Vec_IntEntry(vCover, 0) == 0 {
-        return Kit_GraphCreateConst1(); }
-
-    // prepare memory manager
-//    Vec_IntClear( vMemory );
-    Vec_IntGrow( vMemory, KIT_FACTOR_MEM_LIMIT );
-
-    // perform CST
-    Kit_SopCreateInverse( cSop, vCover, 2 * nVars, vMemory ); // CST
-
-    // start the factored form
-    pFForm = Kit_GraphCreate( nVars );
-    // factor the cover
-    eRoot = Kit_SopFactor_rec( pFForm, cSop, 2 * nVars, vMemory );
-    // finalize the factored form
-    Kit_GraphSetRoot( pFForm, eRoot );
-    if fCompl != 0 {
-        Kit_GraphComplement( pFForm ); }
-
-    // verify the factored form
-//    nCubes = Vec_IntSize(vCover);
-//    Vec_IntShrink( vCover, nCubes );
-//    if ( !Kit_SopFactorVerify( vCover, pFForm, nVars ) )
-//        printf( "Verification has failed.\n" );
-    return pFForm;
+func Kit_SopFactor(cover []uint32, compl, nVars int32, memory *[]uint32) *Kit_Graph_t {
+	if nVars < 0 || nVars >= 16 {
+		panic("kit: factoring supports 0..15 variables")
+	}
+	if len(cover) == 0 {
+		g := Kit_GraphCreateConst0()
+		if compl != 0 {
+			Kit_GraphComplement(g)
+		}
+		return g
+	}
+	if len(cover) == 1 && cover[0] == 0 {
+		g := Kit_GraphCreateConst1()
+		if compl != 0 {
+			Kit_GraphComplement(g)
+		}
+		return g
+	}
+	var sop Kit_Sop_t
+	Kit_SopCreateInverse(&sop, cover, 2*nVars, memory)
+	g := Kit_GraphCreate(nVars)
+	g.eRoot = Kit_SopFactor_rec(g, &sop, 2*nVars, memory)
+	if compl != 0 {
+		Kit_GraphComplement(g)
+	}
+	return g
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursive factoring procedure.]
-
-  Description [For the pseudo-code, see Hachtel/Somenzi, 
-  Logic synthesis and verification algorithms, Kluwer, 1996, p. 432.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactor_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {
-    var Div, Quo, Rem, Com Kit_Sop_t;
-    var cDiv *Kit_Sop_t = &Div;
-    var cQuo *Kit_Sop_t = &Quo;
-    var cRem *Kit_Sop_t = &Rem;
-    var cCom *Kit_Sop_t = &Com;
-    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;
-
-    // make sure the cover contains some cubes
-    assert(Kit_SopCubeNum(cSop) > 0, "Kit_SopCubeNum(cSop) > 0");
-
-    // get the divisor
-    if !Kit_SopDivisor(cDiv, cSop, nLits, vMemory) {
-        return Kit_SopFactorTrivial( pFForm, cSop, nLits ); }
-
-    // divide the cover by the divisor
-    Kit_SopDivideInternal( cSop, cDiv, cQuo, cRem, vMemory );
-
-    // check the trivial case
-    assert(Kit_SopCubeNum(cQuo) > 0, "Kit_SopCubeNum(cQuo) > 0");
-    if Kit_SopCubeNum(cQuo) == 1 {
-        return Kit_SopFactorLF_rec( pFForm, cSop, cQuo, nLits, vMemory ); }
-
-    // make the quotient cube ABC_FREE
-    Kit_SopMakeCubeFree( cQuo );
-
-    // divide the cover by the quotient
-    Kit_SopDivideInternal( cSop, cQuo, cDiv, cRem, vMemory );
-
-    // check the trivial case
-    if Kit_SopIsCubeFree( cDiv ) {
-        eNodeDiv = Kit_SopFactor_rec( pFForm, cDiv, nLits, vMemory );
-        eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );
-        eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );
-        if Kit_SopCubeNum(cRem) == 0 {
-            return eNodeAnd; }
-        eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );
-        return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );
-    }
-
-    // get the common cube
-    Kit_SopCommonCubeCover( cCom, cDiv, vMemory );
-
-    // solve the simple problem
-    return Kit_SopFactorLF_rec( pFForm, cSop, cCom, nLits, vMemory );
+func Kit_SopFactor_rec(g *Kit_Graph_t, sop *Kit_Sop_t, nLits int32, memory *[]uint32) Kit_Edge_t {
+	if sop.cubeNum() <= 0 {
+		panic("kit: cannot factor an empty intermediate cover")
+	}
+	var div, quo, rem, common Kit_Sop_t
+	if Kit_SopDivisor(&div, sop, nLits, memory) == 0 {
+		return Kit_SopFactorTrivial(g, sop, nLits)
+	}
+	Kit_SopDivideInternal(sop, &div, &quo, &rem, memory)
+	if quo.cubeNum() <= 0 {
+		panic("kit: empty quotient")
+	}
+	if quo.cubeNum() == 1 {
+		return Kit_SopFactorLF_rec(g, sop, &quo, nLits, memory)
+	}
+	Kit_SopMakeCubeFree(&quo)
+	Kit_SopDivideInternal(sop, &quo, &div, &rem, memory)
+	if Kit_SopIsCubeFree(&div) != 0 {
+		a := Kit_SopFactor_rec(g, &div, nLits, memory)
+		b := Kit_SopFactor_rec(g, &quo, nLits, memory)
+		result := Kit_GraphAddNodeAnd(g, a, b)
+		if rem.cubeNum() == 0 {
+			return result
+		}
+		r := Kit_SopFactor_rec(g, &rem, nLits, memory)
+		return Kit_GraphAddNodeOr(g, result, r)
+	}
+	Kit_SopCommonCubeCover(&common, &div, memory)
+	return Kit_SopFactorLF_rec(g, sop, &common, nLits, memory)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Internal recursive factoring procedure for the leaf case.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactorLF_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, cSimple *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {
-    var Div, Quo, Rem Kit_Sop_t;
-    var cDiv *Kit_Sop_t = &Div;
-    var cQuo *Kit_Sop_t = &Quo;
-    var cRem *Kit_Sop_t = &Rem;
-    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;
-    assert(Kit_SopCubeNum(cSimple) == 1, "Kit_SopCubeNum(cSimple) == 1");
-    // get the most often occurring literal
-    Kit_SopBestLiteralCover( cDiv, cSop, Kit_SopCube(cSimple, 0), nLits, vMemory );
-    // divide the cover by the literal
-    Kit_SopDivideByCube( cSop, cDiv, cQuo, cRem, vMemory );
-    // get the node pointer for the literal
-    eNodeDiv = Kit_SopFactorTrivialCube( pFForm, Kit_SopCube(cDiv, 0), nLits );
-    // factor the quotient and remainder
-    eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );
-    eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );
-    if Kit_SopCubeNum(cRem) == 0 {
-        return eNodeAnd; }
-    eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );
-    return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );
+func Kit_SopFactorLF_rec(g *Kit_Graph_t, sop, simple *Kit_Sop_t, nLits int32, memory *[]uint32) Kit_Edge_t {
+	if simple.cubeNum() != 1 {
+		panic("kit: expected a simple divisor")
+	}
+	var div, quo, rem Kit_Sop_t
+	Kit_SopBestLiteralCover(&div, sop, simple.pCubes[0], nLits, memory)
+	Kit_SopDivideByCube(sop, &div, &quo, &rem, memory)
+	a := Kit_SopFactorTrivialCube(g, div.pCubes[0], nLits)
+	b := Kit_SopFactor_rec(g, &quo, nLits, memory)
+	result := Kit_GraphAddNodeAnd(g, a, b)
+	if rem.cubeNum() == 0 {
+		return result
+	}
+	r := Kit_SopFactor_rec(g, &rem, nLits, memory)
+	return Kit_GraphAddNodeOr(g, result, r)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactorTrivialCube_rec(pFForm *Kit_Graph_t, uCube uint32, nStart int32, nFinish int32) Kit_Edge_t {
-    var eNode1, eNode2 Kit_Edge_t;
-    var i int32;
-    var iLit int32 = -1;
-    var nLits int32;
-    var nLits1 int32;
-    var nLits2 int32;
-    assert((uCube != 0), "uCube");
-    // count the number of literals in this interval
-    nLits = 0;
-    for  i = nStart; i < nFinish; i++  {
-        if Kit_CubeHasLit(uCube, i) {
-            iLit = i;
-            nLits++;
-        }
-    }
-    assert(iLit != -1, "iLit != -1");
-    // quit if there is only one literal        
-    if nLits == 1 {
-        return Kit_EdgeCreate( iLit/2, iLit%2 ); } // CST
-    // split the literals into two parts
-    nLits1 = nLits/2;
-    nLits2 = nLits - nLits1;
-//    nLits2 = nLits/2;
-//    nLits1 = nLits - nLits2;
-    // find the splitting point
-    nLits = 0;
-    for  i = nStart; i < nFinish; i++  {
-        if Kit_CubeHasLit(uCube, i) {
-            if nLits == nLits1 {
-                break; }
-            nLits++;
-        }
-    }
-    // recursively construct the tree for the parts
-    eNode1 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, nStart, i  );
-    eNode2 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, i, nFinish );
-    return Kit_GraphAddNodeAnd( pFForm, eNode1, eNode2 );
+func Kit_SopFactorTrivialCube_rec(g *Kit_Graph_t, cube uint32, start, end int32) Kit_Edge_t {
+	var literals []int32
+	for i := start; i < end; i++ {
+		if cube&(1<<uint(i)) != 0 {
+			literals = append(literals, i)
+		}
+	}
+	if len(literals) == 0 {
+		panic("kit: empty intermediate cube")
+	}
+	if len(literals) == 1 {
+		return Kit_EdgeCreate(literals[0]/2, literals[0]%2)
+	}
+	middle := literals[len(literals)/2]
+	a := Kit_SopFactorTrivialCube_rec(g, cube, start, middle)
+	b := Kit_SopFactorTrivialCube_rec(g, cube, middle, end)
+	return Kit_GraphAddNodeAnd(g, a, b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactorTrivialCube(pFForm *Kit_Graph_t, uCube uint32, nLits int32) Kit_Edge_t {
-    return Kit_SopFactorTrivialCube_rec( pFForm, uCube, 0, nLits );
+func Kit_SopFactorTrivialCube(g *Kit_Graph_t, cube uint32, nLits int32) Kit_Edge_t {
+	return Kit_SopFactorTrivialCube_rec(g, cube, 0, nLits)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactorTrivial_rec(pFForm *Kit_Graph_t, pCubes *uint32, nCubes int32, nLits int32) Kit_Edge_t {
-    var eNode1, eNode2 Kit_Edge_t;
-    var nCubes1, nCubes2 int32;
-    if nCubes == 1 {
-        return Kit_SopFactorTrivialCube_rec( pFForm, pCubes[0], 0, nLits ); }
-    // split the cubes into two parts
-    nCubes1 = nCubes/2;
-    nCubes2 = nCubes - nCubes1;
-//    nCubes2 = nCubes/2;
-//    nCubes1 = nCubes - nCubes2;
-    // recursively construct the tree for the parts
-    eNode1 = Kit_SopFactorTrivial_rec( pFForm, pCubes,           nCubes1, nLits );
-    eNode2 = Kit_SopFactorTrivial_rec( pFForm, pCubes + nCubes1, nCubes2, nLits );
-    return Kit_GraphAddNodeOr( pFForm, eNode1, eNode2 );
+func Kit_SopFactorTrivial_rec(g *Kit_Graph_t, cubes []uint32, nCubes, nLits int32) Kit_Edge_t {
+	if nCubes < 1 {
+		panic("kit: no cubes to factor")
+	}
+	if nCubes == 1 {
+		return Kit_SopFactorTrivialCube(g, cubes[0], nLits)
+	}
+	middle := nCubes / 2
+	a := Kit_SopFactorTrivial_rec(g, cubes[:middle], middle, nLits)
+	b := Kit_SopFactorTrivial_rec(g, cubes[middle:nCubes], nCubes-middle, nLits)
+	return Kit_GraphAddNodeOr(g, a, b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring the cover, which has no algebraic divisors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopFactorTrivial(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32) Kit_Edge_t {
-    return Kit_SopFactorTrivial_rec( pFForm, cSop.pCubes, cSop.nCubes, nLits );
+func Kit_SopFactorTrivial(g *Kit_Graph_t, sop *Kit_Sop_t, nLits int32) Kit_Edge_t {
+	return Kit_SopFactorTrivial_rec(g, sop.pCubes, sop.cubeNum(), nLits)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Testing procedure for the factoring code.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_FactorTest(pTruth *uint32, nVars int32) {
-    var vCover, vMemory *Vec_Int_t;
-    var pGraph *Kit_Graph_t;
-//    unsigned uTruthRes;
-    var RetValue int32;
-
-    // derive SOP
-    vCover = Vec_IntAlloc( 0 );
-    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 );
-    assert(RetValue == 0, "RetValue == 0");
-
-    // derive factored form
-    vMemory = Vec_IntAlloc( 0 );
-    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );
-/*
-    // derive truth table
-    assert( nVars <= 5 );
-    uTruthRes = Kit_GraphToTruth( pGraph );
-    if ( uTruthRes != pTruth[0] )
-        printf( "Verification failed!" );
-*/
-    fmt.Printf("Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\n", nVars, Vec_IntSize(vCover), Kit_GraphNodeNum(pGraph), Vec_IntSize(vMemory));
-
-    Vec_IntFree( vMemory );
-    Vec_IntFree( vCover );
-    Kit_GraphFree( pGraph );
+func Kit_FactorTest(truth []uint32, nVars int32) {
+	var cover, memory []uint32
+	result := Kit_TruthIsop(truth, nVars, &cover, 0)
+	if result != 0 {
+		panic("kit: direct ISOP failed")
+	}
+	g := Kit_SopFactor(cover, 0, nVars, &memory)
+	fmt.Printf("Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\n", nVars, len(cover), Kit_GraphNodeNum(g), len(memory))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

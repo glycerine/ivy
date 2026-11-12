@@ -1,566 +1,212 @@
 package kit
 
-/**CFile****************************************************************
-
-  FileName    [kitSop.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Procedures involving SOPs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitSop.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates SOP from the cube array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopCreate(cResult *Kit_Sop_t, vInput *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) {
-    var uCube uint32;
-    var i int32;
-    // start the cover
-    cResult.nCubes = 0;
-    cResult.pCubes = Vec_IntFetch( vMemory, Vec_IntSize(vInput) );
-    // add the cubes
-    Vec_IntForEachEntry( vInput, uCube, i )
-        Kit_SopPushCube( cResult, uCube );
+// Covers use one bit per literal (two bits per variable). Scratch memory is a
+// Go slice arena: callers may retain sub-slices because Go keeps old backing
+// arrays alive when the arena grows.
+func kitSopReset(s *Kit_Sop_t, capacity int, memory *[]uint32) {
+	s.failed = false
+	s.nLits = 0
+	if memory == nil {
+		s.pCubes = make([]uint32, 0, capacity)
+		return
+	}
+	start := len(*memory)
+	*memory = append(*memory, make([]uint32, capacity)...)
+	s.pCubes = (*memory)[start : start : start+capacity]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates SOP from the cube array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopCreateInverse(cResult *Kit_Sop_t, vInput *Vec_Int_t, nLits int32, vMemory *Vec_Int_t) {
-    var uCube, uMask uint32;
-    var i int32;
-    var nCubes int32 = Vec_IntSize(vInput);
-    // start the cover
-    cResult.nCubes = 0;
-    cResult.pCubes = Vec_IntFetch( vMemory, nCubes );
-    // add the cubes
-//    Vec_IntForEachEntry( vInput, uCube, i )
-    for  i = 0; i < nCubes; i++  {
-        uCube = Vec_IntEntry( vInput, i );
-        uMask = ((uCube | (uCube >> 1)) & 0x55555555);
-        uMask |= (uMask << 1);
-        Kit_SopPushCube( cResult, uCube ^ uMask );
-    }
+func Kit_SopCreate(result *Kit_Sop_t, input []uint32, nVars int32, memory *[]uint32) {
+	kitSopReset(result, len(input), memory)
+	for _, c := range input {
+		Kit_SopPushCube(result, c)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDup(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {
-    var uCube uint32;
-    var i int32;
-    // start the cover
-    cResult.nCubes = 0;
-    cResult.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );
-    // add the cubes
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        Kit_SopPushCube( cResult, uCube );
-    }
+func Kit_SopCreateInverse(result *Kit_Sop_t, input []uint32, nLits int32, memory *[]uint32) {
+	kitSopReset(result, len(input), memory)
+	for _, c := range input {
+		m := (c | c>>1) & 0x55555555
+		m |= m << 1
+		Kit_SopPushCube(result, c^m)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the quotient of division by literal.]
-
-  Description [Reduces the cover to be equal to the result of
-  division of the given cover by the literal.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDivideByLiteralQuo(cSop *Kit_Sop_t, iLit int32) {
-    var uCube uint32;
-    var i, k int32;
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        if Kit_CubeHasLit(uCube, iLit) {
-            Kit_SopWriteCube( cSop, Kit_CubeRemLit(uCube, iLit), k++ ); }
-    }
-    Kit_SopShrink( cSop, k );
+func Kit_SopDup(result, sop *Kit_Sop_t, memory *[]uint32) {
+	input := sop.pCubes[:sop.cubeNum()]
+	Kit_SopCreate(result, input, 0, memory)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Divides cover by one cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDivideByCube(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {
-    var uCube, uDiv uint32;
-    var i int32;
-    // get the only cube
-    assert(Kit_SopCubeNum(cDiv) == 1, "Kit_SopCubeNum(cDiv) == 1");
-    uDiv = Kit_SopCube(cDiv, 0);
-    // allocate covers
-    vQuo.nCubes = 0;
-    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );
-    vRem.nCubes = 0;
-    vRem.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );
-    // sort the cubes
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        if Kit_CubeContains( uCube, uDiv ) {
-            Kit_SopPushCube( vQuo, Kit_CubeSharp(uCube, uDiv) );
-        } else {
-            Kit_SopPushCube( vRem, uCube ); }
-    }
+func Kit_SopDivideByLiteralQuo(sop *Kit_Sop_t, lit int32) {
+	k := 0
+	mask := uint32(1) << uint(lit)
+	for _, c := range sop.pCubes[:sop.cubeNum()] {
+		if c&mask != 0 {
+			sop.pCubes[k] = c &^ mask
+			k++
+		}
+	}
+	sop.pCubes = sop.pCubes[:k]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Divides cover by one cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDivideInternal(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {
-    var uCube, uDiv uint32;
-    var uCube2 uint32; // Suppress "might be used uninitialized"
-    var uDiv2, uQuo uint32;
-    var i, i2, k, k2, nCubesRem int32;
-    assert(Kit_SopCubeNum(cSop) >= Kit_SopCubeNum(cDiv), "Kit_SopCubeNum(cSop) >= Kit_SopCubeNum(cDiv)");
-    // consider special case
-    if Kit_SopCubeNum(cDiv) == 1 {
-        Kit_SopDivideByCube( cSop, cDiv, vQuo, vRem, vMemory );
-        return;
-    }
-    // allocate quotient
-    vQuo.nCubes = 0;
-    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) / Kit_SopCubeNum(cDiv) );
-    // for each cube of the cover
-    // it either belongs to the quotient or to the remainder
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        // skip taken cubes
-        if Kit_CubeIsMarked(uCube) {
-            continue; }
-        // find a matching cube in the divisor
-        uDiv = ~0;
-        // inlining of macro Kit_SopForEachCube
-        for  k = 0; (k < Kit_SopCubeNum(cDiv)) && ((uDiv) = Kit_SopCube(cDiv, k)); k++  {
-            if Kit_CubeContains( uCube, uDiv ) {
-                break; }
-        }
-        // the cube is not found 
-        if k == Kit_SopCubeNum(cDiv) {
-            continue; }
-        // the quotient cube exists
-        uQuo = Kit_CubeSharp( uCube, uDiv );
-        // find corresponding cubes for other cubes of the divisor
-        uDiv2 = ~0;
-        // inlining of macro Kit_SopForEachCube
-        for  k2 = 0; (k2 < Kit_SopCubeNum(cDiv)) && ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {
-            if k2 == k {
-                continue; }
-            // find a matching cube
-            // inlining of macro Kit_SopForEachCube
-            for  i2 = 0; (i2 < Kit_SopCubeNum(cSop)) && ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {
-                // skip taken cubes
-                if Kit_CubeIsMarked(uCube2) {
-                    continue; }
-                // check if the cube can be used
-                if Kit_CubeContains( uCube2, uDiv2 ) && uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {
-                    break; }
-            }
-            // the case when the cube is not found
-            if i2 == Kit_SopCubeNum(cSop) {
-                break; }
-        }
-        // we did not find some cubes - continue looking at other cubes
-        if k2 != Kit_SopCubeNum(cDiv) {
-            continue; }
-        // we found all cubes - add the quotient cube
-        Kit_SopPushCube( vQuo, uQuo );
-
-        // mark the first cube
-        Kit_SopWriteCube( cSop, Kit_CubeMark(uCube), i );
-        // mark other cubes that have this quotient
-        // inlining of macro Kit_SopForEachCube
-        for  k2 = 0; (k2 < Kit_SopCubeNum(cDiv)) && ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {
-            if k2 == k {
-                continue; }
-            // find a matching cube
-            // inlining of macro Kit_SopForEachCube
-            for  i2 = 0; (i2 < Kit_SopCubeNum(cSop)) && ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {
-                // skip taken cubes
-                if Kit_CubeIsMarked(uCube2) {
-                    continue; }
-                // check if the cube can be used
-                if Kit_CubeContains( uCube2, uDiv2 ) && uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {
-                    break; }
-            }
-            assert(i2 < Kit_SopCubeNum(cSop), "i2 < Kit_SopCubeNum(cSop)");
-            // the cube is found, mark it 
-            // (later we will add all unmarked cubes to the remainder)
-            Kit_SopWriteCube( cSop, Kit_CubeMark(uCube2), i2 );
-        }
-    }
-    // determine the number of cubes in the remainder
-    nCubesRem = Kit_SopCubeNum(cSop) - Kit_SopCubeNum(vQuo) * Kit_SopCubeNum(cDiv);
-    // allocate remainder
-    vRem.nCubes = 0;
-    vRem.pCubes = Vec_IntFetch( vMemory, nCubesRem );
-    // finally add the remaining unmarked cubes to the remainder 
-    // and clean the marked cubes in the cover
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        if !Kit_CubeIsMarked(uCube) {
-            Kit_SopPushCube( vRem, uCube );
-            continue;
-        }
-        Kit_SopWriteCube( cSop, Kit_CubeUnmark(uCube), i );
-    }
-    assert(nCubesRem == Kit_SopCubeNum(vRem), "nCubesRem == Kit_SopCubeNum(vRem)");
+func Kit_SopDivideByCube(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
+	if div.cubeNum() != 1 {
+		panic("kit: divisor must have one cube")
+	}
+	d := div.pCubes[0]
+	kitSopReset(quo, int(sop.cubeNum()), memory)
+	kitSopReset(rem, int(sop.cubeNum()), memory)
+	for _, c := range sop.pCubes[:sop.cubeNum()] {
+		if c&d == d {
+			Kit_SopPushCube(quo, c&^d)
+		} else {
+			Kit_SopPushCube(rem, c)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the common cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopCommonCube(cSop *Kit_Sop_t) uint32 {
-    var uMask, uCube uint32;
-    var i int32;
-    uMask = ~uint32(0);
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        uMask &= uCube;
-    }
-    return uMask;
+func Kit_SopDivideInternal(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
+	if div.cubeNum() == 1 {
+		Kit_SopDivideByCube(sop, div, quo, rem, memory)
+		return
+	}
+	if div.cubeNum() <= 0 || sop.cubeNum() < div.cubeNum() {
+		panic("kit: invalid algebraic divisor")
+	}
+	kitSopReset(quo, int(sop.cubeNum()/div.cubeNum()), memory)
+	used := make([]bool, sop.cubeNum())
+	for i, c := range sop.pCubes[:sop.cubeNum()] {
+		if used[i] {
+			continue
+		}
+		divisorIndex := -1
+		for k, d := range div.pCubes[:div.cubeNum()] {
+			if c&d == d {
+				divisorIndex = k
+				break
+			}
+		}
+		if divisorIndex < 0 {
+			continue
+		}
+		q := c &^ div.pCubes[divisorIndex]
+		indices := make([]int, div.cubeNum())
+		indices[divisorIndex] = i
+		found := true
+		for k, d := range div.pCubes[:div.cubeNum()] {
+			if k == divisorIndex {
+				continue
+			}
+			index := -1
+			for j, candidate := range sop.pCubes[:sop.cubeNum()] {
+				if !used[j] && candidate&d == d && candidate&^d == q {
+					index = j
+					break
+				}
+			}
+			if index < 0 {
+				found = false
+				break
+			}
+			indices[k] = index
+		}
+		if !found {
+			continue
+		}
+		Kit_SopPushCube(quo, q)
+		for _, j := range indices {
+			used[j] = true
+		}
+	}
+	kitSopReset(rem, int(sop.cubeNum()), memory)
+	for i, c := range sop.pCubes[:sop.cubeNum()] {
+		if !used[i] {
+			Kit_SopPushCube(rem, c)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Makes the cover cube-free.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopMakeCubeFree(cSop *Kit_Sop_t) {
-    var uMask, uCube uint32;
-    var i int32;
-    uMask = Kit_SopCommonCube( cSop );
-    if uMask == 0 {
-        return; }
-    // remove the common cube
-    // inlining of macro Kit_SopForEachCube
-    for  i = 0; (i < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, i)); i++  {
-        Kit_SopWriteCube( cSop, Kit_CubeSharp(uCube, uMask), i );
-    }
+func Kit_SopCommonCube(sop *Kit_Sop_t) uint32 {
+	mask := ^uint32(0)
+	for _, c := range sop.pCubes[:sop.cubeNum()] {
+		mask &= c
+	}
+	return mask
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cover is cube-free.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopIsCubeFree(cSop *Kit_Sop_t) int32 {
-    return Kit_SopCommonCube( cSop ) == 0;
+func Kit_SopMakeCubeFree(sop *Kit_Sop_t) {
+	mask := Kit_SopCommonCube(sop)
+	for i := range sop.pCubes[:sop.cubeNum()] {
+		sop.pCubes[i] &^= mask
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates SOP composes of the common cube of the given SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopCommonCubeCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {
-    assert(Kit_SopCubeNum(cSop) > 0, "Kit_SopCubeNum(cSop) > 0");
-    cResult.nCubes = 0;
-    cResult.pCubes = Vec_IntFetch( vMemory, 1 );
-    Kit_SopPushCube( cResult, Kit_SopCommonCube(cSop) );
+func Kit_SopIsCubeFree(sop *Kit_Sop_t) int32 {
+	if Kit_SopCommonCube(sop) == 0 {
+		return 1
+	}
+	return 0
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Find any literal that occurs more than once.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopAnyLiteral(cSop *Kit_Sop_t, nLits int32) int32 {
-    var uCube uint32;
-    var i, k, nLitsCur int32;
-    // go through each literal
-    for  i = 0; i < nLits; i++  {
-        // go through all the cubes
-        nLitsCur = 0;
-        // inlining of macro Kit_SopForEachCube
-        for  k = 0; (k < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, k)); k++  {
-            if Kit_CubeHasLit(uCube, i) {
-                nLitsCur++; }
-        }
-        if nLitsCur > 1 {
-            return i; }
-    }
-    return -1;
+func Kit_SopCommonCubeCover(result, sop *Kit_Sop_t, memory *[]uint32) {
+	if sop.cubeNum() <= 0 {
+		panic("kit: empty common cube cover")
+	}
+	kitSopReset(result, 1, memory)
+	Kit_SopPushCube(result, Kit_SopCommonCube(sop))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find the least often occurring literal.]
-
-  Description [Find the least often occurring literal among those
-  that occur more than once.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopWorstLiteral(cSop *Kit_Sop_t, nLits int32) int32 {
-    var uCube uint32;
-    var i, k, iMin, nLitsMin, nLitsCur int32;
-    var fUseFirst int32  = 1;
-
-    // go through each literal
-    iMin = -1;
-    nLitsMin = 1000000;
-    for  i = 0; i < nLits; i++  {
-        // go through all the cubes
-        nLitsCur = 0;
-        // inlining of macro Kit_SopForEachCube
-        for  k = 0; (k < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, k)); k++  {
-            if Kit_CubeHasLit(uCube, i) {
-                nLitsCur++; }
-        }
-        // skip the literal that does not occur or occurs once
-        if nLitsCur < 2 {
-            continue; }
-        // check if this is the best literal
-        if fUseFirst != 0 {
-            if nLitsMin > nLitsCur {
-                nLitsMin = nLitsCur;
-                iMin = i;
-            }
-        
-        } else {
-            if nLitsMin >= nLitsCur {
-                nLitsMin = nLitsCur;
-                iMin = i;
-            }
-        }
-    }
-    if nLitsMin < 1000000 {
-        return iMin; }
-    return -1;
+func kitLiteralCount(sop *Kit_Sop_t, lit int32) int32 {
+	var count int32
+	for _, c := range sop.pCubes[:sop.cubeNum()] {
+		if c&(1<<uint(lit)) != 0 {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find the least often occurring literal.]
-
-  Description [Find the least often occurring literal among those
-  that occur more than once.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopBestLiteral(cSop *Kit_Sop_t, nLits int32, uMask uint32) int32 {
-    var uCube uint32;
-    var i, k, iMax, nLitsMax, nLitsCur int32;
-    var fUseFirst int32  = 1;
-
-    // go through each literal
-    iMax = -1;
-    nLitsMax = -1;
-    for  i = 0; i < nLits; i++  {
-        if !Kit_CubeHasLit(uMask, i) {
-            continue; }
-        // go through all the cubes
-        nLitsCur = 0;
-        // inlining of macro Kit_SopForEachCube
-        for  k = 0; (k < Kit_SopCubeNum(cSop)) && ((uCube) = Kit_SopCube(cSop, k)); k++  {
-            if Kit_CubeHasLit(uCube, i) {
-                nLitsCur++; }
-        }
-        // skip the literal that does not occur or occurs once
-        if nLitsCur < 2 {
-            continue; }
-        // check if this is the best literal
-        if fUseFirst != 0 {
-            if nLitsMax < nLitsCur {
-                nLitsMax = nLitsCur;
-                iMax = i;
-            }
-        
-        } else {
-            if nLitsMax <= nLitsCur {
-                nLitsMax = nLitsCur;
-                iMax = i;
-            }
-        }
-    }
-    if nLitsMax >= 0 {
-        return iMax; }
-    return -1;
+func Kit_SopAnyLiteral(sop *Kit_Sop_t, nLits int32) int32 {
+	for lit := int32(0); lit < nLits; lit++ {
+		if kitLiteralCount(sop, lit) > 1 {
+			return lit
+		}
+	}
+	return -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes a level-zero kernel.]
-
-  Description [Modifies the cover to contain one level-zero kernel.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDivisorZeroKernel_rec(cSop *Kit_Sop_t, nLits int32) {
-    var iLit int32;
-    // find any literal that occurs at least two times
-    iLit = Kit_SopWorstLiteral( cSop, nLits );
-    if iLit == -1 {
-        return; }
-    // derive the cube-free quotient
-    Kit_SopDivideByLiteralQuo( cSop, iLit ); // the same cover
-    Kit_SopMakeCubeFree( cSop );             // the same cover
-    // call recursively
-    Kit_SopDivisorZeroKernel_rec( cSop, nLits );    // the same cover
+func Kit_SopWorstLiteral(sop *Kit_Sop_t, nLits int32) int32 {
+	index, best := int32(-1), int32(1000000)
+	for lit := int32(0); lit < nLits; lit++ {
+		n := kitLiteralCount(sop, lit)
+		if n >= 2 && n < best {
+			index, best = lit, n
+		}
+	}
+	return index
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the quick divisor of the cover.]
-
-  Description [Returns 0, if there is no divisor other than trivial.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopDivisor(cResult *Kit_Sop_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) int32 {
-    if Kit_SopCubeNum(cSop) <= 1 {
-        return 0; }
-    if Kit_SopAnyLiteral( cSop, nLits ) == -1 {
-        return 0; }
-    // duplicate the cover
-    Kit_SopDup( cResult, cSop, vMemory );
-    // perform the kerneling
-    Kit_SopDivisorZeroKernel_rec( cResult, nLits );
-    assert(Kit_SopCubeNum(cResult) > 0, "Kit_SopCubeNum(cResult) > 0");
-    return 1;
+func Kit_SopBestLiteral(sop *Kit_Sop_t, nLits int32, mask uint32) int32 {
+	index, best := int32(-1), int32(-1)
+	for lit := int32(0); lit < nLits; lit++ {
+		if mask&(1<<uint(lit)) == 0 {
+			continue
+		}
+		n := kitLiteralCount(sop, lit)
+		if n >= 2 && n > best {
+			index, best = lit, n
+		}
+	}
+	return index
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Create the one-literal cover with the best literal from cSop.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Kit_SopBestLiteralCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, uCube uint32, nLits int32, vMemory *Vec_Int_t) {
-    var iLitBest int32;
-    // get the best literal
-    iLitBest = Kit_SopBestLiteral( cSop, nLits, uCube );
-    // start the cover
-    cResult.nCubes = 0;
-    cResult.pCubes = Vec_IntFetch( vMemory, 1 );
-    // set the cube
-    Kit_SopPushCube( cResult, Kit_CubeSetLit(0, iLitBest) );
+func Kit_SopDivisorZeroKernel_rec(sop *Kit_Sop_t, nLits int32) {
+	for {
+		lit := Kit_SopWorstLiteral(sop, nLits)
+		if lit < 0 {
+			return
+		}
+		Kit_SopDivideByLiteralQuo(sop, lit)
+		Kit_SopMakeCubeFree(sop)
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Kit_SopDivisor(result, sop *Kit_Sop_t, nLits int32, memory *[]uint32) int32 {
+	if sop.cubeNum() <= 1 || Kit_SopAnyLiteral(sop, nLits) < 0 {
+		return 0
+	}
+	Kit_SopDup(result, sop, memory)
+	Kit_SopDivisorZeroKernel_rec(result, nLits)
+	return 1
+}
+func Kit_SopBestLiteralCover(result, sop *Kit_Sop_t, cube uint32, nLits int32, memory *[]uint32) {
+	lit := Kit_SopBestLiteral(sop, nLits, cube)
+	if lit < 0 {
+		panic("kit: no repeated literal in divisor")
+	}
+	kitSopReset(result, 1, memory)
+	Kit_SopPushCube(result, 1<<uint(lit))
+}

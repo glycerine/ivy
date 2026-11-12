@@ -1,245 +1,101 @@
 package kit
 
-/**CFile****************************************************************
-
-  FileName    [kitBdd.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Computation kit.]
-
-  Synopsis    [Procedures involving BDDs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Dec 6, 2006.]
-
-  Revision    [$Id: kitBdd.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "kit.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the BDD for the given SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Kit_SopToBdd( DdManager * dd, Kit_Sop_t * cSop, int nVars )
-{
-    DdNode * bSum, * bCube, * bTemp, * bVar;
-    unsigned uCube;
-    int Value, i, v;
-    assert( nVars < 16 );
-    // start the cover
-    bSum = Cudd_ReadLogicZero(dd);   Cudd_Ref( bSum );
-   // check the logic function of the node
-    Kit_SopForEachCube( cSop, uCube, i )
-    {
-        bCube = Cudd_ReadOne(dd);   Cudd_Ref( bCube );
-        for ( v = 0; v < nVars; v++ )
-        {
-            Value = ((uCube >> 2*v) & 3);
-            if ( Value == 1 )
-                bVar = Cudd_Not( Cudd_bddIthVar( dd, v ) );
-            else if ( Value == 2 )
-                bVar = Cudd_bddIthVar( dd, v );
-            else
-                continue;
-            bCube  = Cudd_bddAnd( dd, bTemp = bCube, bVar );   Cudd_Ref( bCube );
-            Cudd_RecursiveDeref( dd, bTemp );
-        }
-        bSum = Cudd_bddOr( dd, bTemp = bSum, bCube );   
-        Cudd_Ref( bSum );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bCube );
-    }
-    // complement the result if necessary
-    Cudd_Deref( bSum );
-    return bSum;
+// The Go kit uses its local Cloud ROBDD engine for the operations that used
+// optional CUDD in C. Automatic memory management replaces reference counting.
+func Kit_SopToBdd(dd *CloudManager, sop *Kit_Sop_t, nVars int32) *CloudNode {
+	if nVars < 0 || nVars >= 16 || nVars > dd.nVars {
+		panic("kit: invalid SOP variable count")
+	}
+	sum := dd.zero
+	for _, cube := range sop.pCubes[:sop.cubeNum()] {
+		product := dd.one
+		for v := int32(0); v < nVars; v++ {
+			value := cube >> uint(2*v) & 3
+			if value == 0 {
+				continue
+			}
+			if value == 3 {
+				product = dd.zero
+				break
+			}
+			variable := dd.vars[v]
+			if value == 1 {
+				variable = Cloud_Not(variable)
+			}
+			product = Cloud_bddAnd(dd, product, variable)
+			if product == nil {
+				return nil
+			}
+		}
+		sum = Cloud_bddOr(dd, sum, product)
+		if sum == nil {
+			return nil
+		}
+	}
+	return sum
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts graph to BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Kit_GraphToBdd( DdManager * dd, Kit_Graph_t * pGraph )
-{
-    DdNode * bFunc, * bFunc0, * bFunc1;
-    Kit_Node_t * pNode = NULL; // Suppress "might be used uninitialized"
-    int i;
-
-    // sanity checks
-    assert( Kit_GraphLeaveNum(pGraph) >= 0 );
-    assert( Kit_GraphLeaveNum(pGraph) <= pGraph->nSize );
-
-    // check for constant function
-    if ( Kit_GraphIsConst(pGraph) )
-        return Cudd_NotCond( b1, Kit_GraphIsComplement(pGraph) );
-    // check for a literal
-    if ( Kit_GraphIsVar(pGraph) )
-        return Cudd_NotCond( Cudd_bddIthVar(dd, Kit_GraphVarInt(pGraph)), Kit_GraphIsComplement(pGraph) );
-
-    // assign the elementary variables
-    Kit_GraphForEachLeaf( pGraph, pNode, i )
-        pNode->pFunc = Cudd_bddIthVar( dd, i );
-
-    // compute the function for each internal node
-    Kit_GraphForEachNode( pGraph, pNode, i )
-    {
-        bFunc0 = Cudd_NotCond( Kit_GraphNode(pGraph, pNode->eEdge0.Node)->pFunc, pNode->eEdge0.fCompl ); 
-        bFunc1 = Cudd_NotCond( Kit_GraphNode(pGraph, pNode->eEdge1.Node)->pFunc, pNode->eEdge1.fCompl ); 
-        pNode->pFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( (DdNode *)pNode->pFunc );
-    }
-
-    // deref the intermediate results
-    bFunc = (DdNode *)pNode->pFunc;   Cudd_Ref( bFunc );
-    Kit_GraphForEachNode( pGraph, pNode, i )
-        Cudd_RecursiveDeref( dd, (DdNode *)pNode->pFunc );
-    Cudd_Deref( bFunc );
-
-    // complement the result if necessary
-    return Cudd_NotCond( bFunc, Kit_GraphIsComplement(pGraph) );
+func Kit_GraphToBdd(dd *CloudManager, g *Kit_Graph_t) *CloudNode {
+	if g.fConst != 0 {
+		return Cloud_NotCond(dd.one, g.eRoot.fCompl != 0)
+	}
+	if g.nLeaves > dd.nVars {
+		panic("kit: insufficient BDD variables")
+	}
+	nodes := make([]*CloudNode, int32(len(g.pNodes)))
+	copy(nodes, dd.vars[:g.nLeaves])
+	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
+		n := g.pNodes[i]
+		a := Cloud_NotCond(nodes[n.eEdge0.Node], n.eEdge0.fCompl != 0)
+		b := Cloud_NotCond(nodes[n.eEdge1.Node], n.eEdge1.fCompl != 0)
+		nodes[i] = Cloud_bddAnd(dd, a, b)
+		if nodes[i] == nil {
+			return nil
+		}
+		n.pFunc = nodes[i]
+	}
+	return Cloud_NotCond(nodes[g.eRoot.Node], g.eRoot.fCompl != 0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Kit_TruthToBdd_rec( DdManager * dd, unsigned * pTruth, int iBit, int nVars, int nVarsTotal, int fMSBonTop )
-{
-    DdNode * bF0, * bF1, * bF;
-    int Var;
-    if ( nVars <= 5 )
-    {
-        unsigned uTruth, uMask;
-        uMask = ((~(unsigned)0) >> (32 - (1<<nVars)));
-        uTruth = (pTruth[iBit>>5] >> (iBit&31)) & uMask;
-        if ( uTruth == 0 )
-            return b0;
-        if ( uTruth == uMask )
-            return b1;        
-    }
-    // find the variable to use
-    Var = fMSBonTop? nVarsTotal-nVars : nVars-1;
-    // other special cases can be added
-    bF0 = Kit_TruthToBdd_rec( dd, pTruth, iBit,                nVars-1, nVarsTotal, fMSBonTop );  Cudd_Ref( bF0 );
-    bF1 = Kit_TruthToBdd_rec( dd, pTruth, iBit+(1<<(nVars-1)), nVars-1, nVarsTotal, fMSBonTop );  Cudd_Ref( bF1 );
-    bF  = Cudd_bddIte( dd, dd->vars[Var], bF1, bF0 );                     Cudd_Ref( bF );
-    Cudd_RecursiveDeref( dd, bF0 );
-    Cudd_RecursiveDeref( dd, bF1 );
-    Cudd_Deref( bF );
-    return bF;
+func kitCloudIte(dd *CloudManager, v, t, e *CloudNode) *CloudNode {
+	a := Cloud_bddAnd(dd, v, t)
+	if a == nil {
+		return nil
+	}
+	b := Cloud_bddAnd(dd, Cloud_Not(v), e)
+	if b == nil {
+		return nil
+	}
+	return Cloud_bddOr(dd, a, b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Compute BDD corresponding to the truth table.]
-
-  Description [If truth table has N vars, the BDD depends on N topmost
-  variables of the BDD manager. The most significant variable of the table
-  is encoded by the topmost variable of the manager. BDD construction is 
-  efficient in this case because BDD is constructed one node at a time, 
-  by simply adding BDD nodes on top of existent BDD nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Kit_TruthToBdd( DdManager * dd, unsigned * pTruth, int nVars, int fMSBonTop )
-{
-    return Kit_TruthToBdd_rec( dd, pTruth, 0, nVars, nVars, fMSBonTop );
+func Kit_TruthToBdd_rec(dd *CloudManager, truth []uint32, bit, nVars, total, msbOnTop int32) *CloudNode {
+	if nVars == 0 {
+		if Kit_TruthHasBit(truth, bit) != 0 {
+			return dd.one
+		}
+		return dd.zero
+	}
+	low := Kit_TruthToBdd_rec(dd, truth, bit, nVars-1, total, msbOnTop)
+	high := Kit_TruthToBdd_rec(dd, truth, bit+(1<<uint(nVars-1)), nVars-1, total, msbOnTop)
+	if low == nil || high == nil {
+		return nil
+	}
+	variable := nVars - 1
+	if msbOnTop != 0 {
+		variable = total - nVars
+	}
+	return kitCloudIte(dd, dd.vars[variable], high, low)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies that the factoring is correct.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Kit_SopFactorVerify( Vec_Int_t * vCover, Kit_Graph_t * pFForm, int nVars )
-{
-    static DdManager * dd = NULL;
-    Kit_Sop_t Sop, * cSop = &Sop;
-    DdNode * bFunc1, * bFunc2;
-    Vec_Int_t * vMemory;
-    int RetValue;
-    // get the manager
-    if ( dd == NULL )
-        dd = Cudd_Init( 16, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    // derive SOP
-    vMemory = Vec_IntAlloc( Vec_IntSize(vCover) );
-    Kit_SopCreate( cSop, vCover, nVars, vMemory );
-    // get the functions
-    bFunc1 = Kit_SopToBdd( dd, cSop, nVars );      Cudd_Ref( bFunc1 );
-    bFunc2 = Kit_GraphToBdd( dd, pFForm );         Cudd_Ref( bFunc2 );
-//Extra_bddPrint( dd, bFunc1 ); printf("\n");
-//Extra_bddPrint( dd, bFunc2 ); printf("\n");
-    RetValue = (bFunc1 == bFunc2);
-    if ( bFunc1 != bFunc2 )
-    {
-        int s;
-        Extra_bddPrint( dd, bFunc1 ); printf("\n");
-        Extra_bddPrint( dd, bFunc2 ); printf("\n");
-        s  = 0;
-    }
-    Cudd_RecursiveDeref( dd, bFunc1 );
-    Cudd_RecursiveDeref( dd, bFunc2 );
-    Vec_IntFree( vMemory );
-    return RetValue;
+func Kit_TruthToBdd(dd *CloudManager, truth []uint32, nVars, msbOnTop int32) *CloudNode {
+	if nVars < 0 || nVars > dd.nVars {
+		panic("kit: BDD variable count out of bounds")
+	}
+	return Kit_TruthToBdd_rec(dd, truth, 0, nVars, nVars, msbOnTop)
 }
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Kit_SopFactorVerify(cover []uint32, g *Kit_Graph_t, nVars int32) int32 {
+	dd := Cloud_Init(nVars, 20)
+	sop := Kit_Sop_t{pCubes: cover}
+	a, b := Kit_SopToBdd(dd, &sop, nVars), Kit_GraphToBdd(dd, g)
+	if a != nil && a == b {
+		return 1
+	}
+	return 0
+}

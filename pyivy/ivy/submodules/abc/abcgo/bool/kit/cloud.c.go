@@ -1,1161 +1,348 @@
 package kit
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
-/**CFile****************************************************************
-
-  FileName    [cloudCore.c]
-
-  PackageName [Fast application-specific BDD package.]
-
-  Synopsis    [The package core.]
-
-  Author      [Alan Mishchenko <alanmi@ece.pdx.edu>]
-  
-  Affiliation [ECE Department. Portland State University, Portland, Oregon.]
-
-  Date        [Ver. 1.0. Started - June 10, 2002.]
-
-  Revision    [$Id: cloudCore.c,v 1.0 2002/06/10 03:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <string.h>
-//#include "cloud.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// the number of operators using cache
-var CacheOperNum int32 = 4;
-
-// the ratio of cache size to the unique table size for each operator
-static int CacheLogRatioDefault[4] = {
-    2, // CLOUD_OPER_AND, 
-    8, // CLOUD_OPER_XOR, 
-    8, // CLOUD_OPER_BDIFF, 
-    8  // CLOUD_OPER_LEQ 
-};
-
-// the ratio of cache size to the unique table size for each operator
-static int CacheSize[4] = {
-    2, // CLOUD_OPER_AND, 
-    2, // CLOUD_OPER_XOR, 
-    2, // CLOUD_OPER_BDIFF, 
-    2  // CLOUD_OPER_LEQ 
-};
-
-////////////////////////////////////////////////////////////////////////
-///                       FUNCTION DECLARATIONS                      ///
-////////////////////////////////////////////////////////////////////////
-
-// static functions
-// static CloudNode * cloudMakeNode( CloudManager * dd, CloudVar v, CloudNode * t, CloudNode * e );
-
-// static void        cloudCacheAllocate( CloudManager * dd, CloudOper oper );
-
-
-////////////////////////////////////////////////////////////////////////
-///                       FUNCTION DEFINITIONS                       ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function********************************************************************
-
-  Synopsis    [Starts the cloud manager.]
-
-  Description [The first arguments is the number of elementary variables used.
-  The second arguments is the number of bits of the unsigned integer used to 
-  represent nodes in the unique table. If the second argument is 0, the package 
-  assumes 23 to represent nodes, which is equivalent to 2^23 = 8,388,608 nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_Init(nVars int32, nBits int32) *CloudManager {
-    var dd *CloudManager;
-    var i int32;
-    var clk1, clk2 abctime;
-
-    assert(nVars <= 100000, "nVars <= 100000");
-    assert(nBits < 32, "nBits < 32");
-
-    // assign the defaults
-    if nBits == 0 {
-        nBits = CLOUD_NODE_BITS; }
-
-    // start the manager
-    // inlining of macro ABC_CALLOC
-    dd = &CloudManager{};
-    dd.nMemUsed          += sizeof(CloudManager);
-
-    // variables
-    dd.nVars             = nVars;              // the number of variables allocated
-    // bits
-    dd.bitsNode          = nBits;              // the number of bits used for the node
-    for  i = 0; i < CacheOperNum; i++  {
-        dd.bitsCache[i]  = nBits - CacheLogRatioDefault[i];
-    }
-    // shifts
-    dd.shiftUnique       = 8*sizeof(unsigned) - (nBits + 1); // gets node index in the hash table
-    for  i = 0; i < CacheOperNum; i++  {
-        dd.shiftCache[i] = 8*sizeof(unsigned) - dd.bitsCache[i];
-    }
-    // nodes
-    dd.nNodesAlloc       = (1 << (nBits + 1)); // 2 ^ (nBits + 1)
-    dd.nNodesLimit       = (1 << nBits);       // 2 ^  nBits
-
-    // unique table
-clk1 = Abc_Clock();
-    // inlining of macro ABC_CALLOC
-    dd.tUnique           = ((CloudNode *) calloc((size_t)(dd.nNodesAlloc), sizeof(CloudNode)));
-    dd.nMemUsed         += sizeof(CloudNode) * dd.nNodesAlloc;
-clk2 = Abc_Clock();
-//ABC_PRT( "calloc() time", clk2 - clk1 ); 
-
-    // set up the constant node (the only node that is not in the hash table)
-    dd.nSignCur          = 1;
-    dd.tUnique[0].s      = dd.nSignCur;
-    dd.tUnique[0].v      = CLOUD_CONST_INDEX;
-    dd.tUnique[0].e      = nil;
-    dd.tUnique[0].t      = nil;
-    dd.one               = dd.tUnique;
-    // inlining of macro Cloud_Not
-    dd.zero              = ((CloudNode*)(((ABC_PTRUINT_T)(dd.one)) ^  01))   // complement the node
-;
-    dd.nNodesCur         = 1;
-
-    // special nodes
-    dd.pNodeStart        = dd.tUnique + 1;
-    dd.pNodeEnd          = dd.tUnique + dd.nNodesAlloc;
-
-    // set up the elementary variables
-    // inlining of macro ABC_ALLOC
-    dd.vars              = ((CloudNode * *) malloc(sizeof(CloudNode *) * (size_t)(dd.nVars)));
-    dd.nMemUsed         += sizeof(CloudNode *) * dd.nVars;
-    for  i = 0; i < dd.nVars; i++  {
-        dd.vars[i]   = cloudMakeNode( dd, i, dd.one, dd.zero );
-    }
-
-    return dd;
-};
-
-/**Function********************************************************************
-
-  Synopsis    [Stops the cloud manager.]
-
-  Description [The first arguments tells show many elementary variables are used.
-  The second arguments tells how many bits of the unsigned integer are used
-  to represent regular nodes in the unique table.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
+func cloudNodePair(dd *CloudManager, v CloudVar, t, e *CloudNode) *CloudNode {
+	n := &CloudNode{s: dd.nSignCur, v: v, t: t, e: e, owner: dd, id: uint32(len(dd.tUnique)) * 2}
+	c := &CloudNode{s: dd.nSignCur, v: v, t: t, e: e, owner: dd, id: n.id + 1, complement: true, regular: n, opposite: n}
+	n.regular = n
+	n.opposite = c
+	dd.tUnique = append(dd.tUnique, n)
+	return n
+}
+func Cloud_Init(nVars, nBits int32) *CloudManager {
+	if nVars < 0 || nVars > 100000 || nBits < 0 || nBits >= 31 {
+		panic("cloud: invalid manager size")
+	}
+	if nBits == 0 {
+		nBits = CLOUD_NODE_BITS
+	}
+	dd := &CloudManager{nVars: nVars, bitsNode: nBits, nNodesLimit: 1 << uint(nBits), cacheLimit: 1 << uint(max(0, nBits-4)), nSignCur: 1, unique: make(map[cloudKey]*CloudNode), andCache: make(map[cloudPair]*CloudNode)}
+	dd.one = cloudNodePair(dd, CLOUD_CONST_INDEX, nil, nil)
+	dd.zero = Cloud_Not(dd.one)
+	dd.vars = make([]*CloudNode, nVars)
+	for i := int32(0); i < nVars; i++ {
+		dd.vars[i] = Cloud_MakeNode(dd, uint32(i), dd.one, dd.zero)
+		if dd.vars[i] == nil {
+			panic("cloud: node limit too small for variables")
+		}
+	}
+	return dd
+}
 func Cloud_Quit(dd *CloudManager) {
-    var i int32;
-    // inlining of macro ABC_FREE
-    ((dd.ppNodes) ? (free((char *) (dd.ppNodes)), (dd.ppNodes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((dd.tUnique) ? (free((char *) (dd.tUnique)), (dd.tUnique) = 0) : 0); 
-    // inlining of macro ABC_FREE
-    ((dd.vars) ? (free((char *) (dd.vars)), (dd.vars) = 0) : 0); 
-    for  i = 0; i < 4; i++  {
-        // inlining of macro ABC_FREE
-        ((dd.tCaches[i]) ? (free((char *) (dd.tCaches[i])), (dd.tCaches[i]) = 0) : 0);
-    }
-    // inlining of macro ABC_FREE
-    ((dd) ? (free((char *) (dd)), (dd) = 0) : 0); 
+	if dd == nil {
+		return
+	}
+	dd.vars = nil
+	dd.ppNodes = nil
+	dd.tUnique = nil
+	dd.unique = nil
+	dd.andCache = nil
+	dd.one = nil
+	dd.zero = nil
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Prepares the manager for another run.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_Restart(dd *CloudManager) {
-    var i int32;
-    assert(dd.one.s == dd.nSignCur, "dd.one.s == dd.nSignCur");
-    dd.nSignCur++;
-    dd.one.s++;
-    for  i = 0; i < dd.nVars; i++  {
-        dd.vars[i].s++;
-    }
-    dd.nNodesCur = 1 + dd.nVars;
+	next := Cloud_Init(dd.nVars, dd.bitsNode)
+	sign := dd.nSignCur + 1
+	*dd = *next
+	dd.nSignCur = sign
+	for _, n := range dd.tUnique {
+		n.owner = dd
+		n.opposite.owner = dd
+		n.s = sign
+		n.opposite.s = sign
+	}
 }
-
-/**Function********************************************************************
-
-  Synopsis    [This optional function allocates operation cache of the given size.]
-
-  Description [Cache for each operation is allocated independently when the first 
-  operation of the given type is performed. The user can allocate cache of his/her 
-  preferred size by calling Cloud_CacheAllocate before the first operation of the 
-  given type is performed, but this call is optional. Argument "logratio" gives
-  the binary logarithm of the ratio of the size of the unique table to that of cache.
-  For example, if "logratio" is equal to 3, and the unique table will be 2^3=8 times
-  larger than cache; so, if unique table is 2^23 = 8,388,608 nodes, the cache size 
-  will be 2^3=8 times smaller and equal to 2^20 = 1,048,576 entries.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_CacheAllocate(dd *CloudManager, oper CloudOper, logratio int32) {
-    assert(logratio > 0, "logratio > 0");            // cache cannot be larger than the unique table 
-    assert(logratio < dd.bitsNode, "logratio < dd.bitsNode"); // cache cannot be smaller than 2 entries
-
-    if logratio != 0 {
-        dd.bitsCache[oper]  = dd.bitsNode - logratio;
-        dd.shiftCache[oper] = 8*sizeof(unsigned) - dd.bitsCache[oper];
-    }
-    cloudCacheAllocate( dd, oper );
+	if oper < 0 || oper >= 4 || logratio < 0 {
+		panic("cloud: invalid cache configuration")
+	}
+	// All Boolean operations use the AND backend; only it needs a computed
+	// cache. Apply its requested memory ratio to the actual map budget.
+	if oper == CLOUD_OPER_AND {
+		dd.cacheLimit = 1 << uint(max(0, dd.bitsNode-logratio))
+		clear(dd.andCache)
+	}
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Internal cache allocation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func cloudCacheAllocate(dd *CloudManager, oper CloudOper) {
-    var nCacheEntries int32  = (1 << dd.bitsCache[oper]);
-
-    if CacheSize[oper] == 1 {
-        // inlining of macro ABC_CALLOC
-        dd.tCaches[oper] = (CloudCacheEntry2 *)((CloudCacheEntry1 *) calloc((size_t)(nCacheEntries), sizeof(CloudCacheEntry1)));
-        dd.nMemUsed     += sizeof(CloudCacheEntry1) * nCacheEntries;
-    
-    } else if CacheSize[oper] == 2 {
-        // inlining of macro ABC_CALLOC
-        dd.tCaches[oper] = (CloudCacheEntry2 *)((CloudCacheEntry2 *) calloc((size_t)(nCacheEntries), sizeof(CloudCacheEntry2)));
-        dd.nMemUsed     += sizeof(CloudCacheEntry2) * nCacheEntries;
-    
-    } else if CacheSize[oper] == 3 {
-        // inlining of macro ABC_CALLOC
-        dd.tCaches[oper] = (CloudCacheEntry2 *)((CloudCacheEntry3 *) calloc((size_t)(nCacheEntries), sizeof(CloudCacheEntry3)));
-        dd.nMemUsed     += sizeof(CloudCacheEntry3) * nCacheEntries;
-    }
+func cloudCacheAllocate(dd *CloudManager, oper CloudOper) { Cloud_CacheAllocate(dd, oper, 4) }
+func cloudCheck(dd *CloudManager, n *CloudNode) {
+	if n == nil || n.owner != dd || n.s != dd.nSignCur {
+		panic("cloud: foreign or expired BDD node")
+	}
 }
-
-
-
-/**Function********************************************************************
-
-  Synopsis    [Returns or creates a new node]
-
-  Description [Checks the unique table for the existance of the node. If the node is 
-  present, returns the node. If the node is absent, creates a new node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_MakeNode(dd *CloudManager, v CloudVar, t *CloudNode, e *CloudNode) *CloudNode {
-    var pRes *CloudNode;
-    // inlining of macro CLOUD_ASSERT
-    assert((t) >= dd.tUnique && (t) < dd.tUnique+dd.nNodesAlloc, "(t) >= dd.tUnique && (t) < dd.tUnique+dd.nNodesAlloc"); 
-    // inlining of macro CLOUD_ASSERT
-    assert((e) >= dd.tUnique && (e) < dd.tUnique+dd.nNodesAlloc, "(e) >= dd.tUnique && (e) < dd.tUnique+dd.nNodesAlloc");
-    // inlining of macro Cloud_V
-    // inlining of macro Cloud_Regular
-    assert(v < ((((CloudNode*)(((ABC_PTRUINT_T)(t)) & ~01))   // get the regular node (w/o bubble)
-    // inlining of macro Cloud_V
-    // inlining of macro Cloud_Regular
-    ).v) && v < ((((CloudNode*)(((ABC_PTRUINT_T)(e)) & ~01))   // get the regular node (w/o bubble)
-    ).v), "v < /*__starting_point_inline_macro:Cloud_V__*/((/*__starting_point_inline_macro:Cloud_Regular__*/((CloudNode*)(((ABC_PTRUINT_T)(t)) & ~01))   // get the regular node (w/o bubble)\n).v) && v < /*__starting_point_inline_macro:Cloud_V__*/((/*__starting_point_inline_macro:Cloud_Regular__*/((CloudNode*)(((ABC_PTRUINT_T)(e)) & ~01))   // get the regular node (w/o bubble)\n).v)");       // variable should be above in the order
-    // inlining of macro Cloud_IsComplement
-    if  int32((((ABC_PTRUINT_T)(t)) & 01)) != 0 {           // check if complemented
-  
-        // inlining of macro Cloud_Not
-        pRes = cloudMakeNode( dd, v, ((CloudNode*)(((ABC_PTRUINT_T)(t)) ^  01))   // complement the node
-// inlining of macro Cloud_Not
-, ((CloudNode*)(((ABC_PTRUINT_T)(e)) ^  01))   // complement the node
- );
-        if pRes != nil {
-            // inlining of macro Cloud_Not
-            pRes = ((CloudNode*)(((ABC_PTRUINT_T)(pRes)) ^  01))   // complement the node
-; }            
-    
-    } else {
-        pRes = cloudMakeNode( dd, v, t, e ); }
-    return pRes;
+func Cloud_MakeNode(dd *CloudManager, v CloudVar, t, e *CloudNode) *CloudNode {
+	cloudCheck(dd, t)
+	cloudCheck(dd, e)
+	if t == e {
+		return t
+	}
+	if v >= uint32(dd.nVars) || v >= Cloud_V(t) || v >= Cloud_V(e) {
+		panic("cloud: unordered BDD node")
+	}
+	complement := Cloud_IsComplement(t)
+	if complement {
+		t = Cloud_Not(t)
+		e = Cloud_Not(e)
+	}
+	n := cloudMakeNode(dd, v, t, e)
+	return Cloud_NotCond(n, complement)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Returns or creates a new node]
-
-  Description [Checks the unique table for the existance of the node. If the node is 
-  present, returns the node. If the node is absent, creates a new node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func cloudMakeNode(dd *CloudManager, v CloudVar, t *CloudNode, e *CloudNode) *CloudNode {
-    var entryUnique *CloudNode;
-
-    // inlining of macro CLOUD_ASSERT
-    assert((t) >= dd.tUnique && (t) < dd.tUnique+dd.nNodesAlloc, "(t) >= dd.tUnique && (t) < dd.tUnique+dd.nNodesAlloc"); 
-    // inlining of macro CLOUD_ASSERT
-    assert((e) >= dd.tUnique && (e) < dd.tUnique+dd.nNodesAlloc, "(e) >= dd.tUnique && (e) < dd.tUnique+dd.nNodesAlloc");
-
-    assert((int32(v)) >= 0 && (int32(v)) < dd.nVars, "(int32(v)) >= 0 && (int32(v)) < dd.nVars");  // the variable must be in the range
-    // inlining of macro Cloud_V
-    // inlining of macro Cloud_Regular
-    assert(v < ((((CloudNode*)(((ABC_PTRUINT_T)(t)) & ~01))   // get the regular node (w/o bubble)
-    // inlining of macro Cloud_V
-    // inlining of macro Cloud_Regular
-    ).v) && v < ((((CloudNode*)(((ABC_PTRUINT_T)(e)) & ~01))   // get the regular node (w/o bubble)
-    ).v), "v < /*__starting_point_inline_macro:Cloud_V__*/((/*__starting_point_inline_macro:Cloud_Regular__*/((CloudNode*)(((ABC_PTRUINT_T)(t)) & ~01))   // get the regular node (w/o bubble)\n).v) && v < /*__starting_point_inline_macro:Cloud_V__*/((/*__starting_point_inline_macro:Cloud_Regular__*/((CloudNode*)(((ABC_PTRUINT_T)(e)) & ~01))   // get the regular node (w/o bubble)\n).v)");       // variable should be above in the order
-    // inlining of macro Cloud_IsComplement
-    assert( !(int32((((ABC_PTRUINT_T)(t)) & 01)))           // check if complemented
-     );                 // the THEN edge must not be complemented
-
-    // make sure we are not searching for the constant node
-    assert((t != nil) && (e != nil), "t && e");
-
-    // get the unique entry
-    // inlining of macro cloudHashCudd3
-    entryUnique = dd.tUnique + ((((uint32((ABC_PTRUINT_T)(v)) * DD_P1 + uint32((ABC_PTRUINT_T)(t))) * DD_P2 + uint32((ABC_PTRUINT_T)(e))) * DD_P3) >> (dd.shiftUnique));
-    for  entryUnique.s == dd.nSignCur  {
-        // compare the node
-        if entryUnique.v == v && entryUnique.t == t && entryUnique.e == e { // the node is found
-            dd.nUniqueHits++;
-            return entryUnique;  // returns the node
-        }
-        // increment the hash value modulus the hash table size
-        if entryUnique++; entryUnique - dd.tUnique == dd.nNodesAlloc {
-            entryUnique = dd.tUnique + 1; }
-        // increment the number of steps through the table
-        dd.nUniqueSteps++;
-    }
-    dd.nUniqueMisses++;
-
-    // check if the new node can be created
-    if ++dd.nNodesCur == dd.nNodesLimit { // initiate the restart
-        fmt.Printf("Cloud needs restart!\n");
-//        fflush( stdout );
-//        exit(1);
-        return nil;
-    }
-    // create the node
-    entryUnique.s   = dd.nSignCur;
-    entryUnique.v   = v;
-    entryUnique.t   = t;
-    entryUnique.e   = e;
-    return entryUnique;  // returns the node
+func cloudMakeNode(dd *CloudManager, v CloudVar, t, e *CloudNode) *CloudNode {
+	key := cloudKey{v, t, e}
+	if n := dd.unique[key]; n != nil {
+		dd.nUniqueHits++
+		return n
+	}
+	dd.nUniqueMisses++
+	if int32(len(dd.tUnique))+1 >= dd.nNodesLimit {
+		return nil
+	}
+	n := cloudNodePair(dd, v, t, e)
+	dd.unique[key] = n
+	return n
 }
-
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the AND or two BDDs]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func cloudBddAnd(dd *CloudManager, f *CloudNode, g *CloudNode) *CloudNode {
-    var F, G, r *CloudNode;
-    var cacheEntry *CloudCacheEntry2;
-    var fv, fnv, gv, gnv, t, e *CloudNode;
-    var var CloudVar;
-
-    assert(f <= g, "f <= g");
-
-    // terminal cases
-    // inlining of macro Cloud_Regular
-    F = ((CloudNode*)(((ABC_PTRUINT_T)(f)) & ~01))   // get the regular node (w/o bubble)
-;
-    // inlining of macro Cloud_Regular
-    G = ((CloudNode*)(((ABC_PTRUINT_T)(g)) & ~01))   // get the regular node (w/o bubble)
-;
-    if F == G {
-        if f == g {
-            return f;
-        } else {
-            return dd.zero; }
-    }
-    if F == dd.one {
-        if f == dd.one {
-            return g;
-        } else {
-            return f; }
-    }
-
-    // check cache
-    // inlining of macro cloudHashCudd2
-    cacheEntry = dd.tCaches[CLOUD_OPER_AND] + (((uint32((ABC_PTRUINT_T)(f)) * DD_P1 + uint32((ABC_PTRUINT_T)(g))) * DD_P2) >> (dd.shiftCache[CLOUD_OPER_AND]));
-//    cacheEntry = dd->tCaches[CLOUD_OPER_AND] + cloudHashBuddy2(f, g, dd->shiftCache[CLOUD_OPER_AND]);
-    // inlining of macro cloudCacheLookup2
-    
-    if (cacheEntry).s == (dd.nSignCur) && (cacheEntry).a == (f) && (cacheEntry).b == (g) {
-        r = ((cacheEntry).r);
-    } else {
-        r = (0);
-    }
-    if r != nil {
-        dd.nCacheHits++;
-        return r;
-    }
-    dd.nCacheMisses++;
-
-
-    // compute cofactors
-    // inlining of macro cloudV
-    if  ((F).v) <= ((G).v) {
-        // inlining of macro cloudV
-        var = ((F).v);
-        // inlining of macro Cloud_IsComplement
-        if  int32((((ABC_PTRUINT_T)(f)) & 01)) != 0 {           // check if complemented
-  
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudE
-            fnv = ((CloudNode*)(((ABC_PTRUINT_T)(((F).e))) ^  01))   // complement the node
-;
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudT
-            fv  = ((CloudNode*)(((ABC_PTRUINT_T)(((F).t))) ^  01))   // complement the node
-;
-        
-        } else {
-            // inlining of macro cloudE
-            fnv = ((F).e);
-            // inlining of macro cloudT
-            fv  = ((F).t);
-        }
-    
-    } else {
-        // inlining of macro cloudV
-        var = ((G).v);
-        fv  = fnv = f;
-    }
-
-    // inlining of macro cloudV
-    if  ((G).v) <= ((F).v) {
-        // inlining of macro Cloud_IsComplement
-        if  int32((((ABC_PTRUINT_T)(g)) & 01)) != 0 {           // check if complemented
-  
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudE
-            gnv = ((CloudNode*)(((ABC_PTRUINT_T)(((G).e))) ^  01))   // complement the node
-;
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudT
-            gv  = ((CloudNode*)(((ABC_PTRUINT_T)(((G).t))) ^  01))   // complement the node
-;
-        
-        } else {
-            // inlining of macro cloudE
-            gnv = ((G).e);
-            // inlining of macro cloudT
-            gv  = ((G).t);
-        }
-    
-    } else {
-        gv = gnv = g;
-    }
-
-    if fv <= gv {
-        t = cloudBddAnd( dd, fv, gv );
-    } else {
-        t = cloudBddAnd( dd, gv, fv ); }
-
-    if t == nil {
-        return nil; }
-
-    if fnv <= gnv {
-        e = cloudBddAnd( dd, fnv, gnv );
-    } else {
-        e = cloudBddAnd( dd, gnv, fnv ); }
-
-    if e == nil {
-        return nil; }
-
-    if t == e {
-        r = t;
-    } else {
-        // inlining of macro Cloud_IsComplement
-        if  int32((((ABC_PTRUINT_T)(t)) & 01)) != 0 {           // check if complemented
-  
-            // inlining of macro Cloud_Not
-            r = cloudMakeNode( dd, var, ((CloudNode*)(((ABC_PTRUINT_T)(t)) ^  01))   // complement the node
-// inlining of macro Cloud_Not
-, ((CloudNode*)(((ABC_PTRUINT_T)(e)) ^  01))   // complement the node
- );
-            if r == nil {
-                return nil; }
-            // inlining of macro Cloud_Not
-            r = ((CloudNode*)(((ABC_PTRUINT_T)(r)) ^  01))   // complement the node
-;
-        
-        } else {
-            r = cloudMakeNode( dd, var, t, e );
-            if r == nil {
-                return nil; }
-        }
-    }
-    // inlining of macro cloudCacheInsert2
-    ((cacheEntry).s = (dd.nSignCur));
-((cacheEntry).a = (f));
-((cacheEntry).b = (g));
-((cacheEntry).r = (r));;
-    return r;
+func cloudCofactor(n *CloudNode, v uint32) (*CloudNode, *CloudNode) {
+	if Cloud_V(n) != v {
+		return n, n
+	}
+	return Cloud_NotCond(Cloud_E(n), n.complement), Cloud_NotCond(Cloud_T(n), n.complement)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the AND or two BDDs]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func cloudBddAnd_gate(dd *CloudManager, f *CloudNode, g *CloudNode) *CloudNode {
-    if f <= g {
-        return cloudBddAnd(dd,f,g);
-    } else {
-        return cloudBddAnd(dd,g,f); }
+func cloudBddAnd(dd *CloudManager, f, g *CloudNode) *CloudNode {
+	if f == dd.zero || g == dd.zero || f == Cloud_Not(g) {
+		return dd.zero
+	}
+	if f == dd.one {
+		return g
+	}
+	if g == dd.one || f == g {
+		return f
+	}
+	if f.id > g.id {
+		f, g = g, f
+	}
+	key := cloudPair{f, g}
+	if r := dd.andCache[key]; r != nil {
+		dd.nCacheHits++
+		return r
+	}
+	dd.nCacheMisses++
+	v := min(Cloud_V(f), Cloud_V(g))
+	f0, f1 := cloudCofactor(f, v)
+	g0, g1 := cloudCofactor(g, v)
+	low := cloudBddAnd(dd, f0, g0)
+	if low == nil {
+		return nil
+	}
+	high := cloudBddAnd(dd, f1, g1)
+	if high == nil {
+		return nil
+	}
+	r := Cloud_MakeNode(dd, v, high, low)
+	if r != nil {
+		if len(dd.andCache) >= dd.cacheLimit {
+			clear(dd.andCache)
+		}
+		dd.andCache[key] = r
+	}
+	return r
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the AND or two BDDs]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_bddAnd(dd *CloudManager, f *CloudNode, g *CloudNode) *CloudNode {
-    // inlining of macro Cloud_Regular
-    if  ((CloudNode*)(((ABC_PTRUINT_T)(f)) & ~01))   // get the regular node (w/o bubble)
- // inlining of macro Cloud_Regular
- == nil || ((CloudNode*)(((ABC_PTRUINT_T)(g)) & ~01))   // get the regular node (w/o bubble)
- == nil {
-        return nil; }
-    // inlining of macro CLOUD_ASSERT
-    assert((f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc, "(f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc");
-    // inlining of macro CLOUD_ASSERT
-    assert((g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc, "(g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc");
-    if dd.tCaches[CLOUD_OPER_AND] == nil {
-        cloudCacheAllocate( dd, CLOUD_OPER_AND ); }
-    return cloudBddAnd_gate( dd, f, g );
+func cloudBddAnd_gate(dd *CloudManager, f, g *CloudNode) *CloudNode { return Cloud_bddAnd(dd, f, g) }
+func Cloud_bddAnd(dd *CloudManager, f, g *CloudNode) *CloudNode {
+	cloudCheck(dd, f)
+	cloudCheck(dd, g)
+	return cloudBddAnd(dd, f, g)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the OR or two BDDs]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_bddOr(dd *CloudManager, f *CloudNode, g *CloudNode) *CloudNode {
-    var res *CloudNode;
-    // inlining of macro Cloud_Regular
-    if  ((CloudNode*)(((ABC_PTRUINT_T)(f)) & ~01))   // get the regular node (w/o bubble)
- // inlining of macro Cloud_Regular
- == nil || ((CloudNode*)(((ABC_PTRUINT_T)(g)) & ~01))   // get the regular node (w/o bubble)
- == nil {
-        return nil; }
-    // inlining of macro CLOUD_ASSERT
-    assert((f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc, "(f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc");
-    // inlining of macro CLOUD_ASSERT
-    assert((g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc, "(g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc");
-    if dd.tCaches[CLOUD_OPER_AND] == nil {
-        cloudCacheAllocate( dd, CLOUD_OPER_AND ); }
-    // inlining of macro Cloud_Not
-    res = cloudBddAnd_gate( dd, ((CloudNode*)(((ABC_PTRUINT_T)(f)) ^  01))   // complement the node
-// inlining of macro Cloud_Not
-, ((CloudNode*)(((ABC_PTRUINT_T)(g)) ^  01))   // complement the node
- );
-    // inlining of macro Cloud_NotCond
-    res = ((CloudNode*)(((ABC_PTRUINT_T)(res)) ^ (res != nil)))   // complement the node conditionally
-;
-    return res;
+func Cloud_bddOr(dd *CloudManager, f, g *CloudNode) *CloudNode {
+	return Cloud_Not(Cloud_bddAnd(dd, Cloud_Not(f), Cloud_Not(g)))
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the XOR or two BDDs]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_bddXor(dd *CloudManager, f *CloudNode, g *CloudNode) *CloudNode {
-    var t0, t1, r *CloudNode;
-    // inlining of macro Cloud_Regular
-    if  ((CloudNode*)(((ABC_PTRUINT_T)(f)) & ~01))   // get the regular node (w/o bubble)
- // inlining of macro Cloud_Regular
- == nil || ((CloudNode*)(((ABC_PTRUINT_T)(g)) & ~01))   // get the regular node (w/o bubble)
- == nil {
-        return nil; }
-    // inlining of macro CLOUD_ASSERT
-    assert((f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc, "(f) >= dd.tUnique && (f) < dd.tUnique+dd.nNodesAlloc");
-    // inlining of macro CLOUD_ASSERT
-    assert((g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc, "(g) >= dd.tUnique && (g) < dd.tUnique+dd.nNodesAlloc");
-    if dd.tCaches[CLOUD_OPER_AND] == nil {
-        cloudCacheAllocate( dd, CLOUD_OPER_AND ); }
-    // inlining of macro Cloud_Not
-    t0 = cloudBddAnd_gate( dd, f, ((CloudNode*)(((ABC_PTRUINT_T)(g)) ^  01))   // complement the node
- );
-    if t0 == nil {
-        return nil; }
-    // inlining of macro Cloud_Not
-    t1 = cloudBddAnd_gate( dd, ((CloudNode*)(((ABC_PTRUINT_T)(f)) ^  01))   // complement the node
-, g );
-    if t1 == nil {
-        return nil; }
-    r  = Cloud_bddOr( dd, t0, t1 );
-    return r;
+func Cloud_bddXor(dd *CloudManager, f, g *CloudNode) *CloudNode {
+	a := Cloud_bddAnd(dd, f, Cloud_Not(g))
+	if a == nil {
+		return nil
+	}
+	b := Cloud_bddAnd(dd, Cloud_Not(f), g)
+	if b == nil {
+		return nil
+	}
+	return Cloud_bddOr(dd, a, b)
 }
-
-
-
-/**Function********************************************************************
-
-  Synopsis    [Performs a DFS from f, clearing the LSB of the next
-  pointers.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     [cloudSupport cloudDagSize]
-
-******************************************************************************/
+func cloudWalk(n *CloudNode, seen map[*CloudNode]bool, visit func(*CloudNode)) {
+	n = Cloud_Regular(n)
+	if seen[n] {
+		return
+	}
+	seen[n] = true
+	if !Cloud_IsConstant(n) {
+		cloudWalk(n.t, seen, visit)
+		cloudWalk(n.e, seen, visit)
+	}
+	visit(n)
+}
 func cloudClearMark(dd *CloudManager, n *CloudNode) {
-    // inlining of macro cloudNodeIsMarked
-    if !((int32(((n).v &  CLOUD_MARK_ON)) != 0)) {
-        return; }
-    // clear visited flag
-    // inlining of macro cloudNodeUnmark
-    ((n).v       &= CLOUD_MARK_OFF);
-    // inlining of macro cloudIsConstant
-    if  ((n).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX {
-        return; }
-    // inlining of macro cloudT
-    cloudClearMark( dd, ((n).t) );
-    // inlining of macro Cloud_Regular
-    // inlining of macro cloudE
-    cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(((n).e))) & ~01))   // get the regular node (w/o bubble)
- );
+	cloudWalk(n, map[*CloudNode]bool{}, func(x *CloudNode) { cloudNodeUnmark(x) })
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the recursive step of Cloud_Support.]
-
-  Description [Performs the recursive step of Cloud_Support. Performs a
-  DFS from f. The support is accumulated in supp as a side effect. Uses
-  the LSB of the then pointer as visited flag.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func cloudSupport(dd *CloudManager, n *CloudNode, support *int32) {
-    // inlining of macro cloudIsConstant
-    // inlining of macro cloudNodeIsMarked
-    if  (((n).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX) || ((int32(((n).v &  CLOUD_MARK_ON)) != 0)) {
-        return; }
-    // set visited flag
-    // inlining of macro cloudNodeMark
-    ((n).v       |= CLOUD_MARK_ON);
-    // inlining of macro cloudV
-    support[((n).v)] = 1;
-    // inlining of macro cloudT
-    cloudSupport( dd, ((n).t), support );
-    // inlining of macro Cloud_Regular
-    // inlining of macro cloudE
-    cloudSupport( dd, ((CloudNode*)(((ABC_PTRUINT_T)(((n).e))) & ~01))   // get the regular node (w/o bubble)
-, support );
+func cloudSupport(dd *CloudManager, n *CloudNode, support []int32) {
+	cloudWalk(n, map[*CloudNode]bool{}, func(x *CloudNode) {
+		if !Cloud_IsConstant(x) {
+			support[Cloud_V(x)] = 1
+		}
+	})
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Finds the variables on which a DD depends.]
-
-  Description [Finds the variables on which a DD depends.
-  Returns a BDD consisting of the product of the variables if
-  successful; NULL otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_Support(dd *CloudManager, n *CloudNode) *CloudNode {
-    var res *CloudNode;
-    var support *int32;
-    var i int32;
-
-    // inlining of macro CLOUD_ASSERT
-    assert((n) >= dd.tUnique && (n) < dd.tUnique+dd.nNodesAlloc, "(n) >= dd.tUnique && (n) < dd.tUnique+dd.nNodesAlloc");
-
-    // allocate and initialize support array for cloudSupport
-    // inlining of macro ABC_CALLOC
-    support = ((int *) calloc((size_t)(dd.nVars), sizeof(int)));
-
-    // compute support and clean up markers
-    // inlining of macro Cloud_Regular
-    cloudSupport( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
-, support );
-    // inlining of macro Cloud_Regular
-    cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
- );
-
-    // transform support from array to cube
-    res = dd.one;
-    for  i = dd.nVars - 1; i >= 0; i--  { // for each level bottom-up 
-        if support[i] == 1 {
-            res = Cloud_bddAnd( dd, res, dd.vars[i] );
-            if res == nil {
-                break; }
-        }
-    }
-    // inlining of macro ABC_FREE
-    ((support) ? (free((char *) (support)), (support) = 0) : 0);
-    return res;
+	cloudCheck(dd, n)
+	support := make([]int32, dd.nVars)
+	cloudSupport(dd, n, support)
+	r := dd.one
+	for i := dd.nVars - 1; i >= 0; i-- {
+		if support[i] != 0 {
+			r = Cloud_bddAnd(dd, r, dd.vars[i])
+			if r == nil {
+				return nil
+			}
+		}
+	}
+	return r
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Counts the variables on which a DD depends.]
-
-  Description [Counts the variables on which a DD depends.
-  Returns the number of the variables if successful; Cloud_OUT_OF_MEM
-  otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_SupportSize(dd *CloudManager, n *CloudNode) int32 {
-    var support *int32;
-    var i int32;
-    var count int32;
-
-    // inlining of macro CLOUD_ASSERT
-    assert((n) >= dd.tUnique && (n) < dd.tUnique+dd.nNodesAlloc, "(n) >= dd.tUnique && (n) < dd.tUnique+dd.nNodesAlloc");
-
-    // allocate and initialize support array for cloudSupport
-    // inlining of macro ABC_CALLOC
-    support = ((int *) calloc((size_t)(dd.nVars), sizeof(int)));
-
-    // compute support and clean up markers
-    // inlining of macro Cloud_Regular
-    cloudSupport( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
-, support );
-    // inlining of macro Cloud_Regular
-    cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
- );
-
-    // count support variables
-    count = 0;
-    for  i = 0; i < dd.nVars; i++  {
-        if support[i] == 1 {
-            count++; }
-    }
-
-    // inlining of macro ABC_FREE
-    ((support) ? (free((char *) (support)), (support) = 0) : 0);
-    return count;
+	cloudCheck(dd, n)
+	support := make([]int32, dd.nVars)
+	cloudSupport(dd, n, support)
+	var count int32
+	for _, x := range support {
+		count += x
+	}
+	return count
 }
-
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the recursive step of Cloud_DagSize.]
-
-  Description [Performs the recursive step of Cloud_DagSize. Returns the
-  number of nodes in the graph rooted at n.]
-
-  SideEffects [None]
-
-******************************************************************************/
-func cloudDagSize(dd *CloudManager, n *CloudNode) int32 {
-    var tval, eval int32;
-    // inlining of macro cloudNodeIsMarked
-    if  int32(((n).v &  CLOUD_MARK_ON)) != 0 {
-        return 0; }
-    // set visited flag
-    // inlining of macro cloudNodeMark
-    ((n).v       |= CLOUD_MARK_ON);
-    // inlining of macro cloudIsConstant
-    if  ((n).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX {
-        return 1; }
-    // inlining of macro cloudT
-    tval = cloudDagSize( dd, ((n).t) );
-    // inlining of macro Cloud_Regular
-    // inlining of macro cloudE
-    eval = cloudDagSize( dd, ((CloudNode*)(((ABC_PTRUINT_T)(((n).e))) & ~01))   // get the regular node (w/o bubble)
- );
-    return tval + eval + 1;
-
-}
-
-/**Function********************************************************************
-
-  Synopsis    [Counts the number of nodes in a DD.]
-
-  Description [Counts the number of nodes in a DD. Returns the number
-  of nodes in the graph rooted at node.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
+func cloudDagSize(dd *CloudManager, n *CloudNode) int32 { return Cloud_DagSize(dd, n) }
 func Cloud_DagSize(dd *CloudManager, n *CloudNode) int32 {
-    var res int32;
-    // inlining of macro Cloud_Regular
-    res = cloudDagSize( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
- );
-    // inlining of macro Cloud_Regular
-    cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
- );
-    return res;
-
+	cloudCheck(dd, n)
+	seen := map[*CloudNode]bool{}
+	cloudWalk(n, seen, func(*CloudNode) {})
+	return int32(len(seen))
 }
-
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the recursive step of Cloud_DagSize.]
-
-  Description [Performs the recursive step of Cloud_DagSize. Returns the
-  number of nodes in the graph rooted at n.]
-
-  SideEffects [None]
-
-******************************************************************************/
-func Cloud_DagCollect_rec(dd *CloudManager, n *CloudNode, pCounter *int32) int32 {
-    var tval, eval int32;
-    // inlining of macro cloudNodeIsMarked
-    if  int32(((n).v &  CLOUD_MARK_ON)) != 0 {
-        return 0; }
-    // set visited flag
-    // inlining of macro cloudNodeMark
-    ((n).v       |= CLOUD_MARK_ON);
-    // inlining of macro cloudIsConstant
-    if  ((n).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX {
-        dd.ppNodes[(*pCounter)++] = n;
-        return 1;
-    }
-    // inlining of macro cloudT
-    tval = Cloud_DagCollect_rec( dd, ((n).t), pCounter );
-    // inlining of macro Cloud_Regular
-    // inlining of macro cloudE
-    eval = Cloud_DagCollect_rec( dd, ((CloudNode*)(((ABC_PTRUINT_T)(((n).e))) & ~01))   // get the regular node (w/o bubble)
-, pCounter );
-    dd.ppNodes[(*pCounter)++] = n;
-    return tval + eval + 1;
-
+func Cloud_DagCollect_rec(dd *CloudManager, n *CloudNode, counter *int32) int32 {
+	before := *counter
+	seen := map[*CloudNode]bool{}
+	cloudWalk(n, seen, func(x *CloudNode) { dd.ppNodes = append(dd.ppNodes, x); *counter++ })
+	return *counter - before
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Counts the number of nodes in a DD.]
-
-  Description [Counts the number of nodes in a DD. Returns the number
-  of nodes in the graph rooted at node.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_DagCollect(dd *CloudManager, n *CloudNode) int32 {
-    var res, Counter int32;
-    if dd.ppNodes == nil {
-        // inlining of macro ABC_ALLOC
-        dd.ppNodes = ((CloudNode * *) malloc(sizeof(CloudNode *) * (size_t)(dd.nNodesLimit))); }
-    // inlining of macro Cloud_Regular
-    res = Cloud_DagCollect_rec( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
-, &Counter );
-    // inlining of macro Cloud_Regular
-    cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(n)) & ~01))   // get the regular node (w/o bubble)
- );
-    assert(res == Counter, "res == Counter");
-    return res;
-
+	cloudCheck(dd, n)
+	dd.ppNodes = dd.ppNodes[:0]
+	var count int32
+	return Cloud_DagCollect_rec(dd, n, &count)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Counts the number of nodes in an array of DDs.]
-
-  Description [Counts the number of nodes in a DD. Returns the number
-  of nodes in the graph rooted at node.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Cloud_SharingSize(dd *CloudManager, pn **CloudNode, nn int32) int32 {
-    var res, i int32;
-    res = 0;
-    for  i = 0; i < nn; i++  {
-        // inlining of macro Cloud_Regular
-        res += cloudDagSize( dd, ((CloudNode*)(((ABC_PTRUINT_T)(pn[i])) & ~01))   // get the regular node (w/o bubble)
- );
-    }
-    for  i = 0; i < nn; i++  {
-        // inlining of macro Cloud_Regular
-        cloudClearMark( dd, ((CloudNode*)(((ABC_PTRUINT_T)(pn[i])) & ~01))   // get the regular node (w/o bubble)
- );
-    }
-    return res;
+func Cloud_SharingSize(dd *CloudManager, nodes []*CloudNode, count int32) int32 {
+	seen := map[*CloudNode]bool{}
+	for _, n := range nodes[:count] {
+		cloudCheck(dd, n)
+		cloudWalk(n, seen, func(*CloudNode) {})
+	}
+	return int32(len(seen))
 }
-
-
-/**Function********************************************************************
-
-  Synopsis    [Returns one cube contained in the given BDD.]
-
-  Description []
-
-  SideEffects []
-
-******************************************************************************/
-func Cloud_GetOneCube(dd *CloudManager, bFunc *CloudNode) *CloudNode {
-    var bFunc0, bFunc1, res *CloudNode;
-
-    // inlining of macro Cloud_IsConstant
-    // inlining of macro Cloud_Regular
-    if  ((((CloudNode*)(((ABC_PTRUINT_T)(bFunc)) & ~01))   // get the regular node (w/o bubble)
-).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX {
-        return bFunc; }
-
-    // cofactor
-    // inlining of macro Cloud_IsComplement
-    if  int32((((ABC_PTRUINT_T)(bFunc)) & 01)) != 0 {           // check if complemented
-  
-        // inlining of macro Cloud_Not
-        // inlining of macro cloudE
-        bFunc0 = ((CloudNode*)(((ABC_PTRUINT_T)(((bFunc).e))) ^  01))   // complement the node
-;
-        // inlining of macro Cloud_Not
-        // inlining of macro cloudT
-        bFunc1 = ((CloudNode*)(((ABC_PTRUINT_T)(((bFunc).t))) ^  01))   // complement the node
-;
-    
-    } else {
-        // inlining of macro cloudE
-        bFunc0 = ((bFunc).e);
-        // inlining of macro cloudT
-        bFunc1 = ((bFunc).t);
-    }
-
-    // try to find the cube with the negative literal
-    res = Cloud_GetOneCube( dd, bFunc0 );
-    if res == nil {
-        return nil; }
-
-    if res != dd.zero {
-        // inlining of macro Cloud_Not
-        // inlining of macro Cloud_V
-        // inlining of macro Cloud_Regular
-        res = Cloud_bddAnd( dd, res, ((CloudNode*)(((ABC_PTRUINT_T)(dd.vars[((((CloudNode*)(((ABC_PTRUINT_T)(bFunc)) & ~01))   // get the regular node (w/o bubble)
-).v)])) ^  01))   // complement the node
- );
-    
-    } else {
-        // try to find the cube with the positive literal
-        res = Cloud_GetOneCube( dd, bFunc1 );
-        if res == nil {
-            return nil; }
-        assert(res != dd.zero, "res != dd.zero");
-        // inlining of macro Cloud_V
-        // inlining of macro Cloud_Regular
-        res = Cloud_bddAnd( dd, res, dd.vars[((((CloudNode*)(((ABC_PTRUINT_T)(bFunc)) & ~01))   // get the regular node (w/o bubble)
-).v)] );
-    }
-    return res;
+func Cloud_GetOneCube(dd *CloudManager, n *CloudNode) *CloudNode {
+	cloudCheck(dd, n)
+	if Cloud_IsConstant(n) {
+		return n
+	}
+	v := Cloud_V(n)
+	low, high := cloudCofactor(n, v)
+	r := Cloud_GetOneCube(dd, low)
+	if r == nil {
+		return nil
+	}
+	if r != dd.zero {
+		return Cloud_bddAnd(dd, r, Cloud_Not(dd.vars[v]))
+	}
+	r = Cloud_GetOneCube(dd, high)
+	if r == nil {
+		return nil
+	}
+	return Cloud_bddAnd(dd, r, dd.vars[v])
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Prints the BDD as a set of disjoint cubes to the standard output.]
-
-  Description []
-
-  SideEffects []
-
-******************************************************************************/
-func Cloud_bddPrint(dd *CloudManager, Func *CloudNode) {
-    var Cube *CloudNode;
-    var fFirst int32  = 1;
-
-    if Func == dd.zero {
-        fmt.Printf("Constant 0.");
-    } else if Func == dd.one {
-        fmt.Printf("Constant 1.");
-    } else {
-        for {
-            Cube = Cloud_GetOneCube( dd, Func );
-            if Cube == nil || Cube == dd.zero {
-                break; }
-            if fFirst != 0 {       fFirst = 0;
-            } else {                fmt.Printf(" + "); }
-            Cloud_bddPrintCube( dd, Cube );
-            // inlining of macro Cloud_Not
-            Func = Cloud_bddAnd( dd, Func, ((CloudNode*)(((ABC_PTRUINT_T)(Cube)) ^  01))   // complement the node
- );
-        } 
-    }
-    fmt.Printf("\n");
+func Cloud_Evaluate(dd *CloudManager, n *CloudNode, values []bool) bool {
+	cloudCheck(dd, n)
+	if len(values) < int(dd.nVars) {
+		panic("cloud: short assignment")
+	}
+	for !Cloud_IsConstant(n) {
+		low, high := cloudCofactor(n, Cloud_V(n))
+		if values[Cloud_V(n)] {
+			n = high
+		} else {
+			n = low
+		}
+	}
+	return n == dd.one
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Prints one cube.]
-
-  Description []
-
-  SideEffects []
-
-******************************************************************************/
-func Cloud_bddPrintCube(dd *CloudManager, bCube *CloudNode) {
-    var bCube0, bCube1 *CloudNode;
-
-    // inlining of macro Cloud_IsConstant
-    // inlining of macro Cloud_Regular
-    assert(!(((((CloudNode*)(((ABC_PTRUINT_T)(bCube)) & ~01))   // get the regular node (w/o bubble)
-    ).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX), "!/*__starting_point_inline_macro:Cloud_IsConstant__*/(((/*__starting_point_inline_macro:Cloud_Regular__*/((CloudNode*)(((ABC_PTRUINT_T)(bCube)) & ~01))   // get the regular node (w/o bubble)\n).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX)");
-    for {
-        // get the node structure
-        // inlining of macro Cloud_IsConstant
-        // inlining of macro Cloud_Regular
-        if  ((((CloudNode*)(((ABC_PTRUINT_T)(bCube)) & ~01))   // get the regular node (w/o bubble)
-).v & CLOUD_MARK_OFF) == CLOUD_CONST_INDEX {
-            break; }
-
-        // cofactor the cube
-        // inlining of macro Cloud_IsComplement
-        if  int32((((ABC_PTRUINT_T)(bCube)) & 01)) != 0 {           // check if complemented
-  
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudE
-            bCube0 = ((CloudNode*)(((ABC_PTRUINT_T)(((bCube).e))) ^  01))   // complement the node
-;
-            // inlining of macro Cloud_Not
-            // inlining of macro cloudT
-            bCube1 = ((CloudNode*)(((ABC_PTRUINT_T)(((bCube).t))) ^  01))   // complement the node
-;
-        
-        } else {
-            // inlining of macro cloudE
-            bCube0 = ((bCube).e);
-            // inlining of macro cloudT
-            bCube1 = ((bCube).t);
-        }
-
-        if bCube0 != dd.zero {
-            assert(bCube1 == dd.zero, "bCube1 == dd.zero");
-            // inlining of macro cloudV
-            fmt.Printf("[%d]'", ((bCube).v));
-            bCube = bCube0;
-        
-        } else {
-            assert(bCube1 != dd.zero, "bCube1 != dd.zero");
-            // inlining of macro cloudV
-            fmt.Printf("[%d]", ((bCube).v));
-            bCube = bCube1;
-        }
-    }
+func Cloud_bddPrint(dd *CloudManager, n *CloudNode) {
+	path := make([]byte, dd.nVars)
+	for i := range path {
+		path[i] = '-'
+	}
+	var walk func(*CloudNode)
+	walk = func(x *CloudNode) {
+		if x == dd.zero {
+			return
+		}
+		if x == dd.one {
+			fmt.Printf("%s 1\n", path)
+			return
+		}
+		v := Cloud_V(x)
+		low, high := cloudCofactor(x, v)
+		path[v] = '0'
+		walk(low)
+		path[v] = '1'
+		walk(high)
+		path[v] = '-'
+	}
+	cloudCheck(dd, n)
+	walk(n)
 }
-
-
-/**Function********************************************************************
-
-  Synopsis    [Prints info.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
+func Cloud_bddPrintCube(dd *CloudManager, n *CloudNode) {
+	cloudCheck(dd, n)
+	var literals []string
+	for !Cloud_IsConstant(n) {
+		v := Cloud_V(n)
+		low, high := cloudCofactor(n, v)
+		if low == dd.zero {
+			literals = append(literals, fmt.Sprintf("x%d", v))
+			n = high
+		} else if high == dd.zero {
+			literals = append(literals, fmt.Sprintf("!x%d", v))
+			n = low
+		} else {
+			panic("cloud: function is not a cube")
+		}
+	}
+	if n == dd.zero {
+		fmt.Println("0")
+		return
+	}
+	fmt.Println(strings.Join(literals, " "))
+}
 func Cloud_PrintInfo(dd *CloudManager) {
-    if dd == nil { return; }
-    fmt.Printf("The number of unique table nodes allocated = %12d.\n", dd.nNodesAlloc);
-    fmt.Printf("The number of unique table nodes present   = %12d.\n", dd.nNodesCur);
-    fmt.Printf("The number of unique table hits            = %12d.\n", dd.nUniqueHits);
-    fmt.Printf("The number of unique table misses          = %12d.\n", dd.nUniqueMisses);
-    fmt.Printf("The number of unique table steps           = %12d.\n", dd.nUniqueSteps);
-    fmt.Printf("The number of cache hits                   = %12d.\n", dd.nCacheHits);
-    fmt.Printf("The number of cache misses                 = %12d.\n", dd.nCacheMisses);
-    fmt.Printf("The current signature                      = %12d.\n", dd.nSignCur);
-    fmt.Printf("The total memory in use                    = %12d.\n", dd.nMemUsed);
+	fmt.Printf("Cloud: vars=%d nodes=%d limit=%d unique-hits=%d unique-misses=%d cache-hits=%d cache-misses=%d\n", dd.nVars, len(dd.tUnique), dd.nNodesLimit, dd.nUniqueHits, dd.nUniqueMisses, dd.nCacheHits, dd.nCacheMisses)
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Prints the state of the hash table.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
 func Cloud_PrintHashTable(dd *CloudManager) {
-    var i int32;
-
-    for  i = 0; i < dd.nNodesAlloc; i++  {
-        if dd.tUnique[i].v == CLOUD_CONST_INDEX {
-            fmt.Printf("-");
-        } else {
-            fmt.Printf("+"); }
-    }
-    fmt.Printf("\n");
+	ids := make([]int, 0, len(dd.tUnique))
+	byID := map[int]*CloudNode{}
+	for _, n := range dd.tUnique {
+		ids = append(ids, int(n.id))
+		byID[int(n.id)] = n
+	}
+	sort.Ints(ids)
+	for _, id := range ids {
+		n := byID[id]
+		if Cloud_IsConstant(n) {
+			fmt.Printf("%d: 1\n", id)
+		} else {
+			fmt.Printf("%d: x%d ? %d : %d\n", id, n.v, n.t.id, n.e.id)
+		}
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-
