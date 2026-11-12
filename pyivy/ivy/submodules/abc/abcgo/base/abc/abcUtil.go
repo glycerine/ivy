@@ -1290,50 +1290,8 @@ func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
 
 **********************************************************************
 */
-func Abc_NtkClpOneGia_rec(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {
-	var iLit0, iLit1 int32
-	if Abc_NodeIsTravIdCurrent(pNode) || Abc_ObjFaninNum(pNode) == 0 || Abc_ObjIsCi(pNode) {
-		return pNode.iTemp
-	}
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode( pNode )")
-	Abc_NodeSetTravIdCurrent(pNode)
-	iLit0 = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin0(pNode))
-	iLit1 = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin1(pNode))
-	iLit0 = Abc_LitNotCond(iLit0, Abc_ObjFaninC0(pNode))
-	iLit1 = Abc_LitNotCond(iLit1, Abc_ObjFaninC1(pNode))
-	pNode.iTemp = Gia_ManHashAnd(pNew, iLit0, iLit1)
-	return pNode.iTemp
-}
-func Abc_NtkStrashToGia(pNtk *Abc_Ntk_t) *Gia_Man_t {
-	var i, iLit int32
-	var pNode *Abc_Obj_t
-	var pNew, pTemp *Gia_Man_t
-	assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)")
-	Abc_NtkForEachObj(pNtk, pNode, i)
-	pNode.iTemp = -1
-	// start new manager
-	pNew = Gia_ManStart(Abc_NtkObjNum(pNtk))
-	pNew.pName = Abc_UtilStrsav(pNtk.pName)
-	pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec)
-	Gia_ManHashStart(pNew)
-	// primary inputs
-	Abc_AigConst1(pNtk).iTemp = 1
-	Abc_NtkForEachCi(pNtk, pNode, i)
-	pNode.iTemp = Gia_ManAppendCi(pNew)
-	// create the first cone
-	Abc_NtkIncrementTravId(pNtk)
-	Abc_NtkForEachCo(pNtk, pNode, i)
-	{
-		iLit = Abc_NtkClpOneGia_rec(pNew, Abc_ObjFanin0(pNode))
-		iLit = Abc_LitNotCond(iLit, Abc_ObjFaninC0(pNode))
-		Gia_ManAppendCo(pNew, iLit)
-	}
-	// perform cleanup
-	pTemp = pNew
-	pNew = Gia_ManCleanup(pTemp)
-	Gia_ManStop(pTemp)
-	return pNew
-}
+
+
 func Abc_SopSynthesizeOne(pSop string, fClp int32) *Gia_Man_t {
 	var pNtkNew, pNtk *Abc_Ntk_t
 	var vSops *Vec_Ptr_t
