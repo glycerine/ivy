@@ -680,12 +680,6 @@ func Gia_WriteDotAigSimple(p *Gia_Man_t, pFileName string, vBold *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ShowAddOut(vAdds *Vec_Int_t, vMapAdds *Vec_Int_t, Node int32) int32 {
-    var iBox int32  = Vec_IntEntry( vMapAdds, Node );
-    if iBox >= 0 {
-        return Vec_IntEntry( vAdds, 6*iBox+4 ); }
-    return Node;
-}
 func Gia_WriteDotAig(p *Gia_Man_t, pFileName string, vBold *Vec_Int_t, vAdds *Vec_Int_t, vXors *Vec_Int_t, vMapAdds *Vec_Int_t, vMapXors *Vec_Int_t, vOrder *Vec_Int_t) {
     var pFile *os.File;
     var pNode *Gia_Obj_t;//, * pTemp, * pPrev;
@@ -1031,90 +1025,6 @@ func Gia_WriteDotAig(p *Gia_Man_t, pFileName string, vBold *Vec_Int_t, vAdds *Ve
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ShowMapAdds(p *Gia_Man_t, vAdds *Vec_Int_t, fFadds int32, vBold *Vec_Int_t) *Vec_Int_t {
-    var vIsBold *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );
-    var vMapAdds *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) ); var i, Entry int32;
-    if vBold != nil {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vBold)) && (((Entry) = Vec_IntEntry(vBold, i)), 1); i++  {
-            Vec_BitWriteEntry( vIsBold, Entry, 1 );
-        } }
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        if (fFadds != 0) && Vec_IntEntry(vAdds, 6*i+2) == 0 {
-            continue; }
-        if Vec_BitEntry(vIsBold, Vec_IntEntry(vAdds, 6*i+3)) || Vec_BitEntry(vIsBold, Vec_IntEntry(vAdds, 6*i+4)) {
-            continue; }
-        Vec_IntWriteEntry( vMapAdds, Vec_IntEntry(vAdds, 6*i+3), i );
-        Vec_IntWriteEntry( vMapAdds, Vec_IntEntry(vAdds, 6*i+4), i );
-    }
-    Vec_BitFree( vIsBold );
-    return vMapAdds;
-}
-func Gia_ShowMapXors(p *Gia_Man_t, vXors *Vec_Int_t) *Vec_Int_t {
-    var vMapXors *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) ); var i int32;
-    for  i = 0; 4*i < Vec_IntSize(vXors); i++  {
-        Vec_IntWriteEntry( vMapXors, Vec_IntEntry(vXors, 4*i), i );
-    }
-    return vMapXors;
-}
-func Gia_ShowCollectObjs_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vAdds *Vec_Int_t, vXors *Vec_Int_t, vMapAdds *Vec_Int_t, vMapXors *Vec_Int_t, vOrder *Vec_Int_t) int32 {
-    var Level0, Level1, Level2, Level int32;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return Gia_ObjLevel(p, pObj); }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    if Vec_IntEntry(vMapAdds, Gia_ObjId(p, pObj)) >= 0 {
-        var iBox int32  = Vec_IntEntry(vMapAdds, Gia_ObjId(p, pObj));
-        Gia_ObjSetTravIdCurrentId(p, Vec_IntEntry(vAdds, 6*iBox+3) );
-        Gia_ObjSetTravIdCurrentId(p, Vec_IntEntry(vAdds, 6*iBox+4) );
-        Level0 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vAdds, 6*iBox+0) ), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        Level1 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vAdds, 6*iBox+1) ), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        if Vec_IntEntry(vAdds, 6*iBox+2) {
-        Level2 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vAdds, 6*iBox+2) ), vAdds, vXors, vMapAdds, vMapXors, vOrder ); }
-        Level = 1 + Abc_MaxInt( Abc_MaxInt(Level0, Level1), Level2 );
-        Gia_ObjSetLevelId( p, Vec_IntEntry(vAdds, 6*iBox+3), Level );
-        Gia_ObjSetLevelId( p, Vec_IntEntry(vAdds, 6*iBox+4), Level );
-        pObj = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*iBox+4) );
-    
-    } else if Vec_IntEntry(vMapXors, Gia_ObjId(p, pObj)) >= 0 {
-        var iXor int32  = Vec_IntEntry(vMapXors, Gia_ObjId(p, pObj));
-        Level0 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vXors, 4*iXor+1) ), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        Level1 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vXors, 4*iXor+2) ), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        if Vec_IntEntry(vXors, 4*iXor+3) {
-        Level2 = Gia_ShowCollectObjs_rec( p, Gia_ManObj( p, Vec_IntEntry(vXors, 4*iXor+3) ), vAdds, vXors, vMapAdds, vMapXors, vOrder ); }
-        Level = 1 + Abc_MaxInt( Abc_MaxInt(Level0, Level1), Level2 );
-        Gia_ObjSetLevel( p, pObj, Level );
-    
-    } else {
-        assert(!Gia_ObjIsMux(p, pObj), "!Gia_ObjIsMux(p, pObj)");
-        Level0 = Gia_ShowCollectObjs_rec( p, Gia_ObjFanin0(pObj), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        Level1 = Gia_ShowCollectObjs_rec( p, Gia_ObjFanin1(pObj), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-        Level = 1 + Abc_MaxInt(Level0, Level1);
-        Gia_ObjSetLevel( p, pObj, Level );
-    }
-    Vec_IntPush( vOrder, Gia_ObjId(p, pObj) );
-    p.nLevels = Abc_MaxInt( p.nLevels, Level );
-    return Level;
-}
-func Gia_ShowCollectObjs(p *Gia_Man_t, vAdds *Vec_Int_t, vXors *Vec_Int_t, vMapAdds *Vec_Int_t, vMapXors *Vec_Int_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t; var i int32;
-    var vOrder *Vec_Int_t  = Vec_IntAlloc( 100 );
-    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );
-    p.nLevels = 0;
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent(p, Gia_ManConst0(p));
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        Gia_ObjSetTravIdCurrent(p, pObj);
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Gia_ShowCollectObjs_rec( p, Gia_ObjFanin0(pObj), vAdds, vXors, vMapAdds, vMapXors, vOrder );
-    }
-    return vOrder;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
