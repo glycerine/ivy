@@ -35,3 +35,23 @@ func TestClassifyLatchControls(t *testing.T) {
 		t.Fatal("incorrect mux rewrite")
 	}
 }
+
+func TestExposeLatchControls(t *testing.T) {
+	n := NewNetwork("controls")
+	n.Type = uint8(ABC_NTK_LOGIC)
+	a := n.NewObject(ObjectPI)
+	b := n.NewObject(ObjectPI)
+	controls := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(controls, a)
+	vec.Vec_PtrPush(controls, b)
+	abcExposeLatchControls(n, controls, 0)
+	for i, signal := range []*Object{a, b} {
+		output := vec.Vec_PtrEntry(controls, i).(*Object)
+		if output.Kind != ObjectPO || Abc_ObjFanin0(output) != signal {
+			t.Fatalf("invalid control output %d", i)
+		}
+	}
+	if Abc_NtkPoNum(n) != 2 {
+		t.Fatal("missing outputs")
+	}
+}

@@ -37,3 +37,18 @@ func abcClassifyLatchControls(n *Network) (*vec.Vec_Ptr_t, *vec.Vec_Int_t, latch
 	}
 	return controls, classes, counts
 }
+
+func abcExposeLatchControls(n *Network, controls *vec.Vec_Ptr_t, verbose int32) {
+	for i, item := range vec.Vec_PtrArray(controls) {
+		signal, ok := item.(*Object)
+		if !ok || signal.network != n {
+			panic("abc: invalid latch control")
+		}
+		output := Abc_NtkCreatePo(n)
+		Abc_ObjAddFanin(output, signal)
+		Abc_ObjAssignName(output, Abc_ObjName(output), "")
+		vec.Vec_PtrWriteEntry(controls, i, output)
+	}
+	Abc_NtkOrderCisCos(n)
+	Abc_NtkCleanup(n, verbose)
+}

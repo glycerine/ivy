@@ -150,16 +150,8 @@ func Abc_NtkCRetime(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {
     if fVerbose != 0 {
     fmt.Printf("CountN = %4d. Count2 = %4d. Count1 = %4d. Count0 = %4d. Ctrls = %d.\n", CountN, Count2, Count1, Count0, Vec_PtrSize(vControls)); }
 
-    // add the controls to the list of POs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )
-    {
-        pObjPo = Abc_NtkCreatePo( pNtk );
-        Abc_ObjAddFanin( pObjPo, pObj );
-        Abc_ObjAssignName( pObjPo, Abc_ObjName(pObjPo), nil );
-        Vec_PtrWriteEntry( vControls, i, pObjPo );
-    }
-    Abc_NtkOrderCisCos( pNtk );
-    Abc_NtkCleanup( pNtk, fVerbose );
+    // Add control outputs before retiming.
+    abcExposeLatchControls(pNtk, vControls, fVerbose)
 
     // performs retiming with classes
     pNtkNew = Abc_NtkRetimeWithClassesNtk( pNtk, vFlopClasses, &vFlopClassesNew, fVerbose );
