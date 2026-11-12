@@ -345,53 +345,7 @@ func Io_End(pAbc *Abc_Frame_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadDsd(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pString string;
-    var fCheck int32;
-    var c int32;
-    extern Abc_Ntk_t * Io_ReadDsd( char * pFormula );
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pString = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_ReadDsd( pString );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_dsd [-h] <formula>\n");
-    fmt.Fprintf(pAbc.Err, "\t          parses a formula representing DSD of a function\n");
-    fmt.Fprintf(pAbc.Err, "\t-h      : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tformula : the formula representing disjoint-support decomposition (DSD)\n");
-    fmt.Fprintf(pAbc.Err, "\t          Example of a formula: !(a*(b+CA(!d,e*f,c))*79B3(g,h,i,k))\n");
-    fmt.Fprintf(pAbc.Err, "\t          where \'!\' is an INV, \'*\' is an AND, \'+\' is an XOR, \n");
-    fmt.Fprintf(pAbc.Err, "\t          CA and 79B3 are hexadecimal representations of truth tables\n");
-    fmt.Fprintf(pAbc.Err, "\t          (in this case CA=11001010 is truth table of MUX(Data0,Data1,Ctrl))\n");
-    fmt.Fprintf(pAbc.Err, "\t          The lower chars (a,b,c,etc) are reserved for elementary variables.\n");
-    fmt.Fprintf(pAbc.Err, "\t          The upper chars (A,B,C,etc) are reserved for hexadecimal digits.\n");
-    fmt.Fprintf(pAbc.Err, "\t          No spaces are allowed in formulas. In parentheses, LSB goes first.\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -545,76 +499,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadPla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var c int32;
-    var fZeros int32;
-    var fBoth int32;
-    var fOnDc int32;
-    var fSkipPrepro int32;
-    var fCheck int32 = 1;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "zbdxch" ) ) != -1  {
-        switch  c  {
-            case 'z':
-                fZeros ^= 1;
-                break;
-            case 'b':
-                fBoth ^= 1;
-                break;
-            case 'd':
-                fOnDc ^= 1;
-                break;
-            case 'x':
-                fSkipPrepro ^= 1;
-                break;
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    if (fZeros != 0) || (fBoth != 0) || (fOnDc != 0) || (fSkipPrepro != 0) {
-        var pTemp *Abc_Ntk_t;
-        pNtk = Io_ReadPla( pFileName, fZeros, fBoth, fOnDc, fSkipPrepro, fCheck );
-        if pNtk == nil {
-            fmt.Printf("Reading PLA file has failed.\n");
-            return 1;
-        }
-        pNtk = Abc_NtkToLogic( pTemp = pNtk );
-        Abc_NtkDelete( pTemp );
-    
-    } else {
-        pNtk = Io_Read( pFileName, IO_FILE_PLA, fCheck, 0 ); }
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_pla [-zbdxch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in PLA\n");
-    fmt.Fprintf(pAbc.Err, "\t-z     : toggle reading on-set and off-set [default = %s]\n", fZeros? "off-set":"on-set");
-    fmt.Fprintf(pAbc.Err, "\t-b     : toggle reading both on-set and off-set as on-set [default = %s]\n", fBoth? "off-set":"on-set");
-    fmt.Fprintf(pAbc.Err, "\t-d     : toggle reading both on-set and dc-set as on-set [default = %s]\n", fOnDc? "off-set":"on-set");
-    fmt.Fprintf(pAbc.Err, "\t-x     : toggle reading Exclusive SOP rather than SOP [default = %s]\n", fSkipPrepro? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -627,45 +512,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadPlaMo(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern Abc_Ntk_t * Mop_ManTest( char * pFileName, int fMerge, int fVerbose );
-    var pNtk *Abc_Ntk_t;
-    var c, fMerge, fVerbose int32;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "mvh" ) ) != -1  {
-        switch  c  {
-            case 'm':
-                fMerge ^= 1;
-                break;
-            case 'v':
-                fVerbose ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pNtk = Mop_ManTest( argv[globalUtilOptind], fMerge, fVerbose );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
 
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_plamo [-mvh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in multi-output PLA\n");
-    fmt.Fprintf(pAbc.Err, "\t-m     : toggle dist-1 merge for cubes with identical outputs [default = %s]\n", fMerge? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-v     : toggle printing verbose information [default = %s]\n", fVerbose? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
