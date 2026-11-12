@@ -178,8 +178,8 @@ clear fields directly. Full GIA remains blocked by other generated algorithms.
 
 The standard-library `misc/bzlib` port is now integrated, including its pure-Go
 encoder and ABC stream adapters; cross-tool bzip2 interoperability, race tests
-and vet pass. The base ABC network port has advanced through its original
-`abcAig` manager APIs; the next full-package parser blocker is `abcBarBuf.go`.
+and vet pass. The base ABC network port has advanced through MV and checker
+APIs; its current full-package parser blocker is `abcDfs.go`.
 
 Subsequent integration: `bool/rsb` is ported and race/vet clean, with original-C
 search and counterexample oracles; `misc/vec` hash indexes now remain coherent
@@ -187,8 +187,8 @@ after explicit mutation and are race-tested. CUDD's ZDD set operations also
 have a permanent checksum fixture derived from the original C implementation
 (65,536 operation pairs). The expanded AIG/Scl source-file race suite passes
 after a Repr fix; all four sweep drivers reduce three registers to one while
-preserving sequential traces. The full AIG package remains blocked by other
-original files, and full-module verification remains outstanding.
+preserving sequential traces. The full AIG package now passes race tests and
+vet; full-module verification remains outstanding.
 
 `bool/lucky` is now fully ported and committed after race/vet validation; its
 fast/simple/swap implementations match the original C outputs, phase flags and
@@ -226,43 +226,43 @@ The Espresso sparse row/column/matrix family has since been ported, with
 12,800 operations checked against fixtures generated from the original C
 implementation and 6,000 randomized mutation checks for link and identity
 invariants. The shared minimum-cover family reports 1,000 C-oracle matches and
-1,000 independent optimality cases. Whole Espresso integration is still
-pending; its current reported compile blocker is `expand.go:49` (U+000C), now
-assigned for cleanup and porting. These component checks do not yet prove the
-package builds as a whole.
+1,000 independent optimality cases. Set/cube geometry and sparse matrix
+invariants are now committed as focused tested subsets. Espresso's compile
+frontier has moved through `compl.go`, `cubehack.go`, and `cvrin.go`; the latest
+remaining syntax blockers are `equiv.go`, `essen.go`, and `gasp.go`, all assigned
+for porting.
 
 Latest whole-module snapshot: `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...`
-reports 38 passing and 79 failing package lines. The failing set still includes
-many unported generated drafts; first reported blockers include Espresso's
-`expand.go`, the retained placement test harness, PSAT types, root `demo.go`,
-and several C-shaped headers. The full module remains unbuildable and
-incomplete.
+reports 41 passing and 75 failing package lines, captured in
+`/tmp/abcgo-full-current.log`. This snapshot predates the latest commits and
+active owner edits. The full module remains unbuildable and incomplete.
 
 ## Active integration after the latest snapshot
 
 The parallel owners have advanced several package frontiers since that
 whole-module run: GIA truth/DAU canonicalization and MiniAIG balance have
-focused race-tested implementations; base/abc has moved through the MV APIs
-and is now blocked by `abcCheck.go`; GIA AIGER codecs are in round-trip and
-malformed-input review; and misc/extra has replaced its central truth/bit
-operator header, with Cube and DSD next in the compile chain. Espresso's
-shared cube/header/expand ownership is now assigned across util/hash/tim,
-without duplicate type definitions. SAT/XSAT, base/main, CGlucose and AIG
-forward retiming also have explicit owners. These component and focused tests
-do not replace the whole-module gate; rerun it after the current ports land.
+focused race-tested implementations; base/abc has advanced through MV and
+checker APIs and is now blocked by `abcDfs.go`; GIA AIGER codecs pass focused
+race/C-interoperability review; misc/extra has replaced its central truth/bit
+operator header and cube APIs. Espresso's shared cube, header, set, cofactor,
+irredundancy and cover helpers are ported; equivalence/essential/gasping and
+input/output groups remain underway. SAT/XSAT, base/main, CGlucose and AIG
+forward retiming have explicit owners. These component and
+focused tests do not replace the whole-module gate.
 
 Since that update, Espresso set/cube geometry has been ported with an original
-two-bit encoding and MV masks; its combined tests await the shared cube
-globals. Review caught and fixed a C-to-Go operator-precedence hazard in mixed
-shift/AND expressions by adding explicit parentheses. REO's CUDD comparison now
-matches original-C SIFT and SYMM_SIFT behavior on 512 three-variable cases;
-that owner is completing the connected integration and review.
+two-bit encoding and MV masks; review caught and fixed a C-to-Go
+operator-precedence hazard in mixed shift/AND expressions. REO's CUDD comparison
+matches original-C SIFT and SYMM_SIFT behavior on 512 three-variable cases.
 
-The Espresso dependency barrier has now moved: set, setc geometry, headers,
-cube strings and shared globals compile together, and the combined focused
-tests pass. Geometry oracle coverage is being expanded; sparse minimum-cover
-instrumentation still awaits the remaining cost/irredundancy APIs.
+The Espresso set/cube subset passes its isolated original-C-backed race suite.
+Sparse/matrix plus minimum-cover explicit-file race tests and vet also pass;
+cover-level sparse reduction matches 120 original-C fixtures, with separate
+reviews recorded.
 
-The `opt/cut` package now passes an independent full-package race test and
-`go vet` after its 14 source-derived files were ported. A final audit of the
-optional sequential network driver remains before its owner signs off.
+`opt/cut`, `opt/dar`, `aig/aig`, `bdd/reo`, and XSAT pass their scoped race
+tests and vet, and have commits. `bdd/cudd/core` passes race tests and vet with
+original-C ZDD product and reorder fixtures. Ivy's converted graph/manager/cut
+groups pass their connected race harness, with `ivyDsd.go` now the next
+full-package blocker. The CUDD ISOP/complement core is being added against
+original-C fixtures.
