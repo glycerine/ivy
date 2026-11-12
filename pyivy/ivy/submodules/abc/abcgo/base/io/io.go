@@ -501,45 +501,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadStatus(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var pFile *os.File;
-    var c int32;
-    extern int Abc_NtkReadLogFile( char * pFileName, Abc_Cex_t ** ppCex, int * pnFrames );
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage;
-    }
-
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    if (pFile = os.Open(pFileName)) == nil {
-        fmt.Fprintf(pAbc.Err, "Cannot open input file \"%s\". \n", pFileName);
-        return 1;
-    }
-    _ = (pFile).Close();
-
-    // set the new network
-    Abc_FrameClearVerifStatus( pAbc );
-    pAbc.Status = Abc_NtkReadLogFile( pFileName, &pAbc.pCex, &pAbc.nFrames );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_status [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads verification log file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1747,34 +1709,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteStatus(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
-    extern void Abc_NtkWriteLogFile( char * pFileName, Abc_Cex_t * pCex, int Status, int nFrames, char * pCommand );
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    Abc_NtkWriteLogFile( pFileName, pAbc.pCex, pAbc.Status, pAbc.nFrames, nil );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_status [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes verification log file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
