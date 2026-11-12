@@ -44,74 +44,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Spl_ManWinFindLeavesRoots(p *Spl_Man_t) {
-    var vVec *Vec_Int_t;
-    var iObj, iFan, i, k int32;
-    // collect leaves
-/*
-    Vec_IntClear( p->vLeaves );
-    Gia_ManForEachLut2Vec( p->vNodes, p->pGia, vVec, iObj, i )
-    {
-        assert( Vec_BitEntry(p->vMarksNo, iObj) );
-        Vec_IntForEachEntry( vVec, iFan, k )
-            if ( !Vec_BitEntry(p->vMarksNo, iFan) )
-            {
-                Vec_BitWriteEntry(p->vMarksNo, iFan, 1);
-                Vec_IntPush( p->vLeaves, iFan );
-            }
-    }
-    Vec_IntForEachEntry( p->vLeaves, iFan, i )
-        Vec_BitWriteEntry(p->vMarksNo, iFan, 0);
-*/
-    Vec_IntClear( p.vLeaves );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vAnds)) && (((iObj) = Vec_IntEntry(p.vAnds, i)), 1); i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, iObj );
-        assert(Vec_BitEntry(p.vMarksAnd, iObj), "Vec_BitEntry(p.vMarksAnd, iObj)");
-        iFan = Gia_ObjFaninId0( pObj, iObj );
-        if !Vec_BitEntry(p.vMarksAnd, iFan) {
-            assert(Gia_ObjIsLut2(p.pGia, iFan) || Vec_BitEntry(p.vMarksCIO, iFan), "Gia_ObjIsLut2(p.pGia, iFan) || Vec_BitEntry(p.vMarksCIO, iFan)");
-            Vec_BitWriteEntry(p.vMarksAnd, iFan, 1);
-            Vec_IntPush( p.vLeaves, iFan );
-        }
-        iFan = Gia_ObjFaninId1( pObj, iObj );
-        if !Vec_BitEntry(p.vMarksAnd, iFan) {
-            assert(Gia_ObjIsLut2(p.pGia, iFan) || Vec_BitEntry(p.vMarksCIO, iFan), "Gia_ObjIsLut2(p.pGia, iFan) || Vec_BitEntry(p.vMarksCIO, iFan)");
-            Vec_BitWriteEntry(p.vMarksAnd, iFan, 1);
-            Vec_IntPush( p.vLeaves, iFan );
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vLeaves)) && (((iFan) = Vec_IntEntry(p.vLeaves, i)), 1); i++  {
-        Vec_BitWriteEntry(p.vMarksAnd, iFan, 0);
-    }
-
-    // collect roots
-    Vec_IntClear( p.vRoots );
-    // inlining of macro Gia_ManForEachLut2Vec
-    for  i = 0; i < Vec_IntSize(p.vNodes) && (vVec = Vec_WecEntry(p.pGia.vMapping2, (iObj = Vec_IntEntry(p.vNodes, i)))); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vVec)) && (((iFan) = Vec_IntEntry(vVec, k)), 1); k++  {
-            Gia_ObjLutRefDecId( p.pGia, iFan );
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vAnds)) && (((iObj) = Vec_IntEntry(p.vAnds, i)), 1); i++  {
-        if Gia_ObjLutRefNumId(p.pGia, iObj) {
-            Vec_IntPush( p.vRoots, iObj ); }
-    }
-    // inlining of macro Gia_ManForEachLut2Vec
-    for  i = 0; i < Vec_IntSize(p.vNodes) && (vVec = Vec_WecEntry(p.pGia.vMapping2, (iObj = Vec_IntEntry(p.vNodes, i)))); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vVec)) && (((iFan) = Vec_IntEntry(vVec, k)), 1); k++  {
-            Gia_ObjLutRefIncId( p.pGia, iFan );
-        }
-    }
-}
-
-
-
-
 /**Function*************************************************************
 
   Synopsis    [Computes LUTs that are fanouts of the node outside of the cone.]
@@ -123,37 +55,6 @@ func Spl_ManWinFindLeavesRoots(p *Spl_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Spl_ManLutFanouts_rec(p *Gia_Man_t, iObj int32, vFanouts *Vec_Int_t, vMarksNo *Vec_Bit_t, vMarksCIO *Vec_Bit_t) {
-    var iFanout, i int32;
-    if Vec_BitEntry(vMarksNo, iObj) || Vec_BitEntry(vMarksCIO, iObj) {
-        return; }
-    if Gia_ObjIsLut2(p, iObj) {
-        Vec_BitWriteEntry( vMarksCIO, iObj, 1 );
-        Vec_IntPush( vFanouts, iObj );
-        return;
-    }
-    // inlining of macro Gia_ObjForEachFanoutStaticId
-    for  i = 0; (i < Gia_ObjFanoutNumId(p, iObj))   && (((iFanout) = Gia_ObjFanoutId(p, iObj, i)), 1); i++  {
-        Spl_ManLutFanouts_rec( p, iFanout, vFanouts, vMarksNo, vMarksCIO );
-    }
-}
-func Spl_ManLutFanouts(p *Gia_Man_t, iObj int32, vFanouts *Vec_Int_t, vMarksNo *Vec_Bit_t, vMarksCIO *Vec_Bit_t) int32 {
-    var i, iFanout int32;
-    assert(Gia_ObjIsLut2(p, iObj), "Gia_ObjIsLut2(p, iObj)");
-    Vec_IntClear( vFanouts );
-    // inlining of macro Gia_ObjForEachFanoutStaticId
-    for  i = 0; (i < Gia_ObjFanoutNumId(p, iObj))   && (((iFanout) = Gia_ObjFanoutId(p, iObj, i)), 1); i++  {
-        Spl_ManLutFanouts_rec( p, iFanout, vFanouts, vMarksNo, vMarksCIO );
-    }
-    // clean up
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanouts)) && (((iFanout) = Vec_IntEntry(vFanouts, i)), 1); i++  {
-        Vec_BitWriteEntry( vMarksCIO, iFanout, 0 );
-    }
-    return Vec_IntSize(vFanouts);
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Returns the number of fanins beloning to the set.]
@@ -165,43 +66,6 @@ func Spl_ManLutFanouts(p *Gia_Man_t, iObj int32, vFanouts *Vec_Int_t, vMarksNo *
   SeeAlso     []
 
 ***********************************************************************/
-func Spl_ManCountMarkedFanins(p *Gia_Man_t, iObj int32, vMarks *Vec_Bit_t) int32 {
-    var i, iFan, Count int32;
-    var vFanins *Vec_Int_t  = Gia_ObjLutFanins2(p, iObj);
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFan) = Vec_IntEntry(vFanins, i)), 1); i++  {
-        if Vec_BitEntry(vMarks, iFan) {
-            Count++; }
-    }
-    return Count;
-}
-func Spl_ManFindGoodCand(p *Spl_Man_t) int32 {
-    var i, iObj int32;
-    var Res int32;
-    var InCount int32;
-    var InCountMax int32 = -1; 
-    // mark leaves
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vInputs)) && (((iObj) = Vec_IntEntry(p.vInputs, i)), 1); i++  {
-        Vec_BitWriteEntry( p.vMarksIn, iObj, 1 );
-    }
-    // find candidate with maximum input overlap
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCands)) && (((iObj) = Vec_IntEntry(p.vCands, i)), 1); i++  {
-        InCount = Spl_ManCountMarkedFanins( p.pGia, iObj, p.vMarksIn );
-        if InCountMax < InCount {
-            InCountMax = InCount;
-            Res = iObj;
-        }
-    }
-    // unmark leaves
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vInputs)) && (((iObj) = Vec_IntEntry(p.vInputs, i)), 1); i++  {
-        Vec_BitWriteEntry( p.vMarksIn, iObj, 0 );
-    }
-    return Res;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
