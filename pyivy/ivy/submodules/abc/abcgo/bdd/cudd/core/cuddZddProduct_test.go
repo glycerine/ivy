@@ -286,3 +286,18 @@ func TestZDDCoverDecompositionUtilities(t *testing.T) {
 		t.Fatal("negative cofactor index accepted")
 	}
 }
+
+func TestZDDPositiveFirstLiteralConstraint(t *testing.T) {
+	dd := NewBDDManager(0)
+	dd.ZddSize = 4
+	dd.PermZ = []int{1, 0, 2, 3}
+	dd.InvPermZ = []int{1, 0, 2, 3}
+	InitializeZDDUniverse(dd)
+	a, b := Cudd_zddChange(dd, dd.One, 0), Cudd_zddChange(dd, dd.One, 2)
+	if Cudd_zddProduct(dd, a, b) != nil || Cudd_zddWeakDivF(dd, a, b) != nil {
+		t.Fatal("reversed literal pair accepted")
+	}
+	if Cudd_zddUnateProduct(dd, a, b) == nil {
+		t.Fatal("unate API inherited paired constraint")
+	}
+}

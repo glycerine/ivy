@@ -49,6 +49,9 @@ func TestShuffleHeapPreservesLiveHandlesAndCanonicality(t *testing.T) {
 	if Cudd_ShuffleHeap(dd, order) != 1 {
 		t.Fatal("shuffle failed")
 	}
+	if len(dd.cache) != 0 || len(dd.addCache) != 0 {
+		t.Fatal("reordering retained computed tables")
+	}
 	if !reflect.DeepEqual(dd.InvPerm, order) {
 		t.Fatal(dd.InvPerm)
 	}
@@ -188,9 +191,9 @@ func TestDynamicReorderingOriginalCUDDOracle(t *testing.T) {
 		t.Fatal("incomplete oracle fixture", len(lines))
 	}
 	for _, line := range lines {
-		var method, mask, before, after, status, truth int
+		var method, mask, before, after, status, truth, symmask, symgroups int
 		var order string
-		if _, err := fmt.Sscan(line, &method, &mask, &before, &after, &status, &truth, &order); err != nil {
+		if _, err := fmt.Sscan(line, &method, &mask, &before, &after, &status, &truth, &order, &symmask, &symgroups); err != nil {
 			t.Fatal(err)
 		}
 		dd := NewBDDManager(3)
@@ -216,6 +219,16 @@ func TestDynamicReorderingOriginalCUDDOracle(t *testing.T) {
 		gotStatus := Cudd_ReduceHeap(dd, heuristic, 1)
 		if Cudd_DagSize(root) != after || gotStatus != status {
 			t.Errorf("method=%d mask=%d: size/status %d/%d, CUDD %d/%d", method, mask, Cudd_DagSize(root), gotStatus, after, status)
+		}
+		gotMask := 0
+		groups := dd.SymmetryGroups()
+		for _, g := range groups {
+			for _, index := range g {
+				gotMask |= 1 << index
+			}
+		}
+		if gotMask != symmask || len(groups) != symgroups {
+			t.Errorf("method=%d mask=%d: symmetry mask/groups %d/%d, CUDD %d/%d", method, mask, gotMask, len(groups), symmask, symgroups)
 		}
 		values := reorderTruth(t, dd, root)
 		gotTruth := 0
@@ -293,5 +306,17 @@ func TestSiftLimitsSymmetryMetadataAndMinSize(t *testing.T) {
 	}
 	if Cudd_ReduceHeap(dd, CUDD_REORDER_NONE, 1) != 1 {
 		t.Fatal("NONE should succeed")
+	}
+}
+
+func TestReferencedConstantOnlyHeap(t *testing.T) {
+	dd := NewBDDManager(0)
+	constant := Cudd_addConst(dd, -7)
+	Cudd_Ref(constant)
+	if Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT, 1) != 1 || Cudd_ReadReorderings(dd) != 1 {
+		t.Fatal("referenced terminal omitted from live heap")
+	}
+	if !dd.validAdd(constant) || constant.Ref != 1 || constant != Cudd_addConst(dd, -7) {
+		t.Fatal("constant handle/reference changed")
 	}
 }

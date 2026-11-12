@@ -28,7 +28,13 @@ int main(void){
   DdNode *root=from_table(dd,mask,0,0);Cudd_Ref(root);
   int before=Cudd_DagSize(root);
   int status=Cudd_ReduceHeap(dd,method?CUDD_REORDER_SYMM_SIFT:CUDD_REORDER_SIFT,1);
-  printf("%d %u %d %d %d %u %d%d%d\n",method,mask,before,Cudd_DagSize(root),status,table(root),dd->invperm[0],dd->invperm[1],dd->invperm[2]);
+  unsigned symmetric=0;int groups=0;
+  for(int level=0;level<3;level++)if(dd->subtables[level].next!=(unsigned)level){
+   int x=level,last=level;groups++;
+   do{symmetric|=1u<<dd->invperm[x];last=x;x=dd->subtables[x].next;}while(x!=level);
+   level=last;
+  }
+  printf("%d %u %d %d %d %u %d%d%d %u %d\n",method,mask,before,Cudd_DagSize(root),status,table(root),dd->invperm[0],dd->invperm[1],dd->invperm[2],symmetric,groups);
   Cudd_RecursiveDeref(dd,root);Cudd_Quit(dd);
  }
  return 0;

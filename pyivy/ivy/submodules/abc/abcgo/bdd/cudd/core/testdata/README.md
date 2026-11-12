@@ -54,3 +54,34 @@ checksums entirely in Go. Divide and divideF have identical source recursion in
 this CUDD version apart from their cache tags and share the Go engine. WeakDivF's
 separate earlier-dividend-variable path is retained. Matching these fixtures does
 not establish that the weak-division variants are universally interchangeable.
+
+The three cover-harness operation orders are:
+`unate product`, `product`, `divide`, `divideF`, `weakDiv`, `weakDivF`.
+Checksums fold each numeric set-family bit mask as one unsigned 64-bit value,
+then multiply by FNV's prime; the C and Go loops use that same specified order.
+The complete two-variable fixture checks 1,569,792 operation outputs. The two
+three-variable runs add 12,000 outputs each, including the independent original
+C heap-order change in the reordered harness.
+
+# Independent CUDD dynamic reordering oracle
+
+`reorder_oracle.c` constructs every three-variable Boolean function, references
+its root, then runs either real `Cudd_ReduceHeap(SIFT)` or `SYMM_SIFT`. The 512-row
+`reorder_oracle.txt` fixture records initial/final DAG sizes, success status,
+post-reorder truth table, resulting order, symmetric-variable mask and group
+count. The Go test compares all semantic/size/group fields. Permutation ties are
+not compared because C qsort tie ordering is unspecified.
+
+This oracle caught the public return-value discrepancy: the source comment says
+1+symmetry count, but the actual CUDD tree dispatcher returns 1 on public success.
+
+Reproduce from the ABC checkout (using the same original object files above):
+
+```sh
+cc -DABC_USE_STDINT_H -I src \
+  abcgo/bdd/cudd/core/testdata/reorder_oracle.c \
+  src/bdd/cudd/*.o src/bdd/mtr/*.o src/bdd/epd/*.o \
+  src/misc/st/st.o src/misc/extra/extraUtilUtil.o \
+  -lm -o /tmp/abcgo_reorder_oracle
+/tmp/abcgo_reorder_oracle > abcgo/bdd/cudd/core/testdata/reorder_oracle.txt
+```

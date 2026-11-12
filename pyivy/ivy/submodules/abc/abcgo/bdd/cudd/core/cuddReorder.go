@@ -35,6 +35,11 @@ func (dd *DdManager) liveReorderRoots() reorderRoots {
 			}
 		}
 	}
+	for _, node := range dd.constants {
+		if node.Ref != 0 {
+			roots.active = append(roots.active, node)
+		}
+	}
 	sort.Slice(roots.active, func(i, j int) bool { return roots.active[i].ID < roots.active[j].ID })
 	return roots
 }

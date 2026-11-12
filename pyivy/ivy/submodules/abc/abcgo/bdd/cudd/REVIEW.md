@@ -27,3 +27,13 @@ All remaining source files stay visible to the compiler; no build exclusions,
 hidden originals, or placeholder algorithms make the root package appear green.
 See `core/REVIEW.md` for the separate algorithm/readability review passes and
 regressions of each completed core API group.
+
+## Partial ZDD cover module update
+
+The six completed public cover product/division APIs and their recursive names
+now forward to core. Pointer-output cofactor helpers are small status-convention
+adapters over checked core utilities. The completed prefix was formatted and
+compiled separately against the real core to check forwarding types. The original
+public/internal ZDD complement draft bodies remain in `cuddZddFuncs.go`, clearly
+marked, because their BDD-cover/ISOP dependencies remain unported. No fake logical
+complement or build exclusion has been supplied to make the root package green.

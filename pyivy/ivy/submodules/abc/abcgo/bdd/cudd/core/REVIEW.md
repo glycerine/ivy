@@ -175,3 +175,60 @@ Go and need no C compiler, objects or runtime.
 than deriving its expected value from the implementation under test. It covers
 327,680 union/intersection/difference/ITE/inclusion outputs in a fixed order.
 Race tests and `go vet` pass for core, REO and MTR after adding this fixture.
+
+## ZDD cover product/division group: separate review passes
+
+### Compactness, idiomatic Go, and readability review
+
+- Unate and paired-literal products have distinct recursions because their
+  domains differ: unate multiplication keeps all set unions; paired multiplication
+  excludes opposite literals. Both reuse authoritative ZDD cofactors, union and
+  canonical node construction instead of enumerating cubes in production.
+- Three-way cover decomposition is centralized. Positive/negative/absent names
+  make the literal roles explicit, and original pointer-output helpers forward
+  to checked core utilities in the partially ported root module.
+- Divide and DivideF share one engine because their source bodies differ only in
+  cache tags in this CUDD version. WeakDivF retains its separate earlier-dividend-
+  pair path; it has not been silently replaced by ordinary weak division.
+- All memo tables are operation-local and typed. No C allocator, pointer tagging,
+  global mutable scratch storage or alternate graph implementation was added.
+
+### Bug review and fixed/regression-covered findings
+
+- Paired algorithms require canonical positive-first, adjacent even/odd literal
+  pairs, aligned in level pairs, and consistent cubes. Validate those conditions
+  rather than constructing out-of-order graphs or multiplying contradictory
+  literals. Tests reject nonadjacent/reversed pairs and inconsistent cubes;
+  unate APIs remain valid under arbitrary ZDD variable orders.
+- A missing opposite literal can grow the ZDD inventory only through the existing
+  checked growth path. Helpers validate indices, family and ownership before
+  decomposition; negative index and foreign-domain tests verify failure.
+- Division by an empty family is rejected explicitly. Other terminal cases
+  retain the original ordering (including division by the empty cube), and
+  recursion only selects nonzero divisor cofactors.
+- WeakDivF's early-dividend-variable case reconstructs all three literal states;
+  a dedicated earlier-dividend regression and source-derived fixtures exercise
+  that path. Memoization for the two variants is separate per invocation.
+- Root `cuddZddFuncs.go` replaces only completed algorithms with forwarding aliases.
+  Its original public/internal complement bodies remain visibly unported because
+  BDD-cover conversion and ISOP dependencies are still missing. Set-family
+  difference has not been substituted for logical cover complementation.
+
+Independent original-C checks are permanent Go fixtures:
+
+- All 512 valid two-variable covers against 511 nonempty divisors, all six APIs:
+  combined checksum `1c45d75814740e31` (1,569,792 outputs).
+- 2,000 structured/random three-variable cover pairs, all six APIs:
+  `5eb39e097b2af27d` (12,000 outputs).
+- The same three-variable cases after original CUDD's real pair-group heap
+  permutation: `5eb39e097b2af27d`. Go uses fresh ordered managers for comparison;
+  this does not claim Go ZDD dynamic heap reordering is implemented.
+
+The C harnesses and commands are retained under testdata. Normal Go tests require
+no C compiler or objects. Per-operation checksums are also checked, so failures
+identify the particular API group. Matching finite fixtures does not prove that
+weak-division variants are universally interchangeable.
+
+Full core/REO/MTR race tests and vet pass. Root CUDD remains incomplete; ZDD
+complement, cover↔BDD/ISOP, other conversions, advanced ADD operations, remaining
+root APIs and ZDD dynamic reordering are still explicit remaining work.
