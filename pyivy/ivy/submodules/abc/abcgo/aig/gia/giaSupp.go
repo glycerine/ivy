@@ -778,25 +778,6 @@ func Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Min2ManGatherSupp_rec(p *Gia_Man_t, iObj int32, vCis *Vec_Int_t, vObjs *Vec_Int_t) int32 {
-    var Val0, Val1 int32;
-    var pObj *Gia_Obj_t;
-    if Gia_ObjIsTravIdPreviousId(p, iObj) {
-        return 1; }
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return 0; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vCis, iObj );
-        return 0;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Val0 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId0(pObj, iObj), vCis, vObjs );
-    Val1 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId1(pObj, iObj), vCis, vObjs );
-    Vec_IntPush( vObjs, iObj );
-    return Val0 || Val1;
-}
 func Gia_Min2ManGatherSupp(p *Gia_Man2Min_t) int32 {
     var n, Overlap int32;
     p.nSupps++;
