@@ -1,11 +1,5 @@
 package gia
 
-import (
-	"fmt"
-	"os"
-	"time"
-)
-
 /**CFile****************************************************************
 
   FileName    [giaSweeper.c]
@@ -17,7 +11,7 @@ import (
   Synopsis    [Incremental SAT sweeper.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -61,16 +55,15 @@ SAT sweeping/equivalence checking requires the following steps:
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
 /**Function*************************************************************
 
   Synopsis    [Sweeper cleanup.]
 
   Description [Returns new GIA with sweeper defined, which is the same
-  as the original sweeper, with all the dangling logic removed and SAT 
+  as the original sweeper, with all the dangling logic removed and SAT
   solver restarted. The probe IDs are guaranteed to have the same logic
   functions as in the original manager.]
-               
+
   SideEffects [The input manager is deleted inside this procedure.]
 
   SeeAlso     []
@@ -81,7 +74,7 @@ SAT sweeping/equivalence checking requires the following steps:
   Synopsis    [Addes clauses to the solver.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -92,7 +85,7 @@ SAT sweeping/equivalence checking requires the following steps:
   Synopsis    [Runs equivalence test for probes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -103,7 +96,7 @@ SAT sweeping/equivalence checking requires the following steps:
   Synopsis    [Performs grafting from another manager.]
 
   Description [Returns the array of resulting literals in the destination manager.]
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -113,9 +106,9 @@ SAT sweeping/equivalence checking requires the following steps:
 
   Synopsis    [Performs conditional sweeping of the cone.]
 
-  Description [Returns the result as a new GIA manager with as many inputs 
+  Description [Returns the result as a new GIA manager with as many inputs
   as the original manager and as many outputs as there are logic cones.]
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -130,102 +123,14 @@ SAT sweeping/equivalence checking requires the following steps:
   as constraints for fraig sweeping. The second argument (vProbes) contains
   the array of probe IDs pointing to the user's logic cones to be SAT swept.
   Finally, the optional command line (pCommLine) is an ABC command line
-  to be applied to the resulting GIA after SAT sweeping before it is 
+  to be applied to the resulting GIA after SAT sweeping before it is
   grafted back into the original GIA manager. The return value is the status
   (success/failure) and the array of original probes possibly pointing to the
   new literals in the original GIA manager, corresponding to the user's
   logic cones after sweeping, synthesis and grafting.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SweeperFraig(p *Gia_Man_t, vProbeIds *Vec_Int_t, pCommLime string, nWords int32, nConfs int32, fVerify int32, fVerbose int32) int32 {
-    var pNew *Gia_Man_t;
-    var vLits *Vec_Int_t;
-    var ProbeId, i int32;
-    // sweeper is running
-    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
-    // sweep the logic
-    pNew = Gia_SweeperSweep( p, vProbeIds, nWords, nConfs, fVerify, fVerbose );
-    if pNew == nil {
-        return 0; }
-    // execute command line
-    if pCommLime {
-        // set pNew to be current GIA in ABC
-        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), pNew );
-        // execute command line pCommLine using Abc_CmdCommandExecute()
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), pCommLime );
-        // get pNew to be current GIA in ABC     
-        pNew = Abc_FrameGetGia( Abc_FrameGetGlobalFrame() );
-    }
-    // return logic back into the main manager
-    vLits = Gia_SweeperGraft( p, nil, pNew );
-    Gia_ManStop( pNew );
-    // update the array of probes
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
-        Gia_SweeperProbeUpdate( p, ProbeId, Vec_IntEntry(vLits, i) );
-    }
-    Vec_IntFree( vLits );        
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Executes given command line for the logic defined by the probes.]
-
-  Description [ ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    [Sweeper sweeper test.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_SweeperFraigTest(pInit *Gia_Man_t, nWords int32, nConfs int32, fVerbose int32) *Gia_Man_t {
-    var p, pGia *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var vOuts *Vec_Int_t;
-    var i int32;
-    // add one-hotness constraints
-    p = Gia_ManDupOneHot( pInit );
-    // create sweeper
-    Gia_SweeperStart( p );
-    // collect outputs and create conditions
-    vOuts = Vec_IntAlloc( Gia_ManPoNum(p) );
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        if i < Gia_ManPoNum(p) - p.nConstrs {  // this is the user's output
-            Vec_IntPush( vOuts, Gia_SweeperProbeCreate( p,  Gia_ObjFaninLit0p(p, pObj) ) );
-        } else { // this is a constraint
-            Gia_SweeperCondPush( p, Gia_SweeperProbeCreate( p, Gia_ObjFaninLit0p(p, pObj) ) ); }
-    }
-    // perform the sweeping
-    pGia = Gia_SweeperSweep( p, vOuts, nWords, nConfs, fVerbose, 0 );
-//    pGia = Gia_ManDup( p );
-    Vec_IntFree( vOuts );
-    // sop the sweeper
-    Gia_SweeperStop( p );
-    Gia_ManStop( p );
-    return pGia;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-
