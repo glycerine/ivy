@@ -128,3 +128,22 @@ func TestSblWindowCNF(t *testing.T) {
 		t.Fatal("valid cut rejected")
 	}
 }
+
+func TestSblTiming(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, y)
+	g.vMapping2 = vec.Vec_WecStart(int(g.nObjs))
+	for _, fan := range []int32{a >> 1, b >> 1} {
+		vec.Vec_WecPush(g.vMapping2, int(x>>1), fan)
+	}
+	for _, fan := range []int32{x >> 1, c >> 1} {
+		vec.Vec_WecPush(g.vMapping2, int(y>>1), fan)
+	}
+	p := Sbl_ManAlloc(g, 4)
+	if Sbl_ManCreateTiming(p, 0) != 2 || vec.Vec_IntEntry(p.vArrs, int(x>>1)) != 1 || vec.Vec_IntEntry(p.vReqs, int(x>>1)) != 1 || Sbl_ManCriticalFanin(p, y>>1, Gia_ObjLutFanins2(g, y>>1)) != x>>1 {
+		t.Fatal("incorrect arrival or required times")
+	}
+}

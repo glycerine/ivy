@@ -100,114 +100,6 @@ func Sbl_ManGetCurrentMapping(p *Sbl_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManComputeDelay(p *Sbl_Man_t, iLut int32, vFanins *Vec_Int_t) int32 {
-    var k, iFan, Delay int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  k = 0; (k < Vec_IntSize(vFanins)) && (((iFan) = Vec_IntEntry(vFanins, k)), 1); k++  {
-        Delay = Abc_MaxInt( Delay, Vec_IntEntry(p.vArrs, iFan) + 1 );
-    }
-    return Delay;
-}
-func Sbl_ManCreateTiming(p *Sbl_Man_t, DelayStart int32) int32 {
-    var vFanins *Vec_Int_t;
-    var DelayMax int32 = DelayStart;
-    var Delay int32;
-    var iLut int32;
-    var iFan int32;
-    var k int32;
-    // compute arrival times
-    Vec_IntFill( p.vArrs,  Gia_ManObjNum(p.pGia), 0 );
-    if p.pGia.pManTime != nil && Tim_ManBoxNum((Tim_Man_t*)p.pGia.pManTime) {
-        var pObj *Gia_Obj_t; 
-        var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p.pGia );
-        Tim_ManIncrementTravId( (Tim_Man_t*)p.pGia.pManTime );
-        // inlining of macro Gia_ManForEachObjVec
-        for  k = 0; (k < Vec_IntSize(vNodes)) && ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vNodes,k))); k++  {
-            iLut = Gia_ObjId( p.pGia, pObj );
-            if Gia_ObjIsAnd(pObj) {
-                if Gia_ObjIsLut2(p.pGia, iLut) {
-                    vFanins = Gia_ObjLutFanins2(p.pGia, iLut);
-                    Delay = Sbl_ManComputeDelay( p, iLut, vFanins );
-                    Vec_IntWriteEntry( p.vArrs,  iLut, Delay );
-                    DelayMax = Abc_MaxInt( DelayMax, Delay );
-                }
-            
-            } else if Gia_ObjIsCi(pObj) {
-                var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pGia.pManTime, Gia_ObjCioId(pObj) );
-                Vec_IntWriteEntry( p.vArrs,  iLut, arrTime );
-            
-            } else if Gia_ObjIsCo(pObj) {
-                var arrTime int32  = Vec_IntEntry( p.vArrs, Gia_ObjFaninId0(pObj, iLut) );
-                Tim_ManSetCoArrival( (Tim_Man_t*)p.pGia.pManTime, Gia_ObjCioId(pObj), arrTime );
-            
-            } else if !Gia_ObjIsConst0(pObj) { 
-                assert(false, "0"); }
-        }
-        Vec_IntFree( vNodes );
-    
-    } else {
-        // inlining of macro Gia_ManForEachLut2
-        for  iLut = 1; iLut < Gia_ManObjNum(p.pGia); iLut++  { if !Gia_ObjIsLut2(p.pGia, iLut) {} else {
-            vFanins = Gia_ObjLutFanins2(p.pGia, iLut);
-            Delay = Sbl_ManComputeDelay( p, iLut, vFanins );
-            Vec_IntWriteEntry( p.vArrs,  iLut, Delay );
-            DelayMax = Abc_MaxInt( DelayMax, Delay );
-        }
-        }
-    }
-    // compute required times
-    Vec_IntFill( p.vReqs, Gia_ManObjNum(p.pGia), ABC_INFINITY );
-    // inlining of macro Gia_ManForEachCoDriverId
-    for  k = 0; (k < Vec_IntSize(p.pGia.vCos)) && (((iLut) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, k))), 1); k++  {
-        Vec_IntDowndateEntry( p.vReqs, iLut, DelayMax );
-    }
-    if p.pGia.pManTime != nil && Tim_ManBoxNum((Tim_Man_t*)p.pGia.pManTime) {
-        var pObj *Gia_Obj_t; 
-        var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p.pGia );
-        Tim_ManIncrementTravId( (Tim_Man_t*)p.pGia.pManTime );
-        Tim_ManInitPoRequiredAll( (Tim_Man_t*)p.pGia.pManTime, DelayMax );
-        // inlining of macro Gia_ManForEachObjVecReverse
-        for  k = Vec_IntSize(vNodes) - 1; (k >= 0) && ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vNodes,k))); k--  {
-            iLut = Gia_ObjId( p.pGia, pObj );
-            if Gia_ObjIsAnd(pObj) {
-                if Gia_ObjIsLut2(p.pGia, iLut) {
-                    Delay = Vec_IntEntry(p.vReqs, iLut) - 1;
-                    vFanins = Gia_ObjLutFanins2(p.pGia, iLut);
-                    // inlining of macro Vec_IntForEachEntry
-                    for  k = 0; (k < Vec_IntSize(vFanins)) && (((iFan) = Vec_IntEntry(vFanins, k)), 1); k++  {
-                        Vec_IntDowndateEntry( p.vReqs, iFan, Delay );
-                    }
-                }
-            
-            } else if Gia_ObjIsCi(pObj) {
-                var reqTime int32  = Vec_IntEntry( p.vReqs, iLut );
-                Tim_ManSetCiRequired( (Tim_Man_t*)p.pGia.pManTime, Gia_ObjCioId(pObj), reqTime );
-            
-            } else if Gia_ObjIsCo(pObj) {
-                var reqTime int32  = Tim_ManGetCoRequired( (Tim_Man_t*)p.pGia.pManTime, Gia_ObjCioId(pObj) );
-                Vec_IntWriteEntry( p.vReqs, Gia_ObjFaninId0(pObj, iLut), reqTime );
-            
-            } else if !Gia_ObjIsConst0(pObj) { 
-                assert(false, "0"); }
-        }
-        Vec_IntFree( vNodes );
-    
-    } else {
-        // inlining of macro Gia_ManForEachLut2Reverse
-        for  iLut = Gia_ManObjNum(p.pGia) - 1; iLut > 0; iLut--  { if !Gia_ObjIsLut2(p.pGia, iLut) {} else {
-            Delay = Vec_IntEntry(p.vReqs, iLut) - 1;
-            vFanins = Gia_ObjLutFanins2(p.pGia, iLut);
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vFanins)) && (((iFan) = Vec_IntEntry(vFanins, k)), 1); k++  {
-                Vec_IntDowndateEntry( p.vReqs, iFan, Delay );
-            }
-        }
-        }
-    }
-    return DelayMax;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Given mapping in p->vSolCur, check if mapping meets delay.]
@@ -252,17 +144,6 @@ func Sbl_ManEvaluateMappingEdge(p *Sbl_Man_t, DelayGlo int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManCriticalFanin(p *Sbl_Man_t, iLut int32, vFanins *Vec_Int_t) int32 {
-    var k int32;
-    var iFan int32;
-    var Delay int32 = Vec_IntEntry(p.vArrs, iLut);
-    // inlining of macro Vec_IntForEachEntry
-    for  k = 0; (k < Vec_IntSize(vFanins)) && (((iFan) = Vec_IntEntry(vFanins, k)), 1); k++  {
-        if Vec_IntEntry(p.vArrs, iFan) + 1 == Delay {
-            return iFan; }
-    }
-    return -1;
-}
 func Sbl_ManEvaluateMapping(p *Sbl_Man_t, DelayGlo int32) int32 {
     var clk abctime  = Abc_Clock();
     var vFanins *Vec_Int_t;
