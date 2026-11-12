@@ -40,6 +40,16 @@ func (p *Gia_Man_t) AigerModel() (*ioa.Model, error) {
 }
 
 func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any, error) {
+	if format == "mini-aig-equivalence-classes" {
+		original, ok1 := frame.Resource("pGiaMiniAig").(*Gia_Man_t)
+		mapped, ok2 := frame.Resource("vCopyMiniAig").(*Vec_Int_t)
+		classes, ok3 := frame.Resource("pGia2").(*Gia_Man_t)
+		if !ok1 || !ok2 || !ok3 || original == nil || mapped == nil || classes == nil || classes.pReprs == nil || classes.nObjs != original.nObjs {
+			return nil, fmt.Errorf("gia: MiniAIG equivalence data is incomplete")
+		}
+		result := Gia_ManMapEquivAfterScorr(classes, mapped)
+		return append([]int32(nil), vec.Vec_IntArray(result)...), nil
+	}
 	if format != "gia-aiger" && format != "gia-mini-aig" && format != "gia-mini-lut" && format != "gia-mini-lut-attributes" {
 		if bridge.Other != nil {
 			return bridge.Other.Export(frame, format)

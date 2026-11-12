@@ -1,6 +1,7 @@
 package gia
 
 import (
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -27,6 +28,12 @@ func TestMiniLutExportRoundTrip(t *testing.T) {
 		t.Fatal("invalid attribute length")
 	}
 	result := Gia_ManFromMiniLut(mini, nil)
+	file := filepath.Join(t.TempDir(), "mapped.lut")
+	Gia_ManWriteMiniLut(mapped, file)
+	fromFile := Gia_ManReadMiniLut(file)
+	if fromFile == nil || Gia_ManReadMiniLut(file+".missing") != nil {
+		t.Fatal("incorrect MiniLUT file handling")
+	}
 	for i := 0; i < 4; i++ {
 		inputs := []bool{i&1 != 0, i&2 != 0}
 		want, err := g.Evaluate(inputs)
@@ -36,6 +43,10 @@ func TestMiniLutExportRoundTrip(t *testing.T) {
 		got, err := result.Evaluate(inputs)
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%v: got %v want %v: %v", inputs, got, want, err)
+		}
+		got, err = fromFile.Evaluate(inputs)
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("file %v: got %v want %v: %v", inputs, got, want, err)
 		}
 	}
 }

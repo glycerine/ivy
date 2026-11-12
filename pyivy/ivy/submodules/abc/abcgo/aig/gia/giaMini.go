@@ -70,20 +70,8 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManReadMiniAig(pFileName string) *Gia_Man_t {
-    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );
-    var pGia *Gia_Man_t  = Gia_ManFromMiniAig( p, nil );
-    pGia.pName = "";
-    pGia.pName = Extra_FileNameGeneric( pFileName ); 
-    Mini_AigStop( p );
-    return pGia;
-}
-func Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {
-    var p *Mini_Aig_t  = Gia_ManToMiniAig( pGia );
-    Mini_AigDump( p, pFileName );
-    //Mini_AigDumpVerilog( "test_miniaig.v", "top", p );
-    Mini_AigStop( p );
-}
+
+
 
 
 
@@ -127,19 +115,8 @@ func Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManReadMiniLut(pFileName string) *Gia_Man_t {
-    var p *Mini_Lut_t  = Mini_LutLoad( pFileName );
-    var pGia *Gia_Man_t  = Gia_ManFromMiniLut( p, nil );
-    pGia.pName = "";
-    pGia.pName = Extra_FileNameGeneric( pFileName ); 
-    Mini_LutStop( p );
-    return pGia;
-}
-func Gia_ManWriteMiniLut(pGia *Gia_Man_t, pFileName string) {
-    var p *Mini_Lut_t  = Gia_ManToMiniLut( pGia );
-    Mini_LutDump( p, pFileName );
-    Mini_LutStop( p );
-}
+
+
 
 /**Function*************************************************************
 
@@ -284,25 +261,7 @@ func Abc_FrameReadMiniLutNameMapping(pAbc *Abc_Frame_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_FrameReadMiniAigEquivClasses(pAbc *Abc_Frame_t) *int32 {
-    var vRes *Vec_Int_t;
-    var pRes *int32;
-    if pAbc.pGiaMiniAig == nil {
-        fmt.Printf("GIA derived from MiniAig is not available.\n"); }
-    if pAbc.vCopyMiniAig == nil {
-        fmt.Printf("Mapping of MiniAig nodes is not available.\n"); }
-    if pAbc.pGia2 == nil {
-        fmt.Printf("Internal GIA with equivalence classes is not available.\n"); }
-    if pAbc.pGia2.pReprs == nil {
-        fmt.Printf("Equivalence classes of internal GIA are not available.\n"); }
-    if Gia_ManObjNum(pAbc.pGia2) != Gia_ManObjNum(pAbc.pGiaMiniAig) {
-        fmt.Printf("Internal GIA with equivalence classes is not directly derived from MiniAig.\n"); }
-    // derive the set of equivalent node pairs
-    vRes = Gia_ManMapEquivAfterScorr( pAbc.pGia2, pAbc.vCopyMiniAig );
-    pRes = Vec_IntReleaseArray( vRes );
-    Vec_IntFree( vRes );
-    return pRes;
-}
+
 
 /**Function*************************************************************
 
