@@ -359,36 +359,6 @@ func Shr_ManComputeTruth6(p *Gia_Man_t, pObj *Gia_Obj_t, vLeaves *Vec_Int_t, vTr
   SeeAlso     []
 
 ***********************************************************************/
-func Shr_ManComputeTruths(p *Gia_Man_t, nVars int32, vDivs *Vec_Int_t, vDivTruths *Vec_Wrd_t, vTruths *Vec_Wrd_t) {
-    var pObj *Gia_Obj_t;
-    var Truth0, Truth1 word;//, Truthh;
-    var i, iDiv int32;
-    Vec_WrdClear( vDivTruths );
-    // inlining of macro Vec_IntForEachEntryStop
-    for  i = 0; (i < nVars) && (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {
-        Vec_WrdWriteEntry( vTruths, iDiv, Truth[i] );
-        Vec_WrdPush( vDivTruths, Truth[i] );
-    }
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = nVars; (i < Vec_IntSize(vDivs)) && (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {
-        pObj = Gia_ManObj( p, iDiv );
-        Truth0 = Vec_WrdEntry( vTruths, Gia_ObjFaninId0(pObj, iDiv) );
-        Truth1 = Vec_WrdEntry( vTruths, Gia_ObjFaninId1(pObj, iDiv) );
-        if Gia_ObjFaninC0(pObj) {
-            Truth0 = ~Truth0; }
-        if Gia_ObjFaninC1(pObj) {
-            Truth1 = ~Truth1; }
-        Vec_WrdWriteEntry( vTruths, iDiv, Truth0 & Truth1 );
-        Vec_WrdPush( vDivTruths, Truth0 & Truth1 );
-
-//        Truthh = Truth0 & Truth1;
-//        Abc_TtPrintBinary( &Truthh, nVars );   //printf( "\n" );
-//        Kit_DsdPrintFromTruth( &Truthh, nVars );    printf( "\n" );
-    }
-//    printf( "\n" );
-}
-
-
 /**Function*************************************************************
 
   Synopsis    []
