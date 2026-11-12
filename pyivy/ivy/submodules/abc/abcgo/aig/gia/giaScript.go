@@ -50,16 +50,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManAigPrintPiLevels(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        fmt.Printf("%d ", Gia_ObjLevel(p, pObj));
-    }
-    fmt.Printf("\n");
-}
-
 /**Function*************************************************************
 
   Synopsis    [Synthesis script.]
@@ -275,97 +265,6 @@ func Gia_ManOrderPios(p *Aig_Man_t, pOrder *Gia_Man_t) *Vec_Ptr_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupFromBarBufs(p *Gia_Man_t) *Gia_Man_t {
-    var vBufObjs *Vec_Int_t;
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, k int32;
-    assert(Gia_ManBufNum(p) > 0, "Gia_ManBufNum(p) > 0");
-    assert(Gia_ManRegNum(p) == 0, "Gia_ManRegNum(p) == 0");
-    assert(!Gia_ManHasChoices(p), "!Gia_ManHasChoices(p)");
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManFillValue(p);
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi( pNew );
-    }
-    vBufObjs = Vec_IntAlloc( Gia_ManBufNum(p) );
-    for  i = 0; i < Gia_ManBufNum(p); i++  {
-        Vec_IntPush( vBufObjs, Gia_ManAppendCi(pNew) );
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Vec_IntEntry( vBufObjs, k );
-            Vec_IntWriteEntry( vBufObjs, k++, Gia_ObjFanin0Copy(pObj) );
-        
-        } else { 
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    }
-    assert(k == Gia_ManBufNum(p), "k == Gia_ManBufNum(p)");
-    for  i = 0; i < Gia_ManBufNum(p); i++  {
-        Gia_ManAppendCo( pNew, Vec_IntEntry(vBufObjs, i) );
-    }
-    Vec_IntFree( vBufObjs );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
-}
-func Gia_ManDupToBarBufs(p *Gia_Man_t, nBarBufs int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var nPiReal int32  = Gia_ManCiNum(p) - nBarBufs;
-    var nPoReal int32  = Gia_ManCoNum(p) - nBarBufs;
-    var i, k int32;
-    assert(Gia_ManBufNum(p) == 0, "Gia_ManBufNum(p) == 0");
-    assert(Gia_ManRegNum(p) == 0, "Gia_ManRegNum(p) == 0");
-    assert(Gia_ManHasChoices(p), "Gia_ManHasChoices(p)");
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    if Gia_ManHasChoices(p) {
-        // inlining of macro ABC_CALLOC
-        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }
-    Gia_ManFillValue(p);
-    Gia_ManConst0(p).Value = 0;
-    for  i = 0; i < nPiReal; i++  {
-        Gia_ManCi(p, i).Value = Gia_ManAppendCi( pNew );
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        for  ; k < nBarBufs; k++  {
-            if ~Gia_ObjFanin0(Gia_ManCo(p, k)).Value {
-                Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) );
-            } else {
-                break; }
-        }
-        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {
-            pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }  
-    }
-    }
-    for  ; k < nBarBufs; k++  {
-        if ~Gia_ObjFanin0Copy(Gia_ManCo(p, k)) {
-            Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) ); }
-    }
-    assert(k == nBarBufs, "k == nBarBufs");
-    for  i = 0; i < nPoReal; i++  {
-        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, nBarBufs+i)) );
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    assert(Gia_ManBufNum(pNew) == nBarBufs, "Gia_ManBufNum(pNew) == nBarBufs");
-    assert(Gia_ManCiNum(pNew) == nPiReal, "Gia_ManCiNum(pNew) == nPiReal");
-    assert(Gia_ManCoNum(pNew) == nPoReal, "Gia_ManCoNum(pNew) == nPoReal");
-    return pNew;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
