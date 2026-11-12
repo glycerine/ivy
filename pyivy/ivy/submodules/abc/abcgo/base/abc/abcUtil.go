@@ -819,41 +819,7 @@ func Abc_NtkPrepareTwoNtks(pErr *os.File, pNtk *Abc_Ntk_t, argv *string, argc in
 
 **********************************************************************
 */
-func Abc_NtkDetectMatching(pNtk *Abc_Ntk_t) {
-	/*
-	   Abc_Obj_t * pLatch, * pFanin;
-	   int i, nTFFs, nJKFFs;
-	   nTFFs = nJKFFs = 0;
-	   Abc_NtkForEachLatch( pNtk, pLatch, i )
 
-	   	{
-	   	    pFanin = Abc_ObjFanin0(pLatch);
-	   	    if ( Abc_ObjFaninNum(pFanin) != 2 )
-	   	        continue;
-	   	    if ( Abc_NodeIsExorType(pLatch) )
-	   	    {
-	   	        if ( Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
-	   	             Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch )
-	   	             nTFFs++;
-	   	    }
-	   	    if ( Abc_ObjFaninNum( Abc_ObjFanin0(pFanin) ) != 2 ||
-	   	         Abc_ObjFaninNum( Abc_ObjFanin1(pFanin) ) != 2 )
-	   	        continue;
-
-	   	    if ( (Abc_ObjFanin0(Abc_ObjFanin0(pFanin)) == pLatch ||
-	   	          Abc_ObjFanin1(Abc_ObjFanin0(pFanin)) == pLatch) &&
-	   	         (Abc_ObjFanin0(Abc_ObjFanin1(pFanin)) == pLatch ||
-	   	          Abc_ObjFanin1(Abc_ObjFanin1(pFanin)) == pLatch) )
-	   	    {
-	   	        nJKFFs++;
-	   	    }
-	   	}
-
-	   printf( "D = %6d.   T = %6d.   JK = %6d.  (%6.2f %%)\n",
-
-	   	Abc_NtkLatchNum(pNtk), nTFFs, nJKFFs, 100.0 * nJKFFs / Abc_NtkLatchNum(pNtk) );
-	*/
-}
 
 /*
 *Function*************************************************************
@@ -868,15 +834,7 @@ func Abc_NtkDetectMatching(pNtk *Abc_Ntk_t) {
 
 **********************************************************************
 */
-func Abc_ObjPointerCompare(pp1 *any, pp2 *any) int32 {
-	if *pp1 < *pp2 {
-		return -1
-	}
-	if *pp1 > *pp2 {
-		return 1
-	}
-	return 0
-}
+
 
 /**Function*************************************************************
 
