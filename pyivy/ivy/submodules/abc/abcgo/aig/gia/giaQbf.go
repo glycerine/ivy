@@ -96,92 +96,8 @@ type Qbf_Man_t struct {
 
 
 
-func Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {
-    // |<-- PVars(0)-->|...|<-- PVars(nLutNum-1)-->|
-    var i int32;
-    var n int32;
-    var nPairs int32 = 16;
-    fmt.Printf("%d-input %d-output code table:\n", nLutSize, nLutNum);
-    for  i = 0; i < (1 << nLutSize); i++  {
-        var CodeX *word   = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, i );
-        fmt.Printf("%3d  ", i);
-        Extra_PrintBinary( os.Stdout, (unsigned *)&i, nLutSize );
-        fmt.Printf("  -->  ");
-        if nLutNum <= 16 {
-            fmt.Printf("%5d  ", int32(CodeX[0])); }
-        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );
-        fmt.Printf("\n");
-        // inlining of macro ABC_FREE
-        CodeX = nil;
-    }
-    // create several different pairs
-    srand( time.Now().Unix() );
-    fmt.Printf("Simulation of the encoding with %d random pairs:\n", nPairs);
-    for  n = 0; n < nPairs; n++  {
-        var MaskIn uint32  = Abc_InfoMask( nLutSize );
-        var NumX int32;
-        var NumY int32;
-        var NumXY int32;
-        var nWords int32 = Abc_Bit6WordNum(nLutNum);
-        var CodeX, CodeY, CodeXY *word;
-        // inlining of macro ABC_CALLOC
-        var CodeXCodeY *word  = ((word *) calloc((size_t)(nWords), sizeof(word)));
-        for  NumX == NumY  {
-            NumX = rand() % (1 << nLutSize);
-            NumY = rand() % (1 << nLutSize);
-            NumXY = MaskIn & ~(NumX & NumY);
-        }
-        CodeX  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumX );
-        CodeY  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumY );
-        CodeXY = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumXY );
-        Abc_TtAnd( CodeXCodeY, CodeX, CodeY, nWords, 1 );
-        if nLutNum < 64*nWords {
-            CodeXCodeY[nWords-1] &= Abc_Tt6Mask(nLutNum % 64); }            
 
-        fmt.Printf("%2d :", n);
-        fmt.Printf(" x =%3d ", NumX);
-        Extra_PrintBinary( os.Stdout,(unsigned *) &NumX, nLutSize );
-        fmt.Printf(" y =%3d ", NumY);
-        Extra_PrintBinary( os.Stdout, (unsigned *)&NumY, nLutSize );
-        fmt.Printf(" nand =%3d ", NumXY);
-        Extra_PrintBinary( os.Stdout, (unsigned *)&NumXY, nLutSize );
-        fmt.Printf("  ");
 
-        fmt.Printf(" c(x) = ");
-        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );
-        fmt.Printf(" c(y) = ");
-        Extra_PrintBinary( os.Stdout, (unsigned *)CodeY, nLutNum );
-        fmt.Printf(" c(nand) = ");
-        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXY, nLutNum );
-        fmt.Printf("  nand(c(x),c(y)) = ");
-        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXCodeY, nLutNum );
-        fmt.Printf("  ");
-
-        fmt.Printf("%s", Abc_TtEqual(CodeXCodeY, CodeXY, nWords) ? "yes" : "no");
-        fmt.Printf("\n");
-
-        // inlining of macro ABC_FREE
-        CodeX = nil;
-        // inlining of macro ABC_FREE
-        CodeY = nil;
-        // inlining of macro ABC_FREE
-        CodeXY = nil;
-        // inlining of macro ABC_FREE
-        CodeXCodeY = nil;
-    }
-}
-func Gia_Gen2CodeTest() {
-    var i int32;
-    var nLutSize int32 = 1;
-    var nLutNum int32 = 2;
-    var vCode *Vec_Int_t  = Vec_IntAlloc( (1 << nLutSize) * nLutNum );
-    srand( time.Now().Unix() );
-    for  i = 0; i < (1 << nLutSize) * nLutNum; i++  {
-        Vec_IntPush( vCode, rand() & 1 );
-    }
-    Gia_Gen2CodePrint( nLutSize, nLutNum, vCode );
-    Vec_IntFree( vCode );
-}
 
 /**Function*************************************************************
 
@@ -194,52 +110,7 @@ func Gia_Gen2CodeTest() {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSatEnum(pGia *Gia_Man_t, nConfLimit int32, nTimeOut int32, fVerbose int32) int32 {
-    var pCnf *Cnf_Dat_t;
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var i, iLit, iParVarBeg, Iter int32;
-    var nSolutions, RetValue int32;
-    var clkStart abctime  = Abc_Clock();
-    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    iParVarBeg = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;
-    Cnf_DataFree( pCnf );
-    // iterate through the SAT assignment
-    vLits = Vec_IntAlloc( Gia_ManPiNum(pGia) );
-    for  Iter = 1 ; ; Iter++  {
-        var status int32  = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 );
-        if status == l_False { RetValue =  1; break; }
-        if status == l_Undef { RetValue =  0; break; }
-        nSolutions++;
-        // extract SAT assignment
-        Vec_IntClear( vLits );
-        for  i = 0; i < Gia_ManPiNum(pGia); i++  {
-            Vec_IntPush( vLits, Abc_Var2Lit(iParVarBeg+i, sat_solver_var_value(pSat, iParVarBeg+i)) );
-        }
-        if fVerbose != 0 {
-            fmt.Printf("%5d : ", Iter);
-            // inlining of macro Vec_IntForEachEntry
-            for  i = 0; (i < Vec_IntSize(vLits)) && (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {
-                fmt.Printf("%d", !Abc_LitIsCompl(iLit));
-            }
-            fmt.Printf("\n");
-        }
-        // add clause
-        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) { RetValue =  1; break; }
-        if (nTimeOut != 0) && (Abc_Clock() - clkStart)/int64(time.Second) >= nTimeOut { RetValue = 0; break; }
-    }
-    sat_solver_delete( pSat );
-    Vec_IntFree( vLits );
-    if (nTimeOut != 0) && (Abc_Clock() - clkStart)/int64(time.Second) >= nTimeOut {
-        fmt.Printf("Enumerated %d assignments when timeout (%d sec) was reached.  ", nSolutions, nTimeOut);
-    } else if (nConfLimit != 0) && !(RetValue != 0) {
-        fmt.Printf("Enumerated %d assignments when conflict limit (%d) was reached.  ", nSolutions, nConfLimit);
-    } else { 
-        fmt.Printf("Enumerated the complete set of %d assignments.  ", nSolutions); }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clkStart );
-    return RetValue;
-}
+
 
 /**Function*************************************************************
 
@@ -568,80 +439,7 @@ func Gia_QbfLearnConstraint(p *Qbf_Man_t, vValues *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_QbfSolve(pGia *Gia_Man_t, nPars int32, nIterLimit int32, nConfLimit int32, nTimeOut int32, nEncVars int32, fGlucose int32, fVerbose int32) int32 {
-    var p *Qbf_Man_t  = Gia_QbfAlloc( pGia, nPars, fGlucose, fVerbose );
-    var pCof *Gia_Man_t;
-    var i, status, RetValue int32;
-    var clk abctime;
-//    Gia_QbfAddSpecialConstr( p );
-    if fVerbose != 0 {
-        fmt.Printf("Solving QBF for \"%s\" with %d parameters, %d variables and %d AIG nodes.\n", Gia_ManName(pGia), p.nPars, p.nVars, Gia_ManAndNum(pGia)); }
-    assert(Gia_ManRegNum(pGia) == 0, "Gia_ManRegNum(pGia) == 0");
-    Vec_IntFill( p.vValues, nPars, 0 );
-    for  i = 0; (Gia_QbfVerify(p, p.vValues) != 0); i++  {
-        // generate next constraint
-        assert(Vec_IntSize(p.vValues) == p.nVars, "Vec_IntSize(p.vValues) == p.nVars");
-        pCof = Gia_QbfCofactor( pGia, nPars, p.vValues, p.vParMap );
-        if p.pSatSynG {
-            status = Gia_QbfAddCofactorG( p, pCof );
-        } else {
-            status = Gia_QbfAddCofactor( p, pCof );
-        }
-        Gia_ManStop( pCof );
-        if status == 0       { RetValue =  1; break; }
-        // synthesize next assignment
-        clk = Abc_Clock();
-        if p.pSatSynG {
-            status = bmcg_sat_solver_solve( p.pSatSynG, nil, 0 );
-        } else {
-            status = sat_solver_solve( p.pSatSyn, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 ); }
-        p.clkSat += Abc_Clock() - clk;
-        if fVerbose != 0 {
-            Gia_QbfPrint( p, p.vValues, i ); }
-        if status == l_False { RetValue =  1; break; }
-        if status == l_Undef { RetValue = -1; break; }
-        // extract SAT assignment
-        Gia_QbfOnePattern( p, p.vValues );
-        assert(Vec_IntSize(p.vValues) == p.nPars, "Vec_IntSize(p.vValues) == p.nPars");
-        // examine variables
-//        Gia_QbfLearnConstraint( p, p->vValues );
-//        Vec_IntPrintBinary( p->vValues ); printf( "\n" );
-        if (nIterLimit != 0) && i+1 == nIterLimit { RetValue = -1; break; }
-        if (nTimeOut != 0) && (Abc_Clock() - p.clkStart)/int64(time.Second) >= nTimeOut { RetValue = -1; break; }
-    }
-    if RetValue == 0 {
-        var nZeros int32  = Vec_IntCountZero( p.vValues );
-        fmt.Printf("Parameters: ");
-        assert(Vec_IntSize(p.vValues) == nPars, "Vec_IntSize(p.vValues) == nPars");
-        Vec_IntPrintBinary( p.vValues );
-        fmt.Printf("  Statistics: 0=%d 1=%d\n", nZeros, Vec_IntSize(p.vValues) - nZeros);
-        if nEncVars != 0 {
-            var nBits int32  = Vec_IntSize(p.vValues)/(1 << nEncVars);
-            assert(Vec_IntSize(p.vValues) == (1 << nEncVars) * nBits, "Vec_IntSize(p.vValues) == (1 << nEncVars) * nBits");
-            Gia_Gen2CodePrint( nEncVars, nBits, p.vValues );
-        }
-    }
-    if RetValue == -1 && (nTimeOut != 0) && (Abc_Clock() - p.clkStart)/int64(time.Second) >= nTimeOut {
-        fmt.Printf("The problem timed out after %d sec.  ", nTimeOut);
-    } else if RetValue == -1 && (nConfLimit != 0) {
-        fmt.Printf("The problem aborted after %d conflicts.  ", nConfLimit);
-    } else if RetValue == -1 && (nIterLimit != 0) {
-        fmt.Printf("The problem aborted after %d iterations.  ", nIterLimit);
-    } else if RetValue == 1 {
-        fmt.Printf("The problem is UNSAT after %d iterations.  ", i);
-    } else { 
-        fmt.Printf("The problem is SAT after %d iterations.  ", i); }
-    if fVerbose != 0 {
-        fmt.Printf("\n");
-        Abc_PrintTime( 1, "SAT  ", p.clkSat );
-        Abc_PrintTime( 1, "Other", Abc_Clock() - p.clkStart - p.clkSat );
-        Abc_PrintTime( 1, "TOTAL", Abc_Clock() - p.clkStart );
-    
-    } else {
-        Abc_PrintTime( 1, "Time", Abc_Clock() - p.clkStart ); }
-    Gia_QbfFree( p );
-    return RetValue;
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
