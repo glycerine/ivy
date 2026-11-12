@@ -1,278 +1,112 @@
 package gia
 
-
-
-func Gia_Min2AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {
-    var fPolarFlip int32;
-    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;
-    var pLits [4]int32;
-    var RetValue int32;
-    var VarF int32;
-    var VarI int32;
-    var VarT int32;
-    var VarE int32;
-    var fCompT int32;
-    var fCompE int32;
-
-    assert(!Gia_IsComplement( pNode ), "!Gia_IsComplement( pNode )");
-    assert(pNode.fMark0, "pNode.fMark0");
-    // get nodes (I = if, T = then, E = else)
-    pNodeI = Gia_ObjRecognizeMux( pNode, &pNodeT, &pNodeE );
-    // get the variable numbers
-    VarF = Gia_Min2ObjSatId(p, pNode);
-    VarI = Gia_Min2ObjSatId(p, pNodeI);
-    VarT = Gia_Min2ObjSatId(p, Gia_Regular(pNodeT));
-    VarE = Gia_Min2ObjSatId(p, Gia_Regular(pNodeE));
-    // get the complementation flags
-    fCompT = Gia_IsComplement(pNodeT);
-    fCompE = Gia_IsComplement(pNodeE);
-
-    // f = ITE(i, t, e)
-
-    // i' + t' + f
-    // i' + t  + f'
-    // i  + e' + f
-    // i  + e  + f'
-
-    // create four clauses
-    pLits[0] = Abc_Var2Lit(VarI, 1);
-    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 1);
-    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 0);
-    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 0);
-    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-
-    // two additional clauses
-    // t' & e' -> f'
-    // t  & e  -> f 
-
-    // t  + e   + f'
-    // t' + e'  + f 
-
-    if VarT == VarE {
-//        assert( fCompT == !fCompE );
-        return;
-    }
-
-    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);
-    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);
-    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-}
-func Gia_Min2AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {
-    var fPolarFlip int32;
-    var pFanin *Gia_Obj_t;
-    var pLits *int32;
-    var nLits int32;
-    var RetValue int32;
-    var i int32;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert(Gia_ObjIsAnd( pNode ), "Gia_ObjIsAnd( pNode )");
-    // create storage for literals
-    nLits = Vec_PtrSize(vSuper) + 1;
-    pLits = ABC_ALLOC( int, nLits );
-    // suppose AND-gate is A & B = C
-    // add !A => !C   or   A + !C
-    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )
-    {
-        pLits[0] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));
-        pLits[1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 1);
-        if fPolarFlip != 0 {
-            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }
-        }
-        RetValue = satoko_add_clause( pSat, pLits, 2 );
-        assert((RetValue != 0), "RetValue");
-    }
-    // add A & B => C   or   !A + !B + C
-    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )
-    {
-        pLits[i] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));
-        if fPolarFlip != 0 {
-            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }
-        }
-    }
-    pLits[nLits-1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 0);
-    if fPolarFlip != 0 {
-        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, nLits );
-    assert((RetValue != 0), "RetValue");
-    pLits = nil;
+// Gia_Min2AddClausesMux encodes f = if i then t else e, including the
+// redundant consensus clauses used by the original implementation.
+func Gia_Min2AddClausesMux(p *Gia_Man_t, node *Gia_Obj_t, solver *satoko_t) {
+	if Gia_IsComplement(node) != 0 || node.fMark0 == 0 {
+		panic("gia: invalid marked MUX")
+	}
+	var then, otherwise *Gia_Obj_t
+	control := Gia_ObjRecognizeMux(node, &then, &otherwise)
+	f := int(Gia_Min2ObjSatId(p, node)) * 2
+	i := int(Gia_Min2ObjSatId(p, control)) * 2
+	t := int(Gia_Min2ObjSatId(p, Gia_Regular(then)))*2 + int(Gia_IsComplement(then))
+	e := int(Gia_Min2ObjSatId(p, Gia_Regular(otherwise)))*2 + int(Gia_IsComplement(otherwise))
+	clauses := [][]int{{i ^ 1, t ^ 1, f}, {i ^ 1, t, f ^ 1}, {i, e ^ 1, f}, {i, e, f ^ 1}}
+	if t>>1 != e>>1 {
+		clauses = append(clauses, []int{t, e, f ^ 1}, []int{t ^ 1, e ^ 1, f})
+	}
+	for _, clause := range clauses {
+		if !solver.AddClause(clause) {
+			panic("gia: inconsistent MUX clause")
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds clauses and returns CNF variable of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_Min2CollectSuper_rec(pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {
-    // if the new node is complemented or a PI, another gate begins
-    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || 
-         (!(fFirst != 0) && Gia_ObjValue(pObj) > 1) || 
-         ((fUseMuxes != 0) && pObj.fMark0) {
-        Vec_PtrPushUnique( vSuper, pObj );
-        return;
-    }
-    // go through the branches
-    Gia_Min2CollectSuper_rec( Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );
-    Gia_Min2CollectSuper_rec( Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );
-}
-func Gia_Min2CollectSuper(pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    assert(!Gia_ObjIsCi(pObj), "!Gia_ObjIsCi(pObj)");
-    Vec_PtrClear( vSuper );
-    Gia_Min2CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );
-}
-func Gia_Min2ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t, vSatVars *Vec_Int_t) {
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    assert(!Gia_ObjIsConst0(pObj), "!Gia_ObjIsConst0(pObj)");
-    if Gia_Min2ObjSatId(p, pObj) >= 0 {
-        return; }
-    assert(Gia_Min2ObjSatId(p, pObj) == -1, "Gia_Min2ObjSatId(p, pObj) == -1");
-    Vec_IntPush( vSatVars, Gia_ObjId(p, pObj) );
-    Gia_Min2ObjSetSatId( p, pObj, satoko_add_variable(pSat, 0) );
-    if Gia_ObjIsAnd(pObj) {
-        Vec_PtrPush( vFrontier, pObj ); }
-}
-func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 { 
-    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);
-    var pNode, pFanin *Gia_Obj_t;
-    var i int32;
-    var k int32;
-    var fUseMuxes int32 = 1;
-    if Gia_Min2ObjSatId(p.pGia, pObj) >= 0 {
-        return Gia_Min2ObjSatId(p.pGia, pObj); }
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( p.vSatVars, iObj );
-        return Gia_Min2ObjSetSatId( p.pGia, pObj, satoko_add_variable(p.pSat, 0) );
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    // start the frontier
-    Vec_PtrClear( p.vFrontier );
-    Gia_Min2ObjAddToFrontier( p.pGia, pObj, p.vFrontier, p.pSat, p.vSatVars );
-    // explore nodes in the frontier
-    Vec_PtrForEachEntry( Gia_Obj_t *, p.vFrontier, pNode, i )
-    {
-        assert(Gia_Min2ObjSatId(p.pGia,pNode) >= 0, "Gia_Min2ObjSatId(p.pGia,pNode) >= 0");
-        if (fUseMuxes != 0) && pNode.fMark0 {
-            Vec_PtrClear( p.vFanins );
-            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );
-            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )
-                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );
-            Gia_Min2AddClausesMux( p.pGia, pNode, p.pSat );
-        
-        } else {
-            Gia_Min2CollectSuper( pNode, fUseMuxes, p.vFanins );
-            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )
-                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );
-            Gia_Min2AddClausesSuper( p.pGia, pNode, p.vFanins, p.pSat );
-        }
-        assert(Vec_PtrSize(p.vFanins) > 1, "Vec_PtrSize(p.vFanins) > 1");
-    }
-    return Gia_Min2ObjSatId(p.pGia,pObj);
+func Gia_Min2AddClausesSuper(p *Gia_Man_t, node *Gia_Obj_t, super *Vec_Ptr_t, solver *satoko_t) {
+	if Gia_IsComplement(node) != 0 || Gia_ObjIsAnd(node) == 0 {
+		panic("gia: invalid supergate")
+	}
+	f := int(Gia_Min2ObjSatId(p, node)) * 2
+	clause := make([]int, 0, Vec_PtrSize(super)+1)
+	for _, entry := range Vec_PtrArray(super) {
+		fanin := entry.(*Gia_Obj_t)
+		lit := int(Gia_Min2ObjSatId(p, Gia_Regular(fanin)))*2 + int(Gia_IsComplement(fanin))
+		if !solver.AddClause([]int{lit, f ^ 1}) {
+			panic("gia: inconsistent supergate clause")
+		}
+		clause = append(clause, lit^1)
+	}
+	clause = append(clause, f)
+	if !solver.AddClause(clause) {
+		panic("gia: inconsistent supergate clause")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 0 if the node is not a constant.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    [Collect nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    [Takes a literal and returns a support-minized literal.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Gia_Min2CollectSuper_rec(obj *Gia_Obj_t, super *Vec_Ptr_t, first, useMuxes int32) {
+	if Gia_IsComplement(obj) != 0 || Gia_ObjIsCi(obj) != 0 || first == 0 && Gia_ObjValue(obj) > 1 || useMuxes != 0 && obj.fMark0 != 0 {
+		Vec_PtrPushUnique(super, obj)
+		return
+	}
+	Gia_Min2CollectSuper_rec(Gia_ObjChild0(obj), super, 0, useMuxes)
+	Gia_Min2CollectSuper_rec(Gia_ObjChild1(obj), super, 0, useMuxes)
+}
+func Gia_Min2CollectSuper(obj *Gia_Obj_t, useMuxes int32, super *Vec_Ptr_t) {
+	if Gia_IsComplement(obj) != 0 || Gia_ObjIsCi(obj) != 0 {
+		panic("gia: invalid supergate root")
+	}
+	Vec_PtrClear(super)
+	Gia_Min2CollectSuper_rec(obj, super, 1, useMuxes)
+}
+func Gia_Min2ObjAddToFrontier(p *Gia_Man_t, obj *Gia_Obj_t, frontier *Vec_Ptr_t, solver *satoko_t, vars *Vec_Int_t) {
+	if Gia_IsComplement(obj) != 0 || Gia_ObjIsConst0(obj) != 0 {
+		panic("gia: invalid SAT frontier node")
+	}
+	if Gia_Min2ObjSatId(p, obj) >= 0 {
+		return
+	}
+	Vec_IntPush(vars, Gia_ObjId(p, obj))
+	Gia_Min2ObjSetSatId(p, obj, int32(solver.AddVariable(false)))
+	if Gia_ObjIsAnd(obj) != 0 {
+		Vec_PtrPush(frontier, obj)
+	}
+}
+func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, id int32) int32 {
+	obj := Gia_ManObj(p.pGia, id)
+	if v := Gia_Min2ObjSatId(p.pGia, obj); v >= 0 {
+		return v
+	}
+	if Gia_ObjIsCi(obj) != 0 {
+		Vec_IntPush(p.vSatVars, id)
+		return Gia_Min2ObjSetSatId(p.pGia, obj, int32(p.pSat.AddVariable(false)))
+	}
+	if Gia_ObjIsAnd(obj) == 0 {
+		panic("gia: invalid SAT root")
+	}
+	Vec_PtrClear(p.vFrontier)
+	Gia_Min2ObjAddToFrontier(p.pGia, obj, p.vFrontier, p.pSat, p.vSatVars)
+	for i := 0; i < Vec_PtrSize(p.vFrontier); i++ {
+		node := Vec_PtrEntry(p.vFrontier, i).(*Gia_Obj_t)
+		if node.fMark0 != 0 {
+			Vec_PtrClear(p.vFanins)
+			for _, child := range []*Gia_Obj_t{Gia_ObjFanin0(node), Gia_ObjFanin1(node)} {
+				Vec_PtrPushUnique(p.vFanins, Gia_ObjFanin0(child))
+				Vec_PtrPushUnique(p.vFanins, Gia_ObjFanin1(child))
+			}
+		} else {
+			Gia_Min2CollectSuper(node, 1, p.vFanins)
+		}
+		for _, entry := range Vec_PtrArray(p.vFanins) {
+			Gia_Min2ObjAddToFrontier(p.pGia, Gia_Regular(entry.(*Gia_Obj_t)), p.vFrontier, p.pSat, p.vSatVars)
+		}
+		if node.fMark0 != 0 {
+			Gia_Min2AddClausesMux(p.pGia, node, p.pSat)
+		} else {
+			Gia_Min2AddClausesSuper(p.pGia, node, p.vFanins, p.pSat)
+		}
+		if Vec_PtrSize(p.vFanins) <= 1 {
+			panic("gia: invalid SAT fanins")
+		}
+	}
+	return Gia_Min2ObjSatId(p.pGia, obj)
+}
