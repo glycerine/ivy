@@ -28,8 +28,13 @@ func Mtr_CopyTree(n *MtrNode, expansion int) *MtrNode {
 		return nil
 	}
 	factor := uint64(expansion)
-	if uint64(n.Low)*factor > uint64(MTR_MAXHIGH) || uint64(n.Size)*factor > uint64(MTR_MAXHIGH) || uint64(n.Index)*factor > uint64(MTR_MAXHIGH) {
+	if n.Size > 0 && factor > (uint64(MTR_MAXHIGH)+1)/(uint64(n.Low)+uint64(n.Size)) {
 		return nil
+	}
+	for _, value := range []uint32{n.Low, n.Index} {
+		if value > 0 && factor > uint64(MTR_MAXHIGH)/uint64(value) {
+			return nil
+		}
 	}
 	c := &MtrNode{Flags: n.Flags, Low: n.Low * uint32(expansion), Size: n.Size * uint32(expansion), Index: n.Index * uint32(expansion)}
 	if n.Child != nil {

@@ -120,3 +120,38 @@ func TestBasicSiblingOperations(t *testing.T) {
 		t.Fatal("flag handling")
 	}
 }
+
+func TestReviewCopyBoundsAndCycleDetection(t *testing.T) {
+	n := &MtrNode{Low: MTR_MAXHIGH / 2, Size: 3}
+	if Mtr_CopyTree(n, 2) != nil {
+		t.Fatal("copy accepted interval beyond maximum")
+	}
+	r := Mtr_InitGroupTree(0, 4)
+	c := Mtr_MakeGroup(r, 0, 2, 0)
+	c.Younger = c
+	c.Elder = c
+	if WriteGroups(io.Discard, r) == nil {
+		t.Fatal("cycle accepted")
+	}
+	if WriteGroups(io.Discard, &MtrNode{Low: MTR_MAXHIGH, Size: 2}) == nil {
+		t.Fatal("out-of-range interval accepted")
+	}
+}
+
+func TestReviewLargeArithmeticDoesNotWrap(t *testing.T) {
+	maxInt := int(^uint(0) >> 1)
+	if Mtr_CopyTree(&MtrNode{Low: 2, Size: 2}, maxInt) != nil {
+		t.Fatal("large expansion wrapped")
+	}
+	n := &MtrNode{Low: 0, Size: 2}
+	if mtrShiftHL(n, maxInt) != 0 || n.Low != 0 {
+		t.Fatal("large shift wrapped")
+	}
+}
+
+func TestReviewMaximumLeafIntervalCopy(t *testing.T) {
+	r := Mtr_InitGroupTree(0, int(uint64(MTR_MAXHIGH)+1))
+	if r == nil || Mtr_CopyTree(r, 1) == nil {
+		t.Fatal("maximum valid interval rejected")
+	}
+}

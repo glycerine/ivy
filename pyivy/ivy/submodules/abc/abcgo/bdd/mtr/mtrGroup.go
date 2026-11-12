@@ -139,9 +139,14 @@ func WriteGroups(w io.Writer, root *MtrNode) error {
 	if root == nil {
 		return fmt.Errorf("mtr: nil root")
 	}
+	seen := map[*MtrNode]bool{}
 	var write func(*MtrNode) error
 	write = func(n *MtrNode) error {
-		if n.Size == 0 || n.Flags & ^uint32(MTR_TERMINAL|MTR_SOFT|MTR_FIXED|MTR_NEWNODE) != 0 {
+		if seen[n] {
+			return fmt.Errorf("mtr: repeated node or cycle")
+		}
+		seen[n] = true
+		if n.Size == 0 || uint64(n.Low)+uint64(n.Size)-1 > uint64(MTR_MAXHIGH) || n.Flags & ^uint32(MTR_TERMINAL|MTR_SOFT|MTR_FIXED|MTR_NEWNODE) != 0 {
 			return fmt.Errorf("mtr: invalid node")
 		}
 		if n.Younger != nil && n.Younger.Elder != n || n.Elder != nil && n.Elder.Younger != n {

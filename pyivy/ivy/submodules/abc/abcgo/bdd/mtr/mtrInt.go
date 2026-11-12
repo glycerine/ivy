@@ -5,8 +5,8 @@ func contains(n *MtrNode, low, size uint32) bool {
 	return n != nil && size > 0 && low >= n.Low && uint64(low)+uint64(size) <= uint64(n.Low)+uint64(n.Size)
 }
 func shiftValid(n *MtrNode, shift int64) bool {
-	v := int64(n.Low) + shift
-	if v < 0 || v+int64(n.Size)-1 > int64(MTR_MAXHIGH) {
+	low := int64(n.Low)
+	if shift < -low || shift > int64(MTR_MAXHIGH)-low-int64(n.Size)+1 {
 		return false
 	}
 	if n.Flags&MTR_TERMINAL == 0 {
