@@ -63,3 +63,57 @@ func (p *nfMatcher) incrementalArea(r *nfMappingRefs, id, phase int32, m nfMatch
 	}
 	return area
 }
+
+// bestExactMatch considers every library match for each stored cut. The
+// current root's fanin references must be detached before calling it.
+func (p *nfMatcher) bestExactMatch(r *nfMappingRefs, id, phase, required int32) (nfMatch, uint64, bool) {
+	data := p.cuts.storage.at(p.cuts.sets[id])
+	offset := int32(1)
+	var best nfMatch
+	var bestArea uint64
+	found := false
+	for i := int32(0); i < data[0]; i++ {
+		cut := data[offset:]
+		count, function := Nf_CutSize(cut), Nf_CutFunc(cut)
+		if count == 0 {
+			gate := phase ^ (function & 1)
+			candidate := nfMatch{gate: gate, cutOffset: offset}
+			area := p.cuts.library.cells[gate].AreaW
+			if !found || area < bestArea {
+				best, bestArea, found = candidate, area, true
+			}
+		} else if int(function>>1) < len(p.cuts.library.matches) {
+			leaves := Nf_CutLeaves(cut)
+			for _, match := range p.cuts.library.matches[function>>1] {
+				if int32(match.cfg.fCompl)^(function&1) != phase {
+					continue
+				}
+				cell := &p.cuts.library.cells[match.gate]
+				if cell.Fanins() != count {
+					panic("gia: inconsistent Nf exact-area match")
+				}
+				delay := int32(0)
+				for pin := int32(0); pin < count; pin++ {
+					fanin, polarity := leaves[Nf_CfgVar(match.cfg, pin)], Nf_CfgCompl(match.cfg, pin)
+					kind := r.selected[fanin][polarity]
+					if kind < 0 {
+						kind = 0
+					}
+					delay = max(delay, p.objects[fanin][polarity][kind].delay+cell.Delay(int(pin)))
+				}
+				if delay > required {
+					continue
+				}
+				cfg := match.cfg
+				cfg.fCompl = 0
+				candidate := nfMatch{gate: match.gate, cutOffset: offset, cfg: cfg, delay: delay}
+				area := p.incrementalArea(r, id, phase, candidate)
+				if !found || area < bestArea || area == bestArea && delay < best.delay {
+					best, bestArea, found = candidate, area, true
+				}
+			}
+		}
+		offset += count + 1
+	}
+	return best, bestArea, found
+}

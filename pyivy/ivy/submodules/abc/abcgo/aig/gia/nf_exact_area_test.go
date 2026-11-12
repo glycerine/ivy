@@ -48,3 +48,45 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 2 0 2 0
 		t.Fatal("failed to restore references")
 	}
 }
+
+func TestNfExactMatchRespectsTiming(t *testing.T) {
+	const genlib = `GATE zero 0 O=CONST0;
+GATE one 0 O=CONST1;
+GATE buf 1 O=a; PIN * NONINV 1 999 1 0 1 0
+GATE inv 1 O=!a; PIN * INV 1 999 1 0 1 0
+GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 1 0
+GATE and3 1 O=a*b*c; PIN * NONINV 1 999 5 0 5 0
+.end
+`
+	lib, err := mio.ReadLibrary("nf", genlib, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	library := nfPrepareLibrary(mio.Mio_CollectRootsNew2(lib, 6, nil, 0), false, true, false)
+	g := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	out := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, out)
+	var pars Jf_Par_t
+	Mf_ManSetDefaultPars(&pars)
+	cuts := newNfCutManager(g, &pars, library)
+	cuts.computeCuts()
+	matcher := newNfMatcher(cuts)
+	matcher.computeMapping()
+	refs := matcher.mappingRefs(0)
+	selected := matcher.objects[out>>1][0][refs.selected[out>>1][0]]
+	matcher.adjustMatchRefs(refs, out>>1, 0, selected, false)
+	detached := append([][2]int32(nil), refs.refs...)
+	loose, _, ok := matcher.bestExactMatch(refs, out>>1, 0, nfInfinity-1)
+	if !ok || library.cells[loose.gate].Name() != "and3" {
+		t.Fatalf("wrong loose-timing match: %+v", loose)
+	}
+	tight, _, ok := matcher.bestExactMatch(refs, out>>1, 0, selected.delay)
+	if !ok || library.cells[tight.gate].Name() != "and2" {
+		t.Fatalf("wrong tight-timing match: %+v", tight)
+	}
+	if !reflect.DeepEqual(detached, refs.refs) {
+		t.Fatal("search changed reference counts")
+	}
+}
