@@ -612,7 +612,7 @@ func Au_NtkRemapNum(ids []int, number int) int {
 	if number < 0 || number>>1 >= len(ids) {
 		panic("undefined CBLIF signal")
 	}
-	return ids[number>>1]*2 + number&1
+	return ids[number>>1]*2 + (number & 1)
 }
 func Au_NtkParseCBlifNum(fanins *[]int, token string, ids []int) {
 	parts := strings.FieldsFunc(token, func(c rune) bool { return c == ':' || c == '*' })
@@ -643,10 +643,11 @@ func Au_NtkParseCBlifNum(fanins *[]int, token string, ids []int) {
 // Model references are resolved only after parsing all definitions.
 func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
 	m := Au_ManAlloc(name)
+	line := 0
 	defer func() {
 		if failure := recover(); failure != nil {
 			root = nil
-			err = fmt.Errorf("CBLIF: %v", failure)
+			err = fmt.Errorf("CBLIF line %d: %v", line, failure)
 		}
 	}()
 	scanner := bufio.NewScanner(reader)
@@ -654,7 +655,6 @@ func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
 	var n *Au_Ntk_t
 	var ids []int
 	unresolved := map[*Au_Obj_t]string{}
-	line := 0
 	fail := func(message string) { panic(fmt.Sprintf("line %d: %s", line, message)) }
 	integer := func(s string) int {
 		v, e := strconv.Atoi(s)
@@ -892,6 +892,13 @@ func auExpand(g *aig.Graph, n *Au_Ntk_t, inputs []aig.Edge, active map[*Au_Ntk_t
 		}
 		return value
 	}
+	// Source traversal executes all instantiated boxes, even if a box has no
+	// connected primary output. Preserve its port processing and black-box inputs.
+	for _, object := range n.Objects {
+		if object != nil && (object.Type == AU_OBJ_NODE || object.Type == AU_OBJ_CONST0 || object.Type == AU_OBJ_FAN) {
+			read(object.id * 2)
+		}
+	}
 	outputs := make([]aig.Edge, len(n.POs))
 	for i, id := range n.POs {
 		outputs[i] = read(id * 2)
@@ -919,7 +926,8 @@ func Au_NtkDeriveFlatGia(n *Au_Ntk_t) *aig.Graph {
 	for _, output := range outputs {
 		g.AddOutput(output)
 	}
-	return aig.Aig_ManCleanup(g)
+	aig.Aig_ManCleanup(g)
+	return g
 }
 
 const (
@@ -1072,6 +1080,11 @@ func auSimulate(n *Au_Ntk_t, inputs []int, active map[*Au_Ntk_t]bool) []int {
 			return Au_XsimInv(value)
 		}
 		return value
+	}
+	for _, object := range n.Objects {
+		if object != nil && (object.Type == AU_OBJ_NODE || object.Type == AU_OBJ_CONST0 || object.Type == AU_OBJ_FAN) {
+			read(object.id * 2)
+		}
 	}
 	outputs := make([]int, len(n.POs))
 	for i, id := range n.POs {

@@ -56,11 +56,11 @@ func Lpk_MapPrimeInternal(pIfMan *If_Man_t, pGraph *Kit_Graph_t) *If_Obj_t {
 	var pAnd0, pAnd1 *If_Obj_t
 	var i int32
 	// check for constant function
-	if kit.Kit_GraphIsConst(pGraph) {
+	if kit.Kit_GraphIsConst(pGraph) != 0 {
 		return ifpkg.If_ManConst1(pIfMan)
 	}
 	// check for a literal
-	if kit.Kit_GraphIsVar(pGraph) {
+	if kit.Kit_GraphIsVar(pGraph) != 0 {
 		return kit.Kit_GraphVar(pGraph).pFunc
 	}
 	// build the AIG nodes corresponding to the AND gates of the graph
@@ -144,16 +144,16 @@ func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves []*If_Obj_t, iLi
 		return ifpkg.If_NotCond(ifpkg.If_ManConst1(p.pIfMan), abc.Abc_LitIsCompl(iLit))
 	}
 	if pObj.Type == KIT_DSD_VAR {
-		pObjNew = ppLeaves[abc.Abc_Lit2Var(pObj.pFans[0])]
-		return ifpkg.If_NotCond(pObjNew, abc.Abc_LitIsCompl(iLit)^abc.Abc_LitIsCompl(pObj.pFans[0]))
+		pObjNew = ppLeaves[abc.Abc_Lit2Var(int32(pObj.pFans[0]))]
+		return ifpkg.If_NotCond(pObjNew, abc.Abc_LitIsCompl(iLit)^abc.Abc_LitIsCompl(int32(pObj.pFans[0])))
 	}
 	if pObj.Type == KIT_DSD_AND {
 		assert(pObj.nFans == 2, "pObj.nFans == 2")
-		pFansNew[0] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], pObj.pFans[0], nil)
+		pFansNew[0] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], int32(pObj.pFans[0]), nil)
 		if pResult != nil {
 			pFansNew[1] = pResult
 		} else {
-			pFansNew[1] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], pObj.pFans[1], nil)
+			pFansNew[1] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], int32(pObj.pFans[1]), nil)
 		}
 		if pFansNew[0] == nil || pFansNew[1] == nil {
 			return nil
@@ -164,11 +164,11 @@ func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves []*If_Obj_t, iLi
 	if pObj.Type == KIT_DSD_XOR {
 		var fCompl int32 = abc.Abc_LitIsCompl(iLit)
 		assert(pObj.nFans == 2, "pObj.nFans == 2")
-		pFansNew[0] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], pObj.pFans[0], nil)
+		pFansNew[0] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], int32(pObj.pFans[0]), nil)
 		if pResult != nil {
 			pFansNew[1] = pResult
 		} else {
-			pFansNew[1] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], pObj.pFans[1], nil)
+			pFansNew[1] = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], int32(pObj.pFans[1]), nil)
 		}
 		if pFansNew[0] == nil || pFansNew[1] == nil {
 			return nil
@@ -183,7 +183,7 @@ func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves []*If_Obj_t, iLi
 	// solve for the inputs
 	// inlining of macro Kit_DsdObjForEachFanin
 	for i = 0; i < int32(pObj.nFans); i++ {
-		iLitFanin = pObj.pFans[i]
+		iLitFanin = int32(pObj.pFans[i])
 		if i == 0 {
 			if pResult != nil {
 				pFansNew[i] = pResult

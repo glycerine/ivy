@@ -77,6 +77,24 @@ func TestCircuitSATMatchesExhaustiveModelsAndRestoresScratch(t *testing.T) {
 		}
 	}
 }
+
+func TestTas2VariableStoreGrowsWithoutMovingVariables(t *testing.T) {
+	manager := &Tas2_Man_t{}
+	first := Tas2_ManCreateVar(manager)
+	if first == nil || first.Id != 0 {
+		t.Fatalf("first variable = %#v, want ID 0", first)
+	}
+	for i := 1; i < 4096; i++ {
+		variable := Tas2_ManCreateVar(manager)
+		if variable == nil || variable.Id != int32(i) {
+			t.Fatalf("variable %d = %#v", i, variable)
+		}
+	}
+	if manager.pVars[0] != first || first.Id != 0 {
+		t.Fatal("growing the variable store moved an existing variable")
+	}
+}
+
 func TestCircuitSATQueueSnapshotAndLimits(t *testing.T) {
 	p := Gia_ManStart(12)
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)

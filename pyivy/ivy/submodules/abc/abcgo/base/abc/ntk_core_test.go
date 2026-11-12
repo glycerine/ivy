@@ -312,3 +312,54 @@ func TestMiterTransformMetadataPolicy(t *testing.T) {
 		t.Fatal("miter interface metadata lost")
 	}
 }
+
+type ntkTestGate struct {
+	a, b, c int32
+	kind    int
+}
+type ntkTestLiteralNetwork struct {
+	gates   []ntkTestGate
+	outputs []int32
+}
+
+func (g ntkTestLiteralNetwork) ObjectCount() int        { return len(g.gates) }
+func (g ntkTestLiteralNetwork) InputLiterals() []int32  { return []int32{2, 4} }
+func (g ntkTestLiteralNetwork) OutputLiterals() []int32 { return g.outputs }
+func (g ntkTestLiteralNetwork) Gate(id int32) (int32, int32, int32, int) {
+	v := g.gates[id]
+	return v.a, v.b, v.c, v.kind
+}
+func TestLiteralNetworkConstruction(t *testing.T) {
+	source := ntkTestLiteralNetwork{gates: []ntkTestGate{{kind: 0}, {kind: 1}, {kind: 1}, {a: 2, b: 4, kind: 2}, {a: 2, b: 3, kind: 2}, {a: 7, kind: 5}, {a: 10, kind: 6}}, outputs: []int32{12}}
+	single := Abc_NtkCreateFromGias("single", []NtkLiteralNetwork{source}, nil)
+	source.outputs = []int32{12, 8}
+	multi := Abc_NtkCreateFromGias("multi", nil, source)
+	for x := 0; x < 4; x++ {
+		for _, n := range []*Network{single, multi} {
+			inputs := map[*Object]bool{n.cis[0]: x&1 != 0, n.cis[1]: x&2 != 0}
+			got, err := n.Evaluate(n.cos[0].Signal(), inputs)
+			if err != nil || got != (x != 3) {
+				t.Fatal("literal NAND conversion")
+			}
+			if n == multi {
+				got, err = n.Evaluate(n.cos[1].Signal(), inputs)
+				if err != nil || got {
+					t.Fatal("complemented simplified AND lost")
+				}
+			}
+		}
+	}
+}
+func TestConeArrayAndAppend(t *testing.T) {
+	source := ntkFixture()
+	array := Abc_NtkCreateConeArray(source, source.cos, 1)
+	ntkCheckSame(t, source, array)
+	strash := Abc_NtkCreateTarget(source, []*Object{source.cos[0]}, []int32{1})
+	part := Abc_NtkCreateConeArray(strash, strash.cos, 1)
+	beforeIn, beforeOut := len(part.cis), len(part.cos)
+	Abc_NtkAppendToCone(part, strash, strash.cos)
+	if len(part.cis) != beforeIn || len(part.cos) != beforeOut {
+		t.Fatal("append duplicated interface")
+	}
+	ntkCheckSame(t, strash, part)
+}

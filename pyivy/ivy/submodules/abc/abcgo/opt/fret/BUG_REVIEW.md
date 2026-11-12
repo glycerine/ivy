@@ -18,6 +18,9 @@ the timing, initialization, main-loop, and latch-box code with
 - Initial-state simulation checked BDD representation before SOP, unlike the C
   dispatch order. It now checks SOP first. The strash simulation also now uses
   the same default input value as the C implementation.
+- Init-to-original mapping had discarded constants even though the C code maps
+  them to their original constant object. Conflict extraction can select a
+  constant, so those mappings are preserved; a regression test covers lookup.
 
 ## Review coverage
 

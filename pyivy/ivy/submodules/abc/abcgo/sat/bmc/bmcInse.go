@@ -59,7 +59,9 @@ func Gia_ManInseInit(p *Gia_Man_t, vInit *Vec_Int_t) {
     var pData1, pData0 *word;
     var i, k int32;
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
         pData1 = pData0 + p.iData;
         if Vec_IntEntry(vInit, k) == 0 { // 0
@@ -177,7 +179,9 @@ func Gia_ManInseHighestScore(p *Gia_Man_t, pCost *int32) int32 {
     // inlining of macro ABC_CALLOC
     pCounts = ((int *) calloc((size_t)(nPats), sizeof(int)));
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
         pData1 = pData0 + p.iData;
         for  i = 0; i < p.iData; i++  {
@@ -203,7 +207,9 @@ func Gia_ManInseFindStarting(p *Gia_Man_t, iPat int32, vInit *Vec_Int_t, vInputs
     var i, k int32;
     Vec_IntClear( vInit );
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
         pData1 = pData0 + p.iData;
         for  i = 0; i < p.iData; i++  {
@@ -217,7 +223,9 @@ func Gia_ManInseFindStarting(p *Gia_Man_t, iPat int32, vInit *Vec_Int_t, vInputs
             Vec_IntPush( vInit, 2 ); }
     }
     // inlining of macro Gia_ManForEachPi
-    for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
+    for k = 0; k < Gia_ManPiNum(p); k++ {
+    	pObj = Gia_ManCi(p, k)
+    	if pObj == nil { break }
         pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
         pData1 = pData0 + p.iData;
         for  i = 0; i < p.iData; i++  {
@@ -241,40 +249,59 @@ func Gia_ManInseSimulate(p *Gia_Man_t, vInit0 *Vec_Int_t, vInputs *Vec_Int_t, vI
     assert(Vec_IntSize(vInit) == Gia_ManRegNum(p), "Vec_IntSize(vInit) == Gia_ManRegNum(p)");
     Gia_ManConst0(p).fMark0 = 0;
     // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+    	if pObj == nil { break }
         pObj.fMark0 = Vec_IntEntry(vInit0, i);
     }
     for  f = 0; f < nFrames; f++  {
         // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        for i = 0; i < Gia_ManPiNum(p); i++ {
+        	pObj = Gia_ManCi(p, i)
+        	if pObj == nil { break }
             pObj.fMark0 = Vec_IntEntry(vInputs, iBit++);
         }
         // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for i = 0; i < p.nObjs; i++ {
+        	pObj = Gia_ManObj(p, i)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) & 
                            (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)); }
         }
         // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObj == nil { break }
             pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
         }
         // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObjRi == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObjRo == nil { break }
             pObjRo.fMark0 = pObjRi.fMark0;
         }
     }
     assert(iBit == Vec_IntSize(vInputs), "iBit == Vec_IntSize(vInputs)");
     vRes = Vec_IntAlloc( Gia_ManRegNum(p) );
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         assert(Vec_IntEntry(vInit, i) == 2 || Vec_IntEntry(vInit, i) == int32(pObj.fMark0), "Vec_IntEntry(vInit, i) == 2 || Vec_IntEntry(vInit, i) == int32(pObj.fMark0)");
     }
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         Vec_IntPush( vRes, pObj.fMark0 | (Vec_IntEntry(vInit, i) != 2 ? 4 : 0) );
     }
     // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
         pObj.fMark0 = 0;
     }
     return vRes;
@@ -314,7 +341,9 @@ func Gia_ManInsePerform(p *Gia_Man_t, vInit0 *Vec_Int_t, nFrames int32, nWords i
     for  f = 0; f < nFrames; f++  {
         clk = Abc_Clock();
         // inlining of macro Gia_ManForEachObj
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
+        for i = 0; i < p.nObjs; i++ {
+        	pObj = Gia_ManObj(p, i)
+        	if pObj == nil { break }
             Gia_ManInseSimulateObj( p, i );
         }
         iPat = Gia_ManInseHighestScore( p, &Cost );

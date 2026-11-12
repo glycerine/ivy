@@ -1,171 +1,116 @@
+// Backward onion-ring counterexample extraction from bbrCex.c.
 package bbr
 
-import "fmt"
+import (
+	"github.com/glycerine/abcgo/aig/saig"
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-/**CFile****************************************************************
-
-  FileName    [bbrCex.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD-based reachability analysis.]
-
-  Synopsis    [Procedures to derive a satisfiable counter-example.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bbrCex.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "bbr.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// extern DdNode * Bbr_bddComputeRangeCube( DdManager * dd, int iStart, int iStop );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the counter-example using the set of reached states.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManVerifyUsingBddsCountExample(p *Aig_Man_t, dd *DdManager, pbParts **DdNode, vOnionRings *Vec_Ptr_t, bCubeFirst *DdNode, iOutput int32, fVerbose int32, fSilent int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Aig_Obj_t;
-    var pTree *Bbr_ImageTree_t;
-    var bCubeNs, bState, bImage *DdNode;
-    var bTemp, bVar, bRing *DdNode;
-    var i, v, RetValue, nPiOffset int32;
-    var pValues string;
-    var clk abctime  = Abc_Clock();
-//printf( "\nDeriving counter-example.\n" );
-
-    // allocate room for the counter-example
-    pCex = Abc_CexAlloc( Saig_ManRegNum(p), Saig_ManPiNum(p), Vec_PtrSize(vOnionRings)+1 );
-    pCex.iFrame = Vec_PtrSize(vOnionRings);
-    pCex.iPo = iOutput;
-    nPiOffset = Saig_ManRegNum(p) + Saig_ManPiNum(p) * Vec_PtrSize(vOnionRings);
-
-    // create the cube of NS variables
-    bCubeNs  = Bbr_bddComputeRangeCube( dd, Saig_ManCiNum(p), Saig_ManCiNum(p)+Saig_ManRegNum(p) );    Cudd_Ref( bCubeNs );
-    pTree = Bbr_bddImageStart( dd, bCubeNs, Saig_ManRegNum(p), pbParts, Saig_ManCiNum(p), dd.vars, 100000000, fVerbose );
-    Cudd_RecursiveDeref( dd, bCubeNs );
-    if pTree == nil {
-        if !(fSilent != 0) {
-            fmt.Printf("BDDs blew up during qualitification scheduling.  "); }
-        return nil;
-    }
-
-    // allocate room for the cube
-    pValues = ABC_ALLOC( char, dd.size );
-
-    // get the last cube
-    RetValue = Cudd_bddPickOneCube( dd, bCubeFirst, pValues );
-    assert(RetValue, "RetValue");
-
-    // write PIs of counter-example
-    Saig_ManForEachPi( p, pObj, i )
-        if ( pValues[i] == 1 )
-            Abc_InfoSetBit( pCex.pData, nPiOffset + i );
-    nPiOffset -= Saig_ManPiNum(p);
-
-    // write state in terms of NS variables
-    bState = (dd).one; Cudd_Ref( bState );
-    Saig_ManForEachLo( p, pObj, i )
-    {
-        // inlining of macro Cudd_NotCond
-        bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));
-        bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );
-        Cudd_RecursiveDeref( dd, bTemp ); 
-    }
-
-    // perform backward analysis
-    Vec_PtrForEachEntryReverse( DdNode *, vOnionRings, bRing, v )
-    { 
-        // compute the next states
-        bImage = Bbr_bddImageCompute( pTree, bState );           
-        if bImage == nil {
-            Cudd_RecursiveDeref( dd, bState );
-            if !(fSilent != 0) {
-                fmt.Printf("BDDs blew up during image computation.  "); }
-            Bbr_bddImageTreeDelete( pTree );
-            ABC_FREE( pValues );
-            return nil;
-        }
-        Cudd_Ref( bImage );
-        Cudd_RecursiveDeref( dd, bState );
-
-        // intersect with the previous set
-        bImage = Cudd_bddAnd( dd, bTemp = bImage, bRing );  Cudd_Ref( bImage );
-        Cudd_RecursiveDeref( dd, bTemp );
-
-        // find any assignment of the BDD
-        RetValue = Cudd_bddPickOneCube( dd, bImage, pValues );
-        assert(RetValue, "RetValue");
-        Cudd_RecursiveDeref( dd, bImage );
-
-        // write PIs of counter-example
-        Saig_ManForEachPi( p, pObj, i )
-            if ( pValues[i] == 1 )
-                Abc_InfoSetBit( pCex.pData, nPiOffset + i );
-        nPiOffset -= Saig_ManPiNum(p);
-
-        // check that we get the init state
-        if v == 0 {
-            Saig_ManForEachLo( p, pObj, i )
-                assert(pValues[Saig_ManPiNum(p)+i] == 0, "pValues[Saig_ManPiNum(p)+i] == 0");
-            break;
-        }
-
-        // write state in terms of NS variables
-        bState = (dd).one; Cudd_Ref( bState );
-        Saig_ManForEachLo( p, pObj, i )
-        {
-            // inlining of macro Cudd_NotCond
-            bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));
-            bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );
-            Cudd_RecursiveDeref( dd, bTemp ); 
-        }
-    }
-    // cleanup
-    Bbr_bddImageTreeDelete( pTree );
-    ABC_FREE( pValues );
-    // verify the counter example
-    if Vec_PtrSize(vOnionRings) < 1000 {
-    RetValue = Saig_ManVerifyCex( p, pCex );
-    if RetValue == 0 && !(fSilent != 0) {
-        fmt.Printf("Aig_ManVerifyUsingBdds(): Counter-example verification has FAILED.\n"); }
-    }
-    if (fVerbose != 0) && !(fSilent != 0) {
-    ABC_PRT( "Counter-example generation time", Abc_Clock() - clk );
-    }
-    return pCex;
+// pickCube chooses the else branch first and fills don't-care variables with
+// zero, giving a complete assignment suitable for replay and next-state cubes.
+func pickCube(dd *DdManager, f *DdNode) []bool {
+	if dd == nil || f == nil || f == dd.LogicZero || !cudd.Cudd_bddLeq(dd, f, f) {
+		return nil
+	}
+	values := make([]bool, len(dd.Vars))
+	for !cudd.Cudd_IsConstant(f) {
+		n := cudd.Cudd_Regular(f)
+		lo := cudd.Cudd_NotCond(n.E, cudd.Cudd_IsComplement(f))
+		hi := cudd.Cudd_NotCond(n.T, cudd.Cudd_IsComplement(f))
+		if lo != dd.LogicZero {
+			f = lo
+		} else {
+			values[n.Index] = true
+			f = hi
+		}
+	}
+	if f != dd.One {
+		return nil
+	}
+	return values
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func bbrStateCube(dd *DdManager, values []bool, start, source, n int) *DdNode {
+	f := dd.One
+	for i := 0; i < n; i++ {
+		if source+i >= len(values) || start+i >= len(dd.Vars) {
+			return nil
+		}
+		v := cudd.Cudd_NotCond(dd.Vars[start+i], !values[source+i])
+		f = cudd.Cudd_bddAnd(dd, f, v)
+	}
+	return f
+}
+func Aig_ManVerifyUsingBddsCountExample(p *Aig_Man_t, dd *DdManager, parts []*DdNode, rings []*DdNode, first *DdNode, output int, verbose, silent bool) *Abc_Cex_t {
+	pis, regs, pos, ok := dimensions(p)
+	if !ok || dd == nil || len(parts) != regs || len(dd.Vars) < pis+2*regs || output < 0 || output >= pos {
+		return nil
+	}
+	values := pickCube(dd, first)
+	if values == nil {
+		return nil
+	}
+	cex := util.Abc_CexAlloc(int32(regs), int32(pis), int32(len(rings)+1))
+	if cex == nil {
+		return nil
+	}
+	cex.IPo = int32(output)
+	cex.IFrame = int32(len(rings))
+	writeInputs := func(frame int, values []bool) {
+		for i := 0; i < pis; i++ {
+			if values[i] {
+				bit := regs + frame*pis + i
+				cex.PData[bit>>5] |= 1 << uint(bit&31)
+			}
+		}
+	}
+	writeInputs(len(rings), values)
+	if len(rings) == 0 {
+		for i := 0; i < regs; i++ {
+			if values[pis+i] {
+				return nil
+			}
+		}
+		if saig.Saig_ManVerifyCex(p, cex) != 1 {
+			return nil
+		}
+		return cex
+	}
+	nsCube := Bbr_bddComputeRangeCube(dd, pis+regs, pis+2*regs)
+	tree := Bbr_bddImageStart(dd, nsCube, regs, parts, pis+regs, dd.Vars, 100000000, verbose)
+	if tree == nil {
+		return nil
+	}
+	defer Bbr_bddImageTreeDelete(tree)
+	state := bbrStateCube(dd, values, pis+regs, pis, regs)
+	cudd.Cudd_Ref(state)
+	defer func() { cudd.Cudd_RecursiveDeref(dd, state) }()
+	for frame := len(rings) - 1; frame >= 0; frame-- {
+		image := Bbr_bddImageCompute(tree, state)
+		if image == nil {
+			return nil
+		}
+		intersection := cudd.Cudd_bddAnd(dd, image, rings[frame])
+		values = pickCube(dd, intersection)
+		if values == nil {
+			return nil
+		}
+		writeInputs(frame, values)
+		if frame == 0 {
+			for i := 0; i < regs; i++ {
+				if values[pis+i] {
+					return nil
+				}
+			}
+			break
+		}
+		next := bbrStateCube(dd, values, pis+regs, pis, regs)
+		cudd.Cudd_Ref(next)
+		cudd.Cudd_RecursiveDeref(dd, state)
+		state = next
+	}
+	if saig.Saig_ManVerifyCex(p, cex) != 1 {
+		return nil
+	}
+	return cex
+}

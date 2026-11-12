@@ -132,7 +132,7 @@ func Lpk_ComputeBoundSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t, nSi
 		uSupport = 0
 		// inlining of macro Kit_DsdObjForEachFanin
 		for i = 0; i < pObj.nFans; i++ {
-			iLitFanin = pObj.pFans[i]
+			iLitFanin = uint32(pObj.pFans[i])
 			uSupps[i] = Lpk_ComputeBoundSets_rec(p, iLitFanin, vSets, nSizeMax)
 			uSupport |= uSupps[i]
 		}
@@ -156,7 +156,7 @@ func Lpk_ComputeBoundSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t, nSi
 	uSupport = 0
 	// inlining of macro Kit_DsdObjForEachFanin
 	for i = 0; i < pObj.nFans; i++ {
-		iLitFanin = pObj.pFans[i]
+		iLitFanin = uint32(pObj.pFans[i])
 		uSuppCur = Lpk_ComputeBoundSets_rec(p, iLitFanin, vSets, nSizeMax)
 		uSupport |= uSuppCur
 		if kit.Kit_WordCountOnes(uSuppCur) <= nSizeMax {
@@ -196,7 +196,7 @@ func Lpk_ComputeBoundSets(p *Kit_DsdNtk_t, nSizeMax int32) *Vec_Int_t {
 		}
 		return vSets
 	}
-	uSupport = Lpk_ComputeBoundSets_rec(p, p.Root, vSets, nSizeMax)
+	uSupport = Lpk_ComputeBoundSets_rec(p, int32(p.Root), vSets, nSizeMax)
 	assert((uSupport&0xFFFF0000) == 0, "(uSupport & 0xFFFF0000) == 0")
 	// add the total support of the network
 	if kit.Kit_WordCountOnes(uSupport) <= nSizeMax {

@@ -73,17 +73,23 @@ func Gia_ManMaxiUnfold(p *Gia_Man_t, nFrames int32, fUseVars int32, vInit *Vec_I
     Gia_ManConst0(p).Value = 0;
     // control/data variables
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         Gia_ManAppendCi( pNew );
     }
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         Gia_ManAppendCi( pNew );
     }
     // build timeframes
     assert(!(vInit != nil) || Vec_IntSize(vInit) == Gia_ManRegNum(p), "!vInit || Vec_IntSize(vInit) == Gia_ManRegNum(p)");
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         var Value int32  = Vec_IntEntry( vInit, i );
         var iCtrl int32  = Gia_ManCiLit( pNew, i );
         var iData int32  = Gia_ManCiLit( pNew, Gia_ManRegNum(p)+i );
@@ -112,24 +118,35 @@ func Gia_ManMaxiUnfold(p *Gia_Man_t, nFrames int32, fUseVars int32, vInit *Vec_I
     }
     for  f = 0; f < nFrames; f++  {
         // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        for i = 0; i < Gia_ManPiNum(p); i++ {
+        	pObj = Gia_ManCi(p, i)
+        	if pObj == nil { break }
             pObj.Value = Gia_ManAppendCi( pNew );
         }
         // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for i = 0; i < p.nObjs; i++ {
+        	pObj = Gia_ManObj(p, i)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
         }
         // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObj == nil { break }
             pObj.Value = Gia_ObjFanin0Copy(pObj);
         }
         // inlining of macro Gia_ManForEachRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObj == nil { break }
             pObj.Value = Gia_ObjRoToRi(p, pObj).Value;
         }
     }
     // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ManAppendCo( pNew, pObj.Value );
     }
     pNew = Gia_ManCleanup( pTemp = pNew );
@@ -181,7 +198,9 @@ func Gia_ManMaxiPerform(p *Gia_Man_t, vInit *Vec_Int_t, nFrames int32, nTimeOut 
     // add one large OR clause
     vLits = Vec_IntAlloc( Gia_ManCoNum(p) );
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pM.vCos)) && ((pObj) = Gia_ManCo(pM, i)); i++  {
+    for i = 0; i < Vec_IntSize(pM.vCos); i++ {
+    	pObj = Gia_ManCo(pM, i)
+    	if pObj == nil { break }
         Vec_IntPush( vLits, Abc_Var2Lit(pCnf.pVarNums[Gia_ObjId(pM, pObj)], 0) );
     }
     sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
@@ -189,7 +208,9 @@ func Gia_ManMaxiPerform(p *Gia_Man_t, vInit *Vec_Int_t, nFrames int32, nTimeOut 
     // create assumptions
     Vec_IntClear( vLits );
     // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(pM)) && ((pObj) = Gia_ManCi(pM, i)); i++  {
+    for i = 0; i < Gia_ManPiNum(pM); i++ {
+    	pObj = Gia_ManCi(pM, i)
+    	if pObj == nil { break }
         if i == Gia_ManRegNum(p) {
             break;
         } else if Vec_IntEntry(vInit, i) == 0 || Vec_IntEntry(vInit, i) == 1 {
@@ -255,7 +276,9 @@ func Gia_ManMaxiPerform(p *Gia_Man_t, vInit *Vec_Int_t, nFrames int32, nTimeOut 
     Vec_IntFree( vLits );
     vLits = Vec_IntDup(vInit);
     // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(pM)) && ((pObj) = Gia_ManCi(pM, i)); i++  {
+    for i = 0; i < Gia_ManPiNum(pM); i++ {
+    	pObj = Gia_ManCi(pM, i)
+    	if pObj == nil { break }
         if i == Gia_ManRegNum(p) {
             break;
         } else if Vec_IntEntry(vLits, i) == 4 || Vec_IntEntry(vLits, i) == 5 {

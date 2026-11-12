@@ -116,7 +116,7 @@ func Cudd_ComputeInteractions(dd *DdManager) {
 		return
 	}
 	dd.interact = nil
-	for n := range dd.unique {
+	for _, root := range dd.unique {
 		seen := make(map[*DdNode]bool)
 		support := make(map[int]bool)
 		var visit func(*DdNode)
@@ -130,7 +130,7 @@ func Cudd_ComputeInteractions(dd *DdManager) {
 			visit(n.T)
 			visit(n.E)
 		}
-		visit(n.t)
+		visit(root)
 		indices := make([]int, 0, len(support))
 		for i := range support {
 			indices = append(indices, i)

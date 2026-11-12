@@ -8,8 +8,8 @@ import (
 )
 
 // ReadBlifAsAIG parses the same checked netlist as ReadBLIF, then structurally
-// hashes its actual hierarchy. The AIGER model bridge retains register pairs
-// and provides the common native ABC strash-network construction.
+// hashes its actual combinational hierarchy. The AIGER model bridge provides
+// the common native ABC strash-network construction.
 func ReadBlifAsAIG(filename string, check bool) (*abc.Network, error) {
 	n, err := ReadBLIF(filename, false, check)
 	if err != nil {

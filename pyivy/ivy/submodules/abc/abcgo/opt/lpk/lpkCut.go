@@ -56,13 +56,12 @@ import (
 */
 func Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) *CloudNode {
 	var pTruth, pTruth0, pTruth1 *CloudNode
-	assert(!hop.Hop_IsComplement(pObj), "!hop.Hop_IsComplement(pObj)")
-	if pObj.pData {
-		assert(uint32(pObj.pData)&0xffff0000, "uint32(pObj.pData) & 0xffff0000")
-		return pObj.pData
+	assert(hop.Hop_IsComplement(pObj) == 0, "hop.Hop_IsComplement(pObj) == 0")
+	if cached, ok := pObj.pData.(*CloudNode); ok && cached != nil {
+		return cached
 	}
 	// get the plan for a new truth table
-	if hop.Hop_ObjIsConst1(pObj) {
+	if hop.Hop_ObjIsConst1(pObj) != 0 {
 		pTruth = dd.one
 	} else {
 		assert(hop.Hop_ObjIsAnd(pObj), "hop.Hop_ObjIsAnd(pObj)")
@@ -93,7 +92,7 @@ func Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVa
 */
 func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 	var dd *CloudManager = p.pDsdMan.dd
-	var pManHop *Hop_Man_t = p.pNtk.pManFunc
+	pManHop, _ := p.pNtk.FunctionManager.(*hop.Hop_Man_t)
 	var pObjHop *Hop_Obj_t
 	var pObj, pFanin *Abc_Obj_t
 	var pTruth *CloudNode = nil // Suppress "might be used uninitialized"
@@ -105,7 +104,7 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		pObj.pCopy = dd.vars[pCut.nLeaves-1-i]
+		pObj.Copy = &abc.Object{Data: dd.vars[pCut.nLeaves-1-i]}
 	}
 
 	// construct truth table in the topological order
@@ -113,22 +112,21 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 	for i = int32(pCut.nNodes) - 1; i >= 0; i-- {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pNodes[i])
 		// get the local AIG
-		pObjHop = hop.Hop_Regular(pObj.pData)
+		pObjHop = hop.Hop_Regular(pObj.Data.(*hop.Hop_Obj_t))
 		// clean the data field of the nodes in the AIG subgraph
 		hop.Hop_ObjCleanData_rec(pObjHop)
 		// set the initial truth tables at the fanins
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
-			assert(uint32(pFanin.pCopy)&0xffff0000, "uint32(pFanin.pCopy) & 0xffff0000")
-			hop.Hop_ManPi(pManHop, k).pData = pFanin.pCopy
+			hop.Hop_ManPi(pManHop, k).pData = pFanin.Copy.Data
 		}
 		// compute the truth table of internal nodes
 		pTruth = Lpk_CutTruthBdd_rec(dd, pManHop, pObjHop, pCut.nLeaves)
-		if hop.Hop_IsComplement(pObj.pData) {
+		if hop.Hop_IsComplement(pObj.Data.(*hop.Hop_Obj_t)) != 0 {
 			pTruth = kit.Cloud_Not(pTruth)
 		}
 		// set the truth table at the node
-		pObj.pCopy = pTruth
+		pObj.Copy = &abc.Object{Data: pTruth}
 
 	}
 
@@ -152,15 +150,14 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 */
 func Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *Vec_Ptr_t, piCount *int32) []uint32 {
 	var pTruth, pTruth0, pTruth1 []uint32
-	assert(!hop.Hop_IsComplement(pObj), "!hop.Hop_IsComplement(pObj)")
-	if pObj.pData {
-		assert(uint32(pObj.pData)&0xffff0000, "uint32(pObj.pData) & 0xffff0000")
-		return pObj.pData
+	assert(hop.Hop_IsComplement(pObj) == 0, "hop.Hop_IsComplement(pObj) == 0")
+	if cached, ok := pObj.pData.([]uint32); ok && cached != nil {
+		return cached
 	}
 	// get the plan for a new truth table
 	pTruth = vec.Vec_PtrEntry(vTtNodes, int(*piCount)).([]uint32)
 	*piCount++
-	if hop.Hop_ObjIsConst1(pObj) {
+	if hop.Hop_ObjIsConst1(pObj) != 0 {
 		kit.Kit_TruthFill(pTruth, nVars)
 	} else {
 		assert(hop.Hop_ObjIsAnd(pObj), "hop.Hop_ObjIsAnd(pObj)")
@@ -188,7 +185,7 @@ func Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *V
 **********************************************************************
 */
 func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
-	var pManHop *Hop_Man_t = p.pNtk.pManFunc
+	pManHop, _ := p.pNtk.FunctionManager.(*hop.Hop_Man_t)
 	var pObjHop *Hop_Obj_t
 	var pObj *Abc_Obj_t = nil // Suppress "might be used uninitialized"
 	var pFanin *Abc_Obj_t
@@ -201,12 +198,12 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		pObj.pCopy = vec.Vec_PtrEntry(p.vTtElems, func() int {
+		pObj.Copy = &abc.Object{Data: vec.Vec_PtrEntry(p.vTtElems, func() int {
 			if fInv != 0 {
 				return int(pCut.nLeaves) - 1 - int(i)
 			}
 			return int(i)
-		}())
+		}())}
 	}
 
 	// construct truth table in the topological order
@@ -214,29 +211,28 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 	for i = int32(pCut.nNodes) - 1; i >= 0; i-- {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pNodes[i])
 		// get the local AIG
-		pObjHop = hop.Hop_Regular(pObj.pData)
+		pObjHop = hop.Hop_Regular(pObj.Data.(*hop.Hop_Obj_t))
 		// clean the data field of the nodes in the AIG subgraph
 		hop.Hop_ObjCleanData_rec(pObjHop)
 		// set the initial truth tables at the fanins
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
-			assert(uint32(pFanin.pCopy)&0xffff0000, "uint32(pFanin.pCopy) & 0xffff0000")
-			hop.Hop_ManPi(pManHop, k).pData = pFanin.pCopy
+			hop.Hop_ManPi(pManHop, k).pData = pFanin.Copy.Data
 		}
 		// compute the truth table of internal nodes
 		pTruth = Lpk_CutTruth_rec(pManHop, pObjHop, pCut.nLeaves, p.vTtNodes, &iCount)
-		if hop.Hop_IsComplement(pObj.pData) {
+		if hop.Hop_IsComplement(pObj.Data.(*hop.Hop_Obj_t)) != 0 {
 			kit.Kit_TruthNot(pTruth, pTruth, pCut.nLeaves)
 		}
 		// set the truth table at the node
-		pObj.pCopy = pTruth
+		pObj.Copy = &abc.Object{Data: pTruth}
 	}
 
 	// make sure direct truth table is stored elsewhere (assuming the first call for direct truth!!!)
 	if fInv == 0 {
 		pTruth = vec.Vec_PtrEntry(p.vTtNodes, int(iCount)).([]uint32)
 		iCount++
-		kit.Kit_TruthCopy(pTruth, pObj.pCopy, pCut.nLeaves)
+		kit.Kit_TruthCopy(pTruth, pObj.Copy.Data.([]uint32), pCut.nLeaves)
 	}
 	assert(iCount <= vec.Vec_PtrSize(p.vTtNodes), "iCount <= vec.Vec_PtrSize(p.vTtNodes)")
 	return pTruth
@@ -269,7 +265,7 @@ func Lpk_NodeRecordImpact(p *Lpk_Man_t) {
 			if pNode.MarkC != 0 {
 				continue
 			}
-			pNode.MarkC = 1
+			pNode.MarkC = true
 			vec.Vec_PtrPush(vNodes, pNode.Id)
 			vec.Vec_PtrPush(vNodes, abc.Abc_ObjFanoutNum(pNode))
 		}
@@ -308,7 +304,7 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
 		assert(pObj.MarkA == 0, "pObj.MarkA == 0")
 		pObj.MarkA = true
-		pObj.pCopy = i
+		pObj.Temp = int(i)
 	}
 	// ref leaves pointed from the internal nodes
 	nCands = 0
@@ -336,7 +332,7 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
 			assert(pFanin.MarkA == 1, "pFanin.MarkA == 1")
-			if p.pRefs[int32(pFanin.pCopy.(int32))] > 1 {
+			if p.pRefs[int32(pFanin.Temp)] > 1 {
 				break
 			}
 		}
@@ -540,14 +536,14 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 
 	// if the node is a PI, quit
 	pObj = abc.Abc_NtkObj(p.pNtk, Node)
-	if abc.Abc_ObjIsCi(pObj) {
+	if abc.Abc_ObjIsCi(pObj) != 0 {
 		return
 	}
 	assert(abc.Abc_ObjIsNode(pObj), "abc.Abc_ObjIsNode(pObj)")
 	//    assert( Abc_ObjFaninNum(pObj) <= p->pPars->nLutSize );
 
 	// if the node is not in the MFFC, check the limit
-	if !abc.Abc_NodeIsTravIdCurrent(pObj) {
+	if abc.Abc_NodeIsTravIdCurrent(pObj) == 0 {
 		if int32(pCut.nNodesDup) == p.pPars.nLutsOver {
 			return
 		}

@@ -1,261 +1,176 @@
 package io
 
-import "fmt"
+import (
+	"fmt"
+	stdio "io"
+	"os"
+	"strings"
 
-import "os"
+	"github.com/glycerine/abcgo/base/abc"
+)
 
-/**CFile****************************************************************
-
-  FileName    [ioWriteSmv.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write the network in SMV format.]
-
-  Author      [Satrajit Chatterjee]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioWriteSmv.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Io_WriteSmvCheckNames( Abc_Ntk_t * pNtk );
-
-
-// static int Io_WriteSmvOne( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static int Io_WriteSmvOneNode( FILE * pFile, Abc_Obj_t * pNode );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-// This returns a pointer to a static area, so be careful in using results
-// of this function i.e. don't call this twice in the same printf call.
-//
-// This function replaces '|' with '_' I think abc introduces '|' when
-// flattening hierarchy. The '|' is interpreted as a or function by nusmv
-// which is unfortunate. This probably should be fixed elsewhere.
-var spStatic_cleanUNSAFE_buffer [1024]byte;
-func cleanUNSAFE(s string) string {
-    var t string;
-    
-    assert(len(s) < 1024, "strlen(s) < 1024");
-    strcpy(spStatic_cleanUNSAFE_buffer, s);
-    for t = spStatic_cleanUNSAFE_buffer; *t != 0; ++t { *t = (*t == '|') ? '_' : *t; }
-    return spStatic_cleanUNSAFE_buffer;
+// cleanUNSAFE retains the source helper name but owns its result; there is no
+// static buffer and no truncation. The full exporter also resolves collisions.
+func cleanUNSAFE(text string) string {
+	var out strings.Builder
+	for i, c := range text {
+		valid := c == '_' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || i > 0 && c >= '0' && c <= '9'
+		if valid {
+			out.WriteRune(c)
+		} else {
+			out.WriteByte('_')
+		}
+	}
+	if out.Len() == 0 {
+		return "signal"
+	}
+	name := out.String()
+	switch strings.ToUpper(name) {
+	case "MODULE", "TRUE", "FALSE", "BOOLEAN", "CASE", "ESAC", "NEXT", "INIT", "VAR", "IVAR", "FROZENVAR", "DEFINE", "ASSIGN", "INVAR", "INVARSPEC", "LTLSPEC", "FAIRNESS", "JUSTICE", "COMPASSION", "TRANS", "SPEC", "CTLSPEC", "CONSTANTS":
+		name = "signal_" + name
+	}
+	return name
 }
-
-func hasPrefix(needle string, haystack string) int32 {
-    return (strncmp(haystack, needle, len(needle)) == 0);
+func hasPrefix(needle, haystack string) bool { return strings.HasPrefix(haystack, needle) }
+func smvNames(n *abc.Network) func(*abc.Object) string {
+	names := map[*abc.Object]string{}
+	used := map[string]bool{}
+	return func(o *abc.Object) string {
+		if name := names[o]; name != "" {
+			return name
+		}
+		base := cleanUNSAFE(blifObjectName(o))
+		name := base
+		for suffix := 2; used[name]; suffix++ {
+			name = fmt.Sprintf("%s_%d", base, suffix)
+		}
+		used[name] = true
+		names[o] = name
+		return name
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in SMV format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteSmv(pNtk *Abc_Ntk_t, pFileName string) int32 {
-    var pExdc *Abc_Ntk_t;
-    var pFile *os.File;
-    assert(Abc_NtkIsSopNetlist(pNtk), "Abc_NtkIsSopNetlist(pNtk)");
-    if !(Io_WriteSmvCheckNames(pNtk) != 0) {
-        fmt.Fprintf(os.Stdout, "Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \"short_names\".\n");
-        return 0;
-    }
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Io_WriteSmv(): Cannot open the output file.\n");
-        return 0;
-    }
-    fmt.Fprintf(pFile, "-- benchmark \"%s\" written by ABC on %s\n", pNtk.pName, Extra_TimeStamp());
-    // write the network
-    Io_WriteSmvOne( pFile, pNtk );
-    // write EXDC network if it exists
-    pExdc = Abc_NtkExdc( pNtk );
-    if pExdc != nil {
-        fmt.Printf("Io_WriteSmv: EXDC is not written (warning).\n"); }
-    // finalize the file
-    _ = (pFile).Close();
-    return 1;
+func WriteSMV(w stdio.Writer, n *abc.Network) error {
+	if n == nil {
+		return fmt.Errorf("nil network")
+	}
+	if n.Type != uint8(abc.ABC_NTK_NETLIST) || n.Function != uint8(abc.ABC_FUNC_SOP) {
+		return fmt.Errorf("SMV requires an SOP netlist")
+	}
+	for _, box := range n.Boxes() {
+		if box.Kind != abc.ObjectLatch {
+			return fmt.Errorf("SMV requires flattened hierarchy")
+		}
+	}
+	name := smvNames(n)
+	var out strings.Builder
+	out.WriteString("MODULE main\n")
+	if len(n.ObjectsOfKind(abc.ObjectPI)) > 0 {
+		out.WriteString("\nVAR -- inputs\n")
+	}
+	for _, pi := range n.ObjectsOfKind(abc.ObjectPI) {
+		net := blifPortNet(pi, true)
+		if net == nil {
+			return fmt.Errorf("PI lacks net")
+		}
+		fmt.Fprintf(&out, "    %s : boolean;\n", name(net))
+	}
+	if len(n.ObjectsOfKind(abc.ObjectLatch)) > 0 {
+		out.WriteString("\nVAR -- state variables\n")
+	}
+	for _, latch := range n.ObjectsOfKind(abc.ObjectLatch) {
+		outputs := latch.Fanouts()
+		if len(outputs) != 1 {
+			return fmt.Errorf("malformed latch")
+		}
+		net := blifPortNet(outputs[0], true)
+		if net == nil {
+			return fmt.Errorf("latch lacks output net")
+		}
+		fmt.Fprintf(&out, "    %s : boolean;\n", name(net))
+	}
+	if len(n.ObjectsOfKind(abc.ObjectNode)) > 0 {
+		out.WriteString("\nDEFINE\n")
+	}
+	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
+		outputs := node.Fanouts()
+		if len(outputs) != 1 {
+			return fmt.Errorf("node must drive one net")
+		}
+		expression, err := sopExpression(node, name, " & ", " | ", "TRUE", "FALSE")
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(&out, "    %s := %s;\n", name(outputs[0]), expression)
+	}
+	if len(n.ObjectsOfKind(abc.ObjectLatch)) > 0 {
+		out.WriteString("\nASSIGN\n")
+	}
+	for _, latch := range n.ObjectsOfKind(abc.ObjectLatch) {
+		inputs, outputs := latch.Fanins(), latch.Fanouts()
+		if len(inputs) != 1 || len(outputs) != 1 {
+			return fmt.Errorf("malformed latch")
+		}
+		input, output := blifPortNet(inputs[0].Object, false), blifPortNet(outputs[0], true)
+		if input == nil || output == nil {
+			return fmt.Errorf("latch lacks nets")
+		}
+		if abc.Abc_LatchIsInit0(latch) != 0 {
+			fmt.Fprintf(&out, "    init(%s) := FALSE;\n", name(output))
+		} else if abc.Abc_LatchIsInit1(latch) != 0 {
+			fmt.Fprintf(&out, "    init(%s) := TRUE;\n", name(output))
+		}
+		fmt.Fprintf(&out, "    next(%s) := %s;\n", name(output), name(input))
+	}
+	out.WriteByte('\n')
+	for _, po := range n.ObjectsOfKind(abc.ObjectPO) {
+		net := blifPortNet(po, false)
+		if net == nil {
+			return fmt.Errorf("PO lacks net")
+		}
+		original := net.Name()
+		if p := po.Name(); strings.HasPrefix(p, "assume_fair_") || strings.HasPrefix(p, "Assert_") || strings.HasPrefix(p, "assert_") {
+			original = p
+		}
+		switch {
+		case strings.HasPrefix(original, "assume_fair_"):
+			fmt.Fprintf(&out, "FAIRNESS %s;\n", name(net))
+		case strings.HasPrefix(original, "Assert_"), strings.HasPrefix(original, "assert_safety_"):
+			fmt.Fprintf(&out, "INVARSPEC %s;\n", name(net))
+		case strings.HasPrefix(original, "assert_fair_"):
+			fmt.Fprintf(&out, "LTLSPEC G F %s;\n", name(net))
+		}
+	}
+	return writeText(w, out.String())
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in SMV format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteSmvOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {
-    var pProgress *ProgressBar;
-    var pNode *Abc_Obj_t;
-    var i int32;
-
-    // write the PIs/POs/latches
-    fmt.Fprintf(pFile, "MODULE main\n");   // nusmv needs top module to be main
-    fmt.Fprintf(pFile, "\n");
-
-    fmt.Fprintf(pFile, "VAR  -- inputs\n");
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "    %s : boolean;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));
-    }
-    fmt.Fprintf(pFile, "\n");
-
-    fmt.Fprintf(pFile, "VAR  -- state variables\n");
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        fmt.Fprintf(pFile, "    %s : boolean;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); }
-    } 
-    fmt.Fprintf(pFile, "\n");
-
-    // No outputs needed for NuSMV: 
-    // TODO: Add sepcs by recognizing assume_.* and assert_.*
-    //
-    // Abc_NtkForEachPo( pNtk, pNode, i )
-    //    fprintf( pFile, "OUTPUT(%s)\n", Abc_ObjName(Abc_ObjFanin0(pNode)) );
-    
-    // write internal nodes
-    fmt.Fprintf(pFile, "DEFINE\n");
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Io_WriteSmvOneNode( pFile, pNode );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-    fmt.Fprintf(pFile, "\n");
-
-    fmt.Fprintf(pFile, "ASSIGN\n");
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        var Reset int32  = int32((ABC_PTRUINT_T))Abc_ObjData( pNode );
-        assert(Reset >= 1, "Reset >= 1");
-        assert(Reset <= 3, "Reset <= 3");
-
-        if Reset != 3 {
-            fmt.Fprintf(pFile, "    init(%s) := %d;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))), Reset - 1); 
-        }
-        fmt.Fprintf(pFile, "    next(%s) := ", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); 
-        fmt.Fprintf(pFile, "%s;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))));
-    }
-    }
-      
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        char *n = cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode)));
-        // fprintf( pFile, "-- output %s;\n", n );
-        if hasPrefix("assume_fair_", n) != 0 {
-            fmt.Fprintf(pFile, "FAIRNESS %s;\n", n);
-        
-        } else if (hasPrefix("Assert_", n) != 0) || 
-                (hasPrefix("assert_safety_", n) != 0) {
-            fmt.Fprintf(pFile, "INVARSPEC %s;\n", n);
-        
-        } else if hasPrefix("assert_fair_", n) != 0 {
-            fmt.Fprintf(pFile, "LTLSPEC G F %s;\n", n);
-        }
-    }
-
-    return 1;
+func WriteSMVFile(n *abc.Network, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = WriteSMV(file, n)
+	closeErr := file.Close()
+	if err != nil {
+		return err
+	}
+	return closeErr
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in SMV format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteSmvOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {
-    var nFanins int32;
-
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    nFanins = Abc_ObjFaninNum(pNode);
-    if nFanins == 0 {   // write the constant 1 node
-        assert(Abc_NodeIsConst1(pNode), "Abc_NodeIsConst1(pNode)");
-        fmt.Fprintf(pFile, "    %s", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode)) ));
-        fmt.Fprintf(pFile, " := 1;\n");
-    
-    } else if nFanins == 1 {   // write the interver/buffer
-        if Abc_NodeIsBuf(pNode) {
-            fmt.Fprintf(pFile, "    %s := ", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));
-            fmt.Fprintf(pFile, "%s;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));
-        
-        } else {
-            fmt.Fprintf(pFile, "    %s := !", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));
-            fmt.Fprintf(pFile, "%s;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));
-        }
-    
-    } else {   // write the AND gate
-        fmt.Fprintf(pFile, "    %s", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));
-        fmt.Fprintf(pFile, " := %s & ", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));
-        fmt.Fprintf(pFile, "%s;\n", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin1(pNode))));
-    }
-    return 1;
+func Io_WriteSmv(n *abc.Network, filename string) int32 {
+	if err := WriteSMVFile(n, filename); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 0
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the names cannot be written into the bench file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteSmvCheckNames(pNtk *Abc_Ntk_t) int32 {
-    var pObj *Abc_Obj_t;
-    var pName string;
-    var i int32;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName && *pName; pName++  {
-            if *pName == '(' || *pName == ')' {
-                return 0; }
-        } }
-    }
-    return 1;
+func Io_WriteSmvOne(w stdio.Writer, n *abc.Network) int32 {
+	if err := WriteSMV(w, n); err != nil {
+		return 0
+	}
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Io_WriteSmvCheckNames(n *abc.Network) int32 {
+	if n == nil {
+		return 0
+	}
+	return 1
+}
+func init() { RegisterFormat(IO_FILE_SMV, nil, WriteSMVFile) }

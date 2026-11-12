@@ -134,7 +134,7 @@ func Lpk_ComputeSets(p *Kit_DsdNtk_t, vSets *Vec_Int_t) uint32 {
 		vec.Vec_IntPush(vSets, uSupport)
 		return uSupport
 	}
-	uSupport = Lpk_ComputeSets_rec(p, p.Root, vSets)
+	uSupport = Lpk_ComputeSets_rec(p, int32(p.Root), vSets)
 	assert((uSupport&0xFFFF0000) == 0, "(uSupport & 0xFFFF0000) == 0")
 	vec.Vec_IntPush(vSets, uSupport)
 	// set the remaining variables

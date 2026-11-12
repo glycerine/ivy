@@ -38,11 +38,12 @@ func dotFunction(o *abc.Object, gateNames bool) (string, error) {
 		if !ok {
 			return "", fmt.Errorf("BDD node has no manager")
 		}
-		return strings.TrimSuffix(abc.Abc_ConvertBddToSop(nil, dd, f, f, int32(len(o.Fanins())), 0, nil, -1), "\n"), nil
+		var cube []byte
+		return strings.TrimSuffix(abc.Abc_ConvertBddToSop(nil, dd, f, f, int32(len(o.Fanins())), 0, &cube, -1), "\n"), nil
 	case nil:
 		return "", nil
 	default:
-		return fmt.Sprint(f), nil
+		return "", fmt.Errorf("unsupported DOT function type %T", f)
 	}
 }
 func dotLevels(n *abc.Network, reverse bool) (map[*abc.Object]int, error) {

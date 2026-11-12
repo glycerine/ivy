@@ -117,8 +117,8 @@ func Lpk_MapTreeMux_rec(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*
 		kit.Kit_DsdPrintExpanded(ppNtks[1])
 	}
 	// map the DSD structures
-	pObj0 = Lpk_MapTree_rec(p, ppNtks[0], ppLeaves[:], ppNtks[0].Root, nil)
-	pObj1 = Lpk_MapTree_rec(p, ppNtks[1], ppLeaves[:], ppNtks[1].Root, nil)
+	pObj0 = Lpk_MapTree_rec(p, ppNtks[0], ppLeaves[:], int32(ppNtks[0].Root), nil)
+	pObj1 = Lpk_MapTree_rec(p, ppNtks[1], ppLeaves[:], int32(ppNtks[1].Root), nil)
 	kit.Kit_DsdNtkFree(ppNtks[0])
 	kit.Kit_DsdNtkFree(ppNtks[1])
 	return ifpkg.If_ManCreateMux(p.pIfMan, pObj0, pObj1, ppLeaves[iBestVar])
@@ -253,8 +253,8 @@ func Lpk_MapSuppRedDec_rec(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves 
 	//printf( "cofactored variable %c\n", 'a' + iVar );
 	//printf( "reused variable %c\n", 'a' + iVarReused );
 
-	ppLeaves[iVarReused] = Lpk_MapTree_rec(p, pNtkDec, ppLeaves[:], pNtkDec.Root, nil)
-	pObjNew = Lpk_MapTree_rec(p, pNtkComp, ppLeaves[:], pNtkComp.Root, nil)
+	ppLeaves[iVarReused] = Lpk_MapTree_rec(p, pNtkDec, ppLeaves[:], int32(pNtkDec.Root), nil)
+	pObjNew = Lpk_MapTree_rec(p, pNtkComp, ppLeaves[:], int32(pNtkComp.Root), nil)
 
 	kit.Kit_DsdNtkFree(pNtkDec)
 	kit.Kit_DsdNtkFree(pNtkComp)

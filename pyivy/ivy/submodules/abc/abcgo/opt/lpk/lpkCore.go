@@ -232,7 +232,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	// check special cases
 	pRoot = kit.Kit_DsdNtkRoot(pNtk)
 	if pRoot.Type == KIT_DSD_CONST1 {
-		if abc.Abc_LitIsCompl(pNtk.Root) {
+		if abc.Abc_LitIsCompl(pNtk.Root) != 0 {
 			pObjNew = abc.Abc_NtkCreateNodeConst0(p.pNtk)
 		} else {
 			pObjNew = abc.Abc_NtkCreateNodeConst1(p.pNtk)
@@ -242,8 +242,8 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 		return 1
 	}
 	if pRoot.Type == KIT_DSD_VAR {
-		pObjNew = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[abc.Abc_Lit2Var(pRoot.pFans[0])])
-		if abc.Abc_LitIsCompl(pNtk.Root) ^ abc.Abc_LitIsCompl(pRoot.pFans[0]) {
+		pObjNew = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[abc.Abc_Lit2Var(int32(pRoot.pFans[0]))])
+		if abc.Abc_LitIsCompl(pNtk.Root)^abc.Abc_LitIsCompl(int32(pRoot.pFans[0])) != 0 {
 			pObjNew = abc.Abc_NtkCreateNodeInv(p.pNtk, pObjNew)
 		}
 		abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
@@ -274,7 +274,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	// create the internal nodes
 	p.fCalledOnce = 0
 	p.nCalledSRed = 0
-	pDriver = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], pNtk.Root, nil)
+	pDriver = Lpk_MapTree_rec(p, pNtk, ppLeaves[:], int32(pNtk.Root), nil)
 	if pDriver == nil {
 		return 0
 	}
@@ -322,7 +322,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	}
 	// get the area of mapping
 	pObjNew = abc.Abc_NodeFromIf_rec(p.pNtk, p.pIfMan, ifpkg.If_Regular(pDriver), p.vCover)
-	pObjNew.pData = hop.Hop_NotCond(pObjNew.pData, ifpkg.If_IsComplement(pDriver))
+	pObjNew.Data = hop.Hop_NotCond(pObjNew.Data, ifpkg.If_IsComplement(pDriver))
 	// perform replacement
 	abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
 	//printf( "%3d : %d-%d=%d(%d) \n", p->nChanges, nNodesBef, Abc_NtkNodeNum(p->pNtk), nNodesBef-Abc_NtkNodeNum(p->pNtk), nGain );
@@ -632,7 +632,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	abc.Abc_NtkSweep(pNtk, 0)
 
 	// get the number of inputs
-	if abc.Abc_FrameReadLibLut() {
+	if abc.Abc_FrameReadLibLut() != nil {
 		pPars.nLutSize = (abc.Abc_FrameReadLibLut()).LutMax
 	} else {
 		pPars.nLutSize = abc.Abc_NtkGetFaninMax(pNtk)
@@ -659,7 +659,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	}
 
 	// convert into the AIG
-	if !abc.Abc_NtkToAig(pNtk) {
+	if abc.Abc_NtkToAig(pNtk) == 0 {
 		fmt.Fprintf(os.Stdout, "Converting to BDD has failed.\n")
 		return 0
 	}
@@ -707,7 +707,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 		{
 			// skip all except the final node
 			if pPars.fFirst != 0 {
-				if !abc.Abc_ObjIsCo(abc.Abc_ObjFanout0(pObj)) {
+				if abc.Abc_ObjIsCo(abc.Abc_ObjFanout0(pObj)) == 0 {
 					continue
 				}
 			}
@@ -798,7 +798,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 
 	Lpk_ManStop(p)
 	// check the resulting network
-	if !abc.Abc_NtkCheck(pNtk) {
+	if abc.Abc_NtkCheck(pNtk) == 0 {
 		fmt.Printf("Lpk_Resynthesize: The network check has failed.\n")
 		return 0
 	}

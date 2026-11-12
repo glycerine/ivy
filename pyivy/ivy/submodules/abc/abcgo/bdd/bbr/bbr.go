@@ -1,108 +1,33 @@
+// Package bbr implements partitioned BDD reachability and witness extraction.
+// The algorithms follow ABC's original bdd/bbr sources.
 package bbr
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-  FileName    [bbr.h]
+type DdManager = cudd.DdManager
+type DdNode = cudd.DdNode
+type Aig_Man_t = aig.Graph
+type Aig_Obj_t = aig.Edge
+type Saig_ParBbr_t = saig.Saig_ParBbr_t
+type Abc_Cex_t = util.Abc_Cex_t
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD-based reachability analysis.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bbr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-//#include "aig/aig/aig.h"
-//#include "aig/saig/saig.h"
-//#include "bdd/cudd/cuddInt.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-func Aig_ObjGlobalBdd(pObj *Aig_Obj_t) *DdNode { return (DdNode *)pObj.pData; }
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== bbrImage.c ==========================================================*/
-type Bbr_ImageTree_t =  Bbr_ImageTree_t_;
-// extern Bbr_ImageTree_t * Bbr_bddImageStart( 
-//     DdManager * dd, DdNode * bCare,
-//     int nParts, DdNode ** pbParts,
-//     int nVars, DdNode ** pbVars, int nBddMax, int fVerbose );
-
-// extern DdNode *    Bbr_bddImageCompute( Bbr_ImageTree_t * pTree, DdNode * bCare );
-
-// extern void        Bbr_bddImageTreeDelete( Bbr_ImageTree_t * pTree );
-
-// extern DdNode *    Bbr_bddImageRead( Bbr_ImageTree_t * pTree );
-
-type Bbr_ImageTree2_t =  Bbr_ImageTree2_t_;
-// extern Bbr_ImageTree2_t * Bbr_bddImageStart2( 
-//     DdManager * dd, DdNode * bCare,
-//     int nParts, DdNode ** pbParts,
-//     int nVars, DdNode ** pbVars, int fVerbose );
-
-// extern DdNode *    Bbr_bddImageCompute2( Bbr_ImageTree2_t * pTree, DdNode * bCare );
-
-// extern void        Bbr_bddImageTreeDelete2( Bbr_ImageTree2_t * pTree );
-
-// extern DdNode *    Bbr_bddImageRead2( Bbr_ImageTree2_t * pTree );
-
-/*=== bbrNtbdd.c ==========================================================*/
-// extern void        Aig_ManFreeGlobalBdds( Aig_Man_t * p, DdManager * dd );
-
-// extern int         Aig_ManSizeOfGlobalBdds( Aig_Man_t * p );
-
-// extern DdManager * Aig_ManComputeGlobalBdds( Aig_Man_t * p, int nBddSizeMax, int fDropInternal, int fReorder, int fVerbose );
-
-/*=== bbrReach.c ==========================================================*/
-// extern int         Aig_ManVerifyUsingBdds( Aig_Man_t * p, Saig_ParBbr_t * pPars );
-
-// extern void        Bbr_ManSetDefaultParams( Saig_ParBbr_t * p );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func Aig_ObjGlobalBdd(p *Aig_Man_t, e aig.Edge) *DdNode       { f, _ := p.ObjectData(e).(*DdNode); return f }
+func Aig_ObjSetGlobalBdd(p *Aig_Man_t, e aig.Edge, f *DdNode) { p.SetObjectData(e, f) }
+func Aig_ObjCleanGlobalBdd(dd *DdManager, p *Aig_Man_t, e aig.Edge) {
+	cudd.Cudd_RecursiveDeref(dd, Aig_ObjGlobalBdd(p, e))
+	p.SetObjectData(e, nil)
+}
+func dimensions(p *Aig_Man_t) (pis, regs, pos int, ok bool) {
+	if p == nil || p.Check() != nil {
+		return
+	}
+	regs = int(p.RegisterCount())
+	pis = p.InputCount() - regs
+	pos = p.OutputCount() - regs
+	return pis, regs, pos, regs >= 0 && pis >= 0 && pos >= 0
+}

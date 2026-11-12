@@ -54,11 +54,16 @@ func Gia_ManDeriveOne(p *Gia_Man_t, vValues *Vec_Int_t) *Gia_Man_t {
     assert(Vec_IntSize(vValues) == Gia_ManCiNum(p), "Vec_IntSize(vValues) == Gia_ManCiNum(p)");
     // propagate forward
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCis); i++ {
+    	pObj = Gia_ManCi(p, i)
+    	if pObj == nil { break }
         pObj.fPhase = Vec_IntEntry(vValues, i);
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         fPhase0 = Gia_ObjPhase(Gia_ObjFanin0(pObj)) ^ Gia_ObjFaninC0(pObj);
         fPhase1 = Gia_ObjPhase(Gia_ObjFanin1(pObj)) ^ Gia_ObjFaninC1(pObj);
         pObj.fPhase = fPhase0 & fPhase1;
@@ -67,11 +72,16 @@ func Gia_ManDeriveOne(p *Gia_Man_t, vValues *Vec_Int_t) *Gia_Man_t {
     // propagate backward
     Gia_ManCleanMark0(p);
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         Gia_ObjFanin0(pObj).fMark0 = 1;
     }
     // inlining of macro Gia_ManForEachAndReverse
-    for  i = p.nObjs - 1; (i > 0) && ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {
+    for i = p.nObjs - 1; i > 0; i-- {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         if !pObj.fMark0 {
             continue; }
         fPhase0 = Gia_ObjPhase(Gia_ObjFanin0(pObj)) ^ Gia_ObjFaninC0(pObj);
@@ -100,11 +110,16 @@ func Gia_ManDeriveOne(p *Gia_Man_t, vValues *Vec_Int_t) *Gia_Man_t {
     pNew.pSpec = Abc_UtilStrsav( p.pSpec );
     Gia_ManConst0(p).Value = 0;
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCis); i++ {
+    	pObj = Gia_ManCi(p, i)
+    	if pObj == nil { break }
         pObj.Value = Abc_LitNotCond( Gia_ManAppendCi(pNew), !Vec_IntEntry(vValues, i) );
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         if !pObj.fMark0 {
             continue; }
         fPhase0 = Gia_ObjPhase(Gia_ObjFanin0(pObj)) ^ Gia_ObjFaninC0(pObj);
@@ -129,7 +144,9 @@ func Gia_ManDeriveOne(p *Gia_Man_t, vValues *Vec_Int_t) *Gia_Man_t {
     }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         Gia_ManAppendCo( pNew, Gia_ObjFanin0(pObj).Value );
     }
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
@@ -196,18 +213,26 @@ func Gia_ManDeriveOneTest(p *Gia_Man_t) {
         pNew = Gia_ManDeriveOne( p, vValues );
         // assign variables
         // inlining of macro Gia_ManForEachCi
-        for  i = 0; (i < Vec_IntSize(pNew.vCis)) && ((pObj) = Gia_ManCi(pNew, i)); i++  {
+        for i = 0; i < Vec_IntSize(pNew.vCis); i++ {
+        	pObj = Gia_ManCi(pNew, i)
+        	if pObj == nil { break }
             pObj.Value = iPoVarBeg+i;
         }
         iVar = sat_solver_nvars(pSat);
         // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < pNew.nObjs) && ((pObj) = Gia_ManObj(pNew, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for i = 0; i < pNew.nObjs; i++ {
+        	pObj = Gia_ManObj(pNew, i)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             pObj.Value = iVar++; }
         }
         sat_solver_setnvars( pSat, iVar );
         // create new clauses
         // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < pNew.nObjs) && ((pObj) = Gia_ManObj(pNew, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for i = 0; i < pNew.nObjs; i++ {
+        	pObj = Gia_ManObj(pNew, i)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             sat_solver_add_and( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); }
         }
         // add to the assumptions

@@ -86,8 +86,8 @@ logging services are supplied locally. The oracle is skipped only if `cc` is
 unavailable; all generated artifacts use temporary directories.
 
 **Ordinary package test/race/vet are not yet green.** The latest normal
-`go test ./opt/nwk` reaches external parser failures in `aig/saig/saigRetMin.go`
-and `aig/gia/giaCSat2.go` (the latter through `map/if`). These are owned by other
+`go test ./opt/nwk` reaches external parser failures in `aig/saig/saigRetStep.go` and `aig/saig/saigStrSim.go`
+and `aig/gia/giaCTas.go` (the latter through `map/if`). These are owned by other
 workers. Once those packages build, run the normal NWK gates, type-check and
 exercise the complete IF mapping driver, then update this record. The IF bridge
 has not yet been validated by the ordinary compiler end to end.

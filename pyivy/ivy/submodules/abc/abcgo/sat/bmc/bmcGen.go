@@ -110,7 +110,8 @@ func Gia_ManMoFindSimulate(p *Gia_Man_t, nWords int32) {
     } else {
         p.vSims = Vec_WrdStart( nWords * Gia_ManObjNum(p) ); }
     // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
+    for i = 0; i < Vec_IntSize(p.vCis); i++ {
+    	iObj = Gia_ObjId(p, Gia_ManCi(p, i))
         Gia_ManMoSetCi( p, iObj );
     }
     // inlining of macro Gia_ManForEachAndId
@@ -118,7 +119,8 @@ func Gia_ManMoFindSimulate(p *Gia_Man_t, nWords int32) {
         Gia_ManMoSimAnd( p, iObj ); }
     }
     // inlining of macro Gia_ManForEachCoId
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((iObj) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	iObj = Gia_ObjId(p, Gia_ManCo(p, i))
         Gia_ManMoSetCo( p, iObj );
     }
 }

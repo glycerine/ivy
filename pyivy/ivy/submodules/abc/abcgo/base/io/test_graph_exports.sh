@@ -18,7 +18,7 @@ a=dst/'base/abc';a.mkdir()
 files='network.go network_aig.go hierarchy.go abc.go network_api.go abcFanio.go abcObj.go abcRefs.go abcAig.go abcBarBuf.go abcBlifMv.go abcCheck.go mv_table.go mv_evaluate.go abcDfs.go dfs_iso.go abcFanOrder.go abcFunc.go abcHie.go abcHieCec.go scl_adapter.go fxu_adapter.go abcSop.go abcNtk.go ntk_core.go'.split()
 for f in files:shutil.copy(src/'base/abc'/f,a/f)
 i=dst/'base/io';i.mkdir()
-for f in ['ioRegistry.go','ioAbc.go','ioWriteDot.go','ioWriteGml.go','ioWriteList.go','ioWriteBook.go','graph_export_test.go']:
+for f in ['ioRegistry.go','ioAbc.go','ioWriteDot.go','ioWriteGml.go','ioWriteList.go','ioWriteBook.go','graph_export_test.go','graph_export_reference_test.go']:
  shutil.copy(src/'base/io'/f,i/f)
 PY
-GOCACHE=${GOCACHE:-/tmp/abcgo-cache} go -C "$graph_check_root" "${GRAPH_CHECK_MODE:-test}" "$@" ./base/io
+GRAPH_SOURCE_ROOT="$graph_source_root/../src" GOCACHE=${GOCACHE:-/tmp/abcgo-cache} go -C "$graph_check_root" "${GRAPH_CHECK_MODE:-test}" "$@" ./base/io

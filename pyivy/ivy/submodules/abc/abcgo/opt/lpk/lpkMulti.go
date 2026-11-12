@@ -68,7 +68,7 @@ func Lpk_CreateVarOrder(pNtk *Kit_DsdNtk_t, pTable [][16]byte) {
 		// inlining of macro Kit_DsdObjForEachFanin
 		for k = 0; k < int32((pObj).nFans); k++ {
 			iFaninLit = int32(pObj.pFans[k])
-			if kit.Kit_DsdLitIsLeaf(pNtk, iFaninLit) {
+			if kit.Kit_DsdLitIsLeaf(pNtk, iFaninLit) != 0 {
 				Above[nAbove] = abc.Abc_Lit2Var(iFaninLit)
 				nAbove++
 			} else {
@@ -222,20 +222,20 @@ func Lpk_FindHighest(ppNtks []*Kit_DsdNtk_t, piLits []int32, nSize int32, pPrio 
 		pTriv[i] = 1
 		if piLits[i] < 0 {
 			uSupps[i] = 0
-		} else if kit.Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) {
+		} else if kit.Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) != 0 {
 			uSupps[i] = kit.Kit_DsdLitSupport(ppNtks[i], piLits[i])
 		} else {
 			pObj = kit.Kit_DsdNtkObj(ppNtks[i], abc.Abc_Lit2Var(piLits[i]))
 			if pObj.Type == KIT_DSD_PRIME {
 				pTriv[i] = 0
-				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], pObj.pFans[0])
+				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(pObj.pFans[0]))
 
 			} else {
 				assert(pObj.nFans == 2, "pObj.nFans == 2")
-				if !kit.Kit_DsdLitIsLeaf(ppNtks[i], pObj.pFans[0]) {
+				if kit.Kit_DsdLitIsLeaf(ppNtks[i], int32(pObj.pFans[0])) == 0 {
 					pTriv[i] = 0
 				}
-				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], pObj.pFans[1])
+				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(pObj.pFans[1]))
 			}
 			uSupps[i] = kit.Kit_DsdLitSupport(ppNtks[i], piLits[i]) & ~uSuppFanin
 		}
@@ -336,9 +336,9 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 			if pObj == nil {
 				piLitsNew[i] = -2
 			} else if pObj.Type == KIT_DSD_PRIME {
-				piLitsNew[i] = pObj.pFans[0]
+				piLitsNew[i] = int32(pObj.pFans[0])
 			} else {
-				piLitsNew[i] = pObj.pFans[1]
+				piLitsNew[i] = int32(pObj.pFans[1])
 			}
 
 		} else {
@@ -515,15 +515,15 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		pRoot = kit.Kit_DsdNtkRoot(ppNtks[i])
 		if pRoot.Type == KIT_DSD_CONST1 {
 			piLits[i] = func() int32 {
-				if abc.Abc_LitIsCompl(ppNtks[i].Root) != 0 {
+				if abc.Abc_LitIsCompl(int32(ppNtks[i].Root)) != 0 {
 					return -2
 				}
 				return -1
 			}()
 		} else if pRoot.Type == KIT_DSD_VAR {
-			piLits[i] = abc.Abc_LitNotCond(pRoot.pFans[0], abc.Abc_LitIsCompl(ppNtks[i].Root))
+			piLits[i] = abc.Abc_LitNotCond(int32(pRoot.pFans[0]), abc.Abc_LitIsCompl(int32(ppNtks[i].Root)))
 		} else {
-			piLits[i] = ppNtks[i].Root
+			piLits[i] = int32(ppNtks[i].Root)
 		}
 	}
 

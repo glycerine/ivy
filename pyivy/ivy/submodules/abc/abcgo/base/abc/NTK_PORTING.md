@@ -32,7 +32,7 @@ The original-C oracle links actual ABC objects and compares nine duplication, co
 abcgo/base/abc/test_ntk.sh -race -vet=all -count=1
 ```
 
-Independent review is in progress. Ordinary `go test ./base/abc` and dependent `go test ./opt/ret` currently stop at unrelated draft syntax (`abcHieGia.go` at the last check). No whole-package success is claimed.
+Independent source and bug review is complete; its findings were fixed with regressions. Ordinary `go test ./base/abc` and dependent `go test ./opt/ret` currently stop at unrelated draft syntax (`abcHieGia.go` at the last check). No whole-package success is claimed.
 
 ## Independent-review corrections
 
@@ -42,6 +42,8 @@ Separate source review identified three initial port mistakes, each reproduced w
 2. Graph-changing transforms use fresh metadata. Bottom, Double, and cone extraction discard old witnesses and graph-specific annotations; no-latch starts and paired-miter transforms retain only the fields copied by their respective C routines.
 3. File-supplied flop permutations are inverted before storage, matching C and the subsequent unpermute operation.
 
-The full focused actual-source suite passes fresh `-race -vet=all -count=1` after these fixes (3.264 seconds). Source-backed coverage currently exercises the nine variants named above; start/read/finalize, fixed-file permutations, output edits, cone-array/append, and GIA adapter behavior do not yet all have C differential coverage. Native semantic regressions cover several of these, but this is not exhaustive parity testing of every public entry point.
+The full focused actual-source suite passes fresh `-race -vet=all -count=1` after these fixes (3.304 seconds). Source-backed coverage currently exercises the nine variants named above; start/read/finalize, fixed-file permutations, output edits, cone-array/append, and GIA adapter behavior do not yet all have C differential coverage. Native semantic regressions cover several of these, but this is not exhaustive parity testing of every public entry point.
 
 An additional dependency contract fix makes ABC SOP node constructors store actual immutable SOP strings rather than generic callbacks. Exhaustive constructor tests cover constants, unary gates, AND/OR/XOR, and MUX; unspecified-function networks retain their generic callback fallback.
+
+Additional native semantic tests now exercise cone-array copying/append and literal-network GIA adaptation, including complemented structural simplification. These strengthen interface coverage without claiming new original-C comparisons.

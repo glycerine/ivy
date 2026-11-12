@@ -1,729 +1,395 @@
 package saig
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
+)
 
-  FileName    [saigRetMin.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Min-area retiming for the AIG.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigRetMin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//#include "opt/nwk/nwk.h"
-//#include "sat/cnf/cnf.h"
-//#include "sat/bsat/satSolver.h"
-//#include "sat/bsat/satStore.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the initial state after backward retiming.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeInitState(p *Aig_Man_t) *Vec_Int_t {
-    var nConfLimit int32  = 1000000;
-    var vCiIds *Vec_Int_t;
-    var vInit *Vec_Int_t = nil;
-    var pCnf *Cnf_Dat_t;
-    var pSat *sat_solver;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var RetValue int32;
-    var pModel *int32;
-    // solve the SAT problem
-    pCnf = Cnf_DeriveSimpleForRetiming( p );
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    if pSat == nil {
-        Cnf_DataFree( pCnf );
-        return nil;
-    }
-    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    assert(RetValue != l_Undef, "RetValue != l_Undef");
-    // create counter-example
-    if RetValue == l_True {
-        // accumulate SAT variables of the CIs
-        vCiIds = Vec_IntAlloc( Aig_ManCiNum(p) );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            Vec_IntPush( vCiIds, pCnf.pVarNums[pObj.Id] );
-        }
-        // create the model
-        pModel = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );
-        vInit = Vec_IntAllocArray( pModel, Aig_ManCiNum(p) );
-        Vec_IntFree( vCiIds );
-    }
-    sat_solver_delete( pSat );
-    Cnf_DataFree( pCnf );
-    return vInit;
+// Saig_ManRetimeInitState finds a satisfying assignment to all outputs of an
+// initial-state network. The returned vector contains the network's CI values.
+func Saig_ManRetimeInitState(graph *aig.Graph) *vec.Vec_Int_t {
+	if graph == nil {
+		return nil
+	}
+	cnf, err := encodeAIG(graph)
+	if err != nil {
+		return nil
+	}
+	assumptions := make([]bsat.Literal, len(graph.Outputs()))
+	for i, output := range graph.Outputs() {
+		assumptions[i] = cnf.lit(aig.Aig_ObjChild0(graph, output)) ^ 1
+	}
+	cnf.solver.SetLimits(1_000_000, 0)
+	if cnf.solver.Solve(assumptions...) != bsat.Satisfiable {
+		return nil
+	}
+	model := cnf.solver.Model()
+	values := vec.Vec_IntAlloc(len(graph.Inputs()))
+	for _, input := range graph.Inputs() {
+		value := int32(0)
+		if model[cnf.vars[input.NodeID()]] {
+			value = 1
+		}
+		vec.Vec_IntPush(values, value)
+	}
+	return values
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Uses UNSAT core to find the part of AIG to be excluded.]
-
-  Description [Returns the number of the PO that appears in the UNSAT core.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeUnsatCore(p *Aig_Man_t, fVerbose int32) int32 {
-    var fVeryVerbose int32;
-    var nConfLimit int32  = 1000000;
-    var pSatCnf any  = nil; 
-    var pManProof *Intp_Man_t;
-    var vCore *Vec_Int_t  = nil;
-    var pCnf *Cnf_Dat_t;
-    var pSat *sat_solver;
-    var pObj *Aig_Obj_t;
-    var pClause1, pClause2, pLit, pVars *int32;
-    var i, RetValue, iBadPo, iClause, nVars, nPos int32;
-    // create the SAT solver
-    pCnf = Cnf_DeriveSimpleForRetiming( p );
-    pSat = sat_solver_new();
-    sat_solver_store_alloc( pSat ); 
-    sat_solver_setnvars( pSat, pCnf.nVars );
-    for  i = 0; i < pCnf.nClauses; i++  {
-        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {
-            Cnf_DataFree( pCnf );
-            sat_solver_delete( pSat );
-            return -1;
-        }
-    }
-    sat_solver_store_mark_roots( pSat ); 
-    // solve the problem
-    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    assert(RetValue != l_Undef, "RetValue != l_Undef");
-    assert(RetValue == l_False, "RetValue == l_False");
-    pSatCnf = sat_solver_store_release( pSat ); 
-    sat_solver_delete( pSat );
-    // derive the UNSAT core
-    pManProof = Intp_ManAlloc();
-    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 0, fVeryVerbose );
-    Intp_ManFree( pManProof );
-    Sto_ManFree( (Sto_Man_t *)pSatCnf );
-    // derive the set of variables on which the core depends
-    // collect the variable numbers
-    nVars = 0;
-    // inlining of macro ABC_ALLOC
-    pVars = ((int *) malloc(sizeof(int) * (size_t)(pCnf.nVars)));
-    memset( pVars, 0, sizeof(int) * pCnf.nVars );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCore)) && (((iClause) = Vec_IntEntry(vCore, i)), 1); i++  {
-        pClause1 = pCnf.pClauses[iClause];
-        pClause2 = pCnf.pClauses[iClause+1];
-        for  pLit = pClause1; pLit < pClause2; pLit++  {
-            if pVars[ (*pLit) >> 1 ] == 0 {
-                nVars++; }
-            pVars[ (*pLit) >> 1 ] = 1;
-            if fVeryVerbose != 0 {
-            fmt.Printf("%s%d ", ((*pLit) & 1)? "-" : "+", (*pLit) >> 1); }
-        }
-        if fVeryVerbose != 0 {
-        fmt.Printf("\n"); }
-    }
-    // collect the nodes
-    if fVeryVerbose != 0 {
-      // inlining of macro Aig_ManForEachObj
-      // inlining of macro Vec_PtrForEachEntry
-      for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-          if pCnf.pVarNums[pObj.Id] >= 0 && pVars[ pCnf.pVarNums[pObj.Id] ] == 1 {
-              Aig_ObjPrint( p, pObj );
-              fmt.Printf("\n");
-          }
-      }
-    }
-    // pick the first PO in the list
-    nPos = 0;
-    iBadPo = -1;
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if pCnf.pVarNums[pObj.Id] >= 0 && pVars[ pCnf.pVarNums[pObj.Id] ] == 1 {
-            if iBadPo == -1 {
-                iBadPo = i; }
-            nPos++;
-        }
-    }
-    if fVerbose != 0 {
-        fmt.Printf("UNSAT core: %d clauses, %d variables, %d POs.  ", Vec_IntSize(vCore), nVars, nPos); }
-    pVars = nil;
-    Vec_IntFree( vCore );
-    Cnf_DataFree( pCnf );
-    return iBadPo;
+// Saig_ManRetimeUnsatCore returns the first output represented in the
+// assumption core. It returns -1 when the outputs are jointly satisfiable.
+func Saig_ManRetimeUnsatCore(graph *aig.Graph, verbose int32) int32 {
+	if graph == nil {
+		return -1
+	}
+	cnf, err := encodeAIG(graph)
+	if err != nil {
+		return -1
+	}
+	outputs := graph.Outputs()
+	assumptions := make([]bsat.Literal, len(outputs))
+	for i, output := range outputs {
+		assumptions[i] = cnf.lit(aig.Aig_ObjChild0(graph, output)) ^ 1
+	}
+	cnf.solver.SetLimits(1_000_000, 0)
+	if cnf.solver.Solve(assumptions...) != bsat.Unsatisfiable {
+		return -1
+	}
+	core := cnf.solver.UnsatCore()
+	for i, assumption := range assumptions {
+		for _, member := range core {
+			if member == assumption^1 {
+				return int32(i)
+			}
+		}
+	}
+	return -1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFI cone with the current traversal ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManMarkCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    if pObj == nil {
-        return; }
-    if Aig_ObjIsTravIdCurrent( p, pObj ) {
-        return; }
-    Aig_ObjSetTravIdCurrent( p, pObj );
-    Saig_ManMarkCone_rec( p, Aig_ObjFanin0(pObj) );
-    Saig_ManMarkCone_rec( p, Aig_ObjFanin1(pObj) );
+func Saig_ManMarkCone_rec(graph *aig.Graph, object aig.Edge) {
+	if graph == nil || !graph.ValidEdge(object) || aig.Aig_ObjIsTravIdCurrent(graph, object) {
+		return
+	}
+	aig.Aig_ObjSetTravIdCurrent(graph, object)
+	node := graph.Node(object)
+	if node.Kind == aig.And || node.Kind == aig.ExclusiveOr || node.Kind == aig.Buffer || node.Kind == aig.Output {
+		for _, fanin := range node.Fanins {
+			if fanin != aig.InvalidEdge {
+				Saig_ManMarkCone_rec(graph, fanin)
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of nodes to get registers after retiming.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeCountCut(p *Aig_Man_t, vCut *Vec_Ptr_t) int32 {
-    var vNodes *Vec_Ptr_t;
-    var pObj, pFanin *Aig_Obj_t;
-    var i, RetValue int32;
-    // mark the cones
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        Saig_ManMarkCone_rec( p, pObj );
-    }
-    // collect the new cut
-    vNodes = Vec_PtrAlloc( 1000 );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsTravIdCurrent(p, pObj) {
-            continue; }
-        pFanin = Aig_ObjFanin0( pObj );
-        if (pFanin != nil) && !pFanin.fMarkA && Aig_ObjIsTravIdCurrent(p, pFanin) {
-            Vec_PtrPush( vNodes, pFanin );
-            pFanin.fMarkA = 1;
-        }
-        pFanin = Aig_ObjFanin1( pObj );
-        if (pFanin != nil) && !pFanin.fMarkA && Aig_ObjIsTravIdCurrent(p, pFanin) {
-            Vec_PtrPush( vNodes, pFanin );
-            pFanin.fMarkA = 1;
-        }
-    }
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        pObj.fMarkA = 0;
-    }
-    RetValue = Vec_PtrSize( vNodes );
-    Vec_PtrFree( vNodes );
-    return RetValue;
+// Saig_ManRetimeCountCut counts distinct edges crossing from the marked cone
+// rooted at cut into its complement.
+func Saig_ManRetimeCountCut(graph *aig.Graph, cut *vec.Vec_Ptr_t) int32 {
+	if graph == nil || cut == nil {
+		return 0
+	}
+	aig.Aig_ManIncrementTravId(graph)
+	for _, item := range vec.Vec_PtrArray(cut) {
+		Saig_ManMarkCone_rec(graph, item.(aig.Edge))
+	}
+	seen := make(map[aig.Edge]bool)
+	for id, node := range graph.Nodes() {
+		object := aig.Edge(id) << 1
+		if !graph.ValidEdge(object) || aig.Aig_ObjIsTravIdCurrent(graph, object) {
+			continue
+		}
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer && node.Kind != aig.Output {
+			continue
+		}
+		for _, fanin := range node.Fanins {
+			if fanin != aig.InvalidEdge && aig.Aig_ObjIsTravIdCurrent(graph, fanin) {
+				seen[aig.Aig_Regular(fanin)] = true
+			}
+		}
+	}
+	return int32(len(seen))
 }
 
-/**Function*************************************************************
+// Saig_ManRetimeDup_rec remains as a source-name helper. Native duplication is
+// performed by the retiming routines using an explicit per-call edge map.
+func Saig_ManRetimeDup_rec(_ *aig.Graph, _ aig.Edge) {}
 
-  Synopsis    [Duplicates the AIG recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeDup_rec(pNew *Aig_Man_t, pObj *Aig_Obj_t) {
-    if pObj.pData {
-        return; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin0(pObj) );
-    Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin1(pObj) );
-    pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
+// Saig_ManRetimeDupBackward moves registers from latch-input functions to the
+// specified cut. Cut entries are regular AIG edges.
+func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.Vec_Int_t) *aig.Graph {
+	if src == nil || cut == nil {
+		return nil
+	}
+	inputs, outputs, nodes := src.Inputs(), src.Outputs(), src.Nodes()
+	regs, piCount := int(aig.Aig_ManRegNum(src)), int(Saig_ManPiNum(src))
+	poCount := len(outputs) - regs
+	dst := aig.NewGraph()
+	dst.Name, dst.Spec = src.Name, src.Spec
+	mapped := make([]aig.Edge, len(nodes))
+	known := make([]bool, len(nodes))
+	mapped[0], known[0] = dst.Const1(), true
+	for i := 0; i < piCount; i++ {
+		e := inputs[i]
+		mapped[e.NodeID()], known[e.NodeID()] = dst.NewInput(), true
+	}
+	cutEdges := make([]aig.Edge, vec.Vec_PtrSize(cut))
+	for i := range cutEdges {
+		e, ok := vec.Vec_PtrEntry(cut, i).(aig.Edge)
+		if !ok {
+			return nil
+		}
+		e = aig.Aig_Regular(e)
+		cutEdges[i] = e
+		register := dst.NewInput()
+		if initial != nil && i < vec.Vec_IntSize(initial) && vec.Vec_IntEntry(initial, i) != 0 {
+			register = register.Not()
+		}
+		mapped[e.NodeID()], known[e.NodeID()] = register, true
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		if id < 0 || id >= len(nodes) || !src.ValidEdge(edge) {
+			panic("saig: invalid edge in backward retiming")
+		}
+		if !known[id] {
+			node := nodes[id]
+			switch node.Kind {
+			case aig.And:
+				mapped[id] = dst.AND(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				mapped[id] = dst.NewXor(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				mapped[id] = copyEdge(node.Fanins[0])
+			case aig.Input:
+				panic("saig: cut omits a required input")
+			default:
+				panic("saig: unsupported node in backward retiming")
+			}
+			known[id] = true
+		}
+		result := mapped[id]
+		if edge.Complemented() {
+			result = result.Not()
+		}
+		return result
+	}
+	// Capture old latch next-state functions before cutting them out of the map.
+	next := make([]aig.Edge, regs)
+	for i := range next {
+		next[i] = copyEdge(aig.Aig_ObjChild0(src, outputs[poCount+i]))
+	}
+	for i := range cutEdges {
+		known[cutEdges[i].NodeID()] = false
+	}
+	for i := 0; i < piCount; i++ {
+		e := inputs[i]
+		mapped[e.NodeID()], known[e.NodeID()] = dst.Inputs()[i], true
+	}
+	for i, edge := range outputs[:poCount] {
+		_ = i
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, edge)))
+	}
+	for i := range next {
+		mapped[inputs[piCount+i].NodeID()], known[inputs[piCount+i].NodeID()] = next[i], true
+	}
+	for i, edge := range cutEdges {
+		phase := false
+		if initial != nil && i < vec.Vec_IntSize(initial) {
+			phase = vec.Vec_IntEntry(initial, i) != 0
+		}
+		dst.AddOutput(edgeNotIf(copyEdge(edge), phase))
+	}
+	aig.Aig_ManSetRegNum(dst, int32(len(cutEdges)))
+	return dst
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG while retiming the registers to the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeDupForward(p *Aig_Man_t, vCut *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-    // mark the cones under the cut
-//    assert( Vec_PtrSize(vCut) == Saig_ManRetimeCountCut(p, vCut) );
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nRegs = Vec_PtrSize(vCut);
-    pNew.nTruePis = p.nTruePis;
-    pNew.nTruePos = p.nTruePos;
-    // create the true PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // create the registers
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        pObj.pData = Aig_NotCond( Aig_ObjCreateCi(pNew), pObj.fPhase );
-    }
-    // duplicate logic above the cut
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin0(pObj) );
-    }
-    // create the true POs
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // remember value in LI
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        pObj.pData = Aig_ObjChild0Copy(pObj);
-    }
-    // transfer values from the LIs to the LOs
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        pObjLo.pData = pObjLi.pData;
-    }
-    // erase the data values on the internal nodes of the cut
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        if Aig_ObjIsNode(pObj) {
-            pObj.pData = nil; }
-    }
-    // duplicate logic below the cut
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, pObj );
-        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)pObj.pData, pObj.fPhase) );
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
+// Saig_ManRetimeDupInitState emits each old latch-input function as an output.
+func Saig_ManRetimeDupInitState(src *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
+	if src == nil || cut == nil {
+		return nil
+	}
+	inputs, outputs, nodes := src.Inputs(), src.Outputs(), src.Nodes()
+	regs := int(aig.Aig_ManRegNum(src))
+	poCount := len(outputs) - regs
+	dst := aig.NewGraph()
+	mapped := make([]aig.Edge, len(nodes))
+	known := make([]bool, len(nodes))
+	mapped[0], known[0] = dst.Const1(), true
+	for _, item := range vec.Vec_PtrArray(cut) {
+		edge := item.(aig.Edge)
+		mapped[edge.NodeID()], known[edge.NodeID()] = dst.NewInput(), true
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		if !known[id] {
+			n := nodes[id]
+			switch n.Kind {
+			case aig.And:
+				mapped[id] = dst.AND(copyEdge(n.Fanins[0]), copyEdge(n.Fanins[1]))
+			case aig.ExclusiveOr:
+				mapped[id] = dst.NewXor(copyEdge(n.Fanins[0]), copyEdge(n.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				mapped[id] = copyEdge(n.Fanins[0])
+			default:
+				panic("saig: init-state cut omits input")
+			}
+			known[id] = true
+		}
+		result := mapped[id]
+		if edge.Complemented() {
+			result = result.Not()
+		}
+		return result
+	}
+	for i := 0; i < regs; i++ {
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, outputs[poCount+i])))
+	}
+	_ = inputs
+	return dst
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG while retiming the registers to the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeDupBackward(p *Aig_Man_t, vCut *Vec_Ptr_t, vInit *Vec_Int_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-    // mark the cones under the cut
-//    assert( Vec_PtrSize(vCut) == Saig_ManRetimeCountCut(p, vCut) );
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nRegs = Vec_PtrSize(vCut);
-    pNew.nTruePis = p.nTruePis;
-    pNew.nTruePos = p.nTruePos;
-    // create the true PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // create the registers
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        pObj.pData = Aig_NotCond( Aig_ObjCreateCi(pNew), vInit?Vec_IntEntry(vInit,i):0 );
-    }
-    // duplicate logic above the cut and remember values
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin0(pObj) );
-        pObj.pData = Aig_ObjChild0Copy(pObj);
-    }
-    // transfer values from the LIs to the LOs
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        pObjLo.pData = pObjLi.pData;
-    }
-    // erase the data values on the internal nodes of the cut
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        if Aig_ObjIsNode(pObj) {
-            pObj.pData = nil; }
-    }
-    // replicate the data on the constant node and the PIs
-    pObj = Aig_ManConst1(p);
-    pObj.pData = Aig_ManConst1(pNew);
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ManCi( pNew, i );
-    }
-    // duplicate logic below the cut
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin0(pObj) );
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, pObj );
-        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)pObj.pData, vInit?Vec_IntEntry(vInit,i):0) );
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
+func Saig_ManGetRegistersToExclude(graph *aig.Graph) *vec.Vec_Ptr_t {
+	bad := vec.Vec_PtrAlloc(4)
+	if graph == nil {
+		return bad
+	}
+	positive, negative := make(map[int]bool), make(map[int]bool)
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		driver := aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))
+		if driver.Complemented() {
+			negative[driver.NodeID()] = true
+		} else {
+			positive[driver.NodeID()] = true
+		}
+	}
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		driver := aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))
+		if positive[driver.NodeID()] && negative[driver.NodeID()] {
+			vec.Vec_PtrPush(bad, Saig_ManLi(graph, reg))
+		}
+	}
+	return bad
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives AIG for the initial state computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeDupInitState(p *Aig_Man_t, vCut *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // mark the cones under the cut
-//    assert( Vec_PtrSize(vCut) == Saig_ManRetimeCountCut(p, vCut) );
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    // create the true PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // create the registers
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCut)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCut, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-    // duplicate logic above the cut and create POs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        Saig_ManRetimeDup_rec( pNew, Aig_ObjFanin0(pObj) );
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    return pNew;
+// Saig_ManHideBadRegs moves selected latch interfaces into the PI/PO region.
+func Saig_ManHideBadRegs(graph *aig.Graph, bad *vec.Vec_Ptr_t) int32 {
+	if graph == nil || bad == nil || vec.Vec_PtrSize(bad) == 0 {
+		return 0
+	}
+	inputs, outputs := graph.Inputs(), graph.Outputs()
+	regs := int(aig.Aig_ManRegNum(graph))
+	piCount, poCount := len(inputs)-regs, len(outputs)-regs
+	selected := make(map[int]bool)
+	for _, item := range vec.Vec_PtrArray(bad) {
+		edge, ok := item.(aig.Edge)
+		if !ok {
+			continue
+		}
+		reg := int(Saig_ObjRegId(graph, edge))
+		if reg >= 0 && reg < regs {
+			selected[reg] = true
+		}
+	}
+	newInputs := append([]aig.Edge(nil), inputs[:piCount]...)
+	newOutputs := append([]aig.Edge(nil), outputs[:poCount]...)
+	for reg := 0; reg < regs; reg++ {
+		if selected[reg] {
+			newInputs = append(newInputs, inputs[piCount+reg])
+			newOutputs = append(newOutputs, outputs[poCount+reg])
+		}
+	}
+	for reg := 0; reg < regs; reg++ {
+		if !selected[reg] {
+			newInputs = append(newInputs, inputs[piCount+reg])
+			newOutputs = append(newOutputs, outputs[poCount+reg])
+		}
+	}
+	count := int32(len(selected))
+	if count == 0 {
+		return 0
+	}
+	if err := aig.Aig_ManReorderCisCos(graph, newInputs, newOutputs, int32(regs)-count); err != nil {
+		panic(err)
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of bad registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManGetRegistersToExclude(p *Aig_Man_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj, pFanin *Aig_Obj_t;
-    var i, Diffs int32;
-    assert(Saig_ManRegNum(p) > 0, "Saig_ManRegNum(p) > 0");
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        if !Aig_ObjFaninC0(pObj) {
-            pFanin.fMarkA = 1;
-        } else {
-            pFanin.fMarkB = 1; }
-    }
-    Diffs = 0;
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        Diffs += pFanin.fMarkA && pFanin.fMarkB;
-    }
-    vNodes = Vec_PtrAlloc( 100 );
-    if Diffs > 0 {
-        // inlining of macro Saig_ManForEachLi
-        for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-            pFanin = Aig_ObjFanin0(pObj);
-            if pFanin.fMarkA && pFanin.fMarkB {
-                Vec_PtrPush( vNodes, pObj ); }
-        }
-        assert(Vec_PtrSize(vNodes) == Diffs, "Vec_PtrSize(vNodes) == Diffs");
-    }
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        pFanin.fMarkA = pFanin.fMarkB = 0;
-    }
-    return vNodes;
+func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
+	if graph == nil || count < 0 || count > Saig_ManPiNum(graph) || count > Saig_ManPoNum(graph) {
+		panic("saig: invalid exposed register count")
+	}
+	aig.Aig_ManSetRegNum(graph, aig.Aig_ManRegNum(graph)+count)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Hides the registers that cannot be backward retimed.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManHideBadRegs(p *Aig_Man_t, vBadRegs *Vec_Ptr_t) int32 {
-    var vPisNew, vPosNew *Vec_Ptr_t;
-    var pObjLi, pObjLo *Aig_Obj_t;
-    var nTruePi, nTruePo, nBadRegs, i int32;
-    if Vec_PtrSize(vBadRegs) == 0 {
-        return 0; }
-    // attached LOs to LIs
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        pObjLi.pData = pObjLo;
-    }
-    // reorder them by putting bad registers first
-    vPisNew = Vec_PtrDup( p.vCis );
-    vPosNew = Vec_PtrDup( p.vCos );
-    nTruePi = Aig_ManCiNum(p) - Aig_ManRegNum(p);
-    nTruePo = Aig_ManCoNum(p) - Aig_ManRegNum(p);
-    assert(nTruePi == p.nTruePis, "nTruePi == p.nTruePis");
-    assert(nTruePo == p.nTruePos, "nTruePo == p.nTruePos");
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vBadRegs)) && (((pObjLi) = (Aig_Obj_t *)Vec_PtrEntry(vBadRegs, i)), 1); i++  {
-        Vec_PtrWriteEntry( vPisNew, nTruePi++, pObjLi.pData );
-        Vec_PtrWriteEntry( vPosNew, nTruePo++, pObjLi );
-        pObjLi.fMarkA = 1;
-    }
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        if pObjLi.fMarkA {
-            pObjLi.fMarkA = 0;
-            continue;
-        }
-        Vec_PtrWriteEntry( vPisNew, nTruePi++, pObjLo );
-        Vec_PtrWriteEntry( vPosNew, nTruePo++, pObjLi );
-    }
-    // check the sizes
-    assert(nTruePi == Aig_ManCiNum(p), "nTruePi == Aig_ManCiNum(p)");
-    assert(nTruePo == Aig_ManCoNum(p), "nTruePo == Aig_ManCoNum(p)");
-    // transfer the arrays
-    Vec_PtrFree( p.vCis ); p.vCis = vPisNew;
-    Vec_PtrFree( p.vCos ); p.vCos = vPosNew;
-    // update the PIs
-    nBadRegs = Vec_PtrSize(vBadRegs);
-    p.nRegs -= nBadRegs;
-    p.nTruePis += nBadRegs;
-    p.nTruePos += nBadRegs;
-    return nBadRegs;
+// Saig_ManRetimeMinAreaBackward currently uses a native frontier heuristic:
+// move latches across their immediate fanin gates when that strictly reduces
+// the interface. The former Nwk_ManDeriveRetimingCut dependency is not ported.
+func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
+	if graph == nil || aig.Aig_ManRegNum(graph) == 0 {
+		return nil
+	}
+	cut := vec.Vec_PtrAlloc(8)
+	seen := make(map[int]bool)
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		driver := aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))
+		if aig.Aig_ObjIsNode(graph, driver) && !seen[driver.NodeID()] {
+			seen[driver.NodeID()] = true
+			vec.Vec_PtrPush(cut, aig.Aig_Regular(driver))
+		}
+	}
+	if vec.Vec_PtrSize(cut) >= int(Saig_ManRegNum(graph)) {
+		return nil
+	}
+	initialGraph := Saig_ManRetimeDupInitState(graph, cut)
+	initial := Saig_ManRetimeInitState(initialGraph)
+	if initial == nil {
+		return nil
+	}
+	result := Saig_ManRetimeDupBackward(graph, cut, initial)
+	if result != nil && verbose != 0 {
+		fmt.Printf("Backward retiming moved %d registers across a native frontier.\n", vec.Vec_PtrSize(cut))
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Exposes bad registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManExposeBadRegs(p *Aig_Man_t, nBadRegs int32) {
-    p.nRegs += nBadRegs;
-    p.nTruePis -= nBadRegs;
-    p.nTruePos -= nBadRegs;
+// Saig_ManRetimeMinArea applies forward retiming repeatedly, then backward
+// retiming unless constrained by the caller's mode flags.
+func Saig_ManRetimeMinArea(graph *aig.Graph, maxIterations, forwardOnly, backwardOnly, initialState, verbose int32) *aig.Graph {
+	if graph == nil {
+		return nil
+	}
+	current := aig.Aig_ManDupSimple(graph)
+	if backwardOnly == 0 {
+		for i := int32(0); i < maxIterations && Saig_ManRegNum(current) > 0; i++ {
+			fixed, moved := int32(0), int32(0)
+			next := Saig_ManRetimeForwardOne(current, &fixed, &moved)
+			if next == nil || aig.Aig_ManRegNum(next) >= aig.Aig_ManRegNum(current) {
+				break
+			}
+			current = next
+			if verbose != 0 {
+				aig.Aig_ManReportImprovement(graph, current)
+			}
+		}
+	}
+	if forwardOnly == 0 && backwardOnly == 0 && initialState != 0 {
+		for i := int32(0); i < maxIterations; i++ {
+			next := Saig_ManRetimeMinAreaBackward(current, verbose)
+			if next == nil || aig.Aig_ManRegNum(next) >= aig.Aig_ManRegNum(current) {
+				break
+			}
+			current = next
+		}
+	}
+	return current
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs min-area retiming backward with initial state.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeMinAreaBackward(pNew *Aig_Man_t, fVerbose int32) *Aig_Man_t {
-    var pInit, pFinal *Aig_Man_t;
-    var vBadRegs, vCut *Vec_Ptr_t;
-    var vInit *Vec_Int_t;
-    var iBadReg int32;
-    // transform the AIG to have no bad registers
-    vBadRegs = Saig_ManGetRegistersToExclude( pNew );
-    if (fVerbose != 0) && Vec_PtrSize(vBadRegs) {
-        fmt.Printf("Excluding %d registers that cannot be backward retimed.\n", Vec_PtrSize(vBadRegs)); } 
-    for {
-        Saig_ManHideBadRegs( pNew, vBadRegs );
-        Vec_PtrFree( vBadRegs );
-        // compute cut
-        vCut = Nwk_ManDeriveRetimingCut( pNew, 0, fVerbose );
-        if Vec_PtrSize(vCut) >= Aig_ManRegNum(pNew) {
-            Vec_PtrFree( vCut );
-            return nil;
-        }
-        // derive the initial state
-        pInit = Saig_ManRetimeDupInitState( pNew, vCut );
-        vInit = Saig_ManRetimeInitState( pInit );
-        if vInit != nil {
-            pFinal = Saig_ManRetimeDupBackward( pNew, vCut, vInit );
-            Vec_IntFree( vInit );
-            Vec_PtrFree( vCut );
-            Aig_ManStop( pInit );
-            return pFinal;
-        }
-        Vec_PtrFree( vCut );
-        // there is no initial state - find the offending output
-        iBadReg = Saig_ManRetimeUnsatCore( pInit, fVerbose );
-        Aig_ManStop( pInit );
-        if fVerbose != 0 {
-            fmt.Printf("Excluding register %d.\n", iBadReg); } 
-        // prepare to remove this output
-        vBadRegs = Vec_PtrAlloc( 1 );
-        Vec_PtrPush( vBadRegs, Aig_ManCo( pNew, Saig_ManPoNum(pNew) + iBadReg ) );
-    }
-    return nil;
+func edgeNotIf(edge aig.Edge, yes bool) aig.Edge {
+	if yes {
+		return edge.Not()
+	}
+	return edge
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs min-area retiming.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeMinArea(p *Aig_Man_t, nMaxIters int32, fForwardOnly int32, fBackwardOnly int32, fInitial int32, fVerbose int32) *Aig_Man_t {
-    var vCut *Vec_Ptr_t;
-    var pNew, pTemp, pCopy *Aig_Man_t;
-    var i, fChanges int32;
-    pNew = Aig_ManDupSimple( p );
-    // perform several iterations of forward retiming
-    fChanges = 0;
-    if !(fBackwardOnly != 0) {
-    for  i = 0; i < nMaxIters; i++  {
-        if Saig_ManRegNum(pNew) == 0 {
-            break; }
-        vCut = Nwk_ManDeriveRetimingCut( pNew, 1, fVerbose );
-        if Vec_PtrSize(vCut) >= Aig_ManRegNum(pNew) {
-            if (fVerbose != 0) && !(fChanges != 0) {
-                fmt.Printf("Forward retiming cannot reduce registers.\n"); }
-            Vec_PtrFree( vCut );
-            break;
-        }
-        pNew = Saig_ManRetimeDupForward( pTemp = pNew, vCut );
-        Aig_ManStop( pTemp );
-        Vec_PtrFree( vCut );
-        if fVerbose != 0 {
-            Aig_ManReportImprovement( p, pNew ); }
-        fChanges = 1;
-    } }
-    // perform several iterations of backward retiming
-    fChanges = 0;
-    if !(fForwardOnly != 0) && !(fInitial != 0) {
-    for  i = 0; i < nMaxIters; i++  {
-        if Saig_ManRegNum(pNew) == 0 {
-            break; }
-        vCut = Nwk_ManDeriveRetimingCut( pNew, 0, fVerbose );
-        if Vec_PtrSize(vCut) >= Aig_ManRegNum(pNew) {
-            if (fVerbose != 0) && !(fChanges != 0) {
-                fmt.Printf("Backward retiming cannot reduce registers.\n"); }
-            Vec_PtrFree( vCut );
-            break;
-        }
-        pNew = Saig_ManRetimeDupBackward( pTemp = pNew, vCut, nil );
-        Aig_ManStop( pTemp );
-        Vec_PtrFree( vCut );
-        if fVerbose != 0 {
-            Aig_ManReportImprovement( p, pNew ); }
-        fChanges = 1;
-    }
-    } else if !(fForwardOnly != 0) && (fInitial != 0) {
-    for  i = 0; i < nMaxIters; i++  {
-        if Saig_ManRegNum(pNew) == 0 {
-            break; }
-        pCopy = Aig_ManDupSimple( pNew );
-        pTemp = Saig_ManRetimeMinAreaBackward( pCopy, fVerbose );
-        Aig_ManStop( pCopy );
-        if pTemp == nil {
-            if (fVerbose != 0) && !(fChanges != 0) {
-                fmt.Printf("Backward retiming cannot reduce registers.\n"); }
-            break;
-        }
-        Saig_ManExposeBadRegs( pTemp, Saig_ManPoNum(pTemp) - Saig_ManPoNum(pNew) );
-        Aig_ManStop( pNew );
-        pNew = pTemp;
-        if fVerbose != 0 {
-            Aig_ManReportImprovement( p, pNew ); }
-        fChanges = 1;
-    } }
-    if !(fForwardOnly != 0) && !(fInitial != 0) && (fChanges != 0) {
-        fmt.Printf("Assuming const-0 init-state after backward retiming. Result will not verify.\n"); }
-    return pNew;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -64,29 +64,44 @@ func Bmc_CexTargetEnlarge(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
     Gia_ManConst0(p).Value = 0;
     for  k = 0; k < nFrames; k++  {
         // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        for i = 0; i < Gia_ManPiNum(p); i++ {
+        	pObj = Gia_ManCi(p, i)
+        	if pObj == nil { break }
             Gia_ManAppendCi( pNew );
         }
     }
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ManAppendCi( pNew );
     }
     for  k = 0; k < nFrames; k++  {
         // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        for i = 0; i < Gia_ManPiNum(p); i++ {
+        	pObj = Gia_ManCi(p, i)
+        	if pObj == nil { break }
             pObj.Value = Gia_ManCiLit( pNew, (nFrames - 1 - k) * Gia_ManPiNum(p) + i );
         }
         // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for i = 0; i < p.nObjs; i++ {
+        	pObj = Gia_ManObj(p, i)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
         }
         // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObj == nil { break }
             pObj.Value = Gia_ObjFanin0Copy(pObj);
         }
         // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObj == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObjRo == nil { break }
             pObjRo.Value  = pObj.Value;
         }
     }
@@ -159,7 +174,9 @@ func Bmc_CexBuildNetwork2(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man_
     Gia_ManConst0(p).Value  = ~0;
     // set init state
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         pObj.fMark0 = Abc_InfoHasBit( pCex.pData, pCex.nRegs + fStart * Gia_ManCiNum(p) + Gia_ManPiNum(p) + k );
         pObj.fMark1 = 0;
         pObj.Value  = Abc_LitNotCond( Gia_ManAppendCi(pNew), !pObj.fMark0 );
@@ -169,7 +186,9 @@ func Bmc_CexBuildNetwork2(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man_
     for  i = fStart; i <= pCex.iFrame; i++  {
         //  primary inputs
         // inlining of macro Gia_ManForEachPi
-        for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
+        for k = 0; k < Gia_ManPiNum(p); k++ {
+        	pObj = Gia_ManCi(p, k)
+        	if pObj == nil { break }
             pObj.fMark0 = Abc_InfoHasBit( pCex.pData, iBit++ );
             pObj.fMark1 = 1;
             pObj.Value  = ~0;
@@ -177,14 +196,21 @@ func Bmc_CexBuildNetwork2(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man_
         iBit += Gia_ManRegNum(p);
         // transfer 
         // inlining of macro Gia_ManForEachRiRo
-        for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
+        for k = 0; k < Gia_ManRegNum(p); k++ {
+        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+        	if pObjRi == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+k)
+        	if pObjRo == nil { break }
             pObjRo.fMark0 = pObjRi.fMark0;
             pObjRo.fMark1 = pObjRi.fMark1;
             pObjRo.Value  = pObjRi.Value;
         }
         // internal nodes
         // inlining of macro Gia_ManForEachAnd
-        for  k = 0; (k < p.nObjs) && ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for k = 0; k < p.nObjs; k++ {
+        	pObj = Gia_ManObj(p, k)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             fCompl0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
             fCompl1 = Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj);
             pObj.fMark0 = fCompl0 & fCompl1;
@@ -214,7 +240,9 @@ func Bmc_CexBuildNetwork2(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man_
         }
         // combinational outputs
         // inlining of macro Gia_ManForEachCo
-        for  k = 0; (k < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, k)); k++  {
+        for k = 0; k < Vec_IntSize(p.vCos); k++ {
+        	pObj = Gia_ManCo(p, k)
+        	if pObj == nil { break }
             pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
             pObj.fMark1 = Gia_ObjFanin0(pObj).fMark1;
             pObj.Value  = Gia_ObjFanin0(pObj).Value;
@@ -249,7 +277,9 @@ func Bmc_CexBuildNetwork2_(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man
     Gia_ManConst0(p).Value  = 1;
     // set init state
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         pObj.fMark0 = Abc_InfoHasBit( pCex.pData, pCex.nRegs + fStart * Gia_ManCiNum(p) + Gia_ManPiNum(p) + k );
         pObj.Value  = Abc_LitNotCond( Gia_ManAppendCi(pNew), !pObj.fMark0 );
     }
@@ -258,20 +288,29 @@ func Bmc_CexBuildNetwork2_(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man
     for  i = fStart; i <= pCex.iFrame; i++  {
         //  primary inputs
         // inlining of macro Gia_ManForEachPi
-        for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
+        for k = 0; k < Gia_ManPiNum(p); k++ {
+        	pObj = Gia_ManCi(p, k)
+        	if pObj == nil { break }
             pObj.fMark0 = Abc_InfoHasBit( pCex.pData, iBit++ );
             pObj.Value  = 1;
         }
         iBit += Gia_ManRegNum(p);
         // transfer 
         // inlining of macro Gia_ManForEachRiRo
-        for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
+        for k = 0; k < Gia_ManRegNum(p); k++ {
+        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+        	if pObjRi == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+k)
+        	if pObjRo == nil { break }
             pObjRo.fMark0 = pObjRi.fMark0;
             pObjRo.Value  = pObjRi.Value;
         }
         // internal nodes
         // inlining of macro Gia_ManForEachAnd
-        for  k = 0; (k < p.nObjs) && ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for k = 0; k < p.nObjs; k++ {
+        	pObj = Gia_ManObj(p, k)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             fCompl0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
             fCompl1 = Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj);
             pObj.fMark0 = fCompl0 & fCompl1;
@@ -288,7 +327,9 @@ func Bmc_CexBuildNetwork2_(p *Gia_Man_t, pCex *Abc_Cex_t, fStart int32) *Gia_Man
         }
         // combinational outputs
         // inlining of macro Gia_ManForEachCo
-        for  k = 0; (k < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, k)); k++  {
+        for k = 0; k < Vec_IntSize(p.vCos); k++ {
+        	pObj = Gia_ManCo(p, k)
+        	if pObj == nil { break }
             pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
             pObj.Value  = Gia_ObjFanin0(pObj).Value;
         }

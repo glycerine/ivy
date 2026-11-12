@@ -53,7 +53,8 @@ func Bmc_ComputeSimDiff(p *Gia_Man_t, vPat *Vec_Int_t, vPat2 *Vec_Int_t) int32 {
     var pObj *Gia_Obj_t;
     var i, Id int32; var Sim, Sim0, Sim1 word;
     // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
+    for i = 0; i < Vec_IntSize(p.vCis); i++ {
+    	Id = Gia_ObjId(p, Gia_ManCi(p, i))
         if Vec_IntEntry(vPat, i) {
             Sim = ~(word)0;
         } else {
@@ -63,7 +64,10 @@ func Bmc_ComputeSimDiff(p *Gia_Man_t, vPat *Vec_Int_t, vPat2 *Vec_Int_t) int32 {
         Vec_WrdWriteEntry( p.vSims, Id, Sim );
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         Sim0 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId0(pObj, i) );
         Sim1 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId1(pObj, i) );
         if Gia_ObjFaninC0(pObj) {
@@ -80,7 +84,9 @@ func Bmc_ComputeSimDiff(p *Gia_Man_t, vPat *Vec_Int_t, vPat2 *Vec_Int_t) int32 {
     }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         Id = Gia_ObjId( p, pObj );
         Sim0 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId0(pObj, Id) );
         if Gia_ObjFaninC0(pObj) {

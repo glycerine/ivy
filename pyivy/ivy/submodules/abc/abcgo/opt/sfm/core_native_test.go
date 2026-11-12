@@ -118,3 +118,39 @@ func TestCNFMatchesEveryTruthAssignment(t *testing.T) {
 		}
 	}
 }
+
+func polarityCells() []*Gate {
+	return []*Gate{{Name: "zero", Truth: []uint64{0}}, {Name: "one", Truth: []uint64{^uint64(0)}}, {Name: "buf", Inputs: 1, Truth: []uint64{0xaaaaaaaaaaaaaaaa}, Area: 1}, {Name: "inv", Inputs: 1, Truth: []uint64{0x5555555555555555}, Area: 1}, {Name: "and", Inputs: 2, Truth: []uint64{0x8888888888888888}, Area: 3}, {Name: "nand", Inputs: 2, Truth: []uint64{0x7777777777777777}, Area: 1}, {Name: "or", Inputs: 2, Truth: []uint64{0xeeeeeeeeeeeeeeee}, Area: 3}, {Name: "nor", Inputs: 2, Truth: []uint64{0x1111111111111111}, Area: 1}}
+}
+func TestAreaPolarityChangePreservesFunction(t *testing.T) {
+	cells := polarityCells()
+	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
+	p.Mapping[2] = cells[4]
+	want := coreTable(t, p)
+	gain := Abc_NtkChangePerform(p, cells, false)
+	if gain != 1 || len(p.Fanins) != 5 {
+		t.Fatal("polarity substitution gain", gain, p.Fanins)
+	}
+	if !reflect.DeepEqual(want, coreTable(t, p)) {
+		t.Fatal("output polarity changed")
+	}
+}
+func TestAreaPairTransformAndPinPermutations(t *testing.T) {
+	cells := polarityCells()
+	pairs := Abc_NtkPrecomputeCellPairs(cells)
+	for i, records := range pairs {
+		for pin, record := range records {
+			if record.Gate < 0 {
+				continue
+			}
+			want := ^cells[i].Truth[0]
+			if pin < cells[i].Inputs {
+				want = flipTruth(cells[i].Truth[0], pin)
+			}
+			got := permuteTruth(cells[record.Gate].Truth[0], record.Permutation)
+			if got != want {
+				t.Fatal("invalid polarity equivalence")
+			}
+		}
+	}
+}

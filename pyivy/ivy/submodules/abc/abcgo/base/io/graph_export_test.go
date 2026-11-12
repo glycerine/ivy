@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"os"
 	"path/filepath"
 	"strings"
@@ -145,5 +146,96 @@ func TestBookshelfZeroAreaAndCellNetRepeatedPins(t *testing.T) {
 	}
 	if strings.Count(line, fmt.Sprintf("  %d ", gate.ID)) != 2 {
 		t.Fatalf("pin multiplicity %q", line)
+	}
+}
+
+func TestSequentialDOTAndBookshelfLatch(t *testing.T) {
+	n := abc.NewNetwork("sequential")
+	a := n.NewObject(abc.ObjectPI)
+	a.SetName("a")
+	bi := n.NewObject(abc.ObjectBI)
+	n.AddFanin(bi, a.Signal().Not())
+	latch := n.NewObject(abc.ObjectLatch)
+	latch.SetName("q")
+	n.AddFanin(latch, bi.Signal())
+	bo := n.NewObject(abc.ObjectBO)
+	n.AddFanin(bo, latch.Signal())
+	po := n.NewObject(abc.ObjectPO)
+	po.SetName("z")
+	n.AddFanin(po, bo.Signal())
+	var b bytes.Buffer
+	if e := WriteDOT(&b, n, nil, nil, false, false, true); e != nil {
+		t.Fatal(e)
+	}
+	for _, arc := range []string{fmt.Sprintf("Node%d -> Node%d [style = dotted]", latch.ID, a.ID), fmt.Sprintf("Node%d -> Node%d [style = solid]", po.ID, latch.ID)} {
+		if !strings.Contains(b.String(), arc) {
+			t.Fatalf("missing collapsed sequential edge %s: %s", arc, b.String())
+		}
+	}
+	model, e := makeBook(n)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if model.area != 6 || len(model.cells) != 3 {
+		t.Fatal("latch cell area/count")
+	}
+	for _, net := range model.nets {
+		for _, pin := range net.pins {
+			if pin.cell == nil {
+				t.Fatal("terminal collapse lost cell")
+			}
+		}
+	}
+}
+func TestGraphExportsRegisterAndFailures(t *testing.T) {
+	n := exportFixture()
+	root := t.TempDir()
+	for _, writer := range []func(*abc.Network, string) error{Io_WriteDot, Io_WriteGml, Io_WriteBookLogic} {
+		if e := writer(n, filepath.Join(root, "missing", "bad")); e == nil {
+			t.Fatal("file error swallowed")
+		}
+	}
+	var b bytes.Buffer
+	if WriteGML(&b, nil) == nil || WriteList(&b, nil, false) == nil || WriteDOT(&b, nil, nil, nil, false, false, false) == nil {
+		t.Fatal("nil network accepted")
+	}
+	long := n.NewObject(abc.ObjectPI)
+	long.SetName("quote\" & name\nline")
+	b.Reset()
+	if e := WriteGML(&b, n); e != nil {
+		t.Fatal(e)
+	}
+	if !strings.Contains(b.String(), "&quot;") || !strings.Contains(b.String(), "&amp;") || !strings.Contains(b.String(), "&#10;") {
+		t.Fatal("GML label escaping")
+	}
+	if _, e := makeBook(n); e == nil {
+		t.Fatal("Bookshelf whitespace names accepted")
+	}
+}
+
+func TestGraphBDDLabelsAndBookConversion(t *testing.T) {
+	n := exportFixture()
+	n.Type = uint8(abc.ABC_NTK_LOGIC)
+	n.Function = uint8(abc.ABC_FUNC_BDD)
+	dd := core.Cudd_Init(2, 0, 256, 256, 0)
+	n.FunctionManager = dd
+	node := n.ObjectsOfKind(abc.ObjectNode)[0]
+	f := core.Cudd_bddAnd(dd, core.Cudd_bddIthVar(dd, 0), core.Cudd_Not(core.Cudd_bddIthVar(dd, 1)))
+	node.Data = f
+	var b bytes.Buffer
+	if err := WriteDOT(&b, n, nil, nil, false, false, false); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(b.String(), "10 1") {
+		t.Fatalf("BDD label %s", b.String())
+	}
+	if node.Data != f || n.FunctionManager != dd || n.Function != uint8(abc.ABC_FUNC_BDD) {
+		t.Fatal("DOT changed BDD representation")
+	}
+	if err := Io_WriteBookLogic(n, filepath.Join(t.TempDir(), "bdd")); err != nil {
+		t.Fatal(err)
+	}
+	if node.Data != f || n.FunctionManager != dd {
+		t.Fatal("Bookshelf changed BDD representation")
 	}
 }

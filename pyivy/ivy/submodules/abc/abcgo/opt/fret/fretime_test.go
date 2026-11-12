@@ -95,6 +95,23 @@ func TestInitToOrigLookupReturnsMappedObjectAndLag(t *testing.T) {
 	}
 }
 
+func TestInitToOrigCanMapConstantConflictNode(t *testing.T) {
+	original := abc.NewNetwork("original-constant")
+	initNetwork := abc.NewNetwork("init-constant")
+	pManMR = &MinRegMan_t{pNtk: original, vLags: vec.Vec_IntStart(abc.Abc_NtkObjNumMax(original) + 1)}
+	t.Cleanup(func() { pManMR = nil })
+	initConstant := initNetwork.ObjectsOfKind(abc.ABC_OBJ_CONST1)[0]
+	originalConstant := original.ObjectsOfKind(abc.ABC_OBJ_CONST1)[0]
+
+	Abc_FlowRetime_SetInitToOrig(initConstant, originalConstant)
+	var got *abc.Abc_Obj_t
+	var lag int32
+	Abc_FlowRetime_GetInitToOrig(initConstant, &got, &lag)
+	if got != originalConstant || lag != 0 {
+		t.Fatalf("constant mapping = (%p, %d), want (%p, 0)", got, lag, originalConstant)
+	}
+}
+
 func TestClearInitToOrigMarksEntryUnmapped(t *testing.T) {
 	initNetwork := abc.NewNetwork("clear-init-map")
 	initObj := abc.Abc_NtkCreatePi(initNetwork)

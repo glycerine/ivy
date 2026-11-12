@@ -1,219 +1,138 @@
+// Global AIG BDD construction, following bbrNtbdd.c (Alan Mishchenko).
 package bbr
 
 import (
 	"fmt"
-	"os"
+	"github.com/glycerine/abcgo/aig/aig"
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
-/**CFile****************************************************************
-
-  FileName    [bbrNtbdd.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD-based reachability analysis.]
-
-  Synopsis    [Procedures to construct global BDDs for the network.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bbrNtbdd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "bbr.h"
-//#include "bar.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-typedef char ProgressBar;
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Aig_ObjSetGlobalBdd(pObj *Aig_Obj_t, bFunc *DdNode) { pObj.pData = bFunc; }
-func Aig_ObjCleanGlobalBdd(dd *DdManager, pObj *Aig_Obj_t) { Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData ); pObj.pData = nil; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the global BDD for one AIG node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bbr_NodeGlobalBdds_rec(dd *DdManager, pNode *Aig_Obj_t, nBddSizeMax int32, fDropInternal int32, pProgress *ProgressBar, pCounter *int32, fVerbose int32) *DdNode {
-    var bFunc, bFunc0, bFunc1 *DdNode;
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    if Cudd_ReadKeys(dd)-Cudd_ReadDead(dd) > uint32(nBddSizeMax) {
-//        Extra_ProgressBarStop( pProgress );
-        if fVerbose != 0 {
-        fmt.Printf("The number of live nodes reached %d.\n", nBddSizeMax); }
-        fflush( os.Stdout );
-        return nil;
-    }
-    // if the result is available return
-    if Aig_ObjGlobalBdd(pNode) == nil {
-        // compute the result for both branches
-        bFunc0 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-        if bFunc0 == nil {
-            return nil; }
-        Cudd_Ref( bFunc0 );
-        bFunc1 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin1(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-        if bFunc1 == nil {
-            return nil; }
-        Cudd_Ref( bFunc1 );
-        // inlining of macro Cudd_NotCond
-        bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (Aig_ObjFaninC0(pNode))));
-        // inlining of macro Cudd_NotCond
-        bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (Aig_ObjFaninC1(pNode))));
-        // get the final result
-        bFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );
-        Cudd_RecursiveDeref( dd, bFunc0 );
-        Cudd_RecursiveDeref( dd, bFunc1 );
-        // add the number of used nodes
-        (*pCounter)++;
-        // set the result
-        assert(Aig_ObjGlobalBdd(pNode) == nil, "Aig_ObjGlobalBdd(pNode) == nil");
-        Aig_ObjSetGlobalBdd( pNode, bFunc );
-        // increment the progress bar
-//        if ( pProgress )
-//            Extra_ProgressBarUpdate( pProgress, *pCounter, NULL );
-    }
-    // prepare the return value
-    bFunc = Aig_ObjGlobalBdd(pNode);
-    // dereference BDD at the node
-    if --pNode.nRefs == 0 && fDropInternal {
-        Cudd_Deref( bFunc );
-        Aig_ObjSetGlobalBdd( pNode, nil );
-    }
-    return bFunc;
+// Bbr_NodeGlobalBdds_rec computes a regular object's global function. Progress
+// is a callback invoked with the number of newly constructed internal nodes.
+func Bbr_NodeGlobalBdds_rec(dd *DdManager, p *Aig_Man_t, e aig.Edge, limit int, drop bool, progress func(int), counter *int, verbose bool) *DdNode {
+	if dd == nil || p == nil || !p.ValidEdge(e) || e.Complemented() || counter == nil {
+		return nil
+	}
+	if int(cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd)) > limit {
+		if verbose {
+			fmt.Printf("The number of live nodes reached %d.\n", limit)
+		}
+		return nil
+	}
+	f := Aig_ObjGlobalBdd(p, e)
+	if f == nil {
+		node := p.Node(e)
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+			return nil
+		}
+		child := func(edge aig.Edge) *DdNode {
+			f := Bbr_NodeGlobalBdds_rec(dd, p, aig.Aig_Regular(edge), limit, drop, progress, counter, verbose)
+			return cudd.Cudd_NotCond(f, edge.Complemented())
+		}
+		left := child(node.Fanins[0])
+		if left == nil {
+			return nil
+		}
+		cudd.Cudd_Ref(left)
+		if node.Kind == aig.Buffer {
+			f = left
+		} else {
+			right := child(node.Fanins[1])
+			if right == nil {
+				cudd.Cudd_RecursiveDeref(dd, left)
+				return nil
+			}
+			cudd.Cudd_Ref(right)
+			if node.Kind == aig.ExclusiveOr {
+				f = cudd.Cudd_bddXor(dd, left, right)
+			} else {
+				f = cudd.Cudd_bddAnd(dd, left, right)
+			}
+			cudd.Cudd_Ref(f)
+			cudd.Cudd_RecursiveDeref(dd, left)
+			cudd.Cudd_RecursiveDeref(dd, right)
+		}
+		Aig_ObjSetGlobalBdd(p, e, f)
+		*counter++
+		if progress != nil {
+			progress(*counter)
+		}
+	}
+	// Mirror consumption without altering graph topology; reset refs on exit.
+	if aig.Aig_ObjRefs(p, e) > 0 {
+		aig.Aig_ObjDeref(p, e)
+	}
+	if drop && aig.Aig_ObjRefs(p, e) == 0 {
+		cudd.Cudd_Deref(f)
+		Aig_ObjSetGlobalBdd(p, e, nil)
+	}
+	return f
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the global BDDs of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFreeGlobalBdds(p *Aig_Man_t, dd *DdManager) { 
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManForEachObj( p, pObj, i )
-        if ( Aig_ObjGlobalBdd(pObj) )
-            Aig_ObjCleanGlobalBdd( dd, pObj );
+func Aig_ManFreeGlobalBdds(p *Aig_Man_t, dd *DdManager) {
+	if p == nil {
+		return
+	}
+	for id := range p.Nodes() {
+		e := aig.Edge(id) << 1
+		if p.ValidEdge(e) {
+			Aig_ObjCleanGlobalBdd(dd, p, e)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the shared size of global BDDs of the COs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSizeOfGlobalBdds(p *Aig_Man_t) int32 {
-    var vFuncsGlob *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var RetValue, i int32;
-    // complement the global functions
-    vFuncsGlob = Vec_PtrAlloc( Aig_ManCoNum(p) );
-    Aig_ManForEachCo( p, pObj, i )
-        Vec_PtrPush( vFuncsGlob, Aig_ObjGlobalBdd(pObj) );
-    RetValue = Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncsGlob), Vec_PtrSize(vFuncsGlob) );
-    Vec_PtrFree( vFuncsGlob );
-    return RetValue;
+func Aig_ManSizeOfGlobalBdds(p *Aig_Man_t) int {
+	if p == nil {
+		return 0
+	}
+	seen := map[*DdNode]bool{}
+	var visit func(*DdNode)
+	visit = func(f *DdNode) {
+		if f == nil {
+			return
+		}
+		f = cudd.Cudd_Regular(f)
+		if seen[f] {
+			return
+		}
+		seen[f] = true
+		if !cudd.Cudd_IsConstant(f) {
+			visit(f.T)
+			visit(f.E)
+		}
+	}
+	for _, e := range p.Outputs() {
+		visit(Aig_ObjGlobalBdd(p, e))
+	}
+	return len(seen)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively computes global BDDs for the AIG in the manager.]
-
-  Description [On exit, BDDs are stored in the pNode->pData fields.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManComputeGlobalBdds(p *Aig_Man_t, nBddSizeMax int32, fDropInternal int32, fReorder int32, fVerbose int32) *DdManager {
-    var pProgress *ProgressBar  = nil;
-    var pObj *Aig_Obj_t;
-    var dd *DdManager;
-    var bFunc *DdNode;
-    var i, Counter int32;
-    // start the manager
-    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    // set reordering
-    if fReorder != 0 {
-        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT ); }
-    // prepare to construct global BDDs
-    Aig_ManCleanData( p );
-    // assign the constant node BDD
-    Aig_ObjSetGlobalBdd( Aig_ManConst1(p), dd.one );   Cudd_Ref( dd.one );
-    // set the elementary variables
-    Aig_ManForEachCi( p, pObj, i )
-    {
-        Aig_ObjSetGlobalBdd( pObj, dd.vars[i] );  Cudd_Ref( dd.vars[i] );
-    }
-
-    // collect the global functions of the COs
-    Counter = 0;
-    // construct the BDDs
-//    pProgress = Extra_ProgressBarStart( stdout, Aig_ManNodeNum(p) );
-    Aig_ManForEachCo( p, pObj, i )
-    {
-        bFunc = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pObj), nBddSizeMax, fDropInternal, pProgress, &Counter, fVerbose );
-        if bFunc == nil {
-            if fVerbose != 0 {
-            fmt.Printf("Constructing global BDDs is aborted.\n"); }
-            Aig_ManFreeGlobalBdds( p, dd );
-            Cudd_Quit( dd ); 
-            // reset references
-            Aig_ManResetRefs( p );
-            return nil;
-        }
-        // inlining of macro Cudd_NotCond
-        bFunc = ((DdNode *)((ptrint)(bFunc) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( bFunc ); 
-        Aig_ObjSetGlobalBdd( pObj, bFunc );
-    }
-//    Extra_ProgressBarStop( pProgress );
-    // reset references
-    Aig_ManResetRefs( p );
-    // reorder one more time
-    if fReorder != 0 {
-        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );
-        Cudd_AutodynDisable( dd );
-    }
-//    Cudd_PrintInfo( dd, stdout );
-    return dd;
+func Aig_ManComputeGlobalBdds(p *Aig_Man_t, limit int, drop, reorder, verbose bool) *DdManager {
+	if p == nil || p.Check() != nil || limit < 0 {
+		return nil
+	}
+	dd := cudd.NewBDDManager(p.InputCount())
+	aig.Aig_ManCleanData(p)
+	aig.Aig_ManResetRefs(p)
+	defer aig.Aig_ManResetRefs(p)
+	Aig_ObjSetGlobalBdd(p, p.Const1(), dd.One)
+	cudd.Cudd_Ref(dd.One)
+	for i, e := range p.Inputs() {
+		Aig_ObjSetGlobalBdd(p, e, dd.Vars[i])
+		cudd.Cudd_Ref(dd.Vars[i])
+	}
+	count := 0
+	for _, e := range p.Outputs() {
+		driver := p.Node(e).Fanins[0]
+		f := Bbr_NodeGlobalBdds_rec(dd, p, aig.Aig_Regular(driver), limit, drop, nil, &count, verbose)
+		if f == nil {
+			Aig_ManFreeGlobalBdds(p, dd)
+			cudd.Cudd_Quit(dd)
+			return nil
+		}
+		f = cudd.Cudd_NotCond(f, driver.Complemented())
+		cudd.Cudd_Ref(f)
+		Aig_ObjSetGlobalBdd(p, e, f)
+	}
+	if reorder {
+		cudd.Cudd_ReduceHeap(dd, cudd.CUDD_REORDER_SYMM_SIFT, 1)
+	}
+	return dd
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

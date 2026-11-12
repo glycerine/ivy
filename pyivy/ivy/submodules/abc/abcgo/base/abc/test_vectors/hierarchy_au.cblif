@@ -1,0 +1,11 @@
+.model top
+.inputs 3
+.subckt leaf 2 1 2 4
+.xor 8 6
+.outputs 2 10 11
+.end
+.model leaf
+.inputs 2
+.and 2 4
+.outputs 1 6
+.end

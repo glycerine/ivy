@@ -126,7 +126,10 @@ func Bmc_MeshTest2(p *Gia_Man_t, X int32, Y int32, T int32, fVerbose int32) {
         pN[i][0] = pN[i][1] = -1;
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         pN[i-1][0] = Gia_ObjFaninId0(pObj, i)-1;
         pN[i-1][1] = Gia_ObjFaninId1(pObj, i)-1;
     }

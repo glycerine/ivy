@@ -2,6 +2,18 @@ package bmc
 
 import "fmt"
 
+// bmcVar2LitNext keeps the C expression's pre-increment variable numbering
+// while making the increment a legal Go statement.
+func bmcVar2LitNext(counter *int32, complemented bool) int32 {
+	phase := int32(0)
+	if complemented {
+		phase = 1
+	}
+	literal := 2*(*counter) + phase
+	*counter = *counter + 1
+	return literal
+}
+
 /**CFile****************************************************************
 
   FileName    [bmcCexCare.c]
@@ -61,12 +73,16 @@ func Bmc_CexCareExtendToObjects(p *Gia_Man_t, pCex *Abc_Cex_t, pCexCare *Abc_Cex
     // initialize terminary simulation
     Gia_ObjTerSimSet0( Gia_ManConst0(p) );
     // inlining of macro Gia_ManForEachRi
-    for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
+    for k = 0; k < Gia_ManRegNum(p); k++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
+    	if pObj == nil { break }
         Gia_ObjTerSimSet0( pObj );
     }
     for  i = 0; i <= pCex.iFrame; i++  {
         // inlining of macro Gia_ManForEachPi
-        for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
+        for k = 0; k < Gia_ManPiNum(p); k++ {
+        	pObj = Gia_ManCi(p, k)
+        	if pObj == nil { break }
             if !Abc_InfoHasBit( pCexCare.pData, pCexCare.nRegs + i * pCexCare.nPis + k ) {
                 Gia_ObjTerSimSetX( pObj );
             } else if Abc_InfoHasBit( pCex.pData, pCex.nRegs + i * pCex.nPis + k ) {
@@ -75,20 +91,29 @@ func Bmc_CexCareExtendToObjects(p *Gia_Man_t, pCex *Abc_Cex_t, pCexCare *Abc_Cex
                 Gia_ObjTerSimSet0( pObj ); }
         }
         // inlining of macro Gia_ManForEachRo
-        for  k = 0; (k < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
+        for k = 0; k < Gia_ManRegNum(p); k++ {
+        	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+k)
+        	if pObj == nil { break }
             Gia_ObjTerSimRo( p, pObj );
         }
         // inlining of macro Gia_ManForEachAnd
-        for  k = 0; (k < p.nObjs) && ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        for k = 0; k < p.nObjs; k++ {
+        	pObj = Gia_ManObj(p, k)
+        	if pObj == nil { break }
+        	if !Gia_ObjIsAnd(pObj) {} else {
             Gia_ObjTerSimAnd( pObj ); }
         }
         // inlining of macro Gia_ManForEachCo
-        for  k = 0; (k < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, k)); k++  {
+        for k = 0; k < Vec_IntSize(p.vCos); k++ {
+        	pObj = Gia_ManCo(p, k)
+        	if pObj == nil { break }
             Gia_ObjTerSimCo( pObj );
         }
         // add cares to the exdended counter-example
         // inlining of macro Gia_ManForEachObj
-        for  k = 0; (k < p.nObjs) && ((pObj) = Gia_ManObj(p, k)); k++  {
+        for k = 0; k < p.nObjs; k++ {
+        	pObj = Gia_ManObj(p, k)
+        	if pObj == nil { break }
             if !Gia_ObjTerSimGetX(pObj) {
                 Abc_InfoSetBit( pNew.pData, pNew.nRegs + pNew.nPis * i + k ); }
         }
@@ -115,11 +140,16 @@ func Bmc_CexCarePropagateFwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, vPriosIn
     var i, Phase0, Phase1 int32;
     assert(Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1), "Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1)");
     // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+    for i = 0; i < Gia_ManPiNum(p); i++ {
+    	pObj = Gia_ManCi(p, i)
+    	if pObj == nil { break }
         pObj.Value = Vec_IntEntry( vPriosIn, f * pCex.nPis + i );
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < p.nObjs; i++ {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         Prio0  = Abc_Lit2Var(Gia_ObjFanin0(pObj).Value);
         Prio1  = Abc_Lit2Var(Gia_ObjFanin1(pObj).Value);
         Phase0 = Abc_LitIsCompl(Gia_ObjFanin0(pObj).Value) ^ Gia_ObjFaninC0(pObj);
@@ -137,7 +167,9 @@ func Bmc_CexCarePropagateFwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, vPriosIn
     }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         pObj.Value = Abc_LitNotCond( Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );
     }
 }
@@ -148,14 +180,21 @@ func Bmc_CexCarePropagateFwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t,
     var ValueMax int32 = Abc_Var2Lit( pCex.nPis * (pCex.iFrame + 1), 0 );
     Gia_ManConst0( p ).Value = ValueMax;
     // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+    	if pObjRi == nil { break }
         pObjRi.Value = ValueMax;
     }
     Vec_IntClear( vPriosFf );
     for  f = 0; f <= pCex.iFrame; f++  {
         // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-            Vec_IntPush( vPriosFf, (pObjRo.Value = pObjRi.Value) );
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObjRi == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObjRo == nil { break }
+            pObjRo.Value = pObjRi.Value
+            Vec_IntPush(vPriosFf, pObjRo.Value)
         }
         Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );
     }
@@ -176,16 +215,23 @@ func Bmc_CexCarePropagateBwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, pCexMin 
     var pObj, pFan0, pFan1 *Gia_Obj_t;
     var i, Phase0, Phase1 int32;
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCis); i++ {
+    	pObj = Gia_ManCi(p, i)
+    	if pObj == nil { break }
         pObj.fPhase = 0;
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         if pObj.fPhase {
             Gia_ObjFanin0(pObj).fPhase = 1; }
     }
     // inlining of macro Gia_ManForEachAndReverse
-    for  i = p.nObjs - 1; (i > 0) && ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {
+    for i = p.nObjs - 1; i > 0; i-- {
+    	pObj = Gia_ManObj(p, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         if !pObj.fPhase {
             continue; }
         pFan0 = Gia_ObjFanin0(pObj);
@@ -222,7 +268,9 @@ func Bmc_CexCarePropagateBwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, pCexMin 
     }
     }
     // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+    for i = 0; i < Gia_ManPiNum(p); i++ {
+    	pObj = Gia_ManCi(p, i)
+    	if pObj == nil { break }
         if pObj.fPhase {
             Abc_InfoSetBit( pCexMin.pData, pCexMin.nRegs + pCexMin.nPis * f + i ); }
     }
@@ -235,19 +283,27 @@ func Bmc_CexCarePropagateBwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t,
     pCexMin.iPo    = pCex.iPo;
     pCexMin.iFrame = pCex.iFrame;
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObjRi) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObjRi = Gia_ManCo(p, i)
+    	if pObjRi == nil { break }
         pObjRi.fPhase = 0;
     }
     for  f = pCex.iFrame; f >= 0; f--  {
         Gia_ManPo(p, pCex.iPo).fPhase = int32((f == pCex.iFrame));
         // inlining of macro Gia_ManForEachRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObjRo == nil { break }
             pObjRo.Value = Vec_IntEntry( vPriosFf, f * pCex.nRegs + i );
         }
         Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );
         Bmc_CexCarePropagateBwdOne( p, pCex, f, pCexMin );
         // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObjRi == nil { break }
+        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+        	if pObjRo == nil { break }
             pObjRi.fPhase = pObjRo.fPhase;
         }
     }
@@ -315,85 +371,85 @@ func Bmc_CexCareMinimizeAig(p *Gia_Man_t, nRealPis int32, pCex *Abc_Cex_t, nTryC
         {
             for ( f = 0; f <= pCex->iFrame; f++ )
                 for ( i = nRealPis; i < Gia_ManPiNum(p); i++ )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
             for ( f = 0; f <= pCex->iFrame; f++ )
                 for ( i = 0; i < nRealPis; i++ )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
         }
         else if ( k == 1 )
         {
             for ( f = pCex->iFrame; f >= 0; f-- )
                 for ( i = nRealPis; i < Gia_ManPiNum(p); i++ )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
             for ( f = pCex->iFrame; f >= 0; f-- )
                 for ( i = 0; i < nRealPis; i++ )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
         }
         else if ( k == 2 )
         {
             for ( f = 0; f <= pCex->iFrame; f++ )
                 for ( i = Gia_ManPiNum(p) - 1; i >= nRealPis; i-- )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
             for ( f = 0; f <= pCex->iFrame; f++ )
                 for ( i = nRealPis - 1; i >= 0; i-- )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
         }
         else if ( k == 3 )
         {
             for ( f = pCex->iFrame; f >= 0; f-- )
                 for ( i = Gia_ManPiNum(p) - 1; i >= nRealPis; i-- )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
             for ( f = pCex->iFrame; f >= 0; f-- )
                 for ( i = nRealPis - 1; i >= 0; i-- )
-                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex->nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex->pData, pCex->nRegs + pCex->nPis * f + i)) );
         }
         else assert( 0 );
 */
         if k == 0 {
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = Gia_ManPiNum(p) - 1; i >= nRealPis; i--  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = nRealPis - 1; i >= 0; i--  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
         
         } else if k == 1 {
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = Gia_ManPiNum(p) - 1; i >= nRealPis; i--  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = 0; i < nRealPis; i++  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
         
         } else if k == 2 {
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = nRealPis; i < Gia_ManPiNum(p); i++  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = nRealPis - 1; i >= 0; i--  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
         
         } else if k == 3 {
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = nRealPis; i < Gia_ManPiNum(p); i++  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
             for  f = pCex.iFrame; f >= 0; f--  {
                 for  i = 0; i < nRealPis; i++  {
-                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
+                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, bmcVar2LitNext(&Counter, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );
                 }
             }
         

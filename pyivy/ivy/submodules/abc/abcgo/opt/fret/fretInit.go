@@ -910,7 +910,9 @@ func Abc_FlowRetime_SetInitToOrig(pInit *Abc_Obj_t, pOrig *Abc_Obj_t) {
 	ensureInitToOrig(id)
 
 	// Box boundaries and latches do not correspond to ordinary logic nodes.
-	if Abc_ObjIsBo(pOrig) != 0 || Abc_ObjIsBi(pOrig) != 0 || Abc_ObjIsLatch(pOrig) != 0 || Abc_AigNodeIsConst(pOrig) != 0 || Abc_NodeIsConst(pOrig) != 0 {
+	// Constants do: conflict extraction may select one as the source of an
+	// impossible initial-state constraint.
+	if Abc_ObjIsBo(pOrig) != 0 || Abc_ObjIsBi(pOrig) != 0 || Abc_ObjIsLatch(pOrig) != 0 {
 		Abc_FlowRetime_ClearInitToOrig(pInit)
 		return
 	}

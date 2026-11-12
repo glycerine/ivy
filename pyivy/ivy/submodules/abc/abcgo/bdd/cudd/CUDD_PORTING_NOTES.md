@@ -98,3 +98,30 @@ recurrences. ADD constrain/restrict currently return the exact input ADD, which
 is correct on the care set but does not minimize nodes. LI compaction currently
 uses Restrict, and squeeze returns the lower bound after checking `lower <=
 upper`; these preserve the contracts but not the C edge-marking/size heuristics.
+# Additional native ports
+
+## Harwell–Boeing matrices (`cuddHarwell.go`)
+
+`Cudd_addHarwell` now accepts an `io.Reader` and returns a `HarwellMatrix` or
+an error. It parses the supported real unsymmetric assembled (`RUA`) form,
+validates column pointers and row indices, creates arithmetic row/column
+indicator literals, and builds the sparse matrix ADD. The older C interface
+mutated several pointer-to-pointer arguments; Go returns those values together
+in a result struct instead. Sparse right-hand sides are accepted only in the
+full (`F`) form. Other matrix forms fail with an explanatory error.
+
+## Variable interaction (`cuddInteract.go`)
+
+The interaction bitset is stored by the core manager. Rebuilding it traverses
+the support of each canonical BDD node and marks every pair of variables in
+that support. This can conservatively retain extra interactions from
+unreferenced canonical nodes, which may make linear reordering do extra work;
+it cannot incorrectly skip a dependent swap.
+
+## Generator state (`cuddInt.go`)
+
+The C union used by cube, prime, and node generators is represented by a Go
+struct with named variants and slices. This avoids C allocation and pointer
+arithmetic while keeping each generator's state separate. The C header's
+platform macros and compiler attributes are omitted; generator limits and
+semantic constants used by the Go algorithms remain explicit.

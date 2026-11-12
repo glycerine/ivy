@@ -90,7 +90,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
     // add one large OR clause
     vLits = Vec_IntAlloc( Gia_ManCoNum(p) );
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Vec_IntSize(p.vCos); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         Vec_IntPush( vLits, Abc_Var2Lit(Gia_ManRegNum(p) + i, 0) );
     }
     sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
@@ -101,7 +103,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
 
     // add XOR clauses
     // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Gia_ManPoNum(p); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         pObj0 = Gia_ManPo( pMiter, 2*i+0 );
         pObj1 = Gia_ManPo( pMiter, 2*i+1 );
         iVar0 = pCnf.pVarNums[Gia_ObjId(pMiter, pObj0)];
@@ -110,7 +114,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
         sat_solver_add_xor( pSat, iVar0, iVar1, iVarOut, 0 );
     }
     // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+    	if pObj == nil { break }
         pObj0 = Gia_ManRi( pMiter, i );
         pObj1 = Gia_ManRi( pMiter, i + Gia_ManRegNum(p) );
         iVar0 = pCnf.pVarNums[Gia_ObjId(pMiter, pObj0)];
@@ -129,7 +135,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
         // collect variables of the RO nodes
         Vec_IntClear( vLits );
         // inlining of macro Gia_ManForEachRo
-        for  i = 0; (i < Gia_ManRegNum(pMiter)) && ((pObj) = Gia_ManCi(pMiter, Gia_ManPiNum(pMiter)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(pMiter); i++ {
+        	pObj = Gia_ManCi(pMiter, Gia_ManPiNum(pMiter)+i)
+        	if pObj == nil { break }
             Vec_IntPush( vLits, pCnf.pVarNums[Gia_ObjId(pMiter, pObj)] );
         }
         // lift CNF again
@@ -137,7 +145,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
         VarShift += pCnf.nVars;
         // stitch the clauses
         // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(pMiter)) && ((pObj) = Gia_ManCo(pMiter, Gia_ManPoNum(pMiter)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(pMiter); i++ {
+        	pObj = Gia_ManCo(pMiter, Gia_ManPoNum(pMiter)+i)
+        	if pObj == nil { break }
             iVar0 = pCnf.pVarNums[Gia_ObjId(pMiter, pObj)];
             iVar1 = Vec_IntEntry( vLits, i );
             if iVar1 == -1 {
@@ -146,7 +156,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
         }
         // add equality clauses for the COs
         // inlining of macro Gia_ManForEachPo
-        for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+        for i = 0; i < Gia_ManPoNum(p); i++ {
+        	pObj = Gia_ManCo(p, i)
+        	if pObj == nil { break }
             pObj0 = Gia_ManPo( pMiter, 2*i+0 );
             pObj1 = Gia_ManPo( pMiter, 2*i+1 );
             iVar0 = pCnf.pVarNums[Gia_ObjId(pMiter, pObj0)];
@@ -154,7 +166,9 @@ func Bmc_DeriveSolver(p *Gia_Man_t, pMiter *Gia_Man_t, pCnf *Cnf_Dat_t, nFramesM
             sat_solver_add_buffer( pSat, iVar0, iVar1, 0 );
         }
         // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
+        for i = 0; i < Gia_ManRegNum(p); i++ {
+        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
+        	if pObj == nil { break }
             pObj0 = Gia_ManRi( pMiter, i );
             pObj1 = Gia_ManRi( pMiter, i + Gia_ManRegNum(p) );
             iVar0 = pCnf.pVarNums[Gia_ObjId(pMiter, pObj0)];
@@ -313,14 +327,18 @@ func Bmc_PerformFindFlopOrder(p *Gia_Man_t, vRegs *Vec_Int_t) {
     // start with POs
     Vec_IntClear( vRegs );
     // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Gia_ManPoNum(p); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         Vec_IntPush( vRegs, Gia_ObjId(p, pObj) );
     }
     // add flop outputs in the B
     Gia_ManIncrementTravId( p );
     Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
     // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vRegs)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRegs,i))); i++  {
+    for i = 0; i < Vec_IntSize(vRegs); i++ {
+    	pObj = Gia_ManObj(p, Vec_IntEntry(vRegs,i))
+    	if pObj == nil { break }
         assert(Gia_ObjIsPo(p, pObj) || Gia_ObjIsRo(p, pObj), "Gia_ObjIsPo(p, pObj) || Gia_ObjIsRo(p, pObj)");
         if Gia_ObjIsRo(p, pObj) {
             pObj = Gia_ObjRoToRi( p, pObj ); }
@@ -328,14 +346,18 @@ func Bmc_PerformFindFlopOrder(p *Gia_Man_t, vRegs *Vec_Int_t) {
     }
     // add dangling flops
     // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
+    for i = 0; i < Gia_ManRegNum(p); i++ {
+    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
+    	if pObj == nil { break }
         if !Gia_ObjIsTravIdCurrent(p, pObj) {
             Vec_IntPush( vRegs, Gia_ObjId(p, pObj) ); }
     }
     // remove POs; keep flop outputs only; remap ObjId into CiId
     assert(Vec_IntSize(vRegs) == Gia_ManCoNum(p), "Vec_IntSize(vRegs) == Gia_ManCoNum(p)");
     // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vRegs)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRegs,i))); i++  {
+    for i = 0; i < Vec_IntSize(vRegs); i++ {
+    	pObj = Gia_ManObj(p, Vec_IntEntry(vRegs,i))
+    	if pObj == nil { break }
         if i < Gia_ManPoNum(p) {
             continue; }
         iReg = Gia_ObjCioId(pObj) - Gia_ManPiNum(p);

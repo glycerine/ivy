@@ -66,60 +66,85 @@ func Bmc_EcoMiter(pGold *Gia_Man_t, pOld *Gia_Man_t, vFans *Vec_Int_t) *Gia_Man_
     // copy gold
     Gia_ManConst0(pGold).Value = 0;
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(pGold.vCis)) && ((pObj) = Gia_ManCi(pGold, i)); i++  {
+    for i = 0; i < Vec_IntSize(pGold.vCis); i++ {
+    	pObj = Gia_ManCi(pGold, i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ManAppendCi( pNew );
     }
     NewPi = Gia_ManAppendCi( pNew );
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < pGold.nObjs) && ((pObj) = Gia_ManObj(pGold, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+    for i = 0; i < pGold.nObjs; i++ {
+    	pObj = Gia_ManObj(pGold, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else {
         pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pGold.vCos)) && ((pObj) = Gia_ManCo(pGold, i)); i++  {
+    for i = 0; i < Vec_IntSize(pGold.vCos); i++ {
+    	pObj = Gia_ManCo(pGold, i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ObjFanin0Copy( pObj );
     }
     // create onset
     Gia_ManConst0(pOld).Value = 0;
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(pOld.vCis)) && ((pObj) = Gia_ManCi(pOld, i)); i++  {
+    for i = 0; i < Vec_IntSize(pOld.vCis); i++ {
+    	pObj = Gia_ManCi(pOld, i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ManCi(pGold, i).Value;
     }
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < pOld.nObjs) && ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else
+    for i = 0; i < pOld.nObjs; i++ {
+    	pObj = Gia_ManObj(pOld, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else
         if pObj == pRoot {
             pObj.Value = NewPi;
         } else {
             pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pOld.vCos)) && ((pObj) = Gia_ManCo(pOld, i)); i++  {
+    for i = 0; i < Vec_IntSize(pOld.vCos); i++ {
+    	pObj = Gia_ManCo(pOld, i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ObjFanin0Copy( pObj );
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pGold.vCos)) && ((pObj) = Gia_ManCo(pGold, i)); i++  {
+    for i = 0; i < Vec_IntSize(pGold.vCos); i++ {
+    	pObj = Gia_ManCo(pGold, i)
+    	if pObj == nil { break }
         Gia_ManAppendCo( pNew, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );
     }
     // create offset
     // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < pOld.nObjs) && ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else
+    for i = 0; i < pOld.nObjs; i++ {
+    	pObj = Gia_ManObj(pOld, i)
+    	if pObj == nil { break }
+    	if !Gia_ObjIsAnd(pObj) {} else
         if pObj == pRoot {
             pObj.Value = Abc_LitNot(NewPi);
         } else {
             pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
     }
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pOld.vCos)) && ((pObj) = Gia_ManCo(pOld, i)); i++  {
+    for i = 0; i < Vec_IntSize(pOld.vCos); i++ {
+    	pObj = Gia_ManCo(pOld, i)
+    	if pObj == nil { break }
         pObj.Value = Gia_ObjFanin0Copy( pObj );
     }
     Miter = 0;
     // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pGold.vCos)) && ((pObj) = Gia_ManCo(pGold, i)); i++  {
+    for i = 0; i < Vec_IntSize(pGold.vCos); i++ {
+    	pObj = Gia_ManCo(pGold, i)
+    	if pObj == nil { break }
         Miter = Gia_ManHashOr( pNew, Miter, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );
     }
     Gia_ManAppendCo( pNew, Miter );
     // add outputs for the nodes
     // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vFans)) && ((pObj) = Gia_ManObj(pOld, Vec_IntEntry(vFans,i))); i++  {
+    for i = 0; i < Vec_IntSize(vFans); i++ {
+    	pObj = Gia_ManObj(pOld, Vec_IntEntry(vFans,i))
+    	if pObj == nil { break }
         Gia_ManAppendCo( pNew, pObj.Value );
     }
     // cleanup
@@ -236,7 +261,9 @@ func Bmc_EcoPatch(p *Gia_Man_t, nIns int32, nOuts int32) int32 {
     // add equality constraints
     assert(Gia_ManPoNum(p) == nOuts + 1 + nIns, "Gia_ManPoNum(p) == nOuts + 1 + nIns");
     // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Gia_ManPoNum(p); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         if i == nOuts {
             break; }
         Lit = Abc_Var2Lit( pCnf.pVarNums[Gia_ObjId(p, pObj)], 1 ); // neg lit
@@ -254,7 +281,9 @@ func Bmc_EcoPatch(p *Gia_Man_t, nIns int32, nOuts int32) int32 {
     // collect input variables
     vVars = Vec_IntAlloc( nIns );
     // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+    for i = 0; i < Gia_ManPoNum(p); i++ {
+    	pObj = Gia_ManCo(p, i)
+    	if pObj == nil { break }
         if i >= nOuts + 1 {
             Vec_IntPush( vVars, pCnf.pVarNums[Gia_ObjId(p, pObj)] ); }
     }
@@ -308,7 +337,9 @@ func Bmc_EcoMiterTest() {
     // create ECO miter
     vFans = Vec_IntAlloc( Gia_ManCiNum(pOld) );
     // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(pOld.vCis)) && ((pObj) = Gia_ManCi(pOld, i)); i++  {
+    for i = 0; i < Vec_IntSize(pOld.vCis); i++ {
+    	pObj = Gia_ManCi(pOld, i)
+    	if pObj == nil { break }
         Vec_IntPush( vFans, Gia_ObjId(pOld, pObj) );
     }
     pMiter = Bmc_EcoMiter( pGold, pOld, vFans );
