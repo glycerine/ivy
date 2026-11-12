@@ -525,75 +525,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadTruth(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pStr string  = nil;
-    var pSopCover string;
-    var fHex int32   = 1;
-    var fFile int32;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "xfh" ) ) != -1  {
-        switch  c  {
-            case 'x':
-                fHex ^= 1;
-                break;
-            case 'f':
-                fFile ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-
-    if fFile != 0 {
-        pStr = Extra_FileReadContents( argv[globalUtilOptind] );
-    } else {
-        pStr = argv[globalUtilOptind]; }
-    for  pStr[ len(pStr) - 1 ] == '\n' || pStr[ len(pStr) - 1 ] == '\r'  {
-        pStr[ len(pStr) - 1 ] = '\0';
-    }
-
-    // convert truth table to SOP
-    if fHex != 0 {
-        pSopCover = Abc_SopFromTruthHex(pStr);
-    } else {
-        pSopCover = Abc_SopFromTruthBin(pStr); }
-    if fFile != 0 {
-        ABC_FREE( pStr ); }
-    if pSopCover == nil || pSopCover[0] == 0 {
-        ABC_FREE( pSopCover );
-        fmt.Fprintf(pAbc.Err, "Reading truth table has failed.\n");
-        return 1;
-    }
-
-    pNtk = Abc_NtkCreateWithNode( pSopCover );
-    ABC_FREE( pSopCover );
-    if pNtk == nil {
-        fmt.Fprintf(pAbc.Err, "Deriving the network has failed.\n");
-        return 1;
-    }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_truth [-xfh] <truth> <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         creates network with node having given truth table\n");
-    fmt.Fprintf(pAbc.Err, "\t-x     : toggles between bin and hex representation [default = %s]\n", fHex?  "hex":"bin");
-    fmt.Fprintf(pAbc.Err, "\t-f     : toggles reading truth table from file [default = %s]\n", fFile? "yes": "no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\ttruth  : truth table with most signficant bit first (e.g. 1000 for AND(a,b))\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : file name with the truth table\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
