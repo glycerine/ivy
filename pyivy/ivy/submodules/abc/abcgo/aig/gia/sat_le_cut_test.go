@@ -28,3 +28,26 @@ func TestSleCutMergeAndContainment(t *testing.T) {
 		t.Fatal("dominance filtering failed")
 	}
 }
+
+func TestSleComputeCuts(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	cuts := Sle_ManComputeCuts(p, 3, 0)
+	list := sleList(cuts, y>>1, false)
+	found := false
+	for _, cut := range list {
+		leaves := Sle_CutLeaves(cut)
+		if len(leaves) == 3 && leaves[0] == a>>1 && leaves[1] == b>>1 && leaves[2] == c>>1 {
+			found = true
+		}
+	}
+	if !found || Sle_ManComputeDelay(p, cuts) != 1 {
+		t.Fatalf("cuts %v delay %d", list, Sle_ManComputeDelay(p, cuts))
+	}
+	if got := Sle_ManComputeDelay(p, Sle_ManComputeCuts(p, 2, 0)); got != 2 {
+		t.Fatalf("2-LUT delay %d", got)
+	}
+}
