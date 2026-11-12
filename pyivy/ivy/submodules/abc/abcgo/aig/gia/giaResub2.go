@@ -303,127 +303,9 @@ func Gia_Rsb2ManDivs(p *Gia_Rsb2Man_t, iNode int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Rsb2AddNode(vRes *Vec_Int_t, iLit0 int32, iLit1 int32, iRes0 int32, iRes1 int32) int32 {
-    var iLitMin int32;
-    if iRes0 < iRes1 {
-        iLitMin = Abc_LitNotCond(iRes0, Abc_LitIsCompl(iLit0));
-    } else {
-        iLitMin = Abc_LitNotCond(iRes1, Abc_LitIsCompl(iLit1));
-    }
-    var iLitMax int32;
-    if iRes0 < iRes1 {
-        iLitMax = Abc_LitNotCond(iRes1, Abc_LitIsCompl(iLit1));
-    } else {
-        iLitMax = Abc_LitNotCond(iRes0, Abc_LitIsCompl(iLit0));
-    }
-    var iLitRes int32  = Vec_IntSize(vRes);
-    if iLit0 < iLit1 { // and
-    
-        if iLitMin == 0 {
-            return 0; }
-        if iLitMin == 1 {
-            return iLitMax; }
-        if iLitMin == Abc_LitNot(iLitMax) {
-            return 0; }
-    
-    } else if iLit0 > iLit1 { // xor
-    
-        if iLitMin == 0 {
-            return iLitMax; }
-        if iLitMin == 1 {
-            return Abc_LitNot(iLitMax); }
-        if iLitMin == Abc_LitNot(iLitMax) {
-            return 1; }
-    
-    } else { assert(false, "0"); }
-    assert(iLitMin >= 2 && iLitMax >= 2, "iLitMin >= 2 && iLitMax >= 2");
-    if iLit0 < iLit1 { // and
-        Vec_IntPushTwo( vRes, iLitMin, iLitMax );
-    } else if iLit0 > iLit1 { // xor
-    
-        assert(!Abc_LitIsCompl(iLit0), "!Abc_LitIsCompl(iLit0)");
-        assert(!Abc_LitIsCompl(iLit1), "!Abc_LitIsCompl(iLit1)");
-        Vec_IntPushTwo( vRes, iLitMax, iLitMin );
-    
-    } else { assert(false, "0"); }
-    return iLitRes;
-}
-func Gia_Rsb2ManInsert_rec(vRes *Vec_Int_t, nPis int32, vObjs *Vec_Int_t, iNode int32, vResub *Vec_Int_t, vDivs *Vec_Int_t, vCopies *Vec_Int_t, iObj int32) int32 {
-    if Vec_IntEntry(vCopies, iObj) >= 0 {
-        return Vec_IntEntry(vCopies, iObj); }
-    assert(iObj > nPis, "iObj > nPis");
-    if iObj == iNode {
-        var nVars int32  = Vec_IntSize(vDivs);
-        var iLitRes int32 = -1;
-        var iTopLit int32 = Vec_IntEntryLast( vResub );
-        if Abc_Lit2Var(iTopLit) == 0 {
-            iLitRes = 0;
-        } else if Abc_Lit2Var(iTopLit) < nVars {
-            iLitRes = Gia_Rsb2ManInsert_rec( vRes, nPis, vObjs, -1, vResub, vDivs, vCopies, Vec_IntEntry(vDivs, Abc_Lit2Var(iTopLit)) );
-        } else {
-            var vCopy *Vec_Int_t  = Vec_IntAlloc( 10 );
-            var k, iLit, iLit0, iLit1 int32;
-            // inlining of macro Vec_IntForEachEntryStop
-            for  k = 0; (k < Vec_IntSize(vResub)-1) && (((iLit) = Vec_IntEntry(vResub, k)), 1); k++  {
-                if Abc_Lit2Var(iLit) < nVars {
-                    Gia_Rsb2ManInsert_rec( vRes, nPis, vObjs, -1, vResub, vDivs, vCopies, Vec_IntEntry(vDivs, Abc_Lit2Var(iLit)) ); }
-            }
-            // inlining of macro Vec_IntForEachEntryDouble
-            for  k = 0; (k+1 < Vec_IntSize(vResub)) && (((iLit0) = Vec_IntEntry(vResub, k)), 1) && (((iLit1) = Vec_IntEntry(vResub, k+1)), 1); k += 2  {
-                var iVar0 int32  = Abc_Lit2Var(iLit0);
-                var iVar1 int32  = Abc_Lit2Var(iLit1);
-                var iRes0 int32;
-                if iVar0 < nVars {
-                    iRes0 = Vec_IntEntry(vCopies, Vec_IntEntry(vDivs, iVar0));
-                } else {
-                    iRes0 = Vec_IntEntry(vCopy, iVar0 - nVars);
-                }
-                var iRes1 int32;
-                if iVar1 < nVars {
-                    iRes1 = Vec_IntEntry(vCopies, Vec_IntEntry(vDivs, iVar1));
-                } else {
-                    iRes1 = Vec_IntEntry(vCopy, iVar1 - nVars);
-                }
-                iLitRes   = Gia_Rsb2AddNode( vRes, iLit0, iLit1, iRes0, iRes1 );
-                Vec_IntPush( vCopy, iLitRes );
-            }
-            Vec_IntFree( vCopy );
-        }
-        iLitRes = Abc_LitNotCond( iLitRes, Abc_LitIsCompl(iTopLit) );
-        Vec_IntWriteEntry( vCopies, iObj, iLitRes );
-        return iLitRes;
-    
-    } else {
-        var iLit0 int32  = Vec_IntEntry( vObjs, 2*iObj+0 );
-        var iLit1 int32  = Vec_IntEntry( vObjs, 2*iObj+1 );
-        var iRes0 int32  = Gia_Rsb2ManInsert_rec( vRes, nPis, vObjs, iNode, vResub, vDivs, vCopies, Abc_Lit2Var(iLit0) );
-        var iRes1 int32  = Gia_Rsb2ManInsert_rec( vRes, nPis, vObjs, iNode, vResub, vDivs, vCopies, Abc_Lit2Var(iLit1) );
-        var iLitRes int32  = Gia_Rsb2AddNode( vRes, iLit0, iLit1, iRes0, iRes1 );
-        Vec_IntWriteEntry( vCopies, iObj, iLitRes );
-        return iLitRes;
-    }
-}
-func Gia_Rsb2ManInsert(nPis int32, nPos int32, vObjs *Vec_Int_t, iNode int32, vResub *Vec_Int_t, vDivs *Vec_Int_t, vCopies *Vec_Int_t) *Vec_Int_t {
-    var i int32;
-    var nObjs int32 = Vec_IntSize(vObjs)/2;
-    var iFirstPo int32 = nObjs - nPos;
-    var vRes *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vObjs) );
-//Vec_IntPrint( vDivs );
-//Vec_IntPrint( vResub );
-    Vec_IntFill( vCopies, Vec_IntSize(vObjs), -1 );
-    Vec_IntFill( vRes, 2*(nPis + 1), 0 );
-    for  i = 0; i <= nPis; i++  {
-        Vec_IntWriteEntry( vCopies, i, 2*i );
-    }
-    for  i = iFirstPo; i < nObjs; i++  {
-        Gia_Rsb2ManInsert_rec( vRes, nPis, vObjs, iNode, vResub, vDivs, vCopies, Abc_Lit2Var( Vec_IntEntry(vObjs, 2*i) ) );
-    }
-    for  i = iFirstPo; i < nObjs; i++  {
-        var iLitNew int32  = Abc_Lit2LitL( Vec_IntArray(vCopies), Vec_IntEntry(vObjs, 2*i) );
-        Vec_IntPushTwo( vRes, iLitNew, iLitNew );
-    }
-    return vRes;
-}
+
+
+
 
 
 /**Function*************************************************************
@@ -516,40 +398,8 @@ func Abc_ResubComputeWindow2(pObjs *int32, nObjs int32, nDivsMax int32, nLevelIn
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManToResub(p *Gia_Man_t) *int32 {
-    var pObj *Gia_Obj_t;
-    // inlining of macro ABC_CALLOC
-    int i, * pObjs = ((int *) calloc((size_t)(2*Gia_ManObjNum(p)), sizeof(int)));
-    assert(Gia_ManIsNormalized(p), "Gia_ManIsNormalized(p)");
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            continue; }
-        pObjs[2*i+0] = Gia_ObjFaninLit0(Gia_ManObj(p, i), i);
-        if Gia_ObjIsCo(pObj) {
-            pObjs[2*i+1] = pObjs[2*i+0];
-        } else if Gia_ObjIsAnd(pObj) {
-            pObjs[2*i+1] = Gia_ObjFaninLit1(Gia_ManObj(p, i), i);
-        } else { assert(false, "0"); }
-    }
-    return pObjs;
-}
-func Gia_ManFromResub(pObjs *int32, nObjs int32, nIns int32) *Gia_Man_t {
-    var pNew *Gia_Man_t  = Gia_ManStart( nObjs );
-    var i int32;
-    for  i = 1; i < nObjs; i++  {
-        if pObjs[2*i] == 0 && i <= nIns { // pi
-            Gia_ManAppendCi( pNew );
-        } else if pObjs[2*i] == pObjs[2*i+1] { // po
-            Gia_ManAppendCo( pNew, pObjs[2*i] );
-        } else if pObjs[2*i] < pObjs[2*i+1] {
-            Gia_ManAppendAnd( pNew, pObjs[2*i], pObjs[2*i+1] );
-        } else if pObjs[2*i] > pObjs[2*i+1] {
-            Gia_ManAppendXor( pNew, pObjs[2*i], pObjs[2*i+1] );
-        } else { assert(false, "0"); }
-    }
-    return pNew;
-}
+
+
 func Gia_ManResub2Test(p *Gia_Man_t) *Gia_Man_t {
     var pNew *Gia_Man_t;
     var nResubs int32;
