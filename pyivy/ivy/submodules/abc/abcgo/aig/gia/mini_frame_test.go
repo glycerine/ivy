@@ -52,3 +52,38 @@ func TestFrameMiniAigAndLut(t *testing.T) {
 		}
 	}
 }
+
+func TestFrameMiniLutNameMapping(t *testing.T) {
+	f := abcmain.NewFrame()
+	mini := miniaig.Mini_AigStart()
+	a, b := miniaig.Mini_AigCreatePi(mini), miniaig.Mini_AigCreatePi(mini)
+	x := miniaig.Mini_AigAnd(mini, a, b)
+	miniaig.Mini_AigCreatePo(mini, x)
+	InstallFrameBridge(f)
+	if err := abcmain.Abc_FrameGiaInputMiniAig(f, mini); err != nil {
+		t.Fatal(err)
+	}
+	var pars Jf_Par_t
+	Mf_ManSetDefaultPars(&pars)
+	pars.fCoarsen = 0
+	f.SetResource("pGia", Mf_ManPerformMapping(f.Resource("pGia").(*Gia_Man_t), &pars))
+	if _, err := abcmain.Abc_FrameGiaOutputMiniLut(f); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Abc_FrameReadMiniLutNameMapping(f); err == nil {
+		t.Fatal("missing equivalence computer accepted")
+	}
+	called := false
+	InstallFrameEquivalenceComputer(f, func(g *Gia_Man_t, limit, verbose int32) *Gia_Man_t {
+		called = limit == 1000 && verbose == 0
+		g.pReprs = make([]Gia_Rpr_t, g.nObjs)
+		for i := range g.pReprs {
+			g.pReprs[i].iRepr = GIA_VOID
+		}
+		return Gia_ManDup(g)
+	})
+	mapping, err := Abc_FrameReadMiniLutNameMapping(f)
+	if err != nil || !called || len(mapping) == 0 {
+		t.Fatalf("mapping %v: %v", mapping, err)
+	}
+}

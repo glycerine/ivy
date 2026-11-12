@@ -13,7 +13,17 @@ import (
 
 // FrameDataBridge connects the live manager to frame-owned plugin data. Other
 // formats delegate to the bridge that was installed before this one.
-type FrameDataBridge struct{ Other abcmain.DataBridge }
+type FrameDataBridge struct {
+	Other         abcmain.DataBridge
+	ComputeEquivs func(*Gia_Man_t, int32, int32) *Gia_Man_t
+}
+
+// InstallFrameEquivalenceComputer connects the SAT sweeping package without
+// introducing a GIA-to-CEC import cycle.
+func InstallFrameEquivalenceComputer(frame *abcmain.Frame, compute func(*Gia_Man_t, int32, int32) *Gia_Man_t) {
+	InstallFrameBridge(frame)
+	frame.Bridge.(*FrameDataBridge).ComputeEquivs = compute
+}
 
 func InstallFrameBridge(frame *abcmain.Frame) {
 	if _, ok := frame.Bridge.(*FrameDataBridge); !ok {
@@ -40,6 +50,26 @@ func (p *Gia_Man_t) AigerModel() (*ioa.Model, error) {
 }
 
 func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any, error) {
+	if format == "mini-lut-name-mapping" {
+		aig, ok1 := frame.Resource("pGiaMiniAig").(*Gia_Man_t)
+		lut, ok2 := frame.Resource("pGiaMiniLut").(*Gia_Man_t)
+		aigMap, ok3 := frame.Resource("vCopyMiniAig").(*Vec_Int_t)
+		lutMap, ok4 := frame.Resource("vCopyMiniLut").(*Vec_Int_t)
+		if !ok1 || !ok2 || !ok3 || !ok4 || aig == nil || lut == nil || aigMap == nil || lutMap == nil || bridge.ComputeEquivs == nil {
+			return nil, fmt.Errorf("gia: MiniLUT name mapping needs snapshots and an equivalence computer")
+		}
+		if Gia_ManCiNum(aig) != Gia_ManCiNum(lut) || Gia_ManCoNum(aig) != Gia_ManCoNum(lut) {
+			return nil, fmt.Errorf("gia: MiniAIG and MiniLUT interfaces differ")
+		}
+		combined := Gia_ManDup2(aig, lut)
+		defer Gia_ManStop(combined)
+		reduced := bridge.ComputeEquivs(combined, 1000, 0)
+		if reduced == nil || combined.pReprs == nil {
+			return nil, fmt.Errorf("gia: equivalence computation failed")
+		}
+		Gia_ManStop(reduced)
+		return Gia_ManMapMiniLut2MiniAig(combined, aig, lut, aigMap, lutMap), nil
+	}
 	if format == "mini-aig-equivalence-classes" {
 		original, ok1 := frame.Resource("pGiaMiniAig").(*Gia_Man_t)
 		mapped, ok2 := frame.Resource("vCopyMiniAig").(*Vec_Int_t)

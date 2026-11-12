@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	abcmain "github.com/glycerine/abcgo/base/main"
 
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -95,4 +96,20 @@ func Gia_ManNameMapVerify(combined, aig, lut *Gia_Man_t, aigMap, lutMap *Vec_Int
 			fmt.Printf("Found phase mismatch for LutId %d and AigId %d.\n", i, entry>>1)
 		}
 	}
+}
+
+// Abc_FrameReadMiniLutNameMapping asks the installed bridge to compute names.
+func Abc_FrameReadMiniLutNameMapping(frame *abcmain.Frame) ([]int32, error) {
+	if frame == nil {
+		return nil, fmt.Errorf("gia: missing frame")
+	}
+	result, err := frame.Export("mini-lut-name-mapping")
+	if err != nil {
+		return nil, err
+	}
+	mapping, ok := result.([]int32)
+	if !ok {
+		return nil, fmt.Errorf("gia: invalid MiniLUT name mapping")
+	}
+	return mapping, nil
 }
