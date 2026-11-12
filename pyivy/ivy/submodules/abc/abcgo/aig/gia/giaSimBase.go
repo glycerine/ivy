@@ -402,84 +402,12 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimAbsCheckSolution(p *Gia_SimAbsMan_t) {
-    var x, y, z, w, fFound int32;
-    assert(Vec_WrdSize(p.vCoverTable) == p.nWordsTable * (p.nCands+1), "Vec_WrdSize(p.vCoverTable) == p.nWordsTable * (p.nCands+1)");
-
-    Abc_TtClear( p.pTableTemp, p.nWordsTable );
-    for  x = 0; x < Vec_IntSize(p.vPatPairs)/2; x++  {
-        Abc_TtXorBit( p.pTableTemp, x );
-    }
-
-    for  x =   0; x < p.nCands; x++  {
-        var pSimTableX *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * x );
-        for  w = 0; w < p.nWordsTable; w++  {
-            if p.pTableTemp[w] != pSimTableX[w] {
-                break; }
-        }
-        if w == p.nWordsTable {
-            fmt.Printf("Found solution { %d }\n", x);
-            fFound = 1;
-        }
-    }
-    if fFound != 0 {
-        return; }
-
-    for  x =   0; x < p.nCands; x++  {
-    for  y =   0; y < x;         y++  {
-        var pSimTableX *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * x );
-        var pSimTableY *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * y );
-        for  w = 0; w < p.nWordsTable; w++  {
-            if p.pTableTemp[w] != (pSimTableX[w] | pSimTableY[w]) {
-                break; }
-        }
-        if w == p.nWordsTable {
-            fmt.Printf("Found solution { %d %d }\n", y, x);
-            fFound = 1;
-        }
-    }
-    }
-    if fFound != 0 {
-        return; }
-
-    for  x =   0; x < p.nCands; x++  {
-    for  y =   0; y < x;         y++  {
-    for  z =   0; z < y;         z++  {
-        var pSimTableX *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * x );
-        var pSimTableY *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * y );
-        var pSimTableZ *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * z );
-        for  w = 0; w < p.nWordsTable; w++  {
-            if p.pTableTemp[w] != (pSimTableX[w] | pSimTableY[w] | pSimTableZ[w]) {
-                break; }
-        }
-        if w == p.nWordsTable {
-            fmt.Printf("Found solution { %d %d %d }\n", z, y, x); }
-    }
-    }
-    }
-}
 
 
 
 
-func Gia_SimAbsInit(p *Gia_SimAbsMan_t) {
-    var n int32;
-    var nPairsInit int32 = 64;
-    var vValue0 *Vec_Int_t  = Gia_SimAbsFind( p.vValues, 0 );
-    var vValue1 *Vec_Int_t  = Gia_SimAbsFind( p.vValues, 1 );
-    Vec_IntClear( p.vPatPairs );
-    fmt.Printf("There are %d offset and %d onset minterms (%d pairs) and %d divisors.\n", Vec_IntSize(vValue0), Vec_IntSize(vValue1), Vec_IntSize(vValue0)*Vec_IntSize(vValue1), p.nCands);
-    Abc_Random( 1 );
-    assert(Vec_IntSize(vValue0) > 0, "Vec_IntSize(vValue0) > 0");
-    assert(Vec_IntSize(vValue1) > 0, "Vec_IntSize(vValue1) > 0");
-    for  n = 0; n < nPairsInit; n++  {
-        Vec_IntPushTwo( p.vPatPairs, 
-            Vec_IntEntry(vValue0, Abc_Random(0) % Vec_IntSize(vValue0)), 
-            Vec_IntEntry(vValue1, Abc_Random(0) % Vec_IntSize(vValue1)) );
-    }
-    Vec_IntFree( vValue0 );
-    Vec_IntFree( vValue1 );
-}
+
+
 
 /**Function*************************************************************
 
@@ -492,20 +420,7 @@ func Gia_SimAbsInit(p *Gia_SimAbsMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimAbsPerformOne(pGia *Gia_Man_t, pOffSet *word, pOnSet *word, vSimsCands *Vec_Wrd_t, nWords int32, fVerbose int32) *Vec_Int_t {
-    var clk abctime  = Abc_Clock();
-    var vResub *Vec_Int_t   = Vec_IntAlloc( 10 );
-    var p *Gia_SimAbsMan_t  = Gia_SimAbsAlloc( pGia, pOffSet, pOnSet, vSimsCands, nWords, vResub, fVerbose );
-    Gia_SimAbsInit( p );
-    for {
-        Gia_SimAbsSolve( p );
-        if !(Gia_SimAbsRefine( p ) != 0) {
-            break; }
-    }
-    Gia_SimAbsFree( p );
-    Abc_PrintTime( 1, "Resubstitution time", Abc_Clock() - clk );
-    return vResub;
-}
+
 
 
 
