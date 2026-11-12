@@ -270,3 +270,37 @@ func TestSblSearchWindow(t *testing.T) {
 	}
 	Gia_ManComputeOneWin(g, -1, nil, nil, nil, nil)
 }
+
+func TestGiaManLutSat(t *testing.T) {
+	g := Gia_ManStart(32)
+	inputs := make([]int32, 12)
+	for i := range inputs {
+		inputs[i] = Gia_ManAppendCi(g)
+	}
+	var roots []int32
+	current := Gia_ManAppendAnd(g, inputs[0], inputs[1])
+	roots = append(roots, current)
+	for i := 2; i < len(inputs); i++ {
+		current = Gia_ManAppendAnd(g, current, inputs[i])
+		roots = append(roots, current)
+	}
+	Gia_ManAppendCo(g, current)
+	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	for i, lit := range roots {
+		id := lit >> 1
+		left := inputs[0] >> 1
+		if i > 0 {
+			left = roots[i-1] >> 1
+		}
+		vec.Vec_IntWriteEntry(g.vMapping, int(id), int32(vec.Vec_IntSize(g.vMapping)))
+		vec.Vec_IntPush(g.vMapping, 2)
+		vec.Vec_IntPush(g.vMapping, left)
+		vec.Vec_IntPush(g.vMapping, inputs[i+1]>>1)
+		vec.Vec_IntPush(g.vMapping, id)
+	}
+	before := Gia_ManLutNum(g)
+	Gia_ManLutSat(g, 4, 16, 1, 0, 0, 0, 0, 0, 0, 0)
+	if g.vMapping == nil || g.vMapping2 != nil || Gia_ManLutNum(g) >= before {
+		t.Fatalf("mapping did not improve: %d -> %d", before, Gia_ManLutNum(g))
+	}
+}
