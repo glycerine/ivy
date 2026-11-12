@@ -26,9 +26,8 @@ const (
 
 type Ndr_RecordType_t = int
 type Ndr_Data_t struct {
-	nSize, nCap int
-	pHead       []byte
-	pBody       []int
+	pHead []byte
+	pBody []int
 }
 
 func Ndr_DataType(p *Ndr_Data_t, i int) int { return int(p.pHead[i]) }
@@ -48,12 +47,12 @@ func Ndr_DataAddTo(p *Ndr_Data_t, i, add int) {
 	p.pBody[i] += add
 }
 func Ndr_DataResize(p *Ndr_Data_t, add int) {
-	if p.nSize+add <= p.nCap {
+	if len(p.pBody)+add <= cap(p.pBody) {
 		return
 	}
-	n := 2 * p.nCap
-	if n < p.nSize+add {
-		n = p.nSize + add
+	n := 2 * cap(p.pBody)
+	if n < len(p.pBody)+add {
+		n = len(p.pBody) + add
 	}
 	h := make([]byte, len(p.pHead), n)
 	copy(h, p.pHead)
@@ -61,13 +60,11 @@ func Ndr_DataResize(p *Ndr_Data_t, add int) {
 	copy(b, p.pBody)
 	p.pHead = h
 	p.pBody = b
-	p.nCap = n
 }
 func Ndr_DataPush(p *Ndr_Data_t, typ, entry int) {
 	Ndr_DataResize(p, 1)
 	p.pHead = append(p.pHead, byte(typ))
 	p.pBody = append(p.pBody, entry)
-	p.nSize++
 }
 func Ndr_DataPushRange(p *Ndr_Data_t, left, right, signed int) {
 	if signed != 0 {
@@ -213,7 +210,7 @@ func Ndr_Create(name int) *Ndr_Data_t {
 	return p
 }
 func Ndr_AddModule(p *Ndr_Data_t, name int) int {
-	mod := p.nSize
+	mod := len(p.pBody)
 	Ndr_DataPush(p, NDR_MODULE, 2)
 	Ndr_DataPush(p, NDR_NAME, name)
 	Ndr_DataAddTo(p, 0, 2)
@@ -221,10 +218,10 @@ func Ndr_AddModule(p *Ndr_Data_t, name int) int {
 }
 func Ndr_AddObject(p *Ndr_Data_t, module, typ, name, left, right, signed, ni int, inputs []int, no int, outputs []int, function any) {
 	mod := module - 256
-	if typ == 0 || mod < 0 || mod >= p.nSize || Ndr_DataType(p, mod) != NDR_MODULE || Ndr_DataEnd(p, mod) != p.nSize {
+	if typ == 0 || mod < 0 || mod >= len(p.pBody) || Ndr_DataType(p, mod) != NDR_MODULE || Ndr_DataEnd(p, mod) != len(p.pBody) {
 		panic("objects must be appended to latest module")
 	}
-	obj := p.nSize
+	obj := len(p.pBody)
 	Ndr_DataPush(p, NDR_OBJECT, 0)
 	Ndr_DataPush(p, NDR_OPERTYPE, typ)
 	Ndr_DataPushRange(p, left, right, signed)
@@ -234,7 +231,7 @@ func Ndr_AddObject(p *Ndr_Data_t, module, typ, name, left, right, signed, ni int
 	Ndr_DataPushArray(p, NDR_INPUT, ni, inputs)
 	Ndr_DataPushArray(p, NDR_OUTPUT, no, outputs)
 	Ndr_DataPushString(p, typ, NDR_FUNCTION, function)
-	size := p.nSize - obj
+	size := len(p.pBody) - obj
 	Ndr_DataAddTo(p, obj, size)
 	Ndr_DataAddTo(p, mod, size)
 	Ndr_DataAddTo(p, 0, size)
@@ -243,16 +240,14 @@ func Ndr_Delete(p *Ndr_Data_t) {
 	if p != nil {
 		p.pHead = nil
 		p.pBody = nil
-		p.nSize = 0
-		p.nCap = 0
 	}
 }
 func Ndr_Write(name string, p *Ndr_Data_t) {
-	d := make([]byte, 5*p.nSize)
+	d := make([]byte, 5*len(p.pBody))
 	for i, v := range p.pBody {
 		binary.LittleEndian.PutUint32(d[4*i:], uint32(v))
 	}
-	copy(d[4*p.nSize:], p.pHead)
+	copy(d[4*len(p.pBody):], p.pHead)
 	if err := os.WriteFile(name, d, 0644); err != nil {
 		panic(err)
 	}
@@ -263,20 +258,41 @@ func Ndr_Read(name string) *Ndr_Data_t {
 		return nil
 	}
 	n := len(d) / 5
-	p := &Ndr_Data_t{nSize: n, nCap: n, pHead: append([]byte(nil), d[4*n:]...), pBody: make([]int, n)}
+	p := &Ndr_Data_t{pHead: append([]byte(nil), d[4*n:]...), pBody: make([]int, n)}
 	for i := range p.pBody {
 		p.pBody[i] = int(int32(binary.LittleEndian.Uint32(d[4*i:])))
 	}
 	if p.pHead[0] != NDR_DESIGN || p.pBody[0] != n {
 		return nil
 	}
-	for i, t := range p.pHead {
-		if t == 0 || int(t) >= NDR_UNKNOWN {
-			return nil
+	var valid func(int, int, int) bool
+	valid = func(index, bound, typ int) bool {
+		if index >= bound || int(p.pHead[index]) != typ {
+			return false
 		}
-		if int(t) <= NDR_OBJECT && (p.pBody[i] <= 0 || p.pBody[i] > n-i) {
-			return nil
+		size := p.pBody[index]
+		if size < 2 || size > bound-index {
+			return false
 		}
+		end := index + size
+		for i := index + 1; i < end; {
+			child := int(p.pHead[i])
+			if child <= NDR_NONE || child >= NDR_UNKNOWN {
+				return false
+			}
+			if child <= NDR_OBJECT {
+				if !((typ == NDR_DESIGN && child == NDR_MODULE) || (typ == NDR_MODULE && child == NDR_OBJECT)) || !valid(i, end, child) {
+					return false
+				}
+				i += p.pBody[i]
+			} else {
+				i++
+			}
+		}
+		return true
+	}
+	if !valid(0, n, NDR_DESIGN) {
+		return nil
 	}
 	return p
 }
@@ -302,7 +318,7 @@ func Ndr_WriteVerilog(name string, p *Ndr_Data_t, names []string) {
 		defer f.Close()
 		w = f
 	}
-	for m := 1; m < p.nSize; m += Ndr_DataSize(p, m) {
+	for m := 1; m < len(p.pBody); m += Ndr_DataSize(p, m) {
 		if Ndr_DataType(p, m) == NDR_MODULE {
 			Ndr_WriteVerilogModule(w, p, m, names)
 		}
@@ -356,6 +372,9 @@ func Ndr_WriteVerilogModule(w io.Writer, p *Ndr_Data_t, mod int, names []string)
 			inst = names[id]
 		}
 		if typ >= 256 {
+			for _, id := range Ndr_ObjReadBodyP(p, o, NDR_OUTPUT) {
+				args = append(args, names[id])
+			}
 			fmt.Fprintf(w, "  %s %s (%s);\n", names[Ndr_ObjReadEntry(p, typ-256, NDR_NAME)], inst, strings.Join(args, ", "))
 			continue
 		}

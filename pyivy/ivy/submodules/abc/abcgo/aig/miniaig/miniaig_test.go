@@ -47,7 +47,7 @@ func TestMiniSerialization(t *testing.T) {
 	name := filepath.Join(t.TempDir(), "graph.aig")
 	Mini_AigDump(p, name)
 	q := Mini_AigLoad(name)
-	if q == nil || q.nSize != p.nSize {
+	if q == nil || len(q.pArray) != len(p.pArray) {
 		t.Fatal("round trip")
 	}
 	for i := range p.pArray {
@@ -75,7 +75,7 @@ func TestMiniLut(t *testing.T) {
 	name := filepath.Join(t.TempDir(), "lut.bin")
 	Mini_LutDump(p, name)
 	q := Mini_LutLoad(name)
-	if q == nil || q.nSize != p.nSize {
+	if q == nil || len(q.pArray) != len(p.pArray) {
 		t.Fatal("LUT round trip")
 	}
 	for i, v := range p.pArray {
@@ -115,7 +115,7 @@ func TestNdrRecordsAndRoundTrip(t *testing.T) {
 	name := filepath.Join(t.TempDir(), "net.ndr")
 	Ndr_Write(name, p)
 	q := Ndr_Read(name)
-	if q == nil || q.nSize != p.nSize {
+	if q == nil || len(q.pBody) != len(p.pBody) {
 		t.Fatal("read")
 	}
 	for i, v := range p.pBody {
@@ -143,5 +143,69 @@ func TestNdrExamples(t *testing.T) {
 		if p == nil {
 			t.Fatal(name)
 		}
+	}
+}
+
+func TestMiniAigRejectsMalformedNodes(t *testing.T) {
+	for _, data := range [][]int{{0, MINI_AIG_NULL}, {MINI_AIG_NULL, MINI_AIG_NULL, MINI_AIG_NULL, 0}} {
+		p := &Mini_Aig_t{pArray: data}
+		if Mini_AigCheck(p) {
+			t.Fatal("accepted malformed node", data)
+		}
+	}
+}
+func TestMiniAigVerilogOutputFanin(t *testing.T) {
+	p := Mini_AigStart()
+	a := Mini_AigCreatePi(p)
+	po := Mini_AigCreatePo(p, a)
+	node := Mini_AigAnd(p, po, a)
+	Mini_AigCreatePo(p, node)
+	name := filepath.Join(t.TempDir(), "output_fanin.v")
+	Mini_AigDumpVerilog(name, "top", p)
+	text, _ := os.ReadFile(name)
+	if strings.Contains(string(text), "n2") || !strings.Contains(string(text), "o2") {
+		t.Fatal(string(text))
+	}
+}
+func TestNdrHierarchyWritesOutputConnections(t *testing.T) {
+	p := Ndr_Create(1)
+	child := Ndr_AddModule(p, 1)
+	Ndr_AddObject(p, child, ABC_OPER_CI, 0, 0, 0, 0, 0, nil, 1, []int{2}, nil)
+	Ndr_AddObject(p, child, ABC_OPER_CO, 0, 0, 0, 0, 1, []int{2}, 0, nil, nil)
+	parent := Ndr_AddModule(p, 3)
+	Ndr_AddObject(p, parent, ABC_OPER_CI, 0, 0, 0, 0, 0, nil, 1, []int{4}, nil)
+	Ndr_AddObject(p, parent, child, 0, 0, 0, 0, 1, []int{4}, 1, []int{5}, nil)
+	Ndr_AddObject(p, parent, ABC_OPER_CO, 0, 0, 0, 0, 1, []int{5}, 0, nil, nil)
+	var text strings.Builder
+	Ndr_WriteVerilogModule(&text, p, parent-256, []string{"", "child", "x", "parent", "in", "out"})
+	if !strings.Contains(text.String(), "child  (in, out);") {
+		t.Fatal(text.String())
+	}
+}
+func TestMiniLutRejectsMalformedSentinels(t *testing.T) {
+	p := Mini_LutStart(3)
+	id := Mini_LutCreatePi(p)
+	p.pArray[id*p.LutSize+2] = 0
+	if Mini_LutCheck(p) {
+		t.Fatal("accepted PI with hidden fanin")
+	}
+	p = Mini_LutStart(3)
+	a := Mini_LutCreatePi(p)
+	id = Mini_LutCreateNode(p, 1, []int{a}, []uint32{0xaaaaaaaa})
+	p.pArray[id*p.LutSize+2] = MINI_LUT_NULL2
+	if Mini_LutCheck(p) {
+		t.Fatal("accepted misplaced PO sentinel")
+	}
+}
+func TestNdrRejectsContainerCrossing(t *testing.T) {
+	p := Ndr_Create(1)
+	child := Ndr_AddModule(p, 2)
+	Ndr_AddObject(p, child, ABC_OPER_CI, 0, 0, 0, 0, 0, nil, 1, []int{3}, nil)
+	next := Ndr_AddModule(p, 4)
+	p.pBody[child-256+2] = len(p.pBody) - (child - 256 + 2)
+	name := filepath.Join(t.TempDir(), "invalid.ndr")
+	Ndr_Write(name, p)
+	if Ndr_Read(name) != nil {
+		t.Fatal("object crossed its module boundary", next)
 	}
 }

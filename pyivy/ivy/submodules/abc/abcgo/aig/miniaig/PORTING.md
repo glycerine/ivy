@@ -27,3 +27,16 @@ go test -race ./aig/miniaig
 
 Original implementation: Alan Mishchenko, ABC Logic Synthesis and Verification
 System, UC Berkeley. Refer to the corresponding C headers for source history.
+
+## Review passes
+
+A separate compactness/readability pass removed copied `nSize`/`nCap` metadata
+from all three representations. Slice `len`/`cap` are the single source of truth;
+register counts and LUT width remain because they describe circuit semantics.
+Removed generated blank-identifier assignments and the unused assert helper.
+
+A subsequent bug pass added failing regressions and fixes for malformed constant
+and PI records, MiniLUT sentinel placement, NDR containers crossing their enclosing
+module, MiniAIG Verilog fanins that reference PO nodes, and hierarchical NDR
+instances losing their output connections. The complete package and race tests
+pass after these fixes. No source functionality was excluded to get a build.

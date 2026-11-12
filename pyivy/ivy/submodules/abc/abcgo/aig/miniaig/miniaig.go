@@ -13,29 +13,27 @@ const MINI_AIG_NULL = 0x7fffffff
 const MINI_AIG_START_SIZE = 255
 
 type Mini_Aig_t struct {
-	nCap, nSize, nRegs int
-	pArray             []int
+	nRegs  int
+	pArray []int
 }
 
 func Mini_AigGrow(p *Mini_Aig_t, n int) {
-	if n <= p.nCap {
+	if n <= cap(p.pArray) {
 		return
 	}
-	a := make([]int, p.nSize, n)
+	a := make([]int, len(p.pArray), n)
 	copy(a, p.pArray)
 	p.pArray = a
-	p.nCap = n
 }
 func Mini_AigPush(p *Mini_Aig_t, a, b int) {
-	if p.nSize+2 > p.nCap {
-		n := 2 * p.nCap
+	if len(p.pArray)+2 > cap(p.pArray) {
+		n := 2 * cap(p.pArray)
 		if n < MINI_AIG_START_SIZE {
 			n = MINI_AIG_START_SIZE
 		}
 		Mini_AigGrow(p, n)
 	}
 	p.pArray = append(p.pArray, a, b)
-	p.nSize += 2
 }
 func Mini_AigNodeFanin0(p *Mini_Aig_t, id int) int { return p.pArray[2*id] }
 func Mini_AigNodeFanin1(p *Mini_Aig_t, id int) int { return p.pArray[2*id+1] }
@@ -55,7 +53,7 @@ func Mini_AigLitConst1() int                         { return 1 }
 func Mini_AigLitIsConst0(l int) bool                 { return l == 0 }
 func Mini_AigLitIsConst1(l int) bool                 { return l == 1 }
 func Mini_AigLitIsConst(l int) bool                  { return l == 0 || l == 1 }
-func Mini_AigNodeNum(p *Mini_Aig_t) int              { return p.nSize / 2 }
+func Mini_AigNodeNum(p *Mini_Aig_t) int              { return len(p.pArray) / 2 }
 func Mini_AigNodeIsConst(p *Mini_Aig_t, id int) bool { return id == 0 }
 func Mini_AigNodeIsPi(p *Mini_Aig_t, id int) bool {
 	return id > 0 && Mini_AigNodeFanin0(p, id) == MINI_AIG_NULL
@@ -81,8 +79,6 @@ func Mini_AigStart() *Mini_Aig_t {
 func Mini_AigStop(p *Mini_Aig_t) {
 	if p != nil {
 		p.pArray = nil
-		p.nSize = 0
-		p.nCap = 0
 	}
 }
 func miniCount(p *Mini_Aig_t, pred func(*Mini_Aig_t, int) bool) int {
@@ -101,12 +97,12 @@ func Mini_AigPrintStats(p *Mini_Aig_t) {
 	fmt.Printf("PI = %d. PO = %d. Node = %d.\n", Mini_AigPiNum(p), Mini_AigPoNum(p), Mini_AigAndNum(p))
 }
 func Mini_AigCreatePi(p *Mini_Aig_t) int {
-	l := p.nSize
+	l := len(p.pArray)
 	Mini_AigPush(p, MINI_AIG_NULL, MINI_AIG_NULL)
 	return l
 }
 func Mini_AigCreatePo(p *Mini_Aig_t, l int) int {
-	id := p.nSize
+	id := len(p.pArray)
 	if l < 0 || l >= id {
 		panic("invalid output literal")
 	}
@@ -114,7 +110,7 @@ func Mini_AigCreatePo(p *Mini_Aig_t, l int) int {
 	return id
 }
 func Mini_AigAnd(p *Mini_Aig_t, a, b int) int {
-	id := p.nSize
+	id := len(p.pArray)
 	if a < 0 || b < 0 || a >= id || b >= id {
 		panic("invalid AND literal")
 	}
@@ -179,11 +175,17 @@ func Mini_AigTruth(p *Mini_Aig_t, vars []int, n int, t uint32) int {
 	return Mini_AigMuxProp(p, vars[v], b, a)
 }
 func Mini_AigCheck(p *Mini_Aig_t) bool {
-	if p == nil || p.nSize < 2 || p.nSize%2 != 0 || p.nSize != len(p.pArray) {
+	if p == nil || len(p.pArray) < 2 || len(p.pArray)%2 != 0 {
+		return false
+	}
+	if p.pArray[0] != MINI_AIG_NULL || p.pArray[1] != MINI_AIG_NULL {
 		return false
 	}
 	for i := 1; i < Mini_AigNodeNum(p); i++ {
 		a, b := p.pArray[2*i], p.pArray[2*i+1]
+		if a == MINI_AIG_NULL && b != MINI_AIG_NULL {
+			return false
+		}
 		if a != MINI_AIG_NULL && (a < 0 || a >= 2*i) {
 			return false
 		}
@@ -201,8 +203,8 @@ func Mini_AigDump(p *Mini_Aig_t, name string) {
 		panic(e)
 	}
 	defer f.Close()
-	data := make([]int32, 2+p.nSize)
-	data[0] = int32(p.nSize)
+	data := make([]int32, 2+len(p.pArray))
+	data[0] = int32(len(p.pArray))
 	data[1] = int32(p.nRegs)
 	for i, v := range p.pArray {
 		data[i+2] = int32(v)
@@ -224,7 +226,7 @@ func Mini_AigLoad(name string) *Mini_Aig_t {
 	if size < 2 || size%2 != 0 || size != (len(data)-8)/4 {
 		return nil
 	}
-	p := &Mini_Aig_t{nCap: size, nSize: size, nRegs: regs, pArray: make([]int, size)}
+	p := &Mini_Aig_t{nRegs: regs, pArray: make([]int, size)}
 	for i := range p.pArray {
 		p.pArray[i] = int(int32(binary.LittleEndian.Uint32(data[8+4*i:])))
 	}
@@ -258,6 +260,9 @@ func Mini_AigDumpVerilog(name, module string, p *Mini_Aig_t) {
 			prefix = "~"
 		}
 		kind := "n"
+		if Mini_AigNodeIsPo(p, l>>1) {
+			kind = "o"
+		}
 		if Mini_AigNodeIsPi(p, l>>1) {
 			kind = "i"
 		}
