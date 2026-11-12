@@ -306,82 +306,7 @@ func Io_End(pAbc *Abc_Frame_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadBlif(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fReadAsAig int32;
-    var fCheck int32;
-    var fUseNewParser int32;
-    var fSaveNames int32;
-    var c int32;
-    extern Abc_Ntk_t * Io_ReadBlifAsAig( char * pFileName, int fCheck );
 
-    fCheck = 1;
-    fReadAsAig = 0;
-    fUseNewParser = 1;
-    fSaveNames = 0;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "nmach" ) ) != -1  {
-        switch  c  {
-            case 'n':
-                fUseNewParser ^= 1;
-                break;
-            case 'm':
-                fSaveNames ^= 1;
-                break;
-            case 'a':
-                fReadAsAig ^= 1;
-                break;
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    if fReadAsAig != 0 {
-        pNtk = Io_ReadBlifAsAig( pFileName, fCheck );
-    } else if fUseNewParser != 0 {
-        pNtk = Io_Read( pFileName, IO_FILE_BLIF, fCheck, 0 );
-    } else {
-        var pTemp *Abc_Ntk_t;
-        pNtk = Io_ReadBlif( pFileName, fCheck );
-        if pNtk == nil {
-            return 1; }
-        if fSaveNames != 0 {
-            Abc_NtkStartNameIds( pNtk ); }
-        pNtk = Abc_NtkToLogic( pTemp = pNtk );
-        if fSaveNames != 0 {
-            Abc_NtkTransferNameIds( pTemp, pNtk ); }
-        Abc_NtkDelete( pTemp );
-    }
-
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_blif [-nmach] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in binary BLIF format\n");
-    fmt.Fprintf(pAbc.Err, "\t         (if this command does not work, try \"read\")\n");
-    fmt.Fprintf(pAbc.Err, "\t-n     : toggle using old BLIF parser without hierarchy support [default = %s]\n", !fUseNewParser? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-m     : toggle saving original circuit names into a file [default = %s]\n", fSaveNames? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-a     : toggle creating AIG while reading the file [default = %s]\n", fReadAsAig? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -834,56 +759,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadVerilog(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck, fBarBufs int32;
-    var c int32;
 
-    fCheck = 1;
-    fBarBufs = 0;
-    glo_fMapped = 0;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "mcbh" ) ) != -1  {
-        switch  c  {
-            case 'm':
-                glo_fMapped ^= 1;
-                break;
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'b':
-                fBarBufs ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_VERILOG, fCheck, fBarBufs );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_verilog [-mcbh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in Verilog (IWLS 2002/2005 subset)\n");
-    fmt.Fprintf(pAbc.Err, "\t-m     : toggle reading mapped Verilog [default = %s]\n", glo_fMapped? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-b     : toggle reading barrier buffers [default = %s]\n", fBarBufs? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 

@@ -55,3 +55,17 @@ func Io_ReadVerilog(filename string, check int32) *abc.Network {
 	}
 	return root
 }
+
+func init() {
+	RegisterFormat(IO_FILE_VERILOG, func(filename string, check bool) (*abc.Network, error) {
+		checkInt := int32(0)
+		if check {
+			checkInt = 1
+		}
+		n := Io_ReadVerilog(filename, checkInt)
+		if n == nil {
+			return nil, fmt.Errorf("%s: Verilog parse failed", filename)
+		}
+		return n, nil
+	}, nil)
+}
