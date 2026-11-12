@@ -264,3 +264,129 @@ func TestSparseIOAndEmptyPrint(t *testing.T) {
 	}
 	sparseCheck(t, matrix, sparseModel{{0, 0}: true, {0, 2}: true, {0, 34}: true, {1, 32}: true})
 }
+
+func TestSparsePublicAPIAndReaderValidation(t *testing.T) {
+	matrix := NewSparseMatrix()
+	element := matrix.Insert(3, 7)
+	matrix.Insert(3, 2)
+	if element.Row() != 3 || element.Column() != 7 || matrix.RowCount() != 1 || matrix.ColumnCount() != 2 || matrix.ElementCount() != 2 {
+		t.Fatal("public matrix interface")
+	}
+	columns := matrix.Row(3).Columns()
+	columns[0] = 99
+	if !slices.Equal(matrix.Row(3).Columns(), []int{2, 7}) || !slices.Equal(matrix.Column(7).Rows(), []int{3}) {
+		t.Fatal("public views alias storage")
+	}
+	matrix.RemoveColumn(7)
+	matrix.RemoveRow(3)
+	if matrix.Find(3, 2) != nil || matrix.RowCount() != 0 {
+		t.Fatal("public removal")
+	}
+	var parsed *sm_matrix
+	if !sm_read_compressed(strings.NewReader("1 4\n0x00 +0x5\n"), &parsed) || !slices.Equal(parsed.Row(0).Columns(), []int{0, 2}) {
+		t.Fatal("C-compatible hex prefix")
+	}
+	for _, input := range []string{"1 3\n0 8\n", "1 32\n0 100000000\n", "100000000 4\n", "1 -1\n"} {
+		if sm_read_compressed(strings.NewReader(input), &parsed) {
+			t.Fatal("malformed compressed matrix accepted", input)
+		}
+	}
+	if sm_read(strings.NewReader("0x1 2\n"), &parsed) {
+		t.Fatal("decimal reader accepted hexadecimal coordinate")
+	}
+}
+func TestSparseStandaloneMutationCannotBreakMatrix(t *testing.T) {
+	matrix := NewSparseMatrix()
+	element := matrix.Insert(1, 2)
+	model := sparseSnapshot(matrix)
+	for _, operation := range []func(){
+		func() { sm_row_insert(matrix.Row(1), 3) }, func() { sm_col_insert(matrix.Column(2), 3) },
+		func() { sm_row_remove(matrix.Row(1), 2) }, func() { sm_col_remove(matrix.Column(2), 1) },
+		func() { sm_row_remove_element(matrix.Row(1), element) }, func() { sm_col_remove_element(matrix.Column(2), element) },
+		func() { sm_row_free(matrix.Row(1)) }, func() { sm_col_free(matrix.Column(2)) },
+	} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("matrix-owned standalone mutation accepted")
+				}
+			}()
+			operation()
+		}()
+		sparseCheck(t, matrix, model)
+	}
+}
+
+// Enumerate covers independently of the linked-list algorithms under test.
+func sparseCoverCost(matrix *sm_matrix, weights []int32) int32 {
+	best := int32(1 << 30)
+	for mask := 0; mask < 1<<len(weights); mask++ {
+		cost := int32(0)
+		for col, weight := range weights {
+			if mask&(1<<col) != 0 {
+				cost += weight
+			}
+		}
+		covered := true
+		for row := matrix.first_row; row != nil; row = row.next_row {
+			hit := false
+			for element := row.first_col; element != nil; element = element.next_col {
+				hit = hit || mask&(1<<element.col_num) != 0
+			}
+			covered = covered && hit
+		}
+		if covered && cost < best {
+			best = cost
+		}
+	}
+	return best
+}
+
+func TestSparseDominanceAndPartitionPreserveCoverCost(t *testing.T) {
+	random := rand.New(rand.NewPCG(91, 203))
+	for trial := 0; trial < 500; trial++ {
+		matrix := sm_alloc()
+		width := 1 + random.IntN(7)
+		weights, units := make([]int32, width), make([]int32, width)
+		for col := range weights {
+			weights[col], units[col] = int32(random.IntN(6)), 1
+		}
+		for row, count := 0, 1+random.IntN(6); row < count; row++ {
+			mask := 1 + random.IntN((1<<width)-1)
+			for col := 0; col < width; col++ {
+				if mask&(1<<col) != 0 {
+					sm_insert(matrix, row, col)
+				}
+			}
+		}
+		weighted, unit := sparseCoverCost(matrix, weights), sparseCoverCost(matrix, units)
+		for mode := 0; mode < 3; mode++ {
+			reduced := sm_dup(matrix)
+			want, costs := weighted, weights
+			switch mode {
+			case 0:
+				sm_row_dominance(reduced)
+			case 1:
+				sm_col_dominance(reduced, nil)
+				want, costs = unit, units
+			case 2:
+				sm_col_dominance(reduced, weights)
+			}
+			sparseCheck(t, reduced, sparseSnapshot(reduced))
+			if got := sparseCoverCost(reduced, costs); got != want {
+				t.Fatalf("trial %d mode %d: cost %d want %d", trial, mode, got, want)
+			}
+		}
+		var left, right *sm_matrix
+		if sm_block_partition(matrix, &left, &right) {
+			if got := sparseCoverCost(left, weights) + sparseCoverCost(right, weights); got != weighted {
+				t.Fatalf("partition cost %d want %d", got, weighted)
+			}
+			for col := left.first_col; col != nil; col = col.next_col {
+				if sm_get_col(right, col.col_num) != nil {
+					t.Fatal("partition shares column")
+				}
+			}
+		}
+	}
+}

@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func sm_alloc() *sm_matrix { return &sm_matrix{} }
@@ -266,17 +267,28 @@ func sm_num_elements(matrix *sm_matrix) int {
 
 // Read retains the source output-pointer/boolean result contract. Successful
 // prefixes remain available on malformed input, matching fscanf-based reading.
+func sm_scan_decimal(reader io.Reader) (int, error) {
+	var token string
+	if _, err := fmt.Fscan(reader, &token); err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(token)
+}
 func sm_read(reader io.Reader, result **sm_matrix) bool {
 	matrix := sm_alloc()
 	*result = matrix
 	input := bufio.NewReader(reader)
 	for {
-		var row, col int
-		n, err := fmt.Fscan(input, &row, &col)
-		if err == io.EOF && n == 0 {
+		row, err := sm_scan_decimal(input)
+		if err == io.EOF {
 			return true
 		}
-		if err != nil || n != 2 || row < 0 || col < 0 {
+		if err != nil {
+			return false
+		}
+		col, err := sm_scan_decimal(input)
+		maxInt := int(^uint(0) >> 1)
+		if err != nil || row < 0 || col < 0 || row == maxInt || col == maxInt {
 			return false
 		}
 		sm_insert(matrix, row, col)
@@ -286,15 +298,21 @@ func sm_read_compressed(reader io.Reader, result **sm_matrix) bool {
 	matrix := sm_alloc()
 	*result = matrix
 	input := bufio.NewReader(reader)
-	var rows, cols int
-	if _, err := fmt.Fscan(input, &rows, &cols); err != nil || rows < 0 || cols < 0 {
+	rows, rowErr := sm_scan_decimal(input)
+	cols, colErr := sm_scan_decimal(input)
+	if rowErr != nil || colErr != nil || rows < 0 || cols < 0 {
 		return false
 	}
-	sm_resize(matrix, rows, cols)
+	// Capacity hints do not create row/column entries. Grow only for actual
+	// nonzeros, so a truncated large header cannot force an allocation first.
 	readHex := func() (uint64, bool) {
 		var token string
 		if _, err := fmt.Fscan(input, &token); err != nil {
 			return 0, false
+		}
+		token = strings.TrimPrefix(token, "+")
+		if strings.HasPrefix(token, "0x") || strings.HasPrefix(token, "0X") {
+			token = token[2:]
 		}
 		value, err := strconv.ParseUint(token, 16, 64)
 		return value, err == nil
@@ -303,9 +321,13 @@ func sm_read_compressed(reader io.Reader, result **sm_matrix) bool {
 		if _, ok := readHex(); !ok {
 			return false
 		} // source row label/count word
-		for col := 0; col < cols; col += 32 {
+		for col := 0; col < cols; {
 			word, ok := readHex()
-			if !ok {
+			if !ok || word>>32 != 0 {
+				return false
+			}
+			remaining := min(32, cols-col)
+			if remaining < 32 && word>>uint(remaining) != 0 {
 				return false
 			}
 			for bit := 0; word != 0; word, bit = word>>1, bit+1 {
@@ -313,6 +335,7 @@ func sm_read_compressed(reader io.Reader, result **sm_matrix) bool {
 					sm_insert(matrix, row, col+bit)
 				}
 			}
+			col += remaining
 		}
 	}
 	return true
