@@ -1,12 +1,5 @@
 package abc
 
-import (
-	"fmt"
-	"strings"
-)
-
-import "os"
-
 /**CFile****************************************************************
 
   FileName    [abcUtil.c]
@@ -612,91 +605,6 @@ import "os"
 
 **********************************************************************
 */
-func Abc_NtkPrepareTwoNtks(pErr *os.File, pNtk *Abc_Ntk_t, argv *string, argc int32, ppNtk1 **Abc_Ntk_t, ppNtk2 **Abc_Ntk_t, pfDelete1 *int32, pfDelete2 *int32, fCheck int32) int32 {
-	var pFile *os.File
-	var pNtk1, pNtk2, pNtkTemp *Abc_Ntk_t
-	var util_optind int32
-
-	*pfDelete1 = 0
-	*pfDelete2 = 0
-	if argc == util_optind { // use the spec
-		if pNtk == nil {
-			fmt.Fprintf(pErr, "Empty current network.\n")
-			return 0
-		}
-		if pNtk.pSpec == nil {
-			fmt.Fprintf(pErr, "The external spec is not given.\n")
-			return 0
-		}
-		pFile = os.Open(pNtk.pSpec)
-		if pFile == nil {
-			fmt.Fprintf(pErr, "Cannot open the external spec file \"%s\".\n", pNtk.pSpec)
-			return 0
-
-		} else {
-			_ = (pFile).Close()
-		}
-		pNtk1 = Abc_NtkDup(pNtk)
-		pNtk2 = Io_Read(pNtk.pSpec, Io_ReadFileType(pNtk.pSpec), fCheck, 0)
-		if pNtk2 == nil {
-			return 0
-		}
-		*pfDelete1 = 1
-		*pfDelete2 = 1
-
-	} else if argc == util_optind+1 {
-		if pNtk == nil {
-			fmt.Fprintf(pErr, "Empty current network.\n")
-			return 0
-		}
-		pNtk1 = Abc_NtkDup(pNtk)
-		pNtk2 = Io_Read(argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0)
-		if pNtk2 == nil {
-			return 0
-		}
-		*pfDelete1 = 1
-		*pfDelete2 = 1
-
-	} else if argc == util_optind+2 {
-		pNtk1 = Io_Read(argv[util_optind], Io_ReadFileType(argv[util_optind]), fCheck, 0)
-		if pNtk1 == nil {
-			return 0
-		}
-		pNtk2 = Io_Read(argv[util_optind+1], Io_ReadFileType(argv[util_optind+1]), fCheck, 0)
-		if pNtk2 == nil {
-			Abc_NtkDelete(pNtk1)
-			return 0
-		}
-		*pfDelete1 = 1
-		*pfDelete2 = 1
-
-	} else {
-		fmt.Fprintf(pErr, "Wrong number of arguments.\n")
-		return 0
-	}
-
-	// make sure the networks are strashed
-	if !Abc_NtkIsStrash(pNtk1) {
-		pNtkTemp = Abc_NtkStrash(pNtk1, 0, 1, 0)
-		if *pfDelete1 {
-			Abc_NtkDelete(pNtk1)
-		}
-		pNtk1 = pNtkTemp
-		*pfDelete1 = 1
-	}
-	if !Abc_NtkIsStrash(pNtk2) {
-		pNtkTemp = Abc_NtkStrash(pNtk2, 0, 1, 0)
-		if *pfDelete2 {
-			Abc_NtkDelete(pNtk2)
-		}
-		pNtk2 = pNtkTemp
-		*pfDelete2 = 1
-	}
-
-	*ppNtk1 = pNtk1
-	*ppNtk2 = pNtk2
-	return 1
-}
 
 /**Function*************************************************************
 
