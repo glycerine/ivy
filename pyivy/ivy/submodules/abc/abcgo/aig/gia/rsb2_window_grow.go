@@ -201,3 +201,66 @@ func Gia_RsbWindowCompute(p *Gia_Man_t, id, maxInputs, maxLevels int32, levels *
 	*window, *inputs = win, ins
 	return 1
 }
+
+// Gia_RsbExpandInputs replaces cut nodes whose fanins overlap the window.
+func Gia_RsbExpandInputs(p *Gia_Man_t, levels *Vec_Wec_t, window, inputs *Vec_Int_t) {
+	for changed := true; changed; {
+		changed = false
+		for _, id := range append([]int32(nil), vec.Vec_IntArray(inputs)...) {
+			obj := Gia_ManObj(p, id)
+			if Gia_ObjIsAnd(obj) == 0 {
+				continue
+			}
+			fans := [2]int32{Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)}
+			if Gia_ObjIsTravIdCurrentId(p, fans[0]) == 0 && Gia_ObjIsTravIdCurrentId(p, fans[1]) == 0 {
+				continue
+			}
+			vec.Vec_IntRemove(inputs, id)
+			for _, fan := range fans {
+				if Gia_ObjIsTravIdCurrentId(p, fan) != 0 {
+					continue
+				}
+				vec.Vec_IntPush(inputs, fan)
+				Gia_WinTryAddingNode(p, fan, -1, levels, window)
+			}
+			changed = true
+		}
+	}
+}
+
+func Gia_RsbSelectOneInput(p *Gia_Man_t, levels *Vec_Wec_t, inputs *Vec_Int_t) int32 {
+	best, weight := int32(0), int32(-1)
+	for _, id := range vec.Vec_IntArray(inputs) {
+		obj := Gia_ManObj(p, id)
+		if Gia_ObjIsAnd(obj) == 0 {
+			continue
+		}
+		a, b := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
+		if Gia_ObjIsTravIdCurrentId(p, a) != 0 || Gia_ObjIsTravIdCurrentId(p, b) != 0 {
+			panic("gia: marked Rsb2 input fanin")
+		}
+		w := Gia_WinTryAddingNode(p, a, b, levels, nil)
+		if w > weight {
+			best, weight = id, w
+		}
+	}
+	return best
+}
+
+func Gia_RsbWindowGrow(p *Gia_Man_t, levels *Vec_Wec_t, window, inputs *Vec_Int_t, maxInputs int32) {
+	Gia_RsbAddSideInputs(p, levels, window)
+	Gia_RsbExpandInputs(p, levels, window, inputs)
+	for int32(vec.Vec_IntSize(inputs)) < maxInputs {
+		id := Gia_RsbSelectOneInput(p, levels, inputs)
+		if id == 0 {
+			break
+		}
+		obj := Gia_ManObj(p, id)
+		a, b := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
+		Gia_WinTryAddingNode(p, a, b, levels, window)
+		vec.Vec_IntRemove(inputs, id)
+		vec.Vec_IntPush(inputs, a)
+		vec.Vec_IntPush(inputs, b)
+		Gia_RsbExpandInputs(p, levels, window, inputs)
+	}
+}

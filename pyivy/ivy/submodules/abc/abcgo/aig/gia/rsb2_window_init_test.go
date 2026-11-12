@@ -52,3 +52,28 @@ func TestRsb2ComputeWindow(t *testing.T) {
 		t.Fatal("computed window changed function")
 	}
 }
+
+func TestRsb2GrowAlternativeWindow(t *testing.T) {
+	p := Gia_ManStart(12)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	root := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, root)
+	Gia_ManStaticFanoutStart(p)
+	defer Gia_ManStaticFanoutStop(p)
+	levels := vec.Vec_WecStart(int(Gia_ManLevelNum(p) + 1))
+	inputs := vec.Vec_IntAlloc(3)
+	vec.Vec_IntPush(inputs, x>>1)
+	vec.Vec_IntPush(inputs, c>>1)
+	window := vec.Vec_IntAlloc(8)
+	Gia_WinCreateFromCut(p, root>>1, inputs, levels, window)
+	Gia_RsbWindowGrow(p, levels, window, inputs, 3)
+	if vec.Vec_IntSize(inputs) != 3 {
+		t.Fatalf("inputs %v", vec.Vec_IntArray(inputs))
+	}
+	for _, id := range vec.Vec_IntArray(inputs) {
+		if Gia_ObjIsAnd(Gia_ManObj(p, id)) != 0 {
+			t.Fatalf("internal node %d remains in cut", id)
+		}
+	}
+}
