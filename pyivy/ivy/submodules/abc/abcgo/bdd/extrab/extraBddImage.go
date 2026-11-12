@@ -1,5 +1,8 @@
 package extrab
 
+type Extra_ImageTree_t = Extra_ImageTree_t_
+type Extra_ImageTree2_t = Extra_ImageTree2_t_
+
 import "fmt"
 
 /**CFile****************************************************************

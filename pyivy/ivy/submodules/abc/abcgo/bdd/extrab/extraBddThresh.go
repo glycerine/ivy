@@ -1,788 +1,536 @@
+/**CFile****************************************************************
+
+FileName    [extraBddThresh.c]
+
+SystemName  [ABC: Logic synthesis and verification system.]
+
+PackageName [extra]
+
+Synopsis    [Dealing with threshold functions.]
+
+Author      [Augusto Neutzling, Jody Matos, and Alan Mishchenko (UC Berkeley).]
+
+Affiliation [Federal University of Rio Grande do Sul, Brazil]
+
+Date        [Ver. 1.0. Started - October 7, 2014.]
+
+Revision    [$Id: extraBddThresh.c,v 1.0 2014/10/07 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
 package extrab
 
 import (
 	"fmt"
-	"os"
+	"sort"
+	"strings"
 )
 
-/**CFile****************************************************************
-
- FileName    [extraBddThresh.c]
-
- SystemName  [ABC: Logic synthesis and verification system.]
-
- PackageName [extra]
-
- Synopsis    [Dealing with threshold functions.]
-
- Author      [Augusto Neutzling, Jody Matos, and Alan Mishchenko (UC Berkeley).]
-
- Affiliation [Federal University of Rio Grande do Sul, Brazil]
-
- Date        [Ver. 1.0. Started - October 7, 2014.]
-
- Revision    [$Id: extraBddThresh.c,v 1.0 2014/10/07 00:00:00 alanmi Exp $]
-
- ***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-//#include "base/main/main.h"
-//#include "misc/extra/extra.h"
-//#include "bdd/cudd/cudd.h"
-//#include "bool/kit/kit.h"
-
-//#include "misc/vec/vec.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
- Synopsis    [Checks thresholdness of the function.]
-
- Description []
-
- SideEffects []
-
- SeeAlso     []
-
- ***********************************************************************/
-func Extra_ThreshPrintChow(Chow0 int32, pChow *int32, nVars int32) {
-    var i int32;
-    for i = 0; i < nVars; i++ {
-        fmt.Printf("%d ", pChow[i]);
-    }
-    fmt.Printf("  %d\n", Chow0);
+func thresholdWords(n int) int {
+	if n <= 6 {
+		return 1
+	}
+	return 1 << uint(n-6)
 }
-func Extra_ThreshComputeChow(t *word, nVars int32, pChow *int32) int32 {
-    var i int32;
-    var k int32;
-    var Chow0 int32;
-    var nMints int32 = (1 << nVars);
-    memset(pChow, 0, sizeof(int) * nVars);
-    // compute Chow coefs
-    for i = 0; i < nMints; i++ {
-        if Abc_TtGetBit(t, i) {
-            for Chow0, k = Chow0+1, 0; k < nVars; k++ {
-                if (i >> k) & 1 {
-                    pChow[k]++; }
-            } }
-    }
-    // compute modified Chow coefs
-    for k = 0; k < nVars; k++ {
-        pChow[k] = 2 * pChow[k] - Chow0;
-    }
-    return Chow0 - (1 << (nVars - 1));
+func thresholdValid(t []uint64, n int) bool   { return n >= 1 && n <= 16 && len(t) >= thresholdWords(n) }
+func thresholdBit(t []uint64, index int) bool { return t[index>>6]&(uint64(1)<<uint(index&63)) != 0 }
+func thresholdSet(t []uint64, index int, value bool) {
+	mask := uint64(1) << uint(index&63)
+	if value {
+		t[index>>6] |= mask
+	} else {
+		t[index>>6] &= ^mask
+	}
 }
-func Extra_ThreshSortByChow(t *word, nVars int32, pChow *int32) {
-    var i int32;
-    var nWords int32 = Abc_TtWordNum(nVars);
-    //sort the variables by Chow in ascending order
-    for {
-        var fChange int32;
-        for i = 0; i < nVars - 1; i++ {
-            if pChow[i] >= pChow[i + 1] {
-                continue; }
-            ABC_SWAP(int, pChow[i], pChow[i + 1]);
-            Abc_TtSwapAdjacent(t, nWords, i);
-            fChange = 1;
-        }
-        if !(fChange != 0) {
-            return; }
-    }
+func thresholdPolarity(t []uint64, n, v int) (positive, negative bool) {
+	positive, negative = true, true
+	for a := 0; a < 1<<uint(n); a++ {
+		if a&(1<<uint(v)) != 0 {
+			continue
+		}
+		lo, hi := thresholdBit(t, a), thresholdBit(t, a|1<<uint(v))
+		if lo && !hi {
+			positive = false
+		}
+		if hi && !lo {
+			negative = false
+		}
+	}
+	return
 }
-func Extra_ThreshSortByChowInverted(t *word, nVars int32, pChow *int32) {
-    var i int32;
-    var nWords int32 = Abc_TtWordNum(nVars);
-    //sort the variables by Chow in descending order
-    for {
-        var fChange int32;
-        for i = 0; i < nVars - 1; i++ {
-            if pChow[i] <= pChow[i + 1] {
-                continue; }
-            ABC_SWAP(int, pChow[i], pChow[i + 1]);
-            Abc_TtSwapAdjacent(t, nWords, i);
-            fChange = 1;
-        }
-        if !(fChange != 0) {
-            return; }
-    }
+func thresholdMakePositive(t []uint64, n int) bool {
+	polarities := make([]bool, n)
+	for v := 0; v < n; v++ {
+		pos, neg := thresholdPolarity(t, n, v)
+		if !pos && !neg {
+			return false
+		}
+		polarities[v] = neg
+	}
+	for v, flip := range polarities {
+		if !flip {
+			continue
+		}
+		for a := 0; a < thresholdWords(n)*64; a++ {
+			if a&(1<<uint(v)) != 0 {
+				continue
+			}
+			b := a | 1<<uint(v)
+			lo, hi := thresholdBit(t, a), thresholdBit(t, b)
+			thresholdSet(t, a, hi)
+			thresholdSet(t, b, lo)
+		}
+	}
+	return true
 }
-func Extra_ThreshInitializeChow(nVars int32, pChow *int32) int32 {
-    var i int32;
-    var Aux [16]int32;
-    var nChows int32;
-    //group the variables which have the same Chow
-    for i = 0; i < nVars; i++ {
-        if i == 0 || (pChow[i] == pChow[i - 1]) {
-            Aux[i] = nChows;
-        } else {
-            nChows++;
-            Aux[i] = nChows;
-        }
-    }
-    for i = 0; i < nVars; i++ {
-        pChow[i] = Aux[i];
-    }
-    nChows++;
-    return nChows;
-
+func thresholdSwap(t []uint64, n, v int) {
+	for a := 0; a < thresholdWords(n)*64; a++ {
+		if a&(1<<uint(v)) != 0 || a&(1<<uint(v+1)) == 0 {
+			continue
+		}
+		b := a ^ (3 << uint(v))
+		lo, hi := thresholdBit(t, a), thresholdBit(t, b)
+		thresholdSet(t, a, hi)
+		thresholdSet(t, b, lo)
+	}
 }
-func Extra_ThreshWeightedSum(pW *int32, nVars int32, m int32) int32 {
-    var i, Cost int32;
-    for i = 0; i < nVars; i++ {
-        if (m >> i) & 1 {
-            Cost += pW[i]; }
-    }
-    return Cost;
+func Extra_ThreshPrintChow(chow0 int, chow []int, n int) {
+	for _, v := range chow[:n] {
+		fmt.Printf("%d ", v)
+	}
+	fmt.Printf("  %d\n", chow0)
 }
-func Extra_ThreshCubeWeightedSum1(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {
-    var k, Cost int32;
-    for k = j; k < j + nVars; k++ {
-        if pIsop[k] == '1' {
-            Cost += pWofChow[pChow[k - j]]; }
-    }
-    return Cost;
+func Extra_ThreshComputeChow(t []uint64, n int, chow []int) int {
+	if !thresholdValid(t, n) || len(chow) < n {
+		return 0
+	}
+	clear(chow[:n])
+	count := 0
+	for a := 0; a < 1<<uint(n); a++ {
+		if !thresholdBit(t, a) {
+			continue
+		}
+		count++
+		for v := 0; v < n; v++ {
+			if a&(1<<uint(v)) != 0 {
+				chow[v]++
+			}
+		}
+	}
+	for v := 0; v < n; v++ {
+		chow[v] = 2*chow[v] - count
+	}
+	return count - (1 << uint(n-1))
 }
-func Extra_ThreshCubeWeightedSum2(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {
-    var k, Cost int32;
-    for k = j; k < j + nVars; k++ {
-        if pIsop[k] == '-' {
-            Cost += pWofChow[pChow[k - j]]; }
-    }
-    return Cost;
+func thresholdSort(t []uint64, n int, chow []int, inverted bool) {
+	if !thresholdValid(t, n) || len(chow) < n {
+		return
+	}
+	for {
+		changed := false
+		for v := 0; v < n-1; v++ {
+			swap := chow[v] < chow[v+1]
+			if inverted {
+				swap = chow[v] > chow[v+1]
+			}
+			if swap {
+				chow[v], chow[v+1] = chow[v+1], chow[v]
+				thresholdSwap(t, n, v)
+				changed = true
+			}
+		}
+		if !changed {
+			return
+		}
+	}
 }
-
-static inline int Extra_ThreshCubeWeightedSum3(int * pWofChow, int nChows,
-        unsigned long ** pGreaters, int j) {
-    var i, Cost int32;
-    for i = 0; i < nChows; i++ {
-        Cost += pWofChow[i] * pGreaters[j][i];
-    }
-    return Cost;
+func Extra_ThreshSortByChow(t []uint64, n int, chow []int)         { thresholdSort(t, n, chow, false) }
+func Extra_ThreshSortByChowInverted(t []uint64, n int, chow []int) { thresholdSort(t, n, chow, true) }
+func Extra_ThreshInitializeChow(n int, chow []int) int {
+	if n <= 0 || len(chow) < n {
+		return 0
+	}
+	groups := make([]int, n)
+	group := 0
+	for i := 1; i < n; i++ {
+		if chow[i] != chow[i-1] {
+			group++
+		}
+		groups[i] = group
+	}
+	copy(chow, groups)
+	return group + 1
 }
-static inline int Extra_ThreshCubeWeightedSum4(int * pWofChow, int nChows,
-        unsigned long ** pSmallers, int j) {
-    var i, Cost int32;
-    for i = 0; i < nChows; i++ {
-        Cost += pWofChow[i] * pSmallers[j][i];
-    }
-    return Cost;
+func Extra_ThreshWeightedSum(weights []int, n, assignment int) int {
+	sum := 0
+	for i, w := range weights[:n] {
+		if assignment&(1<<uint(i)) != 0 {
+			sum += w
+		}
+	}
+	return sum
 }
-func Extra_ThreshSelectWeights3(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    assert(nVars == 3, "nVars == 3");
-    for pW[2] = 1; pW[2] <= nVars; pW[2]++ {
-        for pW[1] = pW[2]; pW[1] <= nVars; pW[1]++ {
-            for pW[0] = pW[1]; pW[0] <= nVars; pW[0]++ {
-                Lmin = 10000;
-                Lmax = 0;
-                for m = 0; m < nMints; m++ {
-                    if Abc_TtGetBit(t, m) {
-                        Lmin = Abc_MinInt(Lmin,
-                                Extra_ThreshWeightedSum(pW, nVars, m));
-                    } else {
-                        Lmax = Abc_MaxInt(Lmax,
-                                Extra_ThreshWeightedSum(pW, nVars, m)); }
-                    if Lmax >= Lmin {
-                        break; }
-//            printf( "%c%d ", Abc_TtGetBit(t, m) ? '+' : '-', Extra_ThreshWeightedSum(pW, nVars, m) );
-                }
-//        printf( "  -%d +%d\n", Lmax, Lmin );
-                if m < nMints {
-                    continue; }
-                assert(Lmax < Lmin, "Lmax < Lmin");
-                return Lmin;
-            }
-        }
-    }
-    return 0;
+func Extra_ThreshCubeWeightedSum1(weights, chow []int, sop string, n, start int) int {
+	sum := 0
+	for v := 0; v < n; v++ {
+		if sop[start+v] == '1' {
+			sum += weights[chow[v]]
+		}
+	}
+	return sum
 }
-func Extra_ThreshSelectWeights4(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    assert(nVars == 4, "nVars == 4");
-    for pW[3] = 1; pW[3] <= nVars; pW[3]++ {
-        for pW[2] = pW[3]; pW[2] <= nVars; pW[2]++ {
-            for pW[1] = pW[2]; pW[1] <= nVars; pW[1]++ {
-                for pW[0] = pW[1]; pW[0] <= nVars; pW[0]++ {
-                    Lmin = 10000;
-                    Lmax = 0;
-                    for m = 0; m < nMints; m++ {
-                        if Abc_TtGetBit(t, m) {
-                            Lmin = Abc_MinInt(Lmin,
-                                    Extra_ThreshWeightedSum(pW, nVars, m));
-                        } else {
-                            Lmax = Abc_MaxInt(Lmax,
-                                    Extra_ThreshWeightedSum(pW, nVars, m)); }
-                        if Lmax >= Lmin {
-                            break; }
-                    }
-                    if m < nMints {
-                        continue; }
-                    assert(Lmax < Lmin, "Lmax < Lmin");
-                    return Lmin;
-                }
-            }
-        }
-    }
-    return 0;
+func Extra_ThreshCubeWeightedSum2(weights, chow []int, sop string, n, start int) int {
+	sum := 0
+	for v := 0; v < n; v++ {
+		if sop[start+v] == '-' {
+			sum += weights[chow[v]]
+		}
+	}
+	return sum
 }
-func Extra_ThreshSelectWeights5(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    var Limit int32 = nVars + 0;
-    assert(nVars == 5, "nVars == 5");
-    for pW[4] = 1; pW[4] <= Limit; pW[4]++ {
-        for pW[3] = pW[4]; pW[3] <= Limit; pW[3]++ {
-            for pW[2] = pW[3]; pW[2] <= Limit; pW[2]++ {
-                for pW[1] = pW[2]; pW[1] <= Limit; pW[1]++ {
-                    for pW[0] = pW[1]; pW[0] <= Limit; pW[0]++ {
-                        Lmin = 10000;
-                        Lmax = 0;
-                        for m = 0; m < nMints; m++ {
-                            if Abc_TtGetBit(t, m) {
-                                Lmin = Abc_MinInt(Lmin,
-                                        Extra_ThreshWeightedSum(pW, nVars, m));
-                            } else {
-                                Lmax = Abc_MaxInt(Lmax,
-                                        Extra_ThreshWeightedSum(pW, nVars, m)); }
-                            if Lmax >= Lmin {
-                                break; }
-                        }
-                        if m < nMints {
-                            continue; }
-                        assert(Lmax < Lmin, "Lmax < Lmin");
-                        return Lmin;
-                    }
-                }
-            }
-        }
-    }
-    return 0;
+func Extra_ThreshCubeWeightedSum3(weights []int, n int, greater [][]uint64, row int) int {
+	sum := 0
+	for i := 0; i < n; i++ {
+		sum += weights[i] * int(greater[row][i])
+	}
+	return sum
 }
-func Extra_ThreshSelectWeights6(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    var Limit int32 = nVars + 3;
-    assert(nVars == 6, "nVars == 6");
-    for pW[5] = 1; pW[5] <= Limit; pW[5]++ {
-        for pW[4] = pW[5]; pW[4] <= Limit; pW[4]++ {
-            for pW[3] = pW[4]; pW[3] <= Limit; pW[3]++ {
-                for pW[2] = pW[3]; pW[2] <= Limit; pW[2]++ {
-                    for pW[1] = pW[2]; pW[1] <= Limit; pW[1]++ {
-                        for pW[0] = pW[1]; pW[0] <= Limit; pW[0]++ {
-                            Lmin = 10000;
-                            Lmax = 0;
-                            for m = 0; m < nMints; m++ {
-                                if Abc_TtGetBit(t, m) {
-                                    Lmin = Abc_MinInt(Lmin,
-                                            Extra_ThreshWeightedSum(pW, nVars,
-                                                    m));
-                                } else {
-                                    Lmax = Abc_MaxInt(Lmax,
-                                            Extra_ThreshWeightedSum(pW, nVars,
-                                                    m)); }
-                                if Lmax >= Lmin {
-                                    break; }
-                            }
-                            if m < nMints {
-                                continue; }
-                            assert(Lmax < Lmin, "Lmax < Lmin");
-                            return Lmin;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
-func Extra_ThreshSelectWeights7(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    var Limit int32 = nVars + 6;
-    assert(nVars == 7, "nVars == 7");
-    for pW[6] = 1; pW[6] <= Limit; pW[6]++ {
-        for pW[5] = pW[6]; pW[5] <= Limit; pW[5]++ {
-            for pW[4] = pW[5]; pW[4] <= Limit; pW[4]++ {
-                for pW[3] = pW[4]; pW[3] <= Limit; pW[3]++ {
-                    for pW[2] = pW[3]; pW[2] <= Limit; pW[2]++ {
-                        for pW[1] = pW[2]; pW[1] <= Limit; pW[1]++ {
-                            for pW[0] = pW[1]; pW[0] <= Limit; pW[0]++ {
-                                Lmin = 10000;
-                                Lmax = 0;
-                                for m = 0; m < nMints; m++ {
-                                    if Abc_TtGetBit(t, m) {
-                                        Lmin = Abc_MinInt(Lmin,
-                                                Extra_ThreshWeightedSum(pW,
-                                                        nVars, m));
-                                    } else {
-                                        Lmax = Abc_MaxInt(Lmax,
-                                                Extra_ThreshWeightedSum(pW,
-                                                        nVars, m)); }
-                                    if Lmax >= Lmin {
-                                        break; }
-                                }
-                                if m < nMints {
-                                    continue; }
-                                assert(Lmax < Lmin, "Lmax < Lmin");
-                                return Lmin;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
-func Extra_ThreshSelectWeights8(t *word, nVars int32, pW *int32) int32 {
-    var m int32;
-    var Lmin int32;
-    var Lmax int32;
-    var nMints int32 = (1 << nVars);
-    var Limit int32 = nVars + 1; // <<-- incomplete detection to save runtime!
-    assert(nVars == 8, "nVars == 8");
-    for pW[7] = 1; pW[7] <= Limit; pW[7]++ {
-        for pW[6] = pW[7]; pW[6] <= Limit; pW[6]++ {
-            for pW[5] = pW[6]; pW[5] <= Limit; pW[5]++ {
-                for pW[4] = pW[5]; pW[4] <= Limit; pW[4]++ {
-                    for pW[3] = pW[4]; pW[3] <= Limit; pW[3]++ {
-                        for pW[2] = pW[3]; pW[2] <= Limit; pW[2]++ {
-                            for pW[1] = pW[2]; pW[1] <= Limit; pW[1]++ {
-                                for pW[0] = pW[1]; pW[0] <= Limit; pW[0]++ {
-                                    Lmin = 10000;
-                                    Lmax = 0;
-                                    for m = 0; m < nMints; m++ {
-                                        if Abc_TtGetBit(t, m) {
-                                            Lmin = Abc_MinInt(Lmin,
-                                                    Extra_ThreshWeightedSum(pW,
-                                                            nVars, m));
-                                        } else {
-                                            Lmax = Abc_MaxInt(Lmax,
-                                                    Extra_ThreshWeightedSum(pW,
-                                                            nVars, m)); }
-                                        if Lmax >= Lmin {
-                                            break; }
-                                    }
-                                    if m < nMints {
-                                        continue; }
-                                    assert(Lmax < Lmin, "Lmax < Lmin");
-                                    return Lmin;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return 0;
-}
-func Extra_ThreshSelectWeights(t *word, nVars int32, pW *int32) int32 {
-    if nVars <= 2 {
-        return (t[0] & 0xF) != 6 && (t[0] & 0xF) != 9; }
-    if nVars == 3 {
-        return Extra_ThreshSelectWeights3(t, nVars, pW); }
-    if nVars == 4 {
-        return Extra_ThreshSelectWeights4(t, nVars, pW); }
-    if nVars == 5 {
-        return Extra_ThreshSelectWeights5(t, nVars, pW); }
-    if nVars == 6 {
-        return Extra_ThreshSelectWeights6(t, nVars, pW); }
-    if nVars == 7 {
-        return Extra_ThreshSelectWeights7(t, nVars, pW); }
-    if nVars == 8 {
-        return Extra_ThreshSelectWeights8(t, nVars, pW); }
-    return 0;
-}
-func Extra_ThreshIncrementWeights(nChows int32, pWofChow *int32, i int32) {
-    var k int32;
-    for k = i; k < nChows; k++ {
-        pWofChow[k]++;
-    }
-}
-func Extra_ThreshDecrementWeights(nChows int32, pWofChow *int32, i int32) {
-    var k int32;
-    for k = i; k < nChows; k++ {
-        pWofChow[k]--;
-    }
-}
-void Extra_ThreshPrintInequalities(unsigned long ** pGreaters,
-        unsigned long ** pSmallers, int nChows, int nInequalities) {
-    var i, k int32;
-    for k = 0; k < nInequalities; k++ {
-        fmt.Printf("\n Inequality [%d] = ", k);
-        for i = 0; i < nChows; i++ {
-            fmt.Printf("%d ", pGreaters[k][i]);
-        }
-        fmt.Printf(" > ");
-
-        for i = 0; i < nChows; i++ {
-            fmt.Printf("%d ", pSmallers[k][i]);
-        }
-    }
-}
-void Extra_ThreshCreateInequalities(char * pIsop, char * pIsopFneg, int nVars,
-        int * pWofChow, int * pChow, int nChows, int nInequalities,
-        unsigned long ** pGreaters, unsigned long ** pSmallers) {
-    var i, j, k, m int32;
-
-    var nCubesIsop int32  = len(pIsop) / (nVars + 3);
-    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);
-
-    for k = 0; k < nCubesIsop * nCubesIsopFneg; k++ {
-        for i = 0; i < nChows; i++ {
-            pGreaters[k][i] = 0;
-            pSmallers[k][i] = 0;
-        }
-    }
-    m = 0;
-    for i = 0; i < int32(len(pIsop)); i += (nVars + 3) {
-        for j = 0; j < nCubesIsopFneg; j++ {
-            for k = 0; k < nVars; k++ {
-                if pIsop[i + k] == '1' {
-                    pGreaters[m][pChow[k]] = pGreaters[m][(pChow[k])] + 1; }
-            }
-
-            m++;
-        }
-    }
-    m = 0;
-    for i = 0; i < nCubesIsop; i++ {
-        for j = 0; j < int32(len(pIsopFneg)); j += (nVars + 3) {
-            for k = 0; k < nVars; k++ {
-                if pIsopFneg[j + k] == '-' {
-                    pSmallers[m][pChow[k]] = pSmallers[m][pChow[k]] + 1; }
-            }
-            m++;
-        }
-    }
-//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);
-//        printf( "\nInequalities was Created \n");
+func Extra_ThreshCubeWeightedSum4(weights []int, n int, smaller [][]uint64, row int) int {
+	return Extra_ThreshCubeWeightedSum3(weights, n, smaller, row)
 }
 
-void Extra_ThreshSimplifyInequalities(int nInequalities, int nChows,
-        unsigned long ** pGreaters, unsigned long ** pSmallers) {
-    var i, k int32;
-
-    for k = 0; k < nInequalities; k++ {
-        for i = 0; i < nChows; i++ {
-            if (pGreaters[k][i]) == (pSmallers[k][i]) {
-                pGreaters[k][i] = 0;
-                pSmallers[k][i] = 0;
-            } else if (pGreaters[k][i]) > (pSmallers[k][i]) {
-                pGreaters[k][i] = pGreaters[k][i] - pSmallers[k][i];
-                pSmallers[k][i] = 0;
-            } else {
-                pSmallers[k][i] = pSmallers[k][i] - pGreaters[k][i];
-                ;
-                pGreaters[k][i] = 0;
-            }
-        }
-    }
-//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);
-//        printf( "\nInequalities was Siplified \n");
+func thresholdSelect(t []uint64, n int, weights []int) int {
+	if !thresholdValid(t, n) || len(weights) < n {
+		return 0
+	}
+	if n <= 2 {
+		if t[0]&15 != 6 && t[0]&15 != 9 {
+			return 1
+		}
+		return 0
+	}
+	if n > 8 {
+		return 0
+	}
+	limit := n
+	switch n {
+	case 6:
+		limit = n + 3
+	case 7:
+		limit = n + 6
+	case 8:
+		limit = n + 1
+	}
+	var search func(int, int) int
+	search = func(index, minimum int) int {
+		if index < 0 {
+			lower, upper := 10000, 0
+			for a := 0; a < 1<<uint(n); a++ {
+				sum := Extra_ThreshWeightedSum(weights, n, a)
+				if thresholdBit(t, a) {
+					lower = min(lower, sum)
+				} else {
+					upper = max(upper, sum)
+				}
+				if upper >= lower {
+					return 0
+				}
+			}
+			return lower
+		}
+		for weights[index] = minimum; weights[index] <= limit; weights[index]++ {
+			if threshold := search(index-1, weights[index]); threshold != 0 {
+				return threshold
+			}
+		}
+		return 0
+	}
+	return search(n-1, 1)
 }
-func Extra_ThreshAssignWeights(t *word, pIsop string, pIsopFneg string, nVars int32, pW *int32, pChow *int32, nChows int32, Wmin int32) int32 {
-
-    var i int32;
-    var j int32;
-    var Lmin int32 = 1000;
-    var Lmax int32;
-    var Limit int32 = nVars * 2;
-    var delta int32;
-    var deltaOld int32 = -1000;
-    var fIncremented int32;
-    //******************************
-    var pWofChow *int32  = ABC_ALLOC( int, nChows );
-    var nCubesIsop int32  = len(pIsop) / (nVars + 3);
-    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);
-    var nInequalities int32  = nCubesIsop * nCubesIsopFneg;
-    unsigned long **pGreaters;
-    unsigned long **pSmallers;
-
-    pGreaters = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pGreaters);
-    for i = 0; i < nCubesIsop * nCubesIsopFneg; i++ {
-        pGreaters[i] = (unsigned long *)malloc(nChows * sizeof *pGreaters[i]);
-    }
-    pSmallers = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pSmallers);
-    for i = 0; i < nCubesIsop * nCubesIsopFneg; i++ {
-        pSmallers[i] = (unsigned long *)malloc(nChows * sizeof *pSmallers[i]);
-    }
-
-    //******************************
-    Extra_ThreshCreateInequalities(pIsop, pIsopFneg, nVars, pWofChow, pChow,
-            nChows, nInequalities, pGreaters, pSmallers);
-    Extra_ThreshSimplifyInequalities(nInequalities, nChows, pGreaters,
-            pSmallers);
-
-    //initializes the weights
-    pWofChow[0] = Wmin;
-    for i = 1; i < nChows; i++ {
-        pWofChow[i] = pWofChow[i - 1] + 1;
-    }
-    i = 0;
-
-    //assign the weights respecting the inequalities
-    for i < nChows && pWofChow[nChows - 1] <= Limit {
-        Lmin = 1000;
-        Lmax = 0;
-
-        for j < nInequalities {
-            if pGreaters[j][i] != 0 {
-                Lmin = Extra_ThreshCubeWeightedSum3(pWofChow, nChows, pGreaters,
-                        j);
-                Lmax = Extra_ThreshCubeWeightedSum4(pWofChow, nChows, pSmallers,
-                        j);
-                delta = Lmin - Lmax;
-
-                if delta > 0 {
-                    if fIncremented == 1 {
-                        j = 0;
-                        fIncremented = 0;
-                        deltaOld = -1000;
-                    } else {
-                        j++; }
-                    continue;
-                }
-                if delta > deltaOld {
-                    Extra_ThreshIncrementWeights(nChows, pWofChow, i);
-                    deltaOld = delta;
-                    fIncremented = 1;
-                } else if fIncremented == 1 {
-                    Extra_ThreshDecrementWeights(nChows, pWofChow, i);
-                    j++;
-                    deltaOld = -1000;
-                    fIncremented = 0;
-                    continue;
-                } else {
-                    j++; }
-            } else {
-                j++; }
-
-        }
-        i++;
-        j = 0;
-    }
-
-    //******************************
-    for i = 0; i < nCubesIsop * nCubesIsopFneg; i++ {
-        free(pGreaters[i]);
-    }
-    free(pGreaters);
-    for i = 0; i < nCubesIsop * nCubesIsopFneg; i++ {
-        free(pSmallers[i]);
-    }
-    free(pSmallers);
-    //******************************
-
-    i = 0;
-    Lmin = 1000;
-    Lmax = 0;
-
-    //check the assigned weights in the original system
-    for j = 0; j < int32(len(pIsop)); j += (nVars + 3) {
-        Lmin = Abc_MinInt(Lmin,
-                Extra_ThreshCubeWeightedSum1(pWofChow, pChow, pIsop, nVars, j));
-    }
-    for j = 0; j < int32(len(pIsopFneg)); j += (nVars + 3) {
-        Lmax = Abc_MaxInt(Lmax,
-                Extra_ThreshCubeWeightedSum2(pWofChow, pChow, pIsopFneg, nVars,
-                        j));
-    }
-
-    for i = 0; i < nVars; i++ {
-        pW[i] = pWofChow[pChow[i]];
-    }
-
-    ABC_FREE( pWofChow );
-    if Lmin > Lmax {
-        return Lmin;
-    } else {
-        return 0; }
+func Extra_ThreshSelectWeights(t []uint64, n int, weights []int) int {
+	return thresholdSelect(t, n, weights)
 }
-func Extra_ThreshPrintWeights(T int32, pW *int32, nVars int32) {
-    var i int32;
-
-    if T == 0 {
-        fmt.Fprintf(os.Stdout, "\nHeuristic method: is not TLF\n\n");
-    } else {
-        fmt.Fprintf(os.Stdout, "\nHeuristic method: Weights and threshold value:\n");
-        for i = 0; i < nVars; i++ {
-            fmt.Printf("%d ", pW[i]);
-        }
-        fmt.Printf("  %d\n", T);
-    }
+func Extra_ThreshSelectWeights3(t []uint64, n int, weights []int) int {
+	if n != 3 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
 }
-/**Function*************************************************************
-
-
- Synopsis    [Checks thresholdness of the function.]
-
- Description []
-
- SideEffects []
-
-
- SeeAlso     []
-
- ***********************************************************************/
-func Extra_ThreshCheck(t *word, nVars int32, pW *int32) int32 {
-    var Chow0 int32;
-    var Chow [16]int32;
-    if !Abc_TtIsUnate(t, nVars) {
-        return 0; }
-    Abc_TtMakePosUnate(t, nVars);
-    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);
-    Extra_ThreshSortByChow(t, nVars, Chow);
-    return Extra_ThreshSelectWeights(t, nVars, pW);
+func Extra_ThreshSelectWeights4(t []uint64, n int, weights []int) int {
+	if n != 4 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
 }
-/**Function*************************************************************
-
-
- Synopsis    [Checks thresholdness of the function by using a heuristic method.]
-
- Description []
-
- SideEffects []
-
-
- SeeAlso     []
-
- ***********************************************************************/
-func Extra_ThreshHeuristic(t *word, nVars int32, pW *int32) int32 {
-
-    extern char * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode );
-    var Chow0 int32;
-    var Chow [16]int32;
-    var nChows int32;
-    var i int32;
-    var T int32;
-    var dd *DdManager;
-    var vCube *Vec_Str_t;
-    var ddNode, ddNodeFneg *DdNode;
-    var pIsop, pIsopFneg string;
-    if nVars <= 1 {
-        return 1; }
-    if !Abc_TtIsUnate(t, nVars) {
-        return 0; }
-    Abc_TtMakePosUnate(t, nVars);
-    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);
-    Extra_ThreshSortByChowInverted(t, nVars, Chow);
-    nChows = Extra_ThreshInitializeChow(nVars, Chow);
-
-    dd = (DdManager *) Abc_FrameReadManDd();
-    vCube = Vec_StrAlloc(nVars);
-    for i = 0; i < nVars; i++ {
-        Cudd_bddIthVar(dd, i);
-    }
-    ddNode = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);
-    Cudd_Ref(ddNode);
-    pIsop = Abc_ConvertBddToSop( nil, dd, ddNode, ddNode, nVars, 1,
-            vCube, 1);
-
-    Abc_TtNot(t, Abc_TruthWordNum(nVars));
-    ddNodeFneg = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);
-    Cudd_Ref(ddNodeFneg);
-
-    pIsopFneg = Abc_ConvertBddToSop( nil, dd, ddNodeFneg, ddNodeFneg,
-            nVars, 1, vCube, 1);
-
-    Cudd_RecursiveDeref(dd, ddNode);
-    Cudd_RecursiveDeref(dd, ddNodeFneg);
-
-    T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow, nChows,
-            1);
-
-    for i = 2; (i < 4) && (T == 0) && (nVars >= 6); i++ {
-        T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow,
-                nChows, i);
-    }
-
-    free(pIsop);
-    free(pIsopFneg);
-    Vec_StrFree(vCube);
-
-    return T;
+func Extra_ThreshSelectWeights5(t []uint64, n int, weights []int) int {
+	if n != 5 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
+}
+func Extra_ThreshSelectWeights6(t []uint64, n int, weights []int) int {
+	if n != 6 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
+}
+func Extra_ThreshSelectWeights7(t []uint64, n int, weights []int) int {
+	if n != 7 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
+}
+func Extra_ThreshSelectWeights8(t []uint64, n int, weights []int) int {
+	if n != 8 {
+		return 0
+	}
+	return thresholdSelect(t, n, weights)
+}
+func Extra_ThreshIncrementWeights(n int, weights []int, i int) {
+	for k := i; k < n; k++ {
+		weights[k]++
+	}
+}
+func Extra_ThreshDecrementWeights(n int, weights []int, i int) {
+	for k := i; k < n; k++ {
+		weights[k]--
+	}
+}
+func Extra_ThreshPrintInequalities(greater, smaller [][]uint64, n, rows int) {
+	for row := 0; row < rows; row++ {
+		fmt.Printf("\n Inequality [%d] = ", row)
+		for _, v := range greater[row][:n] {
+			fmt.Printf("%d ", v)
+		}
+		fmt.Print(" > ")
+		for _, v := range smaller[row][:n] {
+			fmt.Printf("%d ", v)
+		}
+	}
+}
+func thresholdSOPValid(sop string, n int) bool {
+	if len(sop)%(n+3) != 0 {
+		return false
+	}
+	for start := 0; start < len(sop); start += n + 3 {
+		for _, c := range sop[start : start+n] {
+			if c != '0' && c != '1' && c != '-' {
+				return false
+			}
+		}
+	}
+	return true
+}
+func Extra_ThreshCreateInequalities(on, off string, n int, weights, chow []int, groups, rows int, greater, smaller [][]uint64) {
+	for row := 0; row < rows; row++ {
+		clear(greater[row][:groups])
+		clear(smaller[row][:groups])
+	}
+	row := 0
+	for a := 0; a < len(on); a += n + 3 {
+		for b := 0; b < len(off); b += n + 3 {
+			for v := 0; v < n; v++ {
+				if on[a+v] == '1' {
+					greater[row][chow[v]]++
+				}
+				if off[b+v] == '-' {
+					smaller[row][chow[v]]++
+				}
+			}
+			row++
+		}
+	}
+}
+func Extra_ThreshSimplifyInequalities(rows, groups int, greater, smaller [][]uint64) {
+	for row := 0; row < rows; row++ {
+		for g := 0; g < groups; g++ {
+			common := min(greater[row][g], smaller[row][g])
+			greater[row][g] -= common
+			smaller[row][g] -= common
+		}
+	}
+}
+func Extra_ThreshAssignWeights(t []uint64, on, off string, n int, weights, chow []int, groups, minimum int) int {
+	if n <= 0 || n > 16 || len(weights) < n || len(chow) < n || groups < 1 || !thresholdSOPValid(on, n) || !thresholdSOPValid(off, n) {
+		return 0
+	}
+	for _, g := range chow[:n] {
+		if g < 0 || g >= groups {
+			return 0
+		}
+	}
+	rows := (len(on) / (n + 3)) * (len(off) / (n + 3))
+	greater, smaller := make([][]uint64, rows), make([][]uint64, rows)
+	for row := 0; row < rows; row++ {
+		greater[row] = make([]uint64, groups)
+		smaller[row] = make([]uint64, groups)
+	}
+	groupWeights := make([]int, groups)
+	Extra_ThreshCreateInequalities(on, off, n, groupWeights, chow, groups, rows, greater, smaller)
+	Extra_ThreshSimplifyInequalities(rows, groups, greater, smaller)
+	for i := range groupWeights {
+		groupWeights[i] = minimum + i
+	}
+	row, oldDelta, incremented := 0, -1000, false
+	for group := 0; group < groups && groupWeights[groups-1] <= n*2; group++ {
+		for row < rows {
+			if greater[row][group] == 0 {
+				row++
+				continue
+			}
+			lower := Extra_ThreshCubeWeightedSum3(groupWeights, groups, greater, row)
+			upper := Extra_ThreshCubeWeightedSum4(groupWeights, groups, smaller, row)
+			delta := lower - upper
+			if delta > 0 {
+				if incremented {
+					row = 0
+					incremented = false
+					oldDelta = -1000
+				} else {
+					row++
+				}
+				continue
+			}
+			if delta > oldDelta {
+				Extra_ThreshIncrementWeights(groups, groupWeights, group)
+				oldDelta = delta
+				incremented = true
+			} else if incremented {
+				Extra_ThreshDecrementWeights(groups, groupWeights, group)
+				row++
+				oldDelta = -1000
+				incremented = false
+			} else {
+				row++
+			}
+		}
+		row = 0
+	}
+	lower, upper := 1000, 0
+	for start := 0; start < len(on); start += n + 3 {
+		lower = min(lower, Extra_ThreshCubeWeightedSum1(groupWeights, chow, on, n, start))
+	}
+	for start := 0; start < len(off); start += n + 3 {
+		upper = max(upper, Extra_ThreshCubeWeightedSum2(groupWeights, chow, off, n, start))
+	}
+	for v := 0; v < n; v++ {
+		weights[v] = groupWeights[chow[v]]
+	}
+	if lower > upper {
+		return lower
+	}
+	return 0
+}
+func Extra_ThreshPrintWeights(threshold int, weights []int, n int) {
+	if threshold == 0 {
+		fmt.Print("\nHeuristic method: is not TLF\n\n")
+		return
+	}
+	fmt.Print("\nHeuristic method: Weights and threshold value:\n")
+	Extra_ThreshPrintChow(threshold, weights, n)
+}
+func Extra_ThreshCheck(t []uint64, n int, weights []int) int {
+	if !thresholdValid(t, n) || len(weights) < n || !thresholdMakePositive(t, n) {
+		return 0
+	}
+	chow := make([]int, n)
+	Extra_ThreshComputeChow(t, n, chow)
+	Extra_ThreshSortByChow(t, n, chow)
+	return Extra_ThreshSelectWeights(t, n, weights)
 }
 
-/**Function*************************************************************
-
- Synopsis    [Checks unateness of a function.]
-
- Description []
-
- SideEffects []
-
- SeeAlso     []
-
- ***********************************************************************/
+// thresholdPrimeSOP enumerates all prime cubes of a monotone function: minimal
+// true assignments or maximal false assignments. Literal-first order matches
+// Abc_ConvertZddToSop_rec, without a global ABC frame/BDD manager dependency.
+func thresholdPrimeSOP(t []uint64, n int, on bool) string {
+	cubes := []string{}
+	for a := 0; a < 1<<uint(n); a++ {
+		if thresholdBit(t, a) != on {
+			continue
+		}
+		prime := true
+		for v := 0; v < n; v++ {
+			bit := 1 << uint(v)
+			if on && a&bit != 0 && thresholdBit(t, a^bit) {
+				prime = false
+				break
+			}
+			if !on && a&bit == 0 && !thresholdBit(t, a|bit) {
+				prime = false
+				break
+			}
+		}
+		if !prime {
+			continue
+		}
+		cube := make([]byte, n+3)
+		for v := 0; v < n; v++ {
+			cube[v] = '-'
+			if on && a&(1<<uint(v)) != 0 {
+				cube[v] = '1'
+			}
+			if !on && a&(1<<uint(v)) == 0 {
+				cube[v] = '0'
+			}
+		}
+		copy(cube[n:], " 1\n")
+		cubes = append(cubes, string(cube))
+	}
+	sort.Slice(cubes, func(i, j int) bool {
+		for v := 0; v < n; v++ {
+			if cubes[i][v] != cubes[j][v] {
+				return cubes[i][v] != '-'
+			}
+		}
+		return false
+	})
+	return strings.Join(cubes, "")
+}
+func Extra_ThreshHeuristic(t []uint64, n int, weights []int) int {
+	if n >= 0 && n <= 1 {
+		return 1
+	}
+	if !thresholdValid(t, n) || len(weights) < n || !thresholdMakePositive(t, n) {
+		return 0
+	}
+	chow := make([]int, n)
+	Extra_ThreshComputeChow(t, n, chow)
+	Extra_ThreshSortByChowInverted(t, n, chow)
+	groups := Extra_ThreshInitializeChow(n, chow)
+	on, off := thresholdPrimeSOP(t, n, true), thresholdPrimeSOP(t, n, false)
+	// Preserve the source's complement side effect, but use the 64-bit word count
+	// instead of its erroneous 32-bit word count (which writes beyond the buffer).
+	for i := 0; i < thresholdWords(n); i++ {
+		t[i] = ^t[i]
+	}
+	threshold := Extra_ThreshAssignWeights(t, on, off, n, weights, chow, groups, 1)
+	for minimum := 2; minimum < 4 && threshold == 0 && n >= 6; minimum++ {
+		threshold = Extra_ThreshAssignWeights(t, on, off, n, weights, chow, groups, minimum)
+	}
+	return threshold
+}
+func thresholdExample() ([]uint64, int) {
+	t := []uint64{0}
+	for a := 0; a < 64; a++ {
+		x := func(v int) bool { return a&(1<<uint(v)) != 0 }
+		if x(0) && x(1) && x(2) || x(0) && x(1) && x(3) || x(0) && x(1) && x(4) && x(5) || x(0) && x(2) && x(3) && x(4) && x(5) {
+			thresholdSet(t, a, true)
+		}
+	}
+	return t, 6
+}
 func Extra_ThreshCheckTest() {
-    var nVars int32  = 6;
-    var T int32;
-    var Chow0 int32;
-    var Chow [16]int32;
-    var Weights [16]int32;
-//    word t =  s_Truths6[0] & s_Truths6[1] & s_Truths6[2] & s_Truths6[3] & s_Truths6[4];
-//    word t =  (s_Truths6[0] & s_Truths6[1]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[3]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[4]);
-//    word t = (s_Truths6[2] & s_Truths6[1])
-//            | (s_Truths6[2] & s_Truths6[0] & s_Truths6[3])
-//            | (s_Truths6[2] & s_Truths6[0] & ~s_Truths6[4]);
-    var t word  = (s_Truths6[0] & s_Truths6[1] & s_Truths6[2])| (s_Truths6[0] & s_Truths6[1] & s_Truths6[3]) | (s_Truths6[0] & s_Truths6[1] & s_Truths6[4] & s_Truths6[5]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[3] & s_Truths6[4] & s_Truths6[5]);
-//    word t =  (s_Truths6[0] & s_Truths6[1]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[3]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[4]) | (s_Truths6[1] & s_Truths6[2] & s_Truths6[3]);
-//    word t =  (s_Truths6[0] & s_Truths6[1]) | (s_Truths6[0] & s_Truths6[2]) | (s_Truths6[0] & s_Truths6[3] & s_Truths6[4] & s_Truths6[5]) | 
-//        (s_Truths6[1] & s_Truths6[2] & s_Truths6[3]) | (s_Truths6[1] & s_Truths6[2] & s_Truths6[4]) | (s_Truths6[1] & s_Truths6[2] & s_Truths6[5]);
-    var i int32;
-    assert(nVars <= 8, "nVars <= 8");
-    for i = 0; i < nVars; i++ {
-        fmt.Printf("%d %d %d\n", i, Abc_TtPosVar(&t, nVars, i), Abc_TtNegVar(&t, nVars, i));
-    }
-//    word t = s_Truths6[0] & s_Truths6[1] & s_Truths6[2];
-    Chow0 = Extra_ThreshComputeChow(&t, nVars, Chow);
-    if T = Extra_ThreshCheck(&t, nVars, Weights) {
-        Extra_ThreshPrintChow(T, Weights, nVars);
-    } else {
-        fmt.Printf("No threshold\n"); }
+	t, n := thresholdExample()
+	weights := make([]int, n)
+	threshold := Extra_ThreshCheck(t, n, weights)
+	if threshold != 0 {
+		Extra_ThreshPrintChow(threshold, weights, n)
+	} else {
+		fmt.Println("No threshold")
+	}
 }
 func Extra_ThreshHeuristicTest() {
-    var nVars int32  = 6;
-    var T int32;
-    var Weights [16]int32;
-
-    //    word t = 19983902376700760000;
-    var t word  = (s_Truths6[0] & s_Truths6[1] & s_Truths6[2])| (s_Truths6[0] & s_Truths6[1] & s_Truths6[3]) | (s_Truths6[0] & s_Truths6[1] & s_Truths6[4] & s_Truths6[5]) | (s_Truths6[0] & s_Truths6[2] & s_Truths6[3] & s_Truths6[4] & s_Truths6[5]);
-    var pT *word  = &t;
-    T = Extra_ThreshHeuristic(pT, nVars, Weights);
-    Extra_ThreshPrintWeights(T, Weights, nVars);
-
+	t, n := thresholdExample()
+	weights := make([]int, n)
+	Extra_ThreshPrintWeights(Extra_ThreshHeuristic(t, n, weights), weights, n)
 }
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-
