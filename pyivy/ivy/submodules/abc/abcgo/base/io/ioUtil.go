@@ -146,7 +146,89 @@ func Io_Write(n *abc.Network, filename string, kind Io_FileType_t) error {
 	return WriteNetwork(n, filename, kind)
 }
 func Io_WriteHie(n *abc.Network, baseName, filename string) error {
-	return WriteNetwork(n, filename, Io_ReadFileType(filename))
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 && abc.Abc_NtkIsLogic(n) == 0 {
+		return fmt.Errorf("io: hierarchy output requires a logic or strashed network")
+	}
+	kind := Io_ReadFileType(baseName)
+	if kind != IO_FILE_BLIF && kind != IO_FILE_BLIFMV && kind != IO_FILE_VERILOG {
+		return fmt.Errorf("io: unknown hierarchy input format")
+	}
+	base, err := ReadNetwork(baseName, kind, true)
+	if err != nil {
+		return err
+	}
+	if len(base.ObjectsOfKind(abc.ObjectWhitebox)) != 0 && n.Barriers == 0 {
+		old := base
+		base = abc.Abc_NtkFlattenLogicHierarchy(old)
+		abc.Abc_NtkDelete(old)
+		if base == nil {
+			return fmt.Errorf("io: cannot flatten base hierarchy")
+		}
+	}
+	defer abc.Abc_NtkDelete(base)
+	flat := abc.Abc_NtkToNetlist(n)
+	if flat == nil {
+		return fmt.Errorf("io: cannot convert network to netlist")
+	}
+	var result *abc.Network
+	switch {
+	case n.Barriers > 0:
+		result = abc.Abc_NtkFromBarBufs(base, flat)
+	case kind == IO_FILE_BLIFMV:
+		if len(base.ObjectsOfKind(abc.ObjectBlackbox)) != 0 {
+			abc.Abc_NtkDelete(flat)
+			return fmt.Errorf("io: BLIF-MV hierarchy with blackboxes is unsupported")
+		}
+		if abc.Abc_NtkConvertToBlifMv(flat) == 0 {
+			abc.Abc_NtkDelete(flat)
+			return fmt.Errorf("io: cannot convert network to BLIF-MV")
+		}
+		result = abc.Abc_NtkInsertBlifMv(base, flat)
+	case len(base.ObjectsOfKind(abc.ObjectBlackbox)) > 0:
+		result = abc.Abc_NtkInsertNewLogic(base, flat)
+	default:
+		result = flat
+	}
+	if result != flat {
+		abc.Abc_NtkDelete(flat)
+	}
+	if result == nil {
+		return fmt.Errorf("io: cannot reinsert hierarchy")
+	}
+	defer abc.Abc_NtkDelete(result)
+	modules := []*abc.Network{result}
+	if result.Design != nil {
+		modules = result.Design.Modules
+	}
+	switch Io_ReadFileType(filename) {
+	case IO_FILE_BLIF:
+		for _, module := range modules {
+			if abc.Abc_NtkHasSop(module) == 0 && abc.Abc_NtkHasMapping(module) == 0 && abc.Abc_NtkToSop(module, -1, 1_000_000_000) == 0 {
+				return fmt.Errorf("io: cannot convert module %q to SOP", module.Name)
+			}
+		}
+		return Io_WriteBlif(result, filename, 1, 0, 0)
+	case IO_FILE_VERILOG:
+		for _, module := range modules {
+			if abc.Abc_NtkHasAig(module) == 0 && abc.Abc_NtkHasMapping(module) == 0 && abc.Abc_NtkToAig(module) == 0 {
+				return fmt.Errorf("io: cannot convert module %q to AIG", module.Name)
+			}
+		}
+		f, err := os.Create(filename)
+		if err != nil {
+			return err
+		}
+		err = WriteVerilog(f, result, 0)
+		closeErr := f.Close()
+		if err != nil {
+			return err
+		}
+		return closeErr
+	case IO_FILE_BLIFMV:
+		return Io_WriteBlifMv(result, filename)
+	default:
+		return fmt.Errorf("io: unknown hierarchy output format")
+	}
 }
 func ioBuilder(n *abc.Network) *blifModel {
 	m := &blifModel{network: n, nets: map[string]*abc.Object{}, domains: map[string]*abc.MVVariable{}}

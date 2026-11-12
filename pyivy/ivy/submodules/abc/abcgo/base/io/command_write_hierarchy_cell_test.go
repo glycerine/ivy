@@ -27,13 +27,21 @@ func TestWriteHierarchyAndCellNetCommands(t *testing.T) {
 	if data, err := os.ReadFile(cell); err != nil || !strings.Contains(string(data), "CellNet") {
 		t.Fatalf("cellnet %q: %v", data, err)
 	}
-	formats.Lock()
-	old := formats.handlers[IO_FILE_BLIF]
-	formats.Unlock()
-	defer func() { formats.Lock(); formats.handlers[IO_FILE_BLIF] = old; formats.Unlock() }()
-	called := false
-	RegisterFormat(IO_FILE_BLIF, nil, func(got *abc.Network, filename string) error { called = got == n && filename == "out.blif"; return nil })
-	if IoCommandWriteHie(frame, []string{"write_hie", "original.blif", "out.blif"}) != 0 || !called {
-		t.Fatalf("hierarchy dispatch failed: %s", errors.String())
+	base := filepath.Join(dir, "base.blif")
+	if err := os.WriteFile(base, []byte(".model base\n.inputs a\n.outputs y\n.names a y\n1 1\n.end\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	logic := abc.Abc_NtkCreateWithNode("1 1\n")
+	frame.ReplaceCurrentNetwork(logic)
+	output := filepath.Join(dir, "hierarchy.blif")
+	if IoCommandWriteHie(frame, []string{"write_hie", base, output}) != 0 {
+		t.Fatalf("hierarchy command failed: %s", errors.String())
+	}
+	data, err := os.ReadFile(output)
+	if err != nil || !strings.Contains(string(data), ".model") {
+		t.Fatalf("hierarchy output %q: %v; %s", data, err, errors.String())
+	}
+	if err := Io_WriteHie(logic, filepath.Join(dir, "missing.blif"), output); err == nil {
+		t.Fatal("missing hierarchy base accepted")
 	}
 }
