@@ -135,19 +135,22 @@ fields cleared to empty strings and a lexical regression that rejects remaining
 live C `free` tokens. GIA as a whole still cannot compile because unrelated
 generated drafts such as `giaAgi.go` remain unported.
 
-The latest full `go test ./...` still fails across many unfinished packages
-(including espresso, place, bzlib, several SAT solvers, CUDD root APIs, and
-large AIG/BDD/Boolean/optimization areas). This does not affect the focused
-green package commits above. The active work remains the `abcgo/` port; no
-further starting-point changes are in scope.
+The latest full `go test ./...` still fails across many unfinished packages.
+GIA's focused ported-core race suite passes, and its remaining package blocker
+has moved from `giaAgi.go` to `giaAig.c.go`. Placement currently fails in the
+retained generated test harness, while its extracted database/geometry tests
+pass. Full-module verification must be repeated after the active package ports
+settle.
 
-## Null-safe free lowering
+Additional reviewed integrations since the earlier checkpoint: SAToko utility
+vectors, SAToko utilities, the SAToko solver and LSAT; CUDD's BDD/ADD core and
+REO's ADD support; RPO; plus the mem/bar audit fixes. Each was committed in its
+own package-scoped change after focused race verification. The root CUDD API,
+full AIG, GIA, placement, extra, bsat and other generated package drafts remain
+incomplete.
 
-The starting-point translator now lowers the exact null-safe free-and-clear
-macro expansion to `lvalue = nil`, after pointer syntax conversion. It only
-accepts a repeated simple lvalue (including selectors/indexing), verifies that
-the tested, freed, and cleared expressions match, and leaves comments and
-unrelated ownership patterns alone. Regression tests cover a GIA-style field,
-indexed lvalues, mismatched expressions, comments, and the full mechanical
-draft pipeline. The GIA owner reports applying the equivalent cleanup to 373
-sites and adding a package-wide regression against live `free` expansions.
+Kit's complete API surface and DEC-backed `deco` inline graph API are now also
+reviewed, race-tested and committed independently. The latest additional race
+checks covered the AIG GIA ported-core harness, CUDD core/REO/MTR, SAToko and
+LSAT, RPO, DEC/DECO, and Kit. Full-module testing remains the release gate; the
+package-level commits establish only their individually tested scopes.
