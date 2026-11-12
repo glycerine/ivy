@@ -40,7 +40,7 @@ func graphToNetwork(n Network, g *Dec_Graph_t, and func(any, any) any) any {
 	if Dec_GraphIsVar(g) != 0 {
 		return decNetworkEdge(n, g.pNodes[g.eRoot.Node].pFunc, g.eRoot.fCompl)
 	}
-	for i := g.nLeaves; i < g.nSize; i++ {
+	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
 		p := g.pNodes[i]
 		a := decNetworkEdge(n, g.pNodes[p.eEdge0.Node].pFunc, p.eEdge0.fCompl)
 		b := decNetworkEdge(n, g.pNodes[p.eEdge1.Node].pFunc, p.eEdge1.fCompl)
@@ -87,7 +87,7 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 		g.pNodes[i].Level = uint32(n.Level(g.pNodes[i].pFunc))
 	}
 	count := int32(0)
-	for i := g.nLeaves; i < g.nSize; i++ {
+	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
 		p := g.pNodes[i]
 		a, b := g.pNodes[p.eEdge0.Node], g.pNodes[p.eEdge1.Node]
 		var signal any

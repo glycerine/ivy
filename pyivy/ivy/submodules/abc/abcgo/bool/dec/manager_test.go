@@ -15,7 +15,7 @@ func TestManagerTables(t *testing.T) {
 		t.Fatal("classes", len(classes))
 	}
 	Dec_ManStop(m)
-	if m.pMvcMem != nil || m.puCanons != nil || m.vCubes != nil {
+	if m.puCanons != nil {
 		t.Fatal("manager retained storage")
 	}
 	Dec_ManStop(nil)
