@@ -1,6 +1,10 @@
 package gia
 
-import "testing"
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"testing"
+)
 
 func TestScriptBarrierRoundTrip(t *testing.T) {
 	p := Gia_ManStart(8)
@@ -39,6 +43,24 @@ func TestScriptSynthesisTruth(t *testing.T) {
 		q := run(p, 0, 0)
 		if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 {
 			t.Fatalf("synthesis %d changed truth", i)
+		}
+	}
+}
+
+func TestScriptPortOrdering(t *testing.T) {
+	g := Gia_ManStart(8)
+	a := Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, a)
+	b := Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, b)
+	p := aig.NewGraph()
+	x, y := p.NewInput(), p.NewInput()
+	outX, outY := p.AddOutput(x), p.AddOutput(y)
+	order := Gia_ManOrderPios(p, g)
+	want := []aig.Edge{x, outX, y, outY}
+	for i, edge := range want {
+		if vec.Vec_PtrEntry(order, i) != edge {
+			t.Fatalf("port %d: %v want %v", i, vec.Vec_PtrEntry(order, i), edge)
 		}
 	}
 }

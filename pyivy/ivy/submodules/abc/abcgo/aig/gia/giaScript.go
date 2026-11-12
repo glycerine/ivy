@@ -154,23 +154,6 @@ func Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo int32, fCoarsen int32, fCutMin in
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManOrderPios(p *Aig_Man_t, pOrder *Gia_Man_t) *Vec_Ptr_t {
-    var vPios *Vec_Ptr_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(Aig_ManCiNum(p) == Gia_ManCiNum(pOrder), "Aig_ManCiNum(p) == Gia_ManCiNum(pOrder)");
-    assert(Aig_ManCoNum(p) == Gia_ManCoNum(pOrder), "Aig_ManCoNum(p) == Gia_ManCoNum(pOrder)");
-    vPios = Vec_PtrAlloc( Aig_ManCiNum(p) + Aig_ManCoNum(p) );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < pOrder.nObjs) && ((pObj) = Gia_ManObj(pOrder, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            Vec_PtrPush( vPios, Aig_ManCi(p, Gia_ObjCioId(pObj)) );
-        } else if Gia_ObjIsCo(pObj) {
-            Vec_PtrPush( vPios, Aig_ManCo(p, Gia_ObjCioId(pObj)) ); }
-    }
-    return vPios;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
