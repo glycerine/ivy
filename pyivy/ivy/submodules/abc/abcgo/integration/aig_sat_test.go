@@ -1,9 +1,10 @@
 package integration_test
 
 import (
+	"testing"
+
 	aig "github.com/glycerine/abcgo/aig/miniaig"
 	"github.com/glycerine/abcgo/sat/satoko"
-	"testing"
 )
 
 // Exercise graph synthesis and SAT encoding together through public APIs.
@@ -47,6 +48,28 @@ func TestMiniAIGSatokoTruthParity(t *testing.T) {
 				}
 				if got != want {
 					t.Fatalf("truth=%02x assignment=%d desired=%v: got %d want %d", truth, assignment, desired, got, want)
+				}
+				if got == satoko.SATOKO_SAT {
+					value := func(l int) bool {
+						v := s.ModelValue(l >> 1)
+						if v != 0 && v != 1 {
+							t.Fatalf("unassigned model node %d", l>>1)
+						}
+						return v^(l&1) == 1
+					}
+					if value(0) || value(out) != desired {
+						t.Fatal("model disagrees with circuit output")
+					}
+					for i, input := range inputs {
+						if value(input) != (assignment&(1<<i) != 0) {
+							t.Fatal("model violates input assumptions")
+						}
+					}
+					for id := 1; id < aig.Mini_AigNodeNum(p); id++ {
+						if aig.Mini_AigNodeIsAnd(p, id) && value(2*id) != (value(aig.Mini_AigNodeFanin0(p, id)) && value(aig.Mini_AigNodeFanin1(p, id))) {
+							t.Fatalf("model violates AND node %d", id)
+						}
+					}
 				}
 			}
 		}
