@@ -108,111 +108,10 @@ Abc_PrintTime( 1, "Time", Abc_Clock() - clkStart );
 
 ***********************************************************************/
    
-type Gia_ResbMan_t struct {
-    nWords         int32;
-    nLimit         int32;
-    nDivsMax         int32;
-    iChoice         int32;
-    fUseXor         int32;
-    fDebug         int32;
-    fVerbose         int32;
-    fVeryVerbose         int32;
-    vDivs  *Vec_Ptr_t;
-    vGates  *Vec_Int_t;
-    Vec_Int_t * vUnateLits[2];
-    Vec_Int_t * vNotUnateVars[2];
-    Vec_Int_t * vUnatePairs[2];
-    vBinateVars  *Vec_Int_t;
-    Vec_Int_t * vUnateLitsW[2];
-    Vec_Int_t * vUnatePairsW[2];
-    vSorter  *Vec_Wec_t;
-    word *      pSets[2];
-    pDivA       *word;
-    pDivB       *word;
-    vSims  *Vec_Wrd_t;
-}
-func Gia_ResbAlloc(nWords int32) *Gia_ResbMan_t {
-    // inlining of macro ABC_CALLOC
-    var p *Gia_ResbMan_t    = &Gia_ResbMan_t{};
-    p.nWords           = nWords;
-    p.vUnateLits[0]    = Vec_IntAlloc( 100 );
-    p.vUnateLits[1]    = Vec_IntAlloc( 100 );
-    p.vNotUnateVars[0] = Vec_IntAlloc( 100 );
-    p.vNotUnateVars[1] = Vec_IntAlloc( 100 );
-    p.vUnatePairs[0]   = Vec_IntAlloc( 100 );
-    p.vUnatePairs[1]   = Vec_IntAlloc( 100 );
-    p.vUnateLitsW[0]   = Vec_IntAlloc( 100 );
-    p.vUnateLitsW[1]   = Vec_IntAlloc( 100 );
-    p.vUnatePairsW[0]  = Vec_IntAlloc( 100 );
-    p.vUnatePairsW[1]  = Vec_IntAlloc( 100 );
-    p.vSorter          = Vec_WecAlloc( nWords*64 );
-    p.vBinateVars      = Vec_IntAlloc( 100 );
-    p.vGates           = Vec_IntAlloc( 100 );
-    p.vDivs            = Vec_PtrAlloc( 100 );
-    // inlining of macro ABC_CALLOC
-    p.pSets[0]         = ((word *) calloc((size_t)(nWords), sizeof(word)));
-    // inlining of macro ABC_CALLOC
-    p.pSets[1]         = ((word *) calloc((size_t)(nWords), sizeof(word)));
-    // inlining of macro ABC_CALLOC
-    p.pDivA            = ((word *) calloc((size_t)(nWords), sizeof(word)));
-    // inlining of macro ABC_CALLOC
-    p.pDivB            = ((word *) calloc((size_t)(nWords), sizeof(word)));
-    p.vSims            = Vec_WrdAlloc( 100 );
-    return p;
-}
-func Gia_ResbInit(p *Gia_ResbMan_t, vDivs *Vec_Ptr_t, nWords int32, nLimit int32, nDivsMax int32, iChoice int32, fUseXor int32, fDebug int32, fVerbose int32, fVeryVerbose int32) {
-    assert(p.nWords == nWords, "p.nWords == nWords");
-    p.nLimit       = nLimit;
-    p.nDivsMax     = nDivsMax;
-    p.iChoice      = iChoice;
-    p.fUseXor      = fUseXor;
-    p.fDebug       = fDebug;
-    p.fVerbose     = fVerbose;
-    p.fVeryVerbose = fVeryVerbose;
-    Abc_TtCopy( p.pSets[0], (word *)Vec_PtrEntry(vDivs, 0), nWords, 0 );
-    Abc_TtCopy( p.pSets[1], (word *)Vec_PtrEntry(vDivs, 1), nWords, 0 );
-    Vec_PtrClear( p.vDivs );
-    Vec_PtrAppend( p.vDivs, vDivs );
-    Vec_IntClear( p.vGates );
-    Vec_IntClear( p.vUnateLits[0]    );
-    Vec_IntClear( p.vUnateLits[1]    );
-    Vec_IntClear( p.vNotUnateVars[0] );
-    Vec_IntClear( p.vNotUnateVars[1] );
-    Vec_IntClear( p.vUnatePairs[0]   );
-    Vec_IntClear( p.vUnatePairs[1]   );
-    Vec_IntClear( p.vUnateLitsW[0]   );
-    Vec_IntClear( p.vUnateLitsW[1]   );
-    Vec_IntClear( p.vUnatePairsW[0]  );
-    Vec_IntClear( p.vUnatePairsW[1]  );
-    Vec_IntClear( p.vBinateVars      );
-}
-func Gia_ResbFree(p *Gia_ResbMan_t) {
-    Vec_IntFree( p.vUnateLits[0]    );
-    Vec_IntFree( p.vUnateLits[1]    );
-    Vec_IntFree( p.vNotUnateVars[0] );
-    Vec_IntFree( p.vNotUnateVars[1] );
-    Vec_IntFree( p.vUnatePairs[0]   );
-    Vec_IntFree( p.vUnatePairs[1]   );
-    Vec_IntFree( p.vUnateLitsW[0]   );
-    Vec_IntFree( p.vUnateLitsW[1]   );
-    Vec_IntFree( p.vUnatePairsW[0]  );
-    Vec_IntFree( p.vUnatePairsW[1]  );
-    Vec_IntFree( p.vBinateVars      );
-    Vec_IntFree( p.vGates           );
-    Vec_WrdFree( p.vSims            );
-    Vec_PtrFree( p.vDivs            );
-    Vec_WecFree( p.vSorter          );
-    // inlining of macro ABC_FREE
-    p.pSets[0] = nil;
-    // inlining of macro ABC_FREE
-    p.pSets[1] = nil;
-    // inlining of macro ABC_FREE
-    p.pDivA = nil;
-    // inlining of macro ABC_FREE
-    p.pDivB = nil;
-    // inlining of macro ABC_FREE
-    p = nil;
-}
+
+
+
+
 
 /**Function*************************************************************
 
@@ -276,67 +175,7 @@ func Gia_ManResubPrint(vRes *Vec_Int_t, nVars int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManResubVerify(p *Gia_ResbMan_t, pFunc *word) int32 {
-    var nVars int32  = Vec_PtrSize(p.vDivs);
-    var iTopLit, RetValue int32;
-    var pDivRes *word; 
-    if Vec_IntSize(p.vGates) == 0 {
-        return -1; }
-    iTopLit = Vec_IntEntryLast(p.vGates);
-    assert(iTopLit >= 0, "iTopLit >= 0");
-    if iTopLit == 0 {
-        if pFunc != nil { Abc_TtClear( pFunc, p.nWords ); }
-        return Abc_TtIsConst0( p.pSets[1], p.nWords );
-    }
-    if iTopLit == 1 {
-        if pFunc != nil { Abc_TtFill( pFunc, p.nWords ); }
-        return Abc_TtIsConst0( p.pSets[0], p.nWords );
-    }
-    if Abc_Lit2Var(iTopLit) < nVars {
-        assert(Vec_IntSize(p.vGates) == 1, "Vec_IntSize(p.vGates) == 1");
-        pDivRes = (word *)Vec_PtrEntry( p.vDivs, Abc_Lit2Var(iTopLit) );
-    
-    } else {
-        var i, iLit0, iLit1 int32;
-        assert(Vec_IntSize(p.vGates) > 1, "Vec_IntSize(p.vGates) > 1");
-        assert(Vec_IntSize(p.vGates) % 2 == 1, "Vec_IntSize(p.vGates) % 2 == 1");
-        assert(Abc_Lit2Var(iTopLit)-nVars == Vec_IntSize(p.vGates)/2-1, "Abc_Lit2Var(iTopLit)-nVars == Vec_IntSize(p.vGates)/2-1");
-        Vec_WrdFill( p.vSims, p.nWords * Vec_IntSize(p.vGates)/2, 0 );
-        // inlining of macro Vec_IntForEachEntryDouble
-        for  i = 0; (i+1 < Vec_IntSize(p.vGates)) && (((iLit0) = Vec_IntEntry(p.vGates, i)), 1) && (((iLit1) = Vec_IntEntry(p.vGates, i+1)), 1); i += 2  {
-            var iVar0 int32  = Abc_Lit2Var(iLit0);
-            var iVar1 int32  = Abc_Lit2Var(iLit1);
-            var pDiv0 *word;
-            if iVar0 < nVars {
-                pDiv0 = (word *)Vec_PtrEntry(p.vDivs, iVar0);
-            } else {
-                pDiv0 = Vec_WrdEntryP(p.vSims, p.nWords*(iVar0 - nVars));
-            }
-            var pDiv1 *word;
-            if iVar1 < nVars {
-                pDiv1 = (word *)Vec_PtrEntry(p.vDivs, iVar1);
-            } else {
-                pDiv1 = Vec_WrdEntryP(p.vSims, p.nWords*(iVar1 - nVars));
-            }
-            var pDiv *word   = Vec_WrdEntryP(p.vSims, p.nWords*i/2);
-            if iVar0 < iVar1 {
-                Abc_TtAndCompl( pDiv, pDiv0, Abc_LitIsCompl(iLit0), pDiv1, Abc_LitIsCompl(iLit1), p.nWords );
-            } else if iVar0 > iVar1 {
-                assert(!Abc_LitIsCompl(iLit0), "!Abc_LitIsCompl(iLit0)");
-                assert(!Abc_LitIsCompl(iLit1), "!Abc_LitIsCompl(iLit1)");
-                Abc_TtXor( pDiv, pDiv0, pDiv1, p.nWords, 0 );
-            
-            } else { assert(false, "0"); }
-        }
-        pDivRes = Vec_WrdEntryP( p.vSims, p.nWords*(Vec_IntSize(p.vGates)/2-1) );
-    }
-    if Abc_LitIsCompl(iTopLit) {
-        RetValue = !Abc_TtIntersectOne(p.pSets[1], 0, pDivRes, 0, p.nWords) && !Abc_TtIntersectOne(p.pSets[0], 0, pDivRes, 1, p.nWords);
-    } else {
-        RetValue = !Abc_TtIntersectOne(p.pSets[0], 0, pDivRes, 0, p.nWords) && !Abc_TtIntersectOne(p.pSets[1], 0, pDivRes, 1, p.nWords); }
-    if pFunc != nil { Abc_TtCopy( pFunc, pDivRes, p.nWords, Abc_LitIsCompl(iTopLit) ); }
-    return RetValue;
-}
+
 
 /**Function*************************************************************
 
@@ -419,54 +258,8 @@ func Gia_ManResubVerify(p *Gia_ResbMan_t, pFunc *word) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManResubFindBestBinate(p *Gia_ResbMan_t) int32 {
-    var nMintsAll int32  = Abc_TtCountOnesVec(p.pSets[0], p.nWords) + Abc_TtCountOnesVec(p.pSets[1], p.nWords);
-    var i int32;
-    var iDiv int32;
-    var iLitBest int32 = -1;
-    var CostBest int32 = -1;
-//Vec_IntPrint( p->vBinateVars );
-//Dau_DsdPrintFromTruth( p->pSets[0], 6 );
-//Dau_DsdPrintFromTruth( p->pSets[1], 6 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vBinateVars)) && (((iDiv) = Vec_IntEntry(p.vBinateVars, i)), 1); i++  {
-        var pDiv *word  = (word *)Vec_PtrEntry(p.vDivs, iDiv);
-        var nMints0 int32  = Abc_TtCountOnesVecMask( pDiv, p.pSets[0], p.nWords, 0 );
-        var nMints1 int32  = Abc_TtCountOnesVecMask( pDiv, p.pSets[1], p.nWords, 0 );
-        if CostBest < nMints0 + nMints1 {
-            CostBest = nMints0 + nMints1;
-            iLitBest = Abc_Var2Lit( iDiv, 0 );
-        }
-        if CostBest < nMintsAll - nMints0 - nMints1 {
-            CostBest = nMintsAll - nMints0 - nMints1;
-            iLitBest = Abc_Var2Lit( iDiv, 1 );
-        }
-    }
-    return iLitBest;
-}
-func Gia_ManResubAddNode(p *Gia_ResbMan_t, iLit0 int32, iLit1 int32, Type int32) int32 {
-    var iNode int32  = Vec_PtrSize(p.vDivs) + Vec_IntSize(p.vGates)/2;
-    var fFlip int32  = (Type == 2) ^ (iLit0 > iLit1);
-    var iFan0 int32;
-    if fFlip != 0 {
-        iFan0 = iLit1;
-    } else {
-        iFan0 = iLit0;
-    }
-    var iFan1 int32;
-    if fFlip != 0 {
-        iFan1 = iLit0;
-    } else {
-        iFan1 = iLit1;
-    }
-    assert(iLit0 != iLit1, "iLit0 != iLit1");
-    if Type == 2 {
-        assert(iFan0 > iFan1, "iFan0 > iFan1");
-    } else {
-        assert(iFan0 < iFan1, "iFan0 < iFan1"); }
-    Vec_IntPushTwo( p.vGates, Abc_LitNotCond(iFan0, Type==1), Abc_LitNotCond(iFan1, Type==1) );
-    return Abc_Var2Lit( iNode, Type==1 );
-}
+
+
 func Gia_ManResubPerformMux_rec(p *Gia_ResbMan_t, nLimit int32) int32 {
     extern int Gia_ManResubPerform_rec( Gia_ResbMan_t * p, int nLimit );
     var iDivBest, iResLit0, iResLit1, nNodes int32;
