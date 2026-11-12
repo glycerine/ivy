@@ -326,50 +326,6 @@ func Gia_ManSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManObjCheckSat_rec(p *Gia_Man_t, iLit int32, vObjs *Vec_Int_t) int32 {
-    var iObj int32  = Abc_Lit2Var(iLit);
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    if pObj.fMark0 {
-        return pObj.fMark1 == uint32(Abc_LitIsCompl(iLit)); }
-    pObj.fMark0 = 1;
-    pObj.fMark1 = Abc_LitIsCompl(iLit);
-    Vec_IntPush( vObjs, iObj );
-    if Gia_ObjIsAnd(pObj) {
-        if pObj.fMark1 == 0 { // node value is 1
-        
-            if !(Gia_ManObjCheckSat_rec( p, Gia_ObjFaninLit0(pObj, iObj), vObjs ) != 0) {   return 0; }
-            if !(Gia_ManObjCheckSat_rec( p, Gia_ObjFaninLit1(pObj, iObj), vObjs ) != 0) {   return 0; }
-        
-        } else {
-            if !(Gia_ManObjCheckSat_rec( p, Abc_LitNot(Gia_ObjFaninLit0(pObj, iObj)), vObjs ) != 0) {   return 0; }
-        }
-    }
-    return 1;
-}
-func Gia_ManObjCheckOverlap1(p *Gia_Man_t, iLit0 int32, iLit1 int32, vObjs *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Res0, Res1 int32;
-//    Gia_ManForEachObj( p, pObj, i )
-//        assert( pObj->fMark0 == 0 && pObj->fMark1 == 0 );
-    Vec_IntClear( vObjs );
-    Res0 = Gia_ManObjCheckSat_rec( p, iLit0, vObjs );
-    if Res0 {
-        Res1 = Gia_ManObjCheckSat_rec( p, iLit1, vObjs ); }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vObjs)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {
-        pObj.fMark0 = pObj.fMark1 = 0;
-    }
-    return Res0 && Res1;
-}
-func Gia_ManObjCheckOverlap(p *Gia_Man_t, iLit0 int32, iLit1 int32, vObjs *Vec_Int_t) int32 {
-    if Gia_ManObjCheckOverlap1( p, iLit0, iLit1, vObjs ) != 0 {
-        return 1; }
-    return Gia_ManObjCheckOverlap1( p, iLit1, iLit0, vObjs );
-}
-
-
-
-
 
 /**Function*************************************************************
 
