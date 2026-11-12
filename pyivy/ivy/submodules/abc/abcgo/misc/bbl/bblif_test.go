@@ -173,3 +173,35 @@ func TestInvalidNetworksAndBinary(t *testing.T) {
 type shortWriter struct{}
 
 func (shortWriter) Write(p []byte) (int, error) { return 0, nil }
+
+func TestPaddedFunctionRecordsReserialize(t *testing.T) {
+	var objects, functions, data bytes.Buffer
+	for i, handle := range []int32{0, 12} {
+		for _, x := range []int32{int32(i), handle, 0} {
+			binary.Write(&objects, binary.LittleEndian, x)
+		}
+	}
+	binary.Write(&functions, binary.LittleEndian, int32(2))
+	functions.Write([]byte{' ', '0', '\n', 0, 0, 0, 0, 0})
+	binary.Write(&functions, binary.LittleEndian, int32(1))
+	functions.Write([]byte{' ', '1', '\n', 0})
+	for _, pool := range [][]byte{make([]byte, 16), objects.Bytes(), functions.Bytes()} {
+		binary.Write(&data, binary.LittleEndian, int32(len(pool)))
+		data.Write(pool)
+	}
+	p, err := ParseBinary(data.Bytes())
+	if err != nil {
+		t.Fatal(err)
+	}
+	var encoded bytes.Buffer
+	if err := p.WriteBinary(&encoded); err != nil {
+		t.Fatal(err)
+	}
+	q, err := ParseBinary(encoded.Bytes())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if q.Objects[0].SOP != " 0\n" || q.Objects[1].SOP != " 1\n" {
+		t.Fatal(q.Objects)
+	}
+}

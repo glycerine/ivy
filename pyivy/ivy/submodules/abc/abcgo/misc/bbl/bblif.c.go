@@ -220,6 +220,18 @@ func (p *Bbl_Man_t) WriteBinary(w io.Writer) error {
 		offsets[o] = size
 		size += 12 + 4*len(o.Fanins)
 	}
+	// Recompute wire handles: an imported function record may have more
+	// padding words than canonical serialization needs.
+	functions := new(bytes.Buffer)
+	handles := map[string]int{}
+	for _, s := range p.functions {
+		handles[s] = functions.Len()
+		words := (len(s) + 4) / 4
+		binary.Write(functions, binary.LittleEndian, int32(words))
+		data := make([]byte, words*4)
+		copy(data, s)
+		functions.Write(data)
+	}
 	objects := new(bytes.Buffer)
 	for _, o := range p.Objects {
 		flags := uint32(len(o.Fanins)) << 4
@@ -235,7 +247,15 @@ func (p *Bbl_Man_t) WriteBinary(w io.Writer) error {
 		if o.Marked {
 			flags |= 8
 		}
-		for _, v := range []uint32{uint32(o.OriginalID), uint32(o.function), flags} {
+		handle := -1
+		if o.SOP != "" {
+			var ok bool
+			handle, ok = handles[o.SOP]
+			if !ok {
+				return fmt.Errorf("object function missing from pool")
+			}
+		}
+		for _, v := range []uint32{uint32(o.OriginalID), uint32(handle), flags} {
 			if err := binary.Write(objects, binary.LittleEndian, v); err != nil {
 				return err
 			}
@@ -243,14 +263,6 @@ func (p *Bbl_Man_t) WriteBinary(w io.Writer) error {
 		for _, f := range o.Fanins {
 			binary.Write(objects, binary.LittleEndian, int32(offsets[o]-offsets[f]))
 		}
-	}
-	functions := new(bytes.Buffer)
-	for _, s := range p.functions {
-		words := (len(s) + 4) / 4
-		binary.Write(functions, binary.LittleEndian, int32(words))
-		data := make([]byte, words*4)
-		copy(data, s)
-		functions.Write(data)
 	}
 	for _, pool := range [][]byte{name, objects.Bytes(), functions.Bytes()} {
 		if len(pool) > mathMaxInt32 {
