@@ -567,63 +567,8 @@ func Gia_QbfFree(p *Qbf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_QbfQuantifyOne(p *Gia_Man_t, iVar int32, fAndAll int32, fOrAll int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t; 
-    var vCofs *Vec_Int_t;
-    var i, c int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    Gia_ManHashAlloc( pNew );
-    Gia_ManFillValue( p );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    // compute cofactors
-    vCofs = Vec_IntAlloc( 2 * Gia_ManPoNum(p) );
-    for  c = 0; c < 2; c++  {
-        Gia_ManPi(p, iVar).Value = c;
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        }
-        // inlining of macro Gia_ManForEachPo
-        for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-            Vec_IntPush( vCofs, Gia_ObjFanin0Copy(pObj) );
-        }
-    }
-    if fAndAll != 0 {
-        for  i = 0; i < Gia_ManPoNum(p); i++  {
-            Gia_ManAppendCo( pNew, Gia_ManHashAnd(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );
-        }
-    
-    } else if fOrAll != 0 {
-        for  i = 0; i < Gia_ManPoNum(p); i++  {
-            Gia_ManAppendCo( pNew, Gia_ManHashOr(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );
-        }
-    
-    } else {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vCofs)) && (((c) = Vec_IntEntry(vCofs, i)), 1); i++  {
-            Gia_ManAppendCo( pNew, c );
-        }
-    }
-    Vec_IntFree( vCofs );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
-func Gia_QbfQuantifyAll(p *Gia_Man_t, nPars int32, fAndAll int32, fOrAll int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t; var v int32;
-    pNew = Gia_ManDup( p );
-    for  v = Gia_ManPiNum(p) - 1; v >= nPars; v--  {
-        pNew = Gia_QbfQuantifyOne( pTemp = pNew, v, fAndAll, fOrAll );
-        Gia_ManStop( pTemp );
-    }
-    return pNew;
-}
+
+
 
 /**Function*************************************************************
 
@@ -636,37 +581,7 @@ func Gia_QbfQuantifyAll(p *Gia_Man_t, nPars int32, fAndAll int32, fOrAll int32) 
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_QbfCofactor(p *Gia_Man_t, nPars int32, vValues *Vec_Int_t, vParMap *Vec_Int_t) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t; var i int32;
-    assert(Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues), "Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues)");
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    Gia_ManHashAlloc( pNew );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if i < nPars {
-            pObj.Value = Gia_ManAppendCi(pNew);
-            if Vec_IntEntry(vParMap, i) != -1 {
-                pObj.Value = Vec_IntEntry(vParMap, i); }
-        
-        } else {
-            pObj.Value = Vec_IntEntry(vValues, i - nPars); }
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    assert(Gia_ManPiNum(pNew) == nPars, "Gia_ManPiNum(pNew) == nPars");
-    return pNew;
-}
+
 /*
 int Gia_QbfAddCofactor( Qbf_Man_t * p, Gia_Man_t * pCof )
 {
