@@ -302,10 +302,8 @@ func Abc_RRManStop(p *Abc_RRMan_t) {
     Vec_PtrFree( p.vLeaves );  
     Vec_PtrFree( p.vCone );  
     Vec_PtrFree( p.vRoots );  
-    // inlining of macro ABC_FREE
-    ((p.pParams) ? (free((char *) (p.pParams)), (p.pParams) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pParams = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

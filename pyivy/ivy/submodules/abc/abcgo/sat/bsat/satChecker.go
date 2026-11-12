@@ -1,8 +1,13 @@
 package bsat
 
-import "fmt"
-
-import "os"
+import (
+	"bufio"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+)
 
 /**CFile****************************************************************
 
@@ -15,7 +20,7 @@ import "os"
   Synopsis    [Resolution proof checker.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -24,174 +29,165 @@ import "os"
 
 ***********************************************************************/
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "misc/vec/vec.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_PrintClause(vClauses *Vec_Vec_t, Clause int32) {
-    var vClause *Vec_Int_t;
-    var i, Entry int32;
-    fmt.Printf("Clause %d:  {", Clause);
-    vClause = Vec_VecEntry( vClauses, Clause );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClause)) && (((Entry) = Vec_IntEntry(vClause, i)), 1); i++  {
-        fmt.Printf(" %d", Entry);
-    }
-    fmt.Printf(" }\n");
+// ProofSummary describes ABC's numbered binary-resolution proof stream.
+type ProofSummary struct {
+	Roots, Steps, Clauses int
+	EmptyDerived          bool
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_ProofResolve(vClauses *Vec_Vec_t, Result int32, Clause1 int32, Clause2 int32) int32 {
-    var vResult *Vec_Int_t   = Vec_VecEntry( vClauses, Result );
-    var vClause1 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause1 );
-    var vClause2 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause2 );
-    var Entry1, Entry2, ResVar int32;
-    var i, j, Counter int32;
-
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClause1)) && (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {
-    // inlining of macro Vec_IntForEachEntry
-    for  j = 0; (j < Vec_IntSize(vClause2)) && (((Entry2) = Vec_IntEntry(vClause2, j)), 1); j++  {
-    if Entry1 == -Entry2 {
-        ResVar = Entry1;
-        Counter++;
-    }
-    }
-    }
-    if Counter != 1 {
-        fmt.Printf("Error: Clause %d = Resolve(%d, %d): The number of pivot vars is %d.\n", Result, Clause1, Clause2, Counter);
-        Sat_PrintClause( vClauses, Clause1 );
-        Sat_PrintClause( vClauses, Clause2 );
-        return 0;
-    }
-    // create new clause
-    assert(Vec_IntSize(vResult) == 0, "Vec_IntSize(vResult) == 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClause1)) && (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {
-        if Entry1 != ResVar && Entry1 != -ResVar {
-            Vec_IntPushUnique( vResult, Entry1 ); }
-    }
-    assert(Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1), "Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1)");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClause2)) && (((Entry2) = Vec_IntEntry(vClause2, i)), 1); i++  {
-        if Entry2 != ResVar && Entry2 != -ResVar {
-            Vec_IntPushUnique( vResult, Entry2 ); }
-    }
-    return 1;
+// ResolveProofClauses resolves clauses written as signed DIMACS literals. Exactly
+// one complementary pair is required; parent clauses must not contain duplicates.
+func ResolveProofClauses(a, b []int32) ([]int32, error) {
+	seen := map[int32]bool{}
+	for _, clause := range [][]int32{a, b} {
+		clear(seen)
+		for _, l := range clause {
+			if l == 0 || l == (-1<<31) {
+				return nil, fmt.Errorf("invalid proof literal %d", l)
+			}
+			if seen[-l] {
+				return nil, fmt.Errorf("tautological parent clause at literal %d", l)
+			}
+			if seen[l] {
+				return nil, fmt.Errorf("duplicate proof literal %d", l)
+			}
+			seen[l] = true
+		}
+	}
+	pivot, count := int32(0), 0
+	for _, x := range a {
+		if seen[-x] {
+			pivot = x
+			count++
+		}
+	}
+	if count != 1 {
+		return nil, fmt.Errorf("resolution requires exactly one pivot, got %d", count)
+	}
+	clear(seen)
+	var result []int32
+	for _, clause := range [][]int32{a, b} {
+		for _, l := range clause {
+			if l == pivot || l == -pivot || seen[l] {
+				continue
+			}
+			seen[l] = true
+			result = append(result, l)
+		}
+	}
+	return result, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_ProofChecker(pFileName string) {
-    var pFile *os.File;
-    var vClauses *Vec_Vec_t;
-    var c, i, Num, RetValue, Counter, Counter2, Clause1, Clause2 int32;
-    var RetValue int32;
-    // open the file
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        return; }
-    // count the number of clauses
-    Counter = Counter2 = 0;
-    for  (c = fgetc(pFile)) != -1  {
-        Counter += (c == '\n');
-        Counter2 += (c == '*');
-    }
-    vClauses = Vec_VecStart( Counter+1 );
-    fmt.Printf("The proof contains %d roots and %d resolution steps.\n", Counter-Counter2, Counter2);
-    // read the clauses
-    rewind( pFile );
-    for  i = 1 ; ; i++  {
-        RetValue = RetValue = fscanf( pFile, "%d", &Num );
-        if RetValue != 1 {
-            break; }
-        assert(Num == i, "Num == i");
-        for  (c = fgetc( pFile )) == ' '  {; }
-        if c == '*' {
-            RetValue = fscanf( pFile, "%d %d", &Clause1, &Clause2 );
-            assert(RetValue == 2, "RetValue == 2");
-            RetValue = fscanf( pFile, "%d", &Num );
-            assert(RetValue == 1, "RetValue == 1");
-            assert(Num == 0, "Num == 0");
-            if !(Sat_ProofResolve( vClauses, i, Clause1, Clause2 ) != 0) {
-                fmt.Printf("Error detected in the resolution proof.\n");
-                Vec_VecFree( vClauses );
-                _ = (pFile).Close();
-                return;
-            }
-        
-        } else {
-            ungetc( c, pFile );
-            for {
-                RetValue = fscanf( pFile, "%d", &Num );
-                assert(RetValue == 1, "RetValue == 1");
-                if Num == 0 {
-                    break; }
-                Vec_VecPush( vClauses, i, (void *)Num );
-            }
-            RetValue = fscanf( pFile, "%d", &Num );
-            assert(RetValue == 1, "RetValue == 1");
-            assert(Num == 0, "Num == 0");
-        }
-    }
-    assert(i-1 == Counter, "i-1 == Counter");
-    if Vec_IntSize( Vec_VecEntry(vClauses, Counter) ) != 0 {
-        fmt.Printf("The last clause is not empty.\n");
-    } else {
-        fmt.Printf("The empty clause is derived.\n"); }
-    Vec_VecFree( vClauses );
-    _ = (pFile).Close();
+// CheckResolutionProof accepts root records "id literals... 0 0" and derived
+// records "id * parent1 parent2 0". IDs start at one and refer only backwards.
+func CheckResolutionProof(input io.Reader) (ProofSummary, error) {
+	reader := bufio.NewReader(input)
+	clauses := [][]int32{nil}
+	var summary ProofSummary
+	for {
+		var id int
+		_, err := fmt.Fscan(reader, &id)
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			return summary, fmt.Errorf("read clause ID: %w", err)
+		}
+		if id != len(clauses) {
+			return summary, fmt.Errorf("clause ID %d: expected %d", id, len(clauses))
+		}
+		var token string
+		if _, err := fmt.Fscan(reader, &token); err != nil {
+			return summary, fmt.Errorf("clause %d: %w", id, err)
+		}
+		var result []int32
+		if token == "*" {
+			var a, b, zero int
+			if _, err := fmt.Fscan(reader, &a, &b, &zero); err != nil {
+				return summary, fmt.Errorf("resolution %d: %w", id, err)
+			}
+			if a <= 0 || a >= id || b <= 0 || b >= id || zero != 0 {
+				return summary, fmt.Errorf("resolution %d: invalid parents or terminator", id)
+			}
+			result, err = ResolveProofClauses(clauses[a], clauses[b])
+			if err != nil {
+				return summary, fmt.Errorf("resolution %d: %w", id, err)
+			}
+			summary.Steps++
+		} else {
+			seen := map[int32]bool{}
+			for {
+				n, err := strconv.ParseInt(token, 10, 32)
+				if err != nil || n == (-1<<31) {
+					return summary, fmt.Errorf("clause %d: invalid literal %q", id, token)
+				}
+				if n == 0 {
+					break
+				}
+				if seen[-int32(n)] {
+					return summary, fmt.Errorf("clause %d: tautological root", id)
+				}
+				if seen[int32(n)] {
+					return summary, fmt.Errorf("clause %d: duplicate literal %d", id, n)
+				}
+				seen[int32(n)] = true
+				result = append(result, int32(n))
+				if _, err := fmt.Fscan(reader, &token); err != nil {
+					return summary, fmt.Errorf("clause %d: missing root terminator: %w", id, err)
+				}
+			}
+			var zero int
+			if _, err := fmt.Fscan(reader, &zero); err != nil || zero != 0 {
+				return summary, fmt.Errorf("clause %d: missing second zero", id)
+			}
+			summary.Roots++
+		}
+		clauses = append(clauses, result)
+		summary.Clauses++
+	}
+	if summary.Clauses == 0 {
+		return summary, errors.New("empty proof stream")
+	}
+	summary.EmptyDerived = len(clauses[len(clauses)-1]) == 0
+	return summary, nil
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Compatibility entry points use Go slices in place of C Vec_Vec_t storage.
+func Sat_PrintClause(clauses *[][]int32, id int32) {
+	fmt.Printf("Clause %d:  {", id)
+	for _, l := range (*clauses)[id] {
+		fmt.Printf(" %d", l)
+	}
+	fmt.Println(" }")
+}
+func Sat_ProofResolve(clauses *[][]int32, result, a, b int32) int32 {
+	if result <= 0 || int(result) >= len(*clauses) || a <= 0 || b <= 0 || a >= result || b >= result || len((*clauses)[result]) != 0 {
+		return 0
+	}
+	resolved, err := ResolveProofClauses((*clauses)[a], (*clauses)[b])
+	if err != nil {
+		fmt.Printf("Error: Clause %d = Resolve(%d, %d): %v\n", result, a, b, err)
+		return 0
+	}
+	(*clauses)[result] = resolved
+	return 1
+}
+func Sat_ProofChecker(name string) {
+	file, err := os.Open(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+	summary, err := CheckResolutionProof(file)
+	if err != nil {
+		fmt.Printf("Error detected in the resolution proof: %v\n", err)
+		return
+	}
+	fmt.Printf("The proof contains %d roots and %d resolution steps.\n", summary.Roots, summary.Steps)
+	if summary.EmptyDerived {
+		fmt.Println("The empty clause is derived.")
+	} else {
+		fmt.Println("The last clause is not empty.")
+	}
+}

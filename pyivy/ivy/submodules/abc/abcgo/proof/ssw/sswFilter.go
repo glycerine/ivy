@@ -345,8 +345,7 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, TimeLimit int32) int32 {
                     pNodeToFrames[2*p.nFrames*pObj.Id + f1] = Ssw_ObjFrame( p, pObj, f1 ); }
                 }
             }
-            // inlining of macro ABC_FREE
-            ((p.pNodeToFrames) ? (free((char *) (p.pNodeToFrames)), (p.pNodeToFrames) = 0) : 0);
+            p.pNodeToFrames = nil;
             p.pNodeToFrames = pNodeToFrames;
             p.nFrames *= 2;
         }
@@ -518,10 +517,8 @@ func Ssw_SignalFilterGia(p *Gia_Man_t, nFramesMax int32, nConfMax int32, nRounds
     pAig = Gia_ManToAigSimple( p );
     if p.pReprs != nil {
         Gia_ManReprToAigRepr2( pAig, p );
-        // inlining of macro ABC_FREE
-        ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+        p.pReprs = nil;
+        p.pNexts = nil;
     }
     Ssw_SignalFilter( pAig, nFramesMax, nConfMax, nRounds, TimeLimit, TimeLimit2, pCex, fLatchOnly, fVerbose );
     Gia_ManReprFromAigRepr( pAig, p );

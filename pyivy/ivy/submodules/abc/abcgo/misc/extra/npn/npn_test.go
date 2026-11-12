@@ -83,3 +83,19 @@ func TestOriginalCTableOracle(t *testing.T) {
 		t.Fatal(got)
 	}
 }
+
+func TestTransformRejectsInvalidMappings(t *testing.T) {
+	for _, tc := range []struct {
+		phase byte
+		perm  [4]byte
+	}{{32, [4]byte{0, 1, 2, 3}}, {0, [4]byte{0, 0, 2, 3}}, {0, [4]byte{0, 1, 2, 4}}} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("accepted invalid mapping %+v", tc)
+				}
+			}()
+			Transform(1, tc.phase, tc.perm)
+		}()
+	}
+}

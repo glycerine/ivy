@@ -392,10 +392,8 @@ func Extra_TruthPermute(Truth uint32, pPerms string, nVars int32, fReverse int32
         }
     }
 
-    // inlining of macro ABC_FREE
-    ((pMints) ? (free((char *) (pMints)), (pMints) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pMintsP) ? (free((char *) (pMintsP)), (pMintsP) = 0) : 0);
+    pMints = nil;
+    pMintsP = nil;
 
     return Result;
 }
@@ -516,8 +514,7 @@ func Extra_TruthCanonP(uTruth uint32, nVars int32) uint32 {
         spStatic_Extra_TruthCanonP_nVarsOld = nVars;
     
     } else if spStatic_Extra_TruthCanonP_nVarsOld != nVars {
-        // inlining of macro ABC_FREE
-        ((spStatic_Extra_TruthCanonP_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonP_pPerms)), (spStatic_Extra_TruthCanonP_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonP_pPerms = nil;
         spStatic_Extra_TruthCanonP_nPerms = Extra_Factorial( nVars );   
         spStatic_Extra_TruthCanonP_pPerms = Extra_Permutations( nVars );
         spStatic_Extra_TruthCanonP_nVarsOld = nVars;
@@ -558,8 +555,7 @@ func Extra_TruthCanonNP(uTruth uint32, nVars int32) uint32 {
         spStatic_Extra_TruthCanonNP_nVarsOld = nVars;
     
     } else if spStatic_Extra_TruthCanonNP_nVarsOld != nVars {
-        // inlining of macro ABC_FREE
-        ((spStatic_Extra_TruthCanonNP_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonNP_pPerms)), (spStatic_Extra_TruthCanonNP_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonNP_pPerms = nil;
         spStatic_Extra_TruthCanonNP_nPerms = Extra_Factorial( nVars );   
         spStatic_Extra_TruthCanonNP_pPerms = Extra_Permutations( nVars );
         spStatic_Extra_TruthCanonNP_nVarsOld = nVars;
@@ -604,8 +600,7 @@ func Extra_TruthCanonNPN(uTruth uint32, nVars int32) uint32 {
         spStatic_Extra_TruthCanonNPN_nVarsOld = nVars;
     
     } else if spStatic_Extra_TruthCanonNPN_nVarsOld != nVars {
-        // inlining of macro ABC_FREE
-        ((spStatic_Extra_TruthCanonNPN_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonNPN_pPerms)), (spStatic_Extra_TruthCanonNPN_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonNPN_pPerms = nil;
         spStatic_Extra_TruthCanonNPN_nPerms = Extra_Factorial( nVars );   
         spStatic_Extra_TruthCanonNPN_pPerms = Extra_Permutations( nVars );
         spStatic_Extra_TruthCanonNPN_nVarsOld = nVars;
@@ -715,28 +710,23 @@ void Extra_Truth4VarNPN( unsigned short ** puCanons, char ** puPhases, char ** p
     }
     uPhases[(1<<16)-1] = 16;
     assert(nClasses == 222, "nClasses == 222");
-    // inlining of macro ABC_FREE
-    ((pPerms4) ? (free((char *) (pPerms4)), (pPerms4) = 0) : 0);
+    pPerms4 = nil;
     if puCanons { 
         *puCanons = uCanons;
     } else {
-        // inlining of macro ABC_FREE
-        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+        uCanons = nil; }
     if puPhases { 
         *puPhases = uPhases;
     } else {
-        // inlining of macro ABC_FREE
-        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+        uPhases = nil; }
     if puPerms { 
         *puPerms = uPerms;
     } else {
-        // inlining of macro ABC_FREE
-        ((uPerms) ? (free((char *) (uPerms)), (uPerms) = 0) : 0); }
+        uPerms = nil; }
     if puMap { 
         *puMap = uMap;
     } else {
-        // inlining of macro ABC_FREE
-        ((uMap) ? (free((char *) (uMap)), (uMap) = 0) : 0); }
+        uMap = nil; }
 }
 
 /**Function*************************************************************
@@ -792,18 +782,15 @@ func Extra_Truth3VarN(puCanons **uint32, puPhases **string, ppCounters *string) 
     if puCanons { 
         *puCanons = uCanons;
     } else {
-        // inlining of macro ABC_FREE
-        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+        uCanons = nil; }
     if puPhases { 
         *puPhases = uPhases;
     } else {
-        // inlining of macro ABC_FREE
-        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+        uPhases = nil; }
     if ppCounters != nil { 
         *ppCounters = pCounters;
     } else {
-        // inlining of macro ABC_FREE
-        ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0); }
+        pCounters = nil; }
 //    printf( "The number of 3N-classes = %d.\n", nClasses );
 }
 
@@ -859,18 +846,15 @@ void Extra_Truth4VarN( unsigned short ** puCanons, char *** puPhases, char ** pp
     if puCanons { 
         *puCanons = uCanons;
     } else {
-        // inlining of macro ABC_FREE
-        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+        uCanons = nil; }
     if puPhases { 
         *puPhases = uPhases;
     } else {
-        // inlining of macro ABC_FREE
-        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+        uPhases = nil; }
     if ppCounters != nil { 
         *ppCounters = pCounters;
     } else {
-        // inlining of macro ABC_FREE
-        ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0); }
+        pCounters = nil; }
 //    printf( "The number of 4N-classes = %d.\n", nClasses );
 }
 
@@ -2217,8 +2201,7 @@ func Extra_PermSchedule(n int32) *int32 {
         }
         pRes[b++] = pRes0[2*k+1];
     }
-    // inlining of macro ABC_FREE
-    ((pRes0) ? (free((char *) (pRes0)), (pRes0) = 0) : 0);
+    pRes0 = nil;
     assert(b == nFact, "b == nFact");
 
     if false {
@@ -2449,8 +2432,7 @@ func Extra_NpnTest1() {
     var pComp *int32;
     pComp = Extra_PermSchedule( 5 );
 //    pComp = Extra_GreyCodeSchedule( 5 );
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+    pComp = nil;
 }
 func Extra_NpnTest2() {
     var pComp, pPerm *int32;
@@ -2459,10 +2441,8 @@ func Extra_NpnTest2() {
     pComp = Extra_GreyCodeSchedule( 6 );
     pPerm = Extra_PermSchedule( 6 );
     tMin  = Extra_Truth6MinimumExact( t, pComp, pPerm );
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+    pPerm = nil;
+    pComp = nil;
 
     Extra_PrintHex( os.Stdout, (unsigned *)&t,    6 );
 fmt.Printf("\n");
@@ -2517,12 +2497,9 @@ func Extra_NpnTest() {
         Extra_PrintHex( os.Stdout, (unsigned *)(pFuncs + i), 6 );
 fmt.Printf("\n");
     }
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pFuncs) ? (free((char *) (pFuncs)), (pFuncs) = 0) : 0);
+    pPerm = nil;
+    pComp = nil;
+    pFuncs = nil;
     Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
 }
 

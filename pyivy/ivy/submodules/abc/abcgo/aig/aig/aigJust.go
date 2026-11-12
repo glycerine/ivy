@@ -1,314 +1,215 @@
 package aig
 
-import "fmt"
+const (
+	AIG_VAL0 int32 = 1
+	AIG_VAL1 int32 = 2
+	AIG_VALX int32 = 3
+)
 
-/**CFile****************************************************************
- 
-  FileName    [aigJust.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Justification of node values.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigJust.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const AIG_VAL0 =  1
-const AIG_VAL1 =  2
-const AIG_VALX =  3
-
-// storing ternary values
-func Aig_ObjSetTerValue(pNode *Aig_Obj_t, Value int32) int32 {
-    assert((Value != 0), "Value");
-    pNode.fMarkA = (Value & 1);
-    pNode.fMarkB = ((Value >> 1) & 1);
-    return Value;
+func Aig_ObjSetTerValue(p *Graph, e Edge, value int32) int32 {
+	if value < AIG_VAL0 || value > AIG_VALX {
+		panic("aig: invalid ternary value")
+	}
+	p.node(e).MarkA = value&1 != 0
+	p.node(e).MarkB = value&2 != 0
+	return value
 }
-func Aig_ObjGetTerValue(pNode *Aig_Obj_t) int32 {
-    return (pNode.fMarkB << 1) | pNode.fMarkA;
+func Aig_ObjGetTerValue(p *Graph, e Edge) int32 {
+	var value int32
+	if p.node(e).MarkA {
+		value |= 1
+	}
+	if p.node(e).MarkB {
+		value |= 2
+	}
+	return value
 }
-
-// working with ternary values
-func Aig_ObjNotTerValue(Value int32) int32 {
-    if Value == AIG_VAL1 {
-        return AIG_VAL0; }
-    if Value == AIG_VAL0 {
-        return AIG_VAL1; }
-    return AIG_VALX;
+func Aig_ObjNotTerValue(value int32) int32 {
+	switch value {
+	case AIG_VAL0:
+		return AIG_VAL1
+	case AIG_VAL1:
+		return AIG_VAL0
+	default:
+		return AIG_VALX
+	}
 }
-func Aig_ObjAndTerValue(Value0 int32, Value1 int32) int32 {
-    if Value0 == AIG_VAL0 || Value1 == AIG_VAL0 {
-        return AIG_VAL0; }
-    if Value0 == AIG_VAL1 && Value1 == AIG_VAL1 {
-        return AIG_VAL1; }
-    return AIG_VALX;
+func Aig_ObjAndTerValue(a, b int32) int32 {
+	if a == AIG_VAL0 || b == AIG_VAL0 {
+		return AIG_VAL0
+	}
+	if a == AIG_VAL1 && b == AIG_VAL1 {
+		return AIG_VAL1
+	}
+	return AIG_VALX
 }
-func Aig_ObjNotCondTerValue(Value int32, Cond int32) int32 {
-    if Cond != 0 {
-        return Aig_ObjNotTerValue( Value );
-    } else {
-        return Value;
-    }
+func Aig_ObjNotCondTerValue(value, condition int32) int32 {
+	if condition != 0 {
+		return Aig_ObjNotTerValue(value)
+	}
+	return value
+}
+func Aig_ObjSatValue(p *Graph, e Edge, complement int32) int32 {
+	n := p.node(e)
+	if n.Kind == Constant {
+		return Aig_ObjNotCondTerValue(AIG_VAL1, complement^int32(e&1))
+	}
+	if n.TravID != p.travID {
+		return AIG_VALX
+	}
+	value := AIG_VAL0
+	if n.MarkA {
+		value = AIG_VAL1
+	}
+	return Aig_ObjNotCondTerValue(value, complement^int32(e&1))
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns value (0 or 1) or X if unassigned.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjSatValue(pAig *Aig_Man_t, pNode *Aig_Obj_t, fCompl int32) int32 {
-    if Aig_ObjIsTravIdCurrent(pAig, pNode) {
-        if pNode.fMarkA ^ fCompl {
-            return AIG_VAL1;
-        } else {
-            return AIG_VAL0;
-        } }
-    return AIG_VALX;
+// Aig_NtkFindSatAssign_rec performs ABC's bounded greedy justification. A false
+// result means this attempt failed; it is not an UNSAT proof.
+func Aig_NtkFindSatAssign_rec(p *Graph, e Edge, value int32, support *[]int32, heur int32) bool {
+	if value != 0 && value != 1 {
+		panic("aig: justification requires Boolean target")
+	}
+	if e.Complemented() {
+		value ^= 1
+		e = Aig_Regular(e)
+	}
+	n := p.node(e)
+	if n.Kind == Constant {
+		return value == 1
+	}
+	if n.TravID == p.travID {
+		return n.MarkA == (value != 0)
+	}
+	n.TravID = p.travID
+	n.MarkA = value != 0
+	if n.Kind == Input {
+		if support != nil {
+			index := Aig_ObjCioId(p, e)
+			*support = append(*support, index*2+(1-value))
+		}
+		return true
+	}
+	a, b := n.Fanins[0], n.Fanins[1]
+	if n.Kind == Output || n.Kind == Buffer {
+		return Aig_NtkFindSatAssign_rec(p, a, value, support, heur)
+	}
+	if n.Kind != And && n.Kind != ExclusiveOr {
+		panic("aig: invalid justification node")
+	}
+	va, vb := Aig_ObjSatValue(p, a, 0), Aig_ObjSatValue(p, b, 0)
+	if n.Kind == ExclusiveOr {
+		first := int32(0)
+		if heur&1 != 0 {
+			first = 1
+		}
+		if va == AIG_VAL0 {
+			first = 0
+		} else if va == AIG_VAL1 {
+			first = 1
+		} else if vb == AIG_VAL0 {
+			first = value
+		} else if vb == AIG_VAL1 {
+			first = value ^ 1
+		}
+		return Aig_NtkFindSatAssign_rec(p, a, first, support, heur) && Aig_NtkFindSatAssign_rec(p, b, first^value, support, heur)
+	}
+	if value == 1 {
+		return Aig_NtkFindSatAssign_rec(p, a, 1, support, heur) && Aig_NtkFindSatAssign_rec(p, b, 1, support, heur)
+	}
+	if va == AIG_VAL0 || vb == AIG_VAL0 {
+		return true
+	}
+	if va == AIG_VAL1 && vb == AIG_VAL1 {
+		return false
+	}
+	if va == AIG_VAL1 {
+		return Aig_NtkFindSatAssign_rec(p, b, 0, support, heur)
+	}
+	if vb == AIG_VAL1 {
+		return Aig_NtkFindSatAssign_rec(p, a, 0, support, heur)
+	}
+	heur++
+	if heur%8 == 0 {
+		return Aig_NtkFindSatAssign_rec(p, b, 0, support, heur)
+	}
+	return Aig_NtkFindSatAssign_rec(p, a, 0, support, heur)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively searched for a satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_NtkFindSatAssign_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t, Heur int32) int32 {
-    var Value0, Value1 int32;
-//    ++Heur;
-    if Aig_ObjIsConst1(pNode) {
-        return 1; }
-    if Aig_ObjIsTravIdCurrent(pAig, pNode) {
-        return (int32(pNode.fMarkA) == Value); }
-    Aig_ObjSetTravIdCurrent(pAig, pNode);
-    pNode.fMarkA = Value;
-    if Aig_ObjIsCi(pNode) {
-//        if ( Aig_ObjId(pNode) % 1000 == 0 )
-//            Value ^= 1;
-        if vSuppLits != nil {
-            Vec_IntPush( vSuppLits, Abc_Var2Lit( Aig_ObjCioId(pNode), !Value ) ); }
-        return 1;
-    }
-    assert(Aig_ObjIsNode(pNode), "Aig_ObjIsNode(pNode)");
-    // propagation
-    if Value != 0 {
-        if !(Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), vSuppLits, Heur) != 0) {
-            return 0; }
-        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), vSuppLits, Heur);
-    }
-    // justification
-    Value0 = Aig_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );
-    if Value0 == AIG_VAL0 {
-        return 1; }
-    Value1 = Aig_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );
-    if Value1 == AIG_VAL0 {
-        return 1; }
-    if Value0 == AIG_VAL1 && Value1 == AIG_VAL1 {
-        return 0; }
-    if Value0 == AIG_VAL1 {
-        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur); }
-    if Value1 == AIG_VAL1 {
-        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }
-    assert(Value0 == AIG_VALX && Value1 == AIG_VALX, "Value0 == AIG_VALX && Value1 == AIG_VALX");
-    // decision making
-//    if ( rand() % 10 == Heur )
-//    if ( Aig_ObjId(pNode) % 8 == Heur )
-    if Heur++; Heur % 8 == 0 {
-        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur);
-    } else {
-        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }
+func justNextTraversal(p *Graph) {
+	if p.travID == int32(1<<31-1) {
+		for i := range p.nodes {
+			p.nodes[i].TravID = 0
+		}
+		p.travID = 1
+	} else {
+		p.travID++
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if SAT assignment is found; 0 otherwise.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjFindSatAssign(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t) int32 {
-    var i int32;
-    if Aig_ObjIsCo(pNode) {
-        return Aig_ObjFindSatAssign( pAig, Aig_ObjFanin0(pNode), Value ^ Aig_ObjFaninC0(pNode), vSuppLits ); }
-    for  i = 0; i < 8; i++  {
-        Vec_IntClear( vSuppLits );
-        Aig_ManIncrementTravId( pAig );
-        if Aig_NtkFindSatAssign_rec( pAig, pNode, Value, vSuppLits, i ) != 0 {
-            return 1; }
-    }
-    return 0;
+func Aig_ObjFindSatAssign(p *Graph, e Edge, value int32, support *[]int32) bool {
+	for attempt := int32(0); attempt < 8; attempt++ {
+		if support != nil {
+			*support = (*support)[:0]
+		}
+		justNextTraversal(p)
+		if Aig_NtkFindSatAssign_rec(p, e, value, support, attempt) {
+			return true
+		}
+	}
+	if support != nil {
+		*support = (*support)[:0]
+	}
+	return false
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjTerSimulate_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t) int32 {
-    var Value0, Value1 int32;
-    if Aig_ObjIsConst1(pNode) {
-        return AIG_VAL1; }
-    if Aig_ObjIsTravIdCurrent(pAig, pNode) {
-        return Aig_ObjGetTerValue( pNode ); }
-    Aig_ObjSetTravIdCurrent( pAig, pNode );
-    if Aig_ObjIsCi(pNode) {
-        return Aig_ObjSetTerValue( pNode, AIG_VALX ); }
-    Value0 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin0(pNode)), Aig_ObjFaninC0(pNode) );
-    if Aig_ObjIsCo(pNode) || Value0 == AIG_VAL0 {
-        return Aig_ObjSetTerValue( pNode, Value0 ); }
-    assert(Aig_ObjIsNode(pNode), "Aig_ObjIsNode(pNode)");
-    Value1 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin1(pNode)), Aig_ObjFaninC1(pNode) );
-    return Aig_ObjSetTerValue( pNode, Aig_ObjAndTerValue(Value0, Value1) );
+func Aig_ObjTerSimulate_rec(p *Graph, e Edge) int32 {
+	n := p.node(e)
+	if n.Kind == Constant {
+		return Aig_ObjNotCondTerValue(AIG_VAL1, int32(e&1))
+	}
+	if n.TravID == p.travID {
+		return Aig_ObjNotCondTerValue(Aig_ObjGetTerValue(p, e), int32(e&1))
+	}
+	n.TravID = p.travID
+	if n.Kind == Input {
+		return Aig_ObjSetTerValue(p, e, AIG_VALX)
+	}
+	a := Aig_ObjTerSimulate_rec(p, n.Fanins[0])
+	value := a
+	if n.Kind == And {
+		if a != AIG_VAL0 {
+			value = Aig_ObjAndTerValue(a, Aig_ObjTerSimulate_rec(p, n.Fanins[1]))
+		}
+	} else if n.Kind == ExclusiveOr {
+		b := Aig_ObjTerSimulate_rec(p, n.Fanins[1])
+		if a == AIG_VALX || b == AIG_VALX {
+			value = AIG_VALX
+		} else if a == b {
+			value = AIG_VAL0
+		} else {
+			value = AIG_VAL1
+		}
+	} else if n.Kind != Output && n.Kind != Buffer {
+		panic("aig: invalid ternary node")
+	}
+	Aig_ObjSetTerValue(p, e, value)
+	return Aig_ObjNotCondTerValue(value, int32(e&1))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns value of the object under input assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjTerSimulate(pAig *Aig_Man_t, pNode *Aig_Obj_t, vSuppLits *Vec_Int_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, Entry int32;
-    Aig_ManIncrementTravId( pAig );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSuppLits)) && (((Entry) = Vec_IntEntry(vSuppLits, i)), 1); i++  {
-        pObj = Aig_ManCi( pAig, Abc_Lit2Var(Entry) );
-        Aig_ObjSetTerValue( pObj, Abc_LitIsCompl(Entry) ? AIG_VAL0 : AIG_VAL1 );
-        Aig_ObjSetTravIdCurrent( pAig, pObj );
-//printf( "%d ", Entry );
-    }
-//printf( "\n" );
-    return Aig_ObjTerSimulate_rec( pAig, pNode );
+func Aig_ObjTerSimulate(p *Graph, e Edge, support []int32) int32 {
+	justNextTraversal(p)
+	for _, literal := range support {
+		index := literal >> 1
+		if index < 0 || int(index) >= len(p.inputs) {
+			panic("aig: invalid support literal")
+		}
+		input := p.inputs[index]
+		value := AIG_VAL1
+		if literal&1 != 0 {
+			value = AIG_VAL0
+		}
+		if p.node(input).TravID == p.travID && Aig_ObjGetTerValue(p, input) != value {
+			panic("aig: conflicting support literals")
+		}
+		Aig_ObjSetTerValue(p, input, value)
+		p.node(input).TravID = p.travID
+	}
+	return Aig_ObjTerSimulate_rec(p, e)
 }
-
-
-type Aig_ManPack_t = Aig_ManPack_t_;
-// extern Aig_ManPack_t *        Aig_ManPackStart( Aig_Man_t * pAig );
-
-// extern void                   Aig_ManPackStop( Aig_ManPack_t * p );
-
-// extern void                   Aig_ManPackAddPattern( Aig_ManPack_t * p, Vec_Int_t * vLits );
-
-// extern Vec_Int_t *            Aig_ManPackConstNodes( Aig_ManPack_t * p );
-
-
-/**Function*************************************************************
-
-  Synopsis    [Testing of the framework.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManJustExperiment(pAig *Aig_Man_t) {
-    var pPack *Aig_ManPack_t;
-    var vSuppLits, vNodes *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    var Count0, Count0f, Count1, Count1f int32;
-    var nTotalLits int32;
-    vSuppLits = Vec_IntAlloc( 100 );
-    pPack = Aig_ManPackStart( pAig );
-    vNodes = Aig_ManPackConstNodes( pPack );
-//    Aig_ManForEachCo( pAig, pObj, i )
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vNodes,i))), 1); i++  {
-        if pObj.fPhase { // const 1
-        
-            if Aig_ObjFindSatAssign(pAig, pObj, 0, vSuppLits) != 0 {
-//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL0 );
-//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL0 )
-//                    printf( "Justification error!\n" );
-                Count0++;
-                nTotalLits += Vec_IntSize(vSuppLits);
-                Aig_ManPackAddPattern( pPack, vSuppLits );
-            
-            } else {
-                Count0f++; }
-        
-        } else {
-            if Aig_ObjFindSatAssign(pAig, pObj, 1, vSuppLits) != 0 {
-//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL1 );
-//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL1 )
-//                    printf( "Justification error!\n" );
-                Count1++;
-                nTotalLits += Vec_IntSize(vSuppLits);
-                Aig_ManPackAddPattern( pPack, vSuppLits );
-            
-            } else {
-                Count1f++; }
-        }
-    }
-    Vec_IntFree( vSuppLits );
-    fmt.Printf("PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f ", Aig_ManCoNum(pAig), Count0, Count0f, Count1, Count1f, 100.0*(Count0+Count1)/Aig_ManCoNum(pAig), 1.0*nTotalLits/(Count0+Count1));
-    Abc_PrintTime( 1, "T", Abc_Clock() - clk );
-    Aig_ManCleanMarkAB( pAig );
-    Aig_ManPackStop( pPack );
-    Vec_IntFree( vNodes );
-}
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -373,8 +373,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkPart)))/(float64(int6
                 }
                 pModel[Aig_ManCiNum(pFrames)] = pObj.Id;
                 pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pFrames, pModel );
-                // inlining of macro ABC_FREE
-                ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
+                pModel = nil;
                 Vec_IntFree( vCiIds );
 
                 if piFrame != nil {

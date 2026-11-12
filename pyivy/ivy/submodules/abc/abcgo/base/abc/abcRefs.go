@@ -2,456 +2,196 @@ package abc
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [abcRefs.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures using reference counting of the AIG nodes.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcRefs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Abc_NodeRefDeref( Abc_Obj_t * pNode, int fReference, int fLabel );
-
-// static int Abc_NodeRefDerefStop( Abc_Obj_t * pNode, int fReference );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the MFFC size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcSize(pNode *Abc_Obj_t) int32 {
-    var nConeSize1, nConeSize2 int32;
-//    assert( Abc_NtkIsStrash(pNode->pNtk) );
-//    assert( !Abc_ObjIsComplement( pNode ) );
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    if Abc_ObjFaninNum(pNode) == 0 {
-        return 0; }
-    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 0 ); // dereference
-    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference
-    assert(nConeSize1 == nConeSize2, "nConeSize1 == nConeSize2");
-    assert(nConeSize1 > 0, "nConeSize1 > 0");
-    return nConeSize1;
+// ABC temporarily used fanout-vector lengths as reference counters. Keep the
+// same algorithm in scratch counters so graph adjacency cannot be truncated.
+func (n *Network) referenceCounts() map[*Object]int {
+	if n.refs == nil {
+		n.refs = make(map[*Object]int, len(n.objects))
+		for _, o := range n.Objects() {
+			n.refs[o] = len(o.fanouts)
+		}
+	}
+	return n.refs
+}
+func (n *Network) finishReferences() {
+	for o, count := range n.refs {
+		if count != len(o.fanouts) {
+			return
+		}
+	}
+	n.refs = nil
+}
+func Abc_NtkIncrementTravId(n *Network) {
+	n.travID++
+	if n.travID == 0 {
+		for _, o := range n.Objects() {
+			o.travID = 0
+		}
+		n.travID = 1
+	}
+}
+func Abc_NodeIsTravIdCurrent(o *Object) int32 { return abcBool(o.travID == o.network.travID) }
+func Abc_NodeSetTravIdCurrent(o *Object)      { o.travID = o.network.travID }
+func refDeref(o *Object, reference, label, stop bool) int32 {
+	refs := o.network.referenceCounts()
+	if label {
+		Abc_NodeSetTravIdCurrent(o)
+	}
+	if o.IsCI() || o.Kind == ObjectConst1 {
+		return 0
+	}
+	count := int32(1)
+	for _, e := range o.fanins {
+		if stop && e.Complement {
+			continue
+		}
+		child := e.Object
+		if reference {
+			before := refs[child]
+			refs[child]++
+			if before == 0 {
+				count += refDeref(child, true, label, stop)
+			}
+		} else {
+			if refs[child] <= 0 {
+				panic("unbalanced node dereference")
+			}
+			refs[child]--
+			if refs[child] == 0 {
+				count += refDeref(child, false, label, stop)
+			}
+		}
+	}
+	return count
+}
+func Abc_NodeRefDeref(o *Object, reference, label int32) int32 {
+	count := refDeref(o, reference != 0, label != 0, false)
+	if reference != 0 {
+		o.network.finishReferences()
+	}
+	return count
+}
+func Abc_NodeRefDerefStop(o *Object, reference int32) int32 {
+	count := refDeref(o, reference != 0, false, true)
+	if reference != 0 {
+		o.network.finishReferences()
+	}
+	return count
+}
+func Abc_NodeDeref_rec(o *Object) int32 { return Abc_NodeRefDeref(o, 0, 0) }
+func Abc_NodeRef_rec(o *Object) int32   { return Abc_NodeRefDeref(o, 1, 0) }
+func mffcSize(o *Object, stop, label bool) int32 {
+	if o.Kind != ObjectNode {
+		panic("MFFC root must be a node")
+	}
+	if len(o.fanins) == 0 {
+		return 0
+	}
+	before := refDeref(o, false, label, stop)
+	after := refDeref(o, true, false, stop)
+	o.network.finishReferences()
+	if before != after {
+		panic("unbalanced MFFC references")
+	}
+	return before
+}
+func Abc_NodeMffcSize(o *Object) int32     { return mffcSize(o, false, false) }
+func Abc_NodeMffcSizeStop(o *Object) int32 { return mffcSize(o, true, false) }
+func Abc_NodeMffcLabelAig(o *Object) int32 { return mffcSize(o, false, true) }
+func mffcCollect(o *Object, cone, support *[]*Object, topmost, labelBoundary bool) {
+	refs := len(o.fanouts)
+	if o.network.refs != nil {
+		refs = o.network.refs[o]
+	}
+	boundary := !topmost && (o.IsCI() || o.Kind == ObjectConst1 || refs > 0)
+	if boundary && !labelBoundary {
+		return
+	}
+	if Abc_NodeIsTravIdCurrent(o) != 0 {
+		return
+	}
+	Abc_NodeSetTravIdCurrent(o)
+	if boundary {
+		if support != nil {
+			*support = append(*support, o)
+		}
+		return
+	}
+	for _, e := range o.fanins {
+		mffcCollect(e.Object, cone, support, false, labelBoundary)
+	}
+	if cone != nil {
+		*cone = append(*cone, o)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the MFFC size while stopping at the complemented edges.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcSizeStop(pNode *Abc_Obj_t) int32 {
-    var nConeSize1, nConeSize2 int32;
-    assert(Abc_NtkIsStrash(pNode.pNtk), "Abc_NtkIsStrash(pNode.pNtk)");
-    assert(!Abc_ObjIsComplement( pNode ), "!Abc_ObjIsComplement( pNode )");
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    if Abc_ObjFaninNum(pNode) == 0 {
-        return 0; }
-    nConeSize1 = Abc_NodeRefDerefStop( pNode, 0 ); // dereference
-    nConeSize2 = Abc_NodeRefDerefStop( pNode, 1 ); // reference
-    assert(nConeSize1 == nConeSize2, "nConeSize1 == nConeSize2");
-    assert(nConeSize1 > 0, "nConeSize1 > 0");
-    return nConeSize1;
+// Output vectors are pointers to slices so nil retains the C optional-output
+// convention without requiring a container package.
+func Abc_NodeMffcConeSupp_rec(o *Object, cone, support *[]*Object, topmost int32) {
+	mffcCollect(o, cone, support, topmost != 0, true)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Labels MFFC with the current traversal ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcLabelAig(pNode *Abc_Obj_t) int32 {
-    var nConeSize1, nConeSize2 int32;
-    assert(Abc_NtkIsStrash(pNode.pNtk), "Abc_NtkIsStrash(pNode.pNtk)");
-    assert(!Abc_ObjIsComplement( pNode ), "!Abc_ObjIsComplement( pNode )");
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    if Abc_ObjFaninNum(pNode) == 0 {
-        return 0; }
-    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 1 ); // dereference
-    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference
-    assert(nConeSize1 == nConeSize2, "nConeSize1 == nConeSize2");
-    assert(nConeSize1 > 0, "nConeSize1 > 0");
-    return nConeSize1;
+func Abc_NodeMffcConeSupp(o *Object, cone, support *[]*Object) {
+	if o.Kind != ObjectNode {
+		panic("MFFC root must be node")
+	}
+	if cone != nil {
+		*cone = (*cone)[:0]
+	}
+	if support != nil {
+		*support = (*support)[:0]
+	}
+	Abc_NtkIncrementTravId(o.network)
+	mffcCollect(o, cone, support, true, true)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [References/references the node and returns MFFC size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeRefDeref(pNode *Abc_Obj_t, fReference int32, fLabel int32) int32 {
-    var pNode0, pNode1 *Abc_Obj_t;
-    var Counter int32;
-    // label visited nodes
-    if fLabel != 0 {
-        Abc_NodeSetTravIdCurrent( pNode ); }
-    // skip the CI
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    // process the internal node
-    pNode0 = Abc_ObjFanin0(pNode);
-    pNode1 = Abc_ObjFanin1(pNode);
-    Counter = 1;
-    if fReference != 0 {
-        if pNode0.vFanouts.nSize++ == 0 {
-            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }
-        if pNode1.vFanouts.nSize++ == 0 {
-            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }
-    
-    } else {
-        assert(pNode0.vFanouts.nSize > 0, "pNode0.vFanouts.nSize > 0");
-        assert(pNode1.vFanouts.nSize > 0, "pNode1.vFanouts.nSize > 0");
-        if --pNode0.vFanouts.nSize == 0 {
-            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }
-        if --pNode1.vFanouts.nSize == 0 {
-            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }
-    }
-    return Counter;
+func Abc_NodeMffcConeSuppPrint(o *Object) {
+	var cone, support []*Object
+	Abc_NodeDeref_rec(o)
+	Abc_NodeMffcConeSupp(o, &cone, &support)
+	Abc_NodeRef_rec(o)
+	fmt.Printf("Node = %6s : Supp = %3d  Cone = %3d  (", o.Name(), len(support), len(cone))
+	for _, inside := range cone {
+		fmt.Printf(" %s", inside.Name())
+	}
+	fmt.Println(" )")
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [References/references the node and returns MFFC size.]
-
-  Description [Stops at the complemented edges.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeRefDerefStop(pNode *Abc_Obj_t, fReference int32) int32 {
-    var pNode0, pNode1 *Abc_Obj_t;
-    var Counter int32;
-    // skip the CI
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    // process the internal node
-    pNode0 = Abc_ObjFanin0(pNode);
-    pNode1 = Abc_ObjFanin1(pNode);
-    Counter = 1;
-    if fReference != 0 {
-        if !Abc_ObjFaninC0(pNode) && pNode0.vFanouts.nSize++ == 0 {
-            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }
-        if !Abc_ObjFaninC1(pNode) && pNode1.vFanouts.nSize++ == 0 {
-            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }
-    
-    } else {
-        assert(pNode0.vFanouts.nSize > 0, "pNode0.vFanouts.nSize > 0");
-        assert(pNode1.vFanouts.nSize > 0, "pNode1.vFanouts.nSize > 0");
-        if !Abc_ObjFaninC0(pNode) && --pNode0.vFanouts.nSize == 0 {
-            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }
-        if !Abc_ObjFaninC1(pNode) && --pNode1.vFanouts.nSize == 0 {
-            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }
-    }
-    return Counter;
+func Abc_NodeMffcInside(o *Object, leaves []*Object, inside *[]*Object) int32 {
+	n := o.network
+	for _, leaf := range leaves {
+		if !n.contains(leaf) {
+			panic("foreign MFFC leaf")
+		}
+	}
+	refs := n.referenceCounts()
+	for _, leaf := range leaves {
+		refs[leaf]++
+	}
+	before := Abc_NodeDeref_rec(o)
+	Abc_NodeMffcConeSupp(o, inside, nil)
+	after := Abc_NodeRef_rec(o)
+	for _, leaf := range leaves {
+		refs[leaf]--
+	}
+	n.finishReferences()
+	if before != after {
+		panic("unbalanced MFFC references")
+	}
+	return before
 }
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Dereferences the node's MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeDeref_rec(pNode *Abc_Obj_t) int32 {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    var Counter int32 = 1;
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        assert(pFanin.vFanouts.nSize > 0, "pFanin.vFanouts.nSize > 0");
-        if --pFanin.vFanouts.nSize == 0 {
-            Counter += Abc_NodeDeref_rec( pFanin ); }
-    }
-    return Counter;
+func Abc_NodeMffcInsideCollect(o *Object) []*Object {
+	var inside []*Object
+	Abc_NodeMffcInside(o, nil, &inside)
+	return inside
 }
-
-/**Function*************************************************************
-
-  Synopsis    [References the node's MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeRef_rec(pNode *Abc_Obj_t) int32 {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    var Counter int32 = 1;
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        if pFanin.vFanouts.nSize++ == 0 {
-            Counter += Abc_NodeRef_rec( pFanin ); }
-    }
-    return Counter;
+func Abc_NodeMffcLabel_rec(o *Object, topmost int32, nodes *[]*Object) {
+	mffcCollect(o, nodes, nil, topmost != 0, false)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the internal and boundary nodes in the derefed MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcConeSupp_rec(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t, fTopmost int32) {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    // skip visited nodes
-    if Abc_NodeIsTravIdCurrent(pNode) {
-        return; }
-    Abc_NodeSetTravIdCurrent(pNode);
-    // add to the new support nodes
-    if !(fTopmost != 0) && (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize > 0) {
-        if vSupp != nil { Vec_PtrPush( vSupp, pNode ); }
-        return;
-    }
-    // recur on the children
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        Abc_NodeMffcConeSupp_rec( pFanin, vCone, vSupp, 0 );
-    }
-    // collect the internal node
-    if vCone != nil { Vec_PtrPush( vCone, pNode ); }
-//    printf( "%d ", pNode->Id );
+func Abc_NodeMffcLabel(o *Object, nodes *[]*Object) int32 {
+	before := Abc_NodeDeref_rec(o)
+	Abc_NtkIncrementTravId(o.network)
+	Abc_NodeMffcLabel_rec(o, 1, nodes)
+	after := Abc_NodeRef_rec(o)
+	if before != after {
+		panic("unbalanced MFFC references")
+	}
+	return before
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the support of the derefed MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcConeSupp(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t) {
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    if vCone != nil { Vec_PtrClear( vCone ); }
-    if vSupp != nil { Vec_PtrClear( vSupp ); }
-    Abc_NtkIncrementTravId( pNode.pNtk );
-    Abc_NodeMffcConeSupp_rec( pNode, vCone, vSupp, 1 );
-//    printf( "\n" );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the support of the derefed MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcConeSuppPrint(pNode *Abc_Obj_t) {
-    var vCone, vSupp *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    vCone = Vec_PtrAlloc( 100 );
-    vSupp = Vec_PtrAlloc( 100 );
-    Abc_NodeDeref_rec( pNode );
-    Abc_NodeMffcConeSupp( pNode, vCone, vSupp );
-    Abc_NodeRef_rec( pNode );
-    fmt.Printf("Node = %6s : Supp = %3d  Cone = %3d  (", Abc_ObjName(pNode), Vec_PtrSize(vSupp), Vec_PtrSize(vCone));
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCone)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {
-        fmt.Printf(" %s", Abc_ObjName(pObj));
-    }
-    fmt.Printf(" )\n");
-    Vec_PtrFree( vCone );
-    Vec_PtrFree( vSupp );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]
-
-  Description []
-               
-  SideEffects [Increments the trav ID and marks visited nodes.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcInside(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vInside *Vec_Ptr_t) int32 {
-    var pObj *Abc_Obj_t;
-    var i, Count1, Count2 int32;
-    // increment the fanout counters for the leaves
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pObj.vFanouts.nSize++;
-    }
-    // dereference the node
-    Count1 = Abc_NodeDeref_rec( pNode );
-    // collect the nodes inside the MFFC
-    Abc_NodeMffcConeSupp( pNode, vInside, nil );
-    // reference it back
-    Count2 = Abc_NodeRef_rec( pNode );
-    assert(Count1 == Count2, "Count1 == Count2");
-    // remove the extra counters
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pObj.vFanouts.nSize--;
-    }
-    return Count1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]
-
-  Description []
-               
-  SideEffects [Increments the trav ID and marks visited nodes.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcInsideCollect(pNode *Abc_Obj_t) *Vec_Ptr_t {
-    var vInside *Vec_Ptr_t;
-    var Count1, Count2 int32;
-    // dereference the node
-    Count1 = Abc_NodeDeref_rec( pNode );
-    // collect the nodes inside the MFFC
-    vInside = Vec_PtrAlloc( 10 );
-    Abc_NodeMffcConeSupp( pNode, vInside, nil );
-    // reference it back
-    Count2 = Abc_NodeRef_rec( pNode );
-    assert(Count1 == Count2, "Count1 == Count2");
-    return vInside;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the internal and boundary nodes in the derefed MFFC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcLabel_rec(pNode *Abc_Obj_t, fTopmost int32, vNodes *Vec_Ptr_t) {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    // add to the new support nodes
-    if !(fTopmost != 0) && (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize > 0) {
-        return; }
-    // skip visited nodes
-    if Abc_NodeIsTravIdCurrent(pNode) {
-        return; }
-    Abc_NodeSetTravIdCurrent(pNode);
-    // recur on the children
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        Abc_NodeMffcLabel_rec( pFanin, 0, vNodes );
-    }
-    // collect the internal node
-//    printf( "%d ", pNode->Id );
-    if vNodes != nil {
-        Vec_PtrPush( vNodes, pNode ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]
-
-  Description []
-               
-  SideEffects [Increments the trav ID and marks visited nodes.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeMffcLabel(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {
-    var Count1, Count2 int32;
-    // dereference the node
-    Count1 = Abc_NodeDeref_rec( pNode );
-    // collect the nodes inside the MFFC
-    Abc_NtkIncrementTravId( pNode.pNtk );
-    Abc_NodeMffcLabel_rec( pNode, 1, vNodes );
-    // reference it back
-    Count2 = Abc_NodeRef_rec( pNode );
-    assert(Count1 == Count2, "Count1 == Count2");
-    return Count1;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

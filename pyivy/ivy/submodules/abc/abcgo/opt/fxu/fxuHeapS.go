@@ -133,11 +133,9 @@ func Fxu_HeapSingleResize(p *Fxu_HeapSingle) {
 func Fxu_HeapSingleStop(p *Fxu_HeapSingle) {
     var i int32;
     i = 0;
-    // inlining of macro ABC_FREE
-    ((p.pTree) ? (free((char *) (p.pTree)), (p.pTree) = 0) : 0);
+    p.pTree = nil;
     i = 1;
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

@@ -15,3 +15,9 @@ entries, stable growth, byte/word recycling, restart, size-class mapping, encode
 handles, and flexible-page release.
 
 Validation: `GOCACHE=/tmp/abcgo-cache go -C abcgo test -race ./misc/mem` passed.
+
+Integration extension: explicit chunk-policy constructors
+`Mem_FixedStartWithChunk`, `Mem_FlexStartWithChunk`, and
+`Mem_StepStartWithChunk` let GIA reuse these implementations while retaining its
+original chunk sizes. Default constructors preserve their original policies.
+Regressions cover custom fixed growth/restart and GIA's flexible/step policies.

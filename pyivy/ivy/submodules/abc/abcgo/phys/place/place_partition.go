@@ -1,1153 +1,411 @@
+// Recursive placement partitioning, ported from place_partition.c
+// (Aaron P. Hurst). Proprietary hMetis is replaced by the native weighted-cut
+// implementation in libhmetis.go; see REVIEW.md for its algorithmic differences.
 package place
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"sort"
+)
 
-/*===================================================================*/
-//  
-//     place_partition.c
-//
-//        Aaron P. Hurst, 2003-2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
+var g_place_rootPartition *Partition
+var allNetsR2, allNetsL2, allNetsB2, allNetsT2 []*ConcreteNet
 
-//#include <stdlib.h>
-//#include <math.h>
-//#include <string.h>
-//#include <stdio.h>
-//#include <limits.h>
-//#include <assert.h>
-//#include <sys/stat.h>
-//#include <unistd.h>
-
-//#include "place_base.h"
-//#include "place_gordian.h"
-
-#if !defined(NO_HMETIS)
-#include "libhmetis.h"
-
-ABC_NAMESPACE_IMPL_START
-
-#endif
-
-// --------------------------------------------------------------------
-// Global variables
-//
-// --------------------------------------------------------------------
-
-var g_place_rootPartition *Partition = nil;
-var allNetsR2 **ConcreteNet = nil;
-var allNetsL2 **ConcreteNet = nil;
-var allNetsB2 **ConcreteNet = nil;
-var allNetsT2 **ConcreteNet = nil;
-
-
-// --------------------------------------------------------------------
-// Function prototypes and local data structures
-//
-// --------------------------------------------------------------------
-
-typedef struct FM_cell {
-    int loc;
-    int gain;
-    ConcreteCell *cell;
-    struct FM_cell *next, *prev;
-    bool locked;
-}
- FM_cell;
-
-// void FM_updateGains(ConcreteNet *net, int partition, int inc, 
-//                     FM_cell target [], FM_cell *bin [], 
-//                     int count_1 [], int count_2 []);
-
-
-
-// --------------------------------------------------------------------
-// initPartitioning()
-//
-/// \brief Initializes data structures necessary for partitioning.
-//
-/// Creates a valid g_place_rootPartition.
-///
-// --------------------------------------------------------------------
 func initPartitioning() {
-  var i int32;
-  var area float32;
-
-  // create root partition
-  g_place_numPartitions = 1;
-  if g_place_rootPartition != nil { free(g_place_rootPartition); }
-  g_place_rootPartition = malloc(sizeof(Partition));
-  g_place_rootPartition.m_level = 0;
-  g_place_rootPartition.m_area = 0;
-  g_place_rootPartition.m_bounds = g_place_coreBounds;
-  g_place_rootPartition.m_vertical = false;
-  g_place_rootPartition.m_done = false;
-  g_place_rootPartition.m_leaf = true;
-      
-  // add all of the cells to this partition
-  g_place_rootPartition.m_members = malloc(sizeof(ConcreteCell*)*g_place_numCells);
-  g_place_rootPartition.m_numMembers = 0;
-  for i=0; i<g_place_numCells; i++ { 
-    if g_place_concreteCells[i] {
-      if !g_place_concreteCells[i].m_fixed {
-        area = getCellArea(g_place_concreteCells[i]);
-        g_place_rootPartition.m_members[g_place_rootPartition.m_numMembers++] =
-          g_place_concreteCells[i];
-        g_place_rootPartition.m_area += area;
-      }
-    }
-  }
+	g_place_numPartitions = 1
+	p := &Partition{m_bounds: g_place_coreBounds, m_leaf: true}
+	for _, cell := range g_place_concreteCells[:g_place_numCells] {
+		if cell != nil && !cell.m_fixed {
+			partitionAddMember(p, cell)
+		}
+	}
+	g_place_rootPartition = p
 }
-
-
-// --------------------------------------------------------------------
-// presortNets()
-//
-/// \brief Sorts nets by corner positions.
-//
-/// Allocates allNetsX2 structures.
-///
-// --------------------------------------------------------------------
 func presortNets() {
-  allNetsL2 = (ConcreteNet**)realloc(allNetsL2, sizeof(ConcreteNet*)*g_place_numNets);
-  allNetsR2 = (ConcreteNet**)realloc(allNetsR2, sizeof(ConcreteNet*)*g_place_numNets);
-  allNetsB2 = (ConcreteNet**)realloc(allNetsB2, sizeof(ConcreteNet*)*g_place_numNets);
-  allNetsT2 = (ConcreteNet**)realloc(allNetsT2, sizeof(ConcreteNet*)*g_place_numNets);
-  memcpy(allNetsL2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);
-  memcpy(allNetsR2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);
-  memcpy(allNetsB2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);
-  memcpy(allNetsT2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);
-  qsort(allNetsL2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByL);
-  qsort(allNetsR2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByR);
-  qsort(allNetsB2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByB);
-  qsort(allNetsT2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByT);
+	nets := g_place_concreteNets[:g_place_numNets]
+	allNetsL2 = append(allNetsL2[:0], nets...)
+	allNetsR2 = append(allNetsR2[:0], nets...)
+	allNetsB2 = append(allNetsB2[:0], nets...)
+	allNetsT2 = append(allNetsT2[:0], nets...)
+	for _, entry := range []struct {
+		nets    []*ConcreteNet
+		compare func(*ConcreteNet, *ConcreteNet) int32
+	}{{allNetsL2, netSortByL}, {allNetsR2, netSortByR}, {allNetsB2, netSortByB}, {allNetsT2, netSortByT}} {
+		sort.SliceStable(entry.nets, func(i, j int) bool { return entry.compare(entry.nets[i], entry.nets[j]) < 0 })
+	}
 }
-
-// --------------------------------------------------------------------
-// refinePartitions()
-//
-/// \brief Splits large leaf partitions.
-//
-// --------------------------------------------------------------------
 func refinePartitions() bool {
-
-  return refinePartition(g_place_rootPartition);
+	if g_place_rootPartition == nil {
+		return true
+	}
+	return refinePartition(g_place_rootPartition)
 }
-
-
-// --------------------------------------------------------------------
-// reallocPartitions()
-//
-/// \brief Reallocates the partitions based on placement information.
-//
-// --------------------------------------------------------------------
 func reallocPartitions() {
-
-  reallocPartition(g_place_rootPartition);
+	if g_place_rootPartition != nil {
+		reallocPartition(g_place_rootPartition)
+	}
 }
-
-
-// --------------------------------------------------------------------
-// refinePartition()
-//
-/// \brief Splits any large leaves within a partition.
-//
-// --------------------------------------------------------------------
+func partitionAddMember(p *Partition, cell *ConcreteCell) {
+	p.m_members = append(p.m_members[:p.m_numMembers], cell)
+	p.m_numMembers++
+	p.m_area += getCellArea(cell)
+}
+func resetPartitionMembers(p *Partition) {
+	clear(p.m_members)
+	p.m_members = p.m_members[:0]
+	p.m_numMembers = 0
+	p.m_area = 0
+}
+func partitionNonzeroMembers(p *Partition) int {
+	count := 0
+	for _, cell := range p.m_members[:p.m_numMembers] {
+		if cell != nil && getCellArea(cell) > 0 {
+			count++
+		}
+	}
+	return count
+}
+func partitionChildren(p *Partition) {
+	if p == nil || p.m_sub1 == nil || p.m_sub2 == nil {
+		panic("partition children are missing")
+	}
+}
 func refinePartition(p *Partition) bool {
-  var degenerate bool  = false;
-  var nonzeroCount int32;
-  var i int32;
-
-  assert((p != nil), "p");
-
-  // is this partition completed?
-  if p.m_done { return true; }
-
-  // is this partition a non-leaf node?
-  if !p.m_leaf {
-    p.m_done = refinePartition(p.m_sub1);
-    p.m_done &= refinePartition(p.m_sub2);
-    return p.m_done;
-  }
-  
-  // leaf...
-  // create two new subpartitions
-  g_place_numPartitions++;
-  p.m_sub1 = malloc(sizeof(Partition));
-  p.m_sub1.m_level = p.m_level+1;
-  p.m_sub1.m_leaf = true;
-  p.m_sub1.m_done = false;
-  p.m_sub1.m_area = 0;
-  p.m_sub1.m_vertical = !p.m_vertical;
-  p.m_sub1.m_numMembers = 0;
-  p.m_sub1.m_members = nil;
-  p.m_sub2 = malloc(sizeof(Partition));
-  p.m_sub2.m_level = p.m_level+1;
-  p.m_sub2.m_leaf = true;
-  p.m_sub2.m_done = false;
-  p.m_sub2.m_area = 0;
-  p.m_sub2.m_vertical = !p.m_vertical;
-  p.m_sub2.m_numMembers = 0;
-  p.m_sub2.m_members = nil;
-  p.m_leaf = false;
-
-  // --- INITIAL PARTITION
-
-  if PARTITION_AREA_ONLY {
-    partitionEqualArea(p);
-  } else { 
-    partitionScanlineMincut(p); }
-
-  resizePartition(p);
-
-  // --- PARTITION IMPROVEMENT
-
-  if p.m_level < REPARTITION_LEVEL_DEPTH {
-    if REPARTITION_FM {
-      repartitionFM(p);
-    } else if REPARTITION_HMETIS {
-      repartitionHMetis(p); }
-  }
-    
-  resizePartition(p);
-  
-  // fix imbalances due to zero-area cells
-  for i=0; i<p.m_sub1.m_numMembers; i++ {
-    if p.m_sub1.m_members[i] { 
-      if getCellArea(p.m_sub1.m_members[i]) > 0 {
-        nonzeroCount++;
-      } }
-  }
-  
-  // is this leaf now done?
-  if nonzeroCount <= LARGEST_FINAL_SIZE {
-      p.m_sub1.m_done = true; }
-  if nonzeroCount == 0 {
-      degenerate = true; }
-
-  nonzeroCount = 0;
-  for i=0; i<p.m_sub2.m_numMembers; i++ {
-    if p.m_sub2.m_members[i] {
-      if getCellArea(p.m_sub2.m_members[i]) > 0 {
-        nonzeroCount++;
-      } }
-  }
-
-  // is this leaf now done?
-  if nonzeroCount <= LARGEST_FINAL_SIZE {
-      p.m_sub2.m_done = true; }
-  if nonzeroCount == 0 {
-      degenerate = true; }
-
-  // have we found a degenerate partitioning?
-  if degenerate {
-    fmt.Printf("QPART-35 : WARNING: degenerate partition generated\n");
-    partitionEqualArea(p);
-    resizePartition(p);
-    p.m_sub1.m_done = true;
-    p.m_sub2.m_done = true;
-  }
-  
-  // is this parent now finished?
-  if p.m_sub1.m_done && p.m_sub2.m_done { p.m_done = true; }
-  
-  return p.m_done;
+	if p == nil {
+		panic("nil partition")
+	}
+	if p.m_done {
+		return true
+	}
+	if !p.m_leaf {
+		first := refinePartition(p.m_sub1)
+		second := refinePartition(p.m_sub2)
+		p.m_done = first && second
+		return p.m_done
+	}
+	g_place_numPartitions++
+	p.m_sub1 = &Partition{m_level: p.m_level + 1, m_leaf: true, m_vertical: !p.m_vertical}
+	p.m_sub2 = &Partition{m_level: p.m_level + 1, m_leaf: true, m_vertical: !p.m_vertical}
+	p.m_leaf = false
+	if PARTITION_AREA_ONLY {
+		partitionEqualArea(p)
+	} else {
+		partitionScanlineMincut(p)
+	}
+	resizePartition(p)
+	if p.m_level < REPARTITION_LEVEL_DEPTH {
+		if REPARTITION_FM {
+			repartitionFM(p)
+		} else if REPARTITION_HMETIS {
+			if err := repartitionHMetis(p); err != nil {
+				fmt.Printf("QPAR-02 : repartitioning: %v\n", err)
+			}
+		}
+	}
+	resizePartition(p)
+	a, b := partitionNonzeroMembers(p.m_sub1), partitionNonzeroMembers(p.m_sub2)
+	p.m_sub1.m_done = a <= LARGEST_FINAL_SIZE
+	p.m_sub2.m_done = b <= LARGEST_FINAL_SIZE
+	if a == 0 || b == 0 {
+		fmt.Println("QPART-35 : WARNING: degenerate partition generated")
+		partitionEqualArea(p)
+		resizePartition(p)
+		p.m_sub1.m_done = true
+		p.m_sub2.m_done = true
+	}
+	p.m_done = p.m_sub1.m_done && p.m_sub2.m_done
+	return p.m_done
 }
-
-
-// --------------------------------------------------------------------
-// repartitionHMetis()
-//
-/// \brief Repartitions the two subpartitions using the hMetis min-cut library.
-///
-/// The number of cut nets between the two partitions will be minimized.
-//
-// --------------------------------------------------------------------
-func repartitionHMetis(parent *Partition) {
-#if defined(NO_HMETIS)
-  printf("QPAR_02 : \t\tERROR: hMetis not available.  Ignoring.\n");
-#else
-
-  int n,c,t, i;
-  float area;
-  int *edgeConnections = NULL;
-  int *partitionAssignment = (int *)calloc(g_place_numCells, sizeof(int));
-  int *vertexWeights = (int *)calloc(g_place_numCells, sizeof(int));
-  int *edgeDegree = (int *)malloc(sizeof(int)*(g_place_numNets+1));
-  int numConnections = 0;
-  int numEdges = 0;
-  float initial_cut;
-  int targets = 0;
-  ConcreteCell *cell = NULL;
-  int options[9];
-  int afterCuts = 0;
-
-  assert(parent);
-  assert(parent->m_sub1);
-  assert(parent->m_sub2);
-
-  printf("QPAR-02 : \t\trepartitioning with hMetis\n");
-
-  // count edges
-  edgeDegree[0] = 0;
-  for(n=0; n<g_place_numNets; n++) if (g_place_concreteNets[n])
-    if (g_place_concreteNets[n]->m_numTerms > 1) {
-      numConnections += g_place_concreteNets[n]->m_numTerms;
-      edgeDegree[++numEdges] = numConnections;
-    }
-  
-  if (parent->m_vertical) {
-    // vertical
-    initial_cut = parent->m_sub2->m_bounds.x;
-    
-    // initialize all cells
-    for(c=0; c<g_place_numCells; c++) if (g_place_concreteCells[c]) {
-      if (g_place_concreteCells[c]->m_x < initial_cut)
-        partitionAssignment[c] = 0;
-      else
-        partitionAssignment[c] = 1;
-    }
-  
-    // initialize cells in partition 1
-    for(t=0; t<parent->m_sub1->m_numMembers; t++) if (parent->m_sub1->m_members[t]) {
-      cell = parent->m_sub1->m_members[t];
-      vertexWeights[cell->m_id] = getCellArea(cell);
-      // pay attention to cells that are close to the cut
-      if (abs(cell->m_x-initial_cut) < parent->m_bounds.w*REPARTITION_TARGET_FRACTION) {
-        targets++;
-        partitionAssignment[cell->m_id] = -1;
-      }
-    }
-    
-    // initialize cells in partition 2
-    for(t=0; t<parent->m_sub2->m_numMembers; t++) if (parent->m_sub2->m_members[t]) {
-      cell = parent->m_sub2->m_members[t];
-      vertexWeights[cell->m_id] = getCellArea(cell);
-      // pay attention to cells that are close to the cut
-      if (abs(cell->m_x-initial_cut) < parent->m_bounds.w*REPARTITION_TARGET_FRACTION) {
-        targets++;
-        partitionAssignment[cell->m_id] = -1;
-      }        
-    }
-    
-  } else {
-    // horizontal
-    initial_cut = parent->m_sub2->m_bounds.y;
-    
-    // initialize all cells
-    for(c=0; c<g_place_numCells; c++) if (g_place_concreteCells[c]) {
-      if (g_place_concreteCells[c]->m_y < initial_cut)
-        partitionAssignment[c] = 0;
-      else
-        partitionAssignment[c] = 1;
-    }
-    
-    // initialize cells in partition 1
-    for(t=0; t<parent->m_sub1->m_numMembers; t++) if (parent->m_sub1->m_members[t]) {
-      cell = parent->m_sub1->m_members[t];
-      vertexWeights[cell->m_id] = getCellArea(cell);
-      // pay attention to cells that are close to the cut
-      if (abs(cell->m_y-initial_cut) < parent->m_bounds.h*REPARTITION_TARGET_FRACTION) {
-        targets++;
-        partitionAssignment[cell->m_id] = -1;
-      }
-    }
-    
-    // initialize cells in partition 2
-    for(t=0; t<parent->m_sub2->m_numMembers; t++) if (parent->m_sub2->m_members[t]) {
-      cell = parent->m_sub2->m_members[t];
-      vertexWeights[cell->m_id] = getCellArea(cell);
-      // pay attention to cells that are close to the cut
-      if (abs(cell->m_y-initial_cut) < parent->m_bounds.h*REPARTITION_TARGET_FRACTION) {
-        targets++;
-        partitionAssignment[cell->m_id] = -1;
-      }        
-    }
-  }
-
-  options[0] = 1;  // any non-default values?
-  options[1] = 3; // num bisections
-  options[2] = 1;  // grouping scheme
-  options[3] = 1;  // refinement scheme
-  options[4] = 1;  // cycle refinement scheme
-  options[5] = 0;  // reconstruction scheme
-  options[6] = 0;  // fixed assignments?
-  options[7] = 12261980; // random seed
-  options[8] = 0;  // debugging level
-
-  edgeConnections = (int *)malloc(sizeof(int)*numConnections);
-
-  i = 0;
-  for(n=0; n<g_place_numNets; n++) if (g_place_concreteNets[n]) {
-    if (g_place_concreteNets[n]->m_numTerms > 1)
-      for(t=0; t<g_place_concreteNets[n]->m_numTerms; t++)
-        edgeConnections[i++] = g_place_concreteNets[n]->m_terms[t]->m_id;
-  }
-
-  HMETIS_PartRecursive(g_place_numCells, numEdges, vertexWeights,
-               edgeDegree, edgeConnections, NULL,
-               2, (int)(100*MAX_PARTITION_NONSYMMETRY),
-               options, partitionAssignment, &afterCuts);
-    
-  /*
-  printf("HMET-20 : \t\t\tbalance before %d / %d ... ", parent->m_sub1->m_numMembers,
-         parent->m_sub2->m_numMembers);
-  */
-
-  // reassign members to subpartitions
-  parent->m_sub1->m_numMembers = 0;
-  parent->m_sub1->m_area = 0;
-  parent->m_sub2->m_numMembers = 0;
-  parent->m_sub2->m_area = 0;
-  parent->m_sub1->m_members = (ConcreteCell**)realloc(parent->m_sub1->m_members, 
-       sizeof(ConcreteCell*)*parent->m_numMembers); 
-  parent->m_sub2->m_members = (ConcreteCell**)realloc(parent->m_sub2->m_members, 
-       sizeof(ConcreteCell*)*parent->m_numMembers); 
- 
-  for(t=0; t<parent->m_numMembers; t++) if (parent->m_members[t]) {
-    cell = parent->m_members[t];
-    area = getCellArea(cell);
-    if (partitionAssignment[cell->m_id] == 0) {
-      parent->m_sub1->m_members[parent->m_sub1->m_numMembers++] = cell;
-      parent->m_sub1->m_area += area;
-    }
-    else {
-      parent->m_sub2->m_members[parent->m_sub2->m_numMembers++] = cell;
-      parent->m_sub2->m_area += area;
-    }
-  }
-  /*
-  printf("after %d / %d\n", parent->m_sub1->m_numMembers,
-         parent->m_sub2->m_numMembers);
-  */
-
-  // cout << "HMET-21 : \t\t\tloc: " << initial_cut <<  " targetting: " << targets*100/parent->m_members.length() << "%" << endl;
-  // cout << "HMET-22 : \t\t\tstarting cuts= " << beforeCuts << " final cuts= " << afterCuts << endl;
-
-  free(edgeConnections);
-  free(vertexWeights);
-  free(edgeDegree);
-  free(partitionAssignment);
-#endif
-}
-
-
-// --------------------------------------------------------------------
-// repartitionFM()
-//
-/// \brief Fiduccia-Matheyses mincut partitioning algorithm.
-//
-/// UNIMPLEMENTED (well, un-C-ified)
-//
-// --------------------------------------------------------------------
-func repartitionFM(parent *Partition) {
-     
-                                                                          
-
-                                                              
-                                         
-                                                            
-                                         
-                                                            
-
-                                             
-                                                                
-                               
-                        
-                                                     
-
-                     
-                                          
-                       
-                    
-                 
-                                           
-                                                                        
-                     
-
-                     
-                                  
-
-                           
-               
-
-                                             
-
-                           
-                                                                                             
-                                 
-                                        
-                                 
-            
-                                 
-                                   
-                                 
-     
-
-                                      
-                                                                                              
-                                 
-                                                           
-                                                                                              
-                  
-                                
-         
-     
-
-                                      
-                                                                                              
-                                 
-                                                           
-                                                                                              
-                  
-                                
-                 
-     
-
-                                                                                
-                                                                                            
-                                                                                             
-                                                              
-                                    
-                                                                   
-                                    
-                                                           
-                                    
-            
-                                    
-                                                                                  
-     
-    
-            
-                 
-
-                                             
-
-                           
-                                                                                             
-                                 
-                                        
-                                 
-            
-                                 
-                                   
-                                 
-     
-
-                                      
-                                                                                              
-                                 
-                                                           
-                                                                                              
-                  
-                                
-         
-     
-
-                                      
-                                                                                              
-                                 
-                                                           
-                                                                                              
-                  
-                                
-                 
-     
-
-                                                                                
-                                                                                            
-                                                                                             
-                                                              
-                                    
-                                                                   
-                                    
-                                                           
-                                    
-            
-                                    
-                                                                                  
-     
-     
-
-                               
-                                                       
-                             
-                                     
-                                     
-
-                                                 
-                                                                                              
-                                    
-                                                  
-                                                                             
-                                                                             
-                                                                             
-                                                                             
-         
-
-                                                                            
-
-                          
-                                                              
-                                          
-
-                                                      
-                                       
-                            
-                              
-                                         
-                                   
-     
-
-                     
-                               
-                      
-                 
-                                                  
-           
-                      
-
-                                                 
-
-                                 
-                       
-                        
-                                  
-                                
-
-                                                                   
-                                          
-
-                               
-                        
-                         
-
-                              
-                                     
-                                     
-                               
-
-                     
-     
-                                                      
-                                                     
-    
-                          
-                                                         
-
-                                   
-              
-
-                                 
-                                        
-
-                                     
-                                               
-                                                                                                          
-                                                                                                           
-
-                                                                                         
-         
-                         
-              
-
-                    
-                               
-                                                                                                                                                                       
-
-                                             
-                                
-                         
-                                                           
-                                                           
-
-                                                                    
-                                                                              
-                            
-            
-                                                                 
-                     
-                                    
-            
-                                    
-                                    
-
-                                                                                                                                                                                                    
-
-                                                                                      
-                                                                                                                          
-                                                                                                                          
-            
-                                                         
-         
-
-                
-                         
-                                                           
-                                                           
-
-                                                         
-                                                                              
-                            
-            
-                                                                 
-                     
-                                    
-                                    
-                                    
-
-                                                                                                                                                                                                    
-
-                                                                                                                          
-                                                                                                                          
-        
-                                                         
-         
-         
-
-                                                   
-
-                                 
-
-  
-                                            
-                                       
-                               
-                    
-                                         
-                                       
-                               
-                    
-            
-                                    
-                                               
-  
-
-                                    
-                                     
-                               
-                                            
-                               
-                                            
-
-  
-                                            
-                                       
-                               
-                    
-                                         
-                                       
-                               
-                    
-            
-                                    
-                                               
-  
-
-                          
-                               
-                        
-                               
-                         
-        
-                                                         
-
-                          
-                              
-                                                             
-     
-
-                                                                                     
-     
-
-                                        
-                                                                                      
-                                                    
-                                      
-                               
-                                      
-                               
-                                                                                      
-                                                                              
-                                                 
-                                                   
-     
-          
-                                                 
-                                                   
-     
-     
-                                                                  
-                                                     
-
-
-                                                                                                                            
-                                                                                                    
-      
-}
-
-// ----- FM_updateGains()
-//   moves a cell between bins
-     
-                                                              
-                                                        
-                                                     
-
-                                                                           
-                                                            
-                               
-    
-                                 
-                      
-
-                                             
-                                                                                        
-                                    
-                                              
-                                                                     
-                                                                     
-                                                                     
-                                                                     
-         
-
-                           
-                                        
-                                                        
-                                    
-                                     
-                               
-                                            
-                               
-                                            
-                                  
-                                                         
-                          
-                                     
-                              
-                                     
-                               
-     
-     
-    
- 
-      
-
-
-// --------------------------------------------------------------------
-// partitionEqualArea()
-//
-/// \brief Splits a partition into two halves of equal area.
-//
-// --------------------------------------------------------------------
 func partitionEqualArea(parent *Partition) {
-  var halfArea, area float32;
-  var i int32;
-  
-  // which way to sort?
-  if parent.m_vertical {
-    // sort by X position
-    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByX);
-  } else {
-    // sort by Y position
-    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByY); }
-
-  // split the list
-  halfArea = parent.m_area*0.5;
-  parent.m_sub1.m_area = 0.0;
-  parent.m_sub1.m_numMembers = 0;
-  parent.m_sub1.m_members = (ConcreteCell**)realloc(parent.m_sub1.m_members, 
-                                    sizeof(ConcreteCell*)*parent.m_numMembers);
-  parent.m_sub2.m_area = 0.0;
-  parent.m_sub2.m_numMembers = 0;
-  parent.m_sub2.m_members = (ConcreteCell**)realloc(parent.m_sub2.m_members, 
-                                    sizeof(ConcreteCell*)*parent.m_numMembers);
-
-  for ; parent.m_sub1.m_area < halfArea; i++ { 
-    if parent.m_members[i] {
-      area = getCellArea(parent.m_members[i]);
-      parent.m_sub1.m_members[parent.m_sub1.m_numMembers++] = parent.m_members[i];
-      parent.m_sub1.m_area += area;
-  }
-  }
-  for ; i<parent.m_numMembers; i++ { 
-    if parent.m_members[i] {
-      area = getCellArea(parent.m_members[i]);
-      parent.m_sub2.m_members[parent.m_sub2.m_numMembers++] = parent.m_members[i];
-      parent.m_sub2.m_area += area;
-    }
-  }
-  
+	partitionChildren(parent)
+	members := parent.m_members[:parent.m_numMembers]
+	compare := cellSortByY
+	if parent.m_vertical {
+		compare = cellSortByX
+	}
+	sort.SliceStable(members, func(i, j int) bool { return compare(members[i], members[j]) < 0 })
+	// Recompute area rather than trusting stale accounting after incremental edits.
+	parent.m_area = 0
+	for _, cell := range members {
+		if cell != nil {
+			parent.m_area += getCellArea(cell)
+		}
+	}
+	resetPartitionMembers(parent.m_sub1)
+	resetPartitionMembers(parent.m_sub2)
+	half := parent.m_area * .5
+	for _, cell := range members {
+		if cell == nil {
+			continue
+		}
+		target := parent.m_sub2
+		if parent.m_sub1.m_area < half {
+			target = parent.m_sub1
+		}
+		partitionAddMember(target, cell)
+	}
 }
-
-
-// --------------------------------------------------------------------
-// partitionScanlineMincut()
-//
-/// \brief Scans the cells within a partition from left to right and chooses the min-cut.
-//
-// --------------------------------------------------------------------
-func partitionScanlineMincut(parent *Partition) {
-     
-                       
-                             
-                                        
-                                                          
-                                                                      
-                                     
-
-                                                                             
-                        
-                                                                      
-                         
-               
-                                                             
-                       
-                 
-                              
-                               
-       
-     
-   
-
-                         
-                                    
-                           
-                                                                        
-                                     
-                                         
-                                                 
-             
-                                                 
-          
-                                 
-                                                                                            
-                                 
-                     
-     
-           
-       
-                                                                                             
-                                 
-                     
-     
-           
-       
-                                        
-                                
-                              
-       
-                        
-     
-   
-        
-                                    
-                           
-                                                                        
-                                     
-                                         
-                                                 
-             
-                                                 
-          
-                                 
-                                                                                           
-                                 
-                     
-     
-           
-       
-                                                                                              
-                                 
-                     
-     
-           
-       
-                                        
-                                
-                              
-       
-                        
-     
-   
-                                 
-                                      
-   
-                                                                   
-                                    
-                             
-                                        
-                                              
-                                               
-   
-                                    
-                             
-                    
-                                              
-                                               
-   
-      
-}
-
-
-// --------------------------------------------------------------------
-// reallocPartition()
-//
-/// \brief Reallocates a partition and all of its children.
-//
-// --------------------------------------------------------------------
-func reallocPartition(p *Partition) {
-
-  if p.m_leaf {
-    return;
-  }
-
-  // --- INITIAL PARTITION
-
-  if PARTITION_AREA_ONLY {
-    partitionEqualArea(p);
-  } else { 
-    partitionScanlineMincut(p); }
-
-  resizePartition(p);
-
-  // --- PARTITION IMPROVEMENT
-  if p.m_level < REPARTITION_LEVEL_DEPTH {
-    if REPARTITION_HMETIS {
-      repartitionHMetis(p); }
-    
-    resizePartition(p);
-  }
-
-  reallocPartition(p.m_sub1);
-  reallocPartition(p.m_sub2);
-}
-
-
-// --------------------------------------------------------------------
-// resizePartition()
-//
-/// \brief Recomputes the bounding boxes of the child partitions based on their relative areas.
-//
-// --------------------------------------------------------------------
 func resizePartition(p *Partition) {
-  // compute the new bounding box
-  p.m_sub1.m_bounds.x = p.m_bounds.x;
-  p.m_sub1.m_bounds.y = p.m_bounds.y;
-  if p.m_vertical {
-    p.m_sub1.m_bounds.w = p.m_bounds.w*(p.m_sub1.m_area/p.m_area);
-    p.m_sub1.m_bounds.h = p.m_bounds.h;
-    p.m_sub2.m_bounds.x = p.m_bounds.x + p.m_sub1.m_bounds.w;
-    p.m_sub2.m_bounds.w = p.m_bounds.w*(p.m_sub2.m_area/p.m_area);
-    p.m_sub2.m_bounds.y = p.m_bounds.y;
-    p.m_sub2.m_bounds.h = p.m_bounds.h;
-  } else {
-    p.m_sub1.m_bounds.h = p.m_bounds.h*(p.m_sub1.m_area/p.m_area);
-    p.m_sub1.m_bounds.w = p.m_bounds.w;
-    p.m_sub2.m_bounds.y = p.m_bounds.y + p.m_sub1.m_bounds.h;
-    p.m_sub2.m_bounds.h = p.m_bounds.h*(p.m_sub2.m_area/p.m_area);
-    p.m_sub2.m_bounds.x = p.m_bounds.x;
-    p.m_sub2.m_bounds.w = p.m_bounds.w;
-  }
+	partitionChildren(p)
+	a, b := p.m_sub1, p.m_sub2
+	fraction := float32(.5)
+	total := a.m_area + b.m_area
+	p.m_area = total
+	if total > 0 {
+		fraction = a.m_area / total
+	} else if a.m_numMembers+b.m_numMembers > 0 {
+		fraction = float32(a.m_numMembers) / float32(a.m_numMembers+b.m_numMembers)
+	}
+	a.m_bounds = p.m_bounds
+	b.m_bounds = p.m_bounds
+	if p.m_vertical {
+		a.m_bounds.w = p.m_bounds.w * fraction
+		b.m_bounds.x = p.m_bounds.x + a.m_bounds.w
+		b.m_bounds.w = p.m_bounds.w - a.m_bounds.w
+	} else {
+		a.m_bounds.h = p.m_bounds.h * fraction
+		b.m_bounds.y = p.m_bounds.y + a.m_bounds.h
+		b.m_bounds.h = p.m_bounds.h - a.m_bounds.h
+	}
+}
+func reallocPartition(p *Partition) {
+	if p == nil || p.m_leaf {
+		return
+	}
+	if PARTITION_AREA_ONLY {
+		partitionEqualArea(p)
+	} else {
+		partitionScanlineMincut(p)
+	}
+	resizePartition(p)
+	if p.m_level < REPARTITION_LEVEL_DEPTH && REPARTITION_HMETIS {
+		if err := repartitionHMetis(p); err != nil {
+			fmt.Printf("QPAR-02 : repartitioning: %v\n", err)
+		}
+		resizePartition(p)
+	}
+	reallocPartition(p.m_sub1)
+	reallocPartition(p.m_sub2)
 }
 
-
-// --------------------------------------------------------------------
-// incrementalSubpartition()
-//
-/// \brief Adds new cells to an existing partition.  Partition sizes/locations are unchanged.
-///
-/// The function recurses, adding new cells to appropriate subpartitions.
-//
-// --------------------------------------------------------------------
-func incrementalSubpartition(p *Partition, newCells []*ConcreteCell, numNewCells int32) {
-  var c int32;
-  var newCells1 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);
-  var newCells2 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);
-  var numNewCells1, numNewCells2 int32;
-  var cut_loc float32;
-
-  assert((p != nil), "p");
-
-  // add new cells to partition list
-  p.m_members = (ConcreteCell**)realloc(p.m_members, 
-         sizeof(ConcreteCell*)*(p.m_numMembers+numNewCells));
-  memcpy(&(p.m_members[p.m_numMembers]), newCells, sizeof(ConcreteCell*)*numNewCells);
-  p.m_numMembers += numNewCells;
-
-  // if is a leaf partition, finished
-  if p.m_leaf { return; }
-
-  // split new cells into sub-partitions based on location
-  if p.m_vertical {
-    cut_loc = p.m_sub2.m_bounds.x;
-    for c=0; c<numNewCells; c++ {
-      if newCells[c].m_x < cut_loc {
-        newCells1[numNewCells1++] = newCells[c];
-      } else {
-        newCells2[numNewCells2++] = newCells[c]; }
-    }
-  } else {
-    cut_loc = p.m_sub2.m_bounds.y;
-    for c=0; c<numNewCells; c++ {
-      if newCells[c].m_y < cut_loc {
-        newCells1[numNewCells1++] = newCells[c];
-      } else {
-        newCells2[numNewCells2++] = newCells[c]; }
-    }    
-  }
-
-  if numNewCells1 > 0 { incrementalSubpartition(p.m_sub1, newCells1, numNewCells1); }
-  if numNewCells2 > 0 { incrementalSubpartition(p.m_sub2, newCells2, numNewCells2); }
-
-  free(newCells1);
-  free(newCells2);
+func repartitionHMetis(parent *Partition) error { return partitionRefineCut(parent, true) }
+func repartitionFM(parent *Partition) {
+	if err := partitionRefineCut(parent, false); err != nil {
+		fmt.Printf("QPAR-02 : gain refinement: %v\n", err)
+	}
+}
+func partitionRefineCut(parent *Partition, nearCut bool) error {
+	partitionChildren(parent)
+	assignment, weights := make([]int32, g_place_numCells), make([]int32, g_place_numCells)
+	cut, width := parent.m_sub2.m_bounds.y, parent.m_bounds.h
+	if parent.m_vertical {
+		cut, width = parent.m_sub2.m_bounds.x, parent.m_bounds.w
+	}
+	for id, cell := range g_place_concreteCells[:g_place_numCells] {
+		if cell != nil {
+			coordinate := cell.m_y
+			if parent.m_vertical {
+				coordinate = cell.m_x
+			}
+			if coordinate >= cut {
+				assignment[id] = 1
+			}
+		}
+	}
+	targets := 0
+	for _, cell := range parent.m_members[:parent.m_numMembers] {
+		if cell == nil {
+			continue
+		}
+		if cell.m_id < 0 || cell.m_id >= g_place_numCells || g_place_concreteCells[cell.m_id] != cell {
+			return fmt.Errorf("partition member is not in database")
+		}
+		area := float64(getCellArea(cell))
+		if area < 0 || math.IsNaN(area) || math.IsInf(area, 0) || area*1000 > math.MaxInt32 {
+			return fmt.Errorf("invalid partition cell area")
+		}
+		weight := int32(math.Round(area * 1000))
+		if area > 0 && weight == 0 {
+			weight = 1
+		}
+		weights[cell.m_id] = weight
+		coordinate := cell.m_y
+		if parent.m_vertical {
+			coordinate = cell.m_x
+		}
+		if !cell.m_fixed && (!nearCut || math.Abs(float64(coordinate-cut)) < float64(width*REPARTITION_TARGET_FRACTION)) {
+			assignment[cell.m_id] = -1
+			targets++
+		}
+	}
+	if targets == 0 {
+		return nil
+	}
+	offsets := []int32{0}
+	var edges []int32
+	for _, net := range g_place_concreteNets[:g_place_numNets] {
+		if net == nil || net.m_numTerms <= 1 {
+			continue
+		}
+		for _, cell := range net.m_terms[:net.m_numTerms] {
+			if cell == nil {
+				return fmt.Errorf("nil hyperedge terminal")
+			}
+			edges = append(edges, cell.m_id)
+		}
+		offsets = append(offsets, int32(len(edges)))
+	}
+	options := make([]int32, 9)
+	options[0] = 1
+	options[6] = 1
+	options[7] = 12261980
+	var afterCuts int32
+	if err := HMETIS_PartRecursive(g_place_numCells, int32(len(offsets)-1), weights, offsets, edges, nil, 2, int32(100*MAX_PARTITION_NONSYMMETRY), options, assignment, &afterCuts); err != nil {
+		return err
+	}
+	resetPartitionMembers(parent.m_sub1)
+	resetPartitionMembers(parent.m_sub2)
+	for _, cell := range parent.m_members[:parent.m_numMembers] {
+		if cell == nil {
+			continue
+		}
+		target := parent.m_sub1
+		if assignment[cell.m_id] != 0 {
+			target = parent.m_sub2
+		}
+		partitionAddMember(target, cell)
+	}
+	return nil
 }
 
-
-// --------------------------------------------------------------------
-// incrementalPartition()
-//
-/// \brief Adds new cells to an existing partition.  Partition sizes/locations are unchanged.
-///
-/// The function recurses, adding new cells to appropriate subpartitions.
-//
-// --------------------------------------------------------------------
+// partitionScanlineMincut evaluates balanced geometric cuts against the actual
+// net connectivity. The old source had only a disabled C++ experiment here.
+func partitionScanlineMincut(parent *Partition) {
+	partitionEqualArea(parent)
+	members := make([]*ConcreteCell, 0, parent.m_numMembers)
+	for _, cell := range parent.m_members[:parent.m_numMembers] {
+		if cell != nil {
+			members = append(members, cell)
+		}
+	}
+	if len(members) < 2 {
+		return
+	}
+	positions := make(map[*ConcreteCell]int, len(members))
+	for i, cell := range members {
+		positions[cell] = i
+	}
+	best, bestCuts := -1, int(^uint(0)>>1)
+	var area float32
+	lower, upper := parent.m_area*(.5-MAX_PARTITION_NONSYMMETRY), parent.m_area*(.5+MAX_PARTITION_NONSYMMETRY)
+	for split := 1; split < len(members); split++ {
+		area += getCellArea(members[split-1])
+		if area < lower || area > upper {
+			continue
+		}
+		cuts := 0
+		for _, net := range g_place_concreteNets[:g_place_numNets] {
+			if net == nil {
+				continue
+			}
+			left, right := false, false
+			for _, cell := range net.m_terms[:net.m_numTerms] {
+				if pos, ok := positions[cell]; ok {
+					left = left || pos < split
+					right = right || pos >= split
+				}
+			}
+			if left && right {
+				cuts++
+			}
+		}
+		if cuts < bestCuts {
+			best, bestCuts = split, cuts
+		}
+	}
+	if best < 0 {
+		return
+	}
+	resetPartitionMembers(parent.m_sub1)
+	resetPartitionMembers(parent.m_sub2)
+	for i, cell := range members {
+		target := parent.m_sub2
+		if i < best {
+			target = parent.m_sub1
+		}
+		partitionAddMember(target, cell)
+	}
+}
+func incrementalSubpartition(p *Partition, cells []*ConcreteCell, n int32) {
+	if p == nil {
+		panic("nil incremental partition")
+	}
+	for _, cell := range cells[:n] {
+		if cell == nil {
+			panic("nil incremental cell")
+		}
+		partitionAddMember(p, cell)
+	}
+	if p.m_leaf {
+		if partitionNonzeroMembers(p) > LARGEST_FINAL_SIZE {
+			p.m_done = false
+		}
+		return
+	}
+	partitionChildren(p)
+	cut := p.m_sub2.m_bounds.y
+	if p.m_vertical {
+		cut = p.m_sub2.m_bounds.x
+	}
+	var first, second []*ConcreteCell
+	for _, cell := range cells[:n] {
+		coordinate := cell.m_y
+		if p.m_vertical {
+			coordinate = cell.m_x
+		}
+		if coordinate < cut {
+			first = append(first, cell)
+		} else {
+			second = append(second, cell)
+		}
+	}
+	if len(first) > 0 {
+		incrementalSubpartition(p.m_sub1, first, int32(len(first)))
+	}
+	if len(second) > 0 {
+		incrementalSubpartition(p.m_sub2, second, int32(len(second)))
+	}
+	p.m_done = p.m_sub1.m_done && p.m_sub2.m_done
+}
 func incrementalPartition() {
-  var c, c2 int32;
-  var numNewCells int32;
-  var allCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-  var newCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-
-  assert((g_place_rootPartition != nil), "g_place_rootPartition");
-
-  // update cell list of root partition
-  memcpy(allCells, (size_t)g_place_concreteCells, sizeof(ConcreteCell*)*g_place_numCells);
-  qsort(allCells, (size_t)g_place_numCells, sizeof(ConcreteCell*), cellSortByID);
-  qsort(g_place_rootPartition.m_members, (size_t)g_place_rootPartition.m_numMembers,
-          sizeof(ConcreteCell*), cellSortByID);
-
-  // scan sorted lists and collect cells not in partitions
-  for !allCells[c++] {; }
-  for !g_place_rootPartition.m_members[c2++] {; }
-
-  for ; c<g_place_numCells; c, c2 = c+1, c2+1 {
-    for c2 < g_place_rootPartition.m_numMembers &&
-          allCells[c].m_id > g_place_rootPartition.m_members[c2].m_id { c2++; }
-    for c < g_place_numCells && 
-          (c2 >= g_place_rootPartition.m_numMembers ||
-           allCells[c].m_id < g_place_rootPartition.m_members[c2].m_id) {
-      // a new cell!
-      newCells[numNewCells++] = allCells[c];
-      c++;
-    }
-  }
-  
-  fmt.Printf("QPRT-50 : \tincremental partitioning with %d new cells\n", numNewCells);
-  if numNewCells>0 { incrementalSubpartition(g_place_rootPartition, newCells, numNewCells); }
-
-  free(allCells);
-  free(newCells);
+	if g_place_rootPartition == nil {
+		panic("partitioning not initialized")
+	}
+	existing := make(map[*ConcreteCell]bool, g_place_rootPartition.m_numMembers)
+	for _, cell := range g_place_rootPartition.m_members[:g_place_rootPartition.m_numMembers] {
+		if cell != nil {
+			existing[cell] = true
+		}
+	}
+	var added []*ConcreteCell
+	for _, cell := range g_place_concreteCells[:g_place_numCells] {
+		if cell != nil && !cell.m_fixed && !existing[cell] {
+			added = append(added, cell)
+		}
+	}
+	fmt.Printf("QPRT-50 : incremental partitioning with %d new cells\n", len(added))
+	if len(added) > 0 {
+		incrementalSubpartition(g_place_rootPartition, added, int32(len(added)))
+	}
 }
-//ABC_NAMESPACE_IMPL_END
-
+func InitPartitioning()         { initPartitioning() }
+func RefinePartitions() bool    { return refinePartitions() }
+func ReallocatePartitions()     { reallocPartitions() }
+func IncrementalPartitioning()  { incrementalPartition() }
+func RootPartition() *Partition { return g_place_rootPartition }
+func (p *Partition) Members() []*ConcreteCell {
+	return append([]*ConcreteCell(nil), p.m_members[:p.m_numMembers]...)
+}
+func (p *Partition) Bounds() Rect { return p.m_bounds }
+func (p *Partition) IsLeaf() bool { return p.m_leaf }

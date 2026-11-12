@@ -108,7 +108,7 @@ func Ccf_ManStop(p *Ccf_Man_t) {
     sat_solver_delete( p.pSat );
     Gia_ManStopP( &p.pFrames );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

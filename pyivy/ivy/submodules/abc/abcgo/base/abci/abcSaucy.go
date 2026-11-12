@@ -1197,8 +1197,7 @@ backtrackBysatCounterExamples(struct saucy *s, struct coloring *c)
             if cex1.outVecOnes != cex2.outVecOnes {
                 bumpActivity(s, cex1);
                 bumpActivity(s, cex2);
-                // inlining of macro ABC_FREE
-                ((flag) ? (free((char *) (flag)), (flag) = 0) : 0);
+                flag = nil;
                 return 0;
             }
 
@@ -1209,15 +1208,13 @@ backtrackBysatCounterExamples(struct saucy *s, struct coloring *c)
             if !ifOutputVectorsAreConsistent(s, cex1.outVec, cex2.outVec) {
                 bumpActivity(s, cex1);
                 bumpActivity(s, cex2);
-                // inlining of macro ABC_FREE
-                ((flag) ? (free((char *) (flag)), (flag) = 0) : 0);
+                flag = nil;
                 return 0;
             }
         }
     }
 
-    // inlining of macro ABC_FREE
-    ((flag) ? (free((char *) (flag)), (flag) = 0) : 0);
+    flag = nil;
     return 1;
 }
 
@@ -1268,12 +1265,9 @@ refineBySim1_init(struct saucy *s, struct coloring *c)
         }
         
         Vec_IntFree(randVec);
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
     }   
 
     return 1;
@@ -1330,12 +1324,9 @@ refineBySim1_left(struct saucy *s, struct coloring *c)
         } else {
             Vec_IntFree(randVec); }
 
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
     }
 
     s.randomVectorSplit_sim1[s.lev] = Vec_PtrSize(s.randomVectorArray_sim1); 
@@ -1383,12 +1374,9 @@ refineBySim1_other(struct saucy *s, struct coloring *c)
             ret = refineByDepGraph(s, c);
         }
         
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
 
         if !(ret != 0) { return 0; }
     }   
@@ -1430,12 +1418,9 @@ refineBySim2_init(struct saucy *s, struct coloring *c)
         
         Vec_IntFree(randVec);
         
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
     }
 
     return 1;
@@ -1477,12 +1462,9 @@ refineBySim2_left(struct saucy *s, struct coloring *c)
         } else {
             Vec_IntFree(randVec); }
         
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
     }
 
     s.randomVectorSplit_sim2[s.lev] = Vec_PtrSize(s.randomVectorArray_sim2); 
@@ -1530,12 +1512,9 @@ refineBySim2_other(struct saucy *s, struct coloring *c)
             ret = refineByDepGraph(s, c);
         }
 
-        // inlining of macro ABC_FREE
-        ((g.adj) ? (free((char *) (g.adj)), (g.adj) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g.edg) ? (free((char *) (g.edg)), (g.edg) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((g) ? (free((char *) (g)), (g) = 0) : 0);
+        g.adj = nil;
+        g.edg = nil;
+        g = nil;
 
         if !(ret != 0) {
             assert(c == &s.right, "c == &s.right");
@@ -1741,8 +1720,7 @@ select_smallest_max_connected_cell(struct saucy *s, int start, int end)
         cell = s.nextnon[cell];
     }
     
-    // inlining of macro ABC_FREE
-    ((connection_list) ? (free((char *) (connection_list)), (connection_list) = 0) : 0);
+    connection_list = nil;
     return smallest_cell;
 }
 
@@ -2549,97 +2527,52 @@ saucy_free(struct saucy *s)
 {
     var i int32;
 
-    // inlining of macro ABC_FREE
-    ((s.undiffnons) ? (free((char *) (s.undiffnons)), (s.undiffnons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.diffnons) ? (free((char *) (s.diffnons)), (s.diffnons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.unpairs) ? (free((char *) (s.unpairs)), (s.unpairs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.pairs) ? (free((char *) (s.pairs)), (s.pairs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.thfront) ? (free((char *) (s.thfront)), (s.thfront) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.threp) ? (free((char *) (s.threp)), (s.threp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.thnext) ? (free((char *) (s.thnext)), (s.thnext) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.thprev) ? (free((char *) (s.thprev)), (s.thprev) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.specmin) ? (free((char *) (s.specmin)), (s.specmin) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.anctar) ? (free((char *) (s.anctar)), (s.anctar) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.thsize) ? (free((char *) (s.thsize)), (s.thsize) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.undifflev) ? (free((char *) (s.undifflev)), (s.undifflev) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.difflev) ? (free((char *) (s.difflev)), (s.difflev) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.diffs) ? (free((char *) (s.diffs)), (s.diffs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.diffmark) ? (free((char *) (s.diffmark)), (s.diffmark) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.conncnts) ? (free((char *) (s.conncnts)), (s.conncnts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.unsupp) ? (free((char *) (s.unsupp)), (s.unsupp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.splitlev) ? (free((char *) (s.splitlev)), (s.splitlev) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.splitfrom) ? (free((char *) (s.splitfrom)), (s.splitfrom) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.splitwho) ? (free((char *) (s.splitwho)), (s.splitwho) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.splitvar) ? (free((char *) (s.splitvar)), (s.splitvar) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.right.unlab) ? (free((char *) (s.right.unlab)), (s.right.unlab) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.right.lab) ? (free((char *) (s.right.lab)), (s.right.lab) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.left.unlab) ? (free((char *) (s.left.unlab)), (s.left.unlab) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.left.lab) ? (free((char *) (s.left.lab)), (s.left.lab) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.theta) ? (free((char *) (s.theta)), (s.theta) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.junk) ? (free((char *) (s.junk)), (s.junk) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.gamma) ? (free((char *) (s.gamma)), (s.gamma) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.start) ? (free((char *) (s.start)), (s.start) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.prevnon) ? (free((char *) (s.prevnon)), (s.prevnon) = 0) : 0);
+    s.undiffnons = nil;
+    s.diffnons = nil;
+    s.unpairs = nil;
+    s.pairs = nil;
+    s.thfront = nil;
+    s.threp = nil;
+    s.thnext = nil;
+    s.thprev = nil;
+    s.specmin = nil;
+    s.anctar = nil;
+    s.thsize = nil;
+    s.undifflev = nil;
+    s.difflev = nil;
+    s.diffs = nil;
+    s.diffmark = nil;
+    s.conncnts = nil;
+    s.unsupp = nil;
+    s.splitlev = nil;
+    s.splitfrom = nil;
+    s.splitwho = nil;
+    s.splitvar = nil;
+    s.right.unlab = nil;
+    s.right.lab = nil;
+    s.left.unlab = nil;
+    s.left.lab = nil;
+    s.theta = nil;
+    s.junk = nil;
+    s.gamma = nil;
+    s.start = nil;
+    s.prevnon = nil;
     free(s.nextnon-1);
-    // inlining of macro ABC_FREE
-    ((s.clist) ? (free((char *) (s.clist)), (s.clist) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.ccount) ? (free((char *) (s.ccount)), (s.ccount) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.count) ? (free((char *) (s.count)), (s.count) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.bucket) ? (free((char *) (s.bucket)), (s.bucket) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.stuff) ? (free((char *) (s.stuff)), (s.stuff) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.right.clen) ? (free((char *) (s.right.clen)), (s.right.clen) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.right.cfront) ? (free((char *) (s.right.cfront)), (s.right.cfront) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.left.clen) ? (free((char *) (s.left.clen)), (s.left.clen) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.left.cfront) ? (free((char *) (s.left.cfront)), (s.left.cfront) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.indmark) ? (free((char *) (s.indmark)), (s.indmark) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.sinduce) ? (free((char *) (s.sinduce)), (s.sinduce) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.ninduce) ? (free((char *) (s.ninduce)), (s.ninduce) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.depAdj) ? (free((char *) (s.depAdj)), (s.depAdj) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.depEdg) ? (free((char *) (s.depEdg)), (s.depEdg) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.marks) ? (free((char *) (s.marks)), (s.marks) = 0) : 0);
+    s.clist = nil;
+    s.ccount = nil;
+    s.count = nil;
+    s.bucket = nil;
+    s.stuff = nil;
+    s.right.clen = nil;
+    s.right.cfront = nil;
+    s.left.clen = nil;
+    s.left.cfront = nil;
+    s.indmark = nil;
+    s.sinduce = nil;
+    s.ninduce = nil;
+    s.depAdj = nil;
+    s.depEdg = nil;
+    s.marks = nil;
     for i = 0; i < Abc_NtkPiNum(s.pNtk); i++ {
         Vec_IntFree( s.iDep[i] );
         Vec_IntFree( s.obs[i] );
@@ -2657,35 +2590,23 @@ saucy_free(struct saucy *s)
     }
     Vec_PtrFree( s.randomVectorArray_sim1 );
     Vec_PtrFree( s.randomVectorArray_sim2 );
-    // inlining of macro ABC_FREE
-    ((s.randomVectorSplit_sim1) ? (free((char *) (s.randomVectorSplit_sim1)), (s.randomVectorSplit_sim1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.randomVectorSplit_sim2) ? (free((char *) (s.randomVectorSplit_sim2)), (s.randomVectorSplit_sim2) = 0) : 0);
+    s.randomVectorSplit_sim1 = nil;
+    s.randomVectorSplit_sim2 = nil;
     Abc_NtkDelete( s.pNtk_permuted );
     for i = 0; i < Vec_PtrSize(s.satCounterExamples); i++ {
         struct sim_result * cex = (struct sim_result *)Vec_PtrEntry(s.satCounterExamples, i);
-        // inlining of macro ABC_FREE
-        ((cex.inVec) ? (free((char *) (cex.inVec)), (cex.inVec) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((cex.outVec) ? (free((char *) (cex.outVec)), (cex.outVec) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((cex) ? (free((char *) (cex)), (cex) = 0) : 0);
+        cex.inVec = nil;
+        cex.outVec = nil;
+        cex = nil;
     }
     Vec_PtrFree(s.satCounterExamples);
-    // inlining of macro ABC_FREE
-    ((s.pModel) ? (free((char *) (s.pModel)), (s.pModel) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.iDep) ? (free((char *) (s.iDep)), (s.iDep) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.oDep) ? (free((char *) (s.oDep)), (s.oDep) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.obs) ? (free((char *) (s.obs)), (s.obs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.ctrl) ? (free((char *) (s.ctrl)), (s.ctrl) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s.topOrder) ? (free((char *) (s.topOrder)), (s.topOrder) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s) ? (free((char *) (s)), (s) = 0) : 0);
+    s.pModel = nil;
+    s.iDep = nil;
+    s.oDep = nil;
+    s.obs = nil;
+    s.ctrl = nil;
+    s.topOrder = nil;
+    s = nil;
 }
 
 func saucy_alloc(pNtk *Abc_Ntk_t) *struct saucy {
@@ -3012,8 +2933,7 @@ generateProperInputVector( Abc_Ntk_t * pNtk, struct coloring *c, Vec_Int_t * ran
 
     //if (k != Vec_IntSize(randomVector)) {
     if i < n {
-        // inlining of macro ABC_FREE
-        ((vPiValues) ? (free((char *) (vPiValues)), (vPiValues) = 0) : 0);
+        vPiValues = nil;
         return nil;
     }
 
@@ -3138,10 +3058,8 @@ buildSim1Graph( Abc_Ntk_t * pNtk, struct coloring *c, Vec_Int_t * randVec, Vec_I
         printf("\n");
     }*/
 
-    // inlining of macro ABC_FREE
-    ((vPiValues) ? (free((char *) (vPiValues)), (vPiValues) = 0) : 0);  
-    // inlining of macro ABC_FREE
-    ((output) ? (free((char *) (output)), (output) = 0) : 0);
+    vPiValues = nil;  
+    output = nil;
     
     return g;   
 }
@@ -3186,8 +3104,7 @@ buildSim2Graph( Abc_Ntk_t * pNtk, struct coloring *c, Vec_Int_t * randVec, Vec_I
         if vPiValues[i] == 0 {  vPiValues[i] = 1;
         } else {                    vPiValues[i] = 0; }
 
-        // inlining of macro ABC_FREE
-        ((output2) ? (free((char *) (output2)), (output2) = 0) : 0);
+        output2 = nil;
     }       
 
     /* build the graph */
@@ -3223,10 +3140,8 @@ buildSim2Graph( Abc_Ntk_t * pNtk, struct coloring *c, Vec_Int_t * randVec, Vec_I
         printf("\n");
     }*/
 
-    // inlining of macro ABC_FREE
-    ((output) ? (free((char *) (output)), (output) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((vPiValues) ? (free((char *) (vPiValues)), (vPiValues) = 0) : 0);  
+    output = nil;
+    vPiValues = nil;  
     for j = 0; j < numins; j++ {
         Vec_IntClear(obs[j]);
     }
@@ -3264,12 +3179,9 @@ reduceDB( struct saucy * s )
         for i = j = 0; i < Vec_PtrSize(s.satCounterExamples); i++ {
             cex = (struct sim_result *)Vec_PtrEntry(s.satCounterExamples, i);
             if cex.activity < extra_lim {
-                // inlining of macro ABC_FREE
-                ((cex.inVec) ? (free((char *) (cex.inVec)), (cex.inVec) = 0) : 0);
-                // inlining of macro ABC_FREE
-                ((cex.outVec) ? (free((char *) (cex.outVec)), (cex.outVec) = 0) : 0);
-                // inlining of macro ABC_FREE
-                ((cex) ? (free((char *) (cex)), (cex) = 0) : 0);                      
+                cex.inVec = nil;
+                cex.outVec = nil;
+                cex = nil;                      
             
             } else if j < i {
                 Vec_PtrWriteEntry(s.satCounterExamples, j, cex);
@@ -3321,8 +3233,7 @@ func analyzeConflict(pNtk *Abc_Ntk_t, pModel *int32, fVerbose int32) *struct sim
         fmt.Printf("\n");
     }
 
-    // inlining of macro ABC_FREE
-    ((pValues) ? (free((char *) (pValues)), (pValues) = 0) : 0);    
+    pValues = nil;    
 
     return cex;
 }
@@ -3353,8 +3264,7 @@ func Abc_NtkCecSat_saucy(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pModel *int32) int3
         for i = 0; i < Abc_NtkPiNum(pNtk1); i++ {
             pModel[i] = pMiter.pModel[i];
         }  
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         return 0;
     }
@@ -3387,8 +3297,7 @@ func Abc_NtkCecSat_saucy(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pModel *int32) int3
             pModel[i] = pCnf.pModel[i];
         }
     }
-    // inlining of macro ABC_FREE
-    ((pCnf.pModel) ? (free((char *) (pCnf.pModel)), (pCnf.pModel) = 0) : 0);
+    pCnf.pModel = nil;
     Abc_NtkDelete( pCnf );
 
     return RetValue;

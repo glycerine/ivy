@@ -62,10 +62,8 @@ func Mpm_LibLutSetSimple(nLutSize int32) *Mpm_LibLut_t {
 func Mpm_LibLutFree(pLib *Mpm_LibLut_t) {
     if pLib == nil {
         return; }
-    // inlining of macro ABC_FREE
-    ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pLib) ? (free((char *) (pLib)), (pLib) = 0) : 0);
+    pLib.pName = nil;
+    pLib = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

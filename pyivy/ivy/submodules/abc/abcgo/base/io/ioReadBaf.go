@@ -126,8 +126,7 @@ func Io_ReadBaf(pFileName string, fCheck int32) *Abc_Ntk_t {
     pBufferNode = (unsigned *)(pContents + (nFileSize - (2 * nAnds + nOutputs + nLatches) * sizeof(int)) );
     // make sure we are at the place where the nodes begin
     if pBufferNode != (unsigned *)pCur {
-        // inlining of macro ABC_FREE
-        ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);
+        pContents = nil;
         Vec_PtrFree( vNodes );
         Abc_NtkDelete( pNtkNew );
         fmt.Printf("Warning: Internal reader error.\n");
@@ -155,8 +154,7 @@ func Io_ReadBaf(pFileName string, fCheck int32) *Abc_Ntk_t {
         pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, Num >> 1), Num & 1 );
         Abc_ObjAddFanin( pObj, pNode0 );
     }
-    // inlining of macro ABC_FREE
-    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);
+    pContents = nil;
     Vec_PtrFree( vNodes );
 
     // remove the extra nodes

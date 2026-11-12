@@ -248,19 +248,19 @@ func Tas_ManStop(p *Tas_Man_t) {
     Vec_IntFree( p.vModel );
     Vec_PtrFree( p.vTemp );
     // inlining of macro ABC_FREE
-    ((p.pActivity) ? (free((char *) (p.pActivity)), (p.pActivity) = 0) : 0);
+    p.pActivity = nil;
     // inlining of macro ABC_FREE
-    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);
+    p.pWatches = nil;
     // inlining of macro ABC_FREE
-    ((p.pStore.pData) ? (free((char *) (p.pStore.pData)), (p.pStore.pData) = 0) : 0);
+    p.pStore.pData = nil;
     // inlining of macro ABC_FREE
-    ((p.pClauses.pData) ? (free((char *) (p.pClauses.pData)), (p.pClauses.pData) = 0) : 0);
+    p.pClauses.pData = nil;
     // inlining of macro ABC_FREE
-    ((p.pProp.pData) ? (free((char *) (p.pProp.pData)), (p.pProp.pData) = 0) : 0);
+    p.pProp.pData = nil;
     // inlining of macro ABC_FREE
-    ((p.pJust.pData) ? (free((char *) (p.pJust.pData)), (p.pJust.pData) = 0) : 0);
+    p.pJust.pData = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -622,7 +622,7 @@ func Tas_ManDecideMaxFF(p *Tas_Man_t) *Gia_Obj_t {
     var pObj *Gia_Obj_t;
     var pObjMax *Gia_Obj_t = nil;
     var i, iMaxFF, iCurFF int32;
-    assert(p.pAig.pRefs != nil, "p.pAig.pRefs != nil");
+    assert(p.pAig.Refs != nil, "p.pAig.Refs != nil");
     // inlining of macro Tas_QueForEachEntry
     for  i = (p.pJust).iHead; (i < (p.pJust).iTail) && ((pObj) = (p.pJust).pData[i]); i++  {
         iCurFF = Tas_VarFaninFanoutMax( p, pObj );

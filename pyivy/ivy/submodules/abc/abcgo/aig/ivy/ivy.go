@@ -1,733 +1,453 @@
+// Package ivy implements ABC's sequential And-Inverter Graph representation.
+// Ported from src/aig/ivy/ivy.h (Alan Mishchenko, UC Berkeley).
 package ivy
 
-/**CFile****************************************************************
+// Integer edges retain the low complement bit without signed-shift overflow.
+type Ivy_Edge_t uint32
+type Ivy_Type_t int32
 
-  FileName    [ivy.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [And-Inverter Graph package.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: ivy.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-//#include "misc/extra/extra.h"
-//#include "misc/vec/vec.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
- 
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-type Ivy_Man_t =            Ivy_Man_t_;
-type Ivy_Obj_t =            Ivy_Obj_t_;
-typedef int                          Ivy_Edge_t;
-type Ivy_FraigParams_t =    Ivy_FraigParams_t_;
-
-// object types
- type Ivy_Type_t int32
-const ( 
-    IVY_NONE Ivy_Type_t = iota
-                        // 0: non-existent object
-    IVY_PI
-                          // 1: primary input (and constant 1 node)
-    IVY_PO
-                          // 2: primary output
-    IVY_ASSERT
-                      // 3: assertion
-    IVY_LATCH
-                       // 4: sequential element
-    IVY_AND
-                         // 5: AND node
-    IVY_EXOR
-                        // 6: EXOR node
-    IVY_BUF
-                         // 7: buffer (temporary)
-    IVY_VOID                         // 8: unused object
-
+const (
+	IVY_NONE Ivy_Type_t = iota
+	IVY_PI
+	IVY_PO
+	IVY_ASSERT
+	IVY_LATCH
+	IVY_AND
+	IVY_EXOR
+	IVY_BUF
+	IVY_VOID
 )
 
- 
+type Ivy_Init_t int32
 
-// latch initial values
- type Ivy_Init_t int32
-const ( 
-    IVY_INIT_NONE Ivy_Init_t = iota
-                   // 0: not a latch
-    IVY_INIT_0
-                      // 1: zero
-    IVY_INIT_1
-                      // 2: one
-    IVY_INIT_DC                      // 3: don't-care
-
+const (
+	IVY_INIT_NONE Ivy_Init_t = iota
+	IVY_INIT_0
+	IVY_INIT_1
+	IVY_INIT_DC
+)
+const (
+	IVY_CUT_LIMIT = 256
+	IVY_CUT_INPUT = 6
+	IVY_LEAF_MASK = 255
+	IVY_LEAF_BITS = 8
 )
 
- 
+type Ivy_Obj_t = Ivy_Obj_t_
+type Ivy_Man_t = Ivy_Man_t_
+type Ivy_FraigParams_t = Ivy_FraigParams_t_
 
-// the AIG node
-type Ivy_Obj_t_ struct {  // 24 bytes (32-bit) or 32 bytes (64-bit)   // 10 words - 16 words
-
-    Id              int32;             // integer ID
-    TravId              int32;         // traversal ID
-    Type uint32; /* C bitfield: 4 bits; review packing and truncation */  // object type
-    fMarkA uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mask
-    fMarkB uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mask
-    fExFan uint32; /* C bitfield: 1 bits; review packing and truncation */  // set to 1 if last fanout added is EXOR
-    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */  // value under 000...0 pattern
-    fFailTfo uint32; /* C bitfield: 1 bits; review packing and truncation */  // the TFO of the failed node
-    Init uint32; /* C bitfield: 2 bits; review packing and truncation */  // latch initial value
-    Level uint32; /* C bitfield: 21 bits; review packing and truncation */  // logic level
-    nRefs              int32;          // reference counter
-    pFanin0       *Ivy_Obj_t;        // fanin
-    pFanin1       *Ivy_Obj_t;        // fanin
-    pFanout       *Ivy_Obj_t;        // fanout
-    pNextFan0       *Ivy_Obj_t;      // next fanout of the first fanin
-    pNextFan1       *Ivy_Obj_t;      // next fanout of the second fanin
-    pPrevFan0       *Ivy_Obj_t;      // prev fanout of the first fanin
-    pPrevFan1       *Ivy_Obj_t;      // prev fanout of the second fanin
-    pEquiv       *Ivy_Obj_t;         // equivalent node
+// Regular objects own state. A complemented pointer is a cached proxy whose
+// regular field points at the object; no pointer bits are changed or concealed
+// from Go's garbage collector. A manager is not safe for concurrent mutation.
+type Ivy_Obj_t_ struct {
+	Id, TravId                                          int32
+	Type                                                Ivy_Type_t
+	fMarkA, fMarkB, fExFan, fPhase, fFailTfo            int32
+	Init                                                Ivy_Init_t
+	Level, nRefs                                        int32
+	pFanin0, pFanin1                                    *Ivy_Obj_t
+	pFanout, pNextFan0, pNextFan1, pPrevFan0, pPrevFan1 *Ivy_Obj_t
+	pEquiv                                              *Ivy_Obj_t
+	regular, neg                                        *Ivy_Obj_t
+	owner                                               *Ivy_Man_t
+	recycled                                            bool
 }
-
-// the AIG manager
 type Ivy_Man_t_ struct {
-    // AIG nodes
-    vPis       *Vec_Ptr_t;           // the array of PIs
-    vPos       *Vec_Ptr_t;           // the array of POs
-    vBufs       *Vec_Ptr_t;          // the array of buffers
-    vObjs       *Vec_Ptr_t;          // the array of objects
-    pConst1       *Ivy_Obj_t;        // the constant 1 node
-    Ghost        Ivy_Obj_t;          // the ghost node
-    // AIG node counters
-    nObjs [IVY_VOID]int32;// the number of objects by type
-    nCreated              int32;       // the number of created objects
-    nDeleted              int32;       // the number of deleted objects
-    // stuctural hash table
-    pTable             *int32;         // structural hash table
-    nTableSize              int32;     // structural hash table size
-    // various data members
-    fCatchExor              int32;     // set to 1 to detect EXORs
-    nTravIds              int32;       // the traversal ID
-    nLevelMax              int32;      // the maximum level
-    vRequired       *Vec_Int_t;      // required times
-    fFanout              int32;        // fanout is allocated
-    pData            any;          // the temporary data
-    pCopy            any;          // the temporary data
-    pHaig       *Ivy_Man_t;          // history AIG if present
-    nClassesSkip              int32;   // the number of skipped classes
-    // memory management
-    vChunks       *Vec_Ptr_t;        // allocated memory pieces
-    vPages       *Vec_Ptr_t;         // memory pages used by nodes
-    pListFree       *Ivy_Obj_t;      // the list of free nodes 
-    // timing statistics
-    time1          abctime;
-    time2          abctime;
+	vPis, vPos, vBufs, vObjs        []*Ivy_Obj_t
+	pConst1                         *Ivy_Obj_t
+	Ghost                           Ivy_Obj_t
+	nObjs                           [IVY_VOID]int32
+	nCreated, nDeleted              int32
+	pTable                          map[ivyHashKey]*Ivy_Obj_t
+	fCatchExor, nTravIds, nLevelMax int32
+	vRequired                       []int32
+	fFanout                         int32
+	pData, pCopy                    any
+	pHaig                           *Ivy_Man_t
+	nClassesSkip                    int32
+	pages                           [][]Ivy_Obj_t
+	freeNodes                       []*Ivy_Obj_t
+	memoryStopped                   bool
+	time1, time2                    int64
 }
-
 type Ivy_FraigParams_t_ struct {
-    nSimWords              int32;         // the number of words in the simulation info
-    dSimSatur           float64;         // the ratio of refined classes when saturation is reached
-    fPatScores              int32;        // enables simulation pattern scoring
-    MaxScore              int32;          // max score after which resimulation is used
-    dActConeRatio           float64;     // the ratio of cone to be bumped
-    dActConeBumpMax           float64;   // the largest bump in activity
-    fProve              int32;            // prove the miter outputs
-    fVerbose              int32;          // verbose output
-    fDoSparse              int32;         // skip sparse functions
-    nBTLimitNode              int32;      // conflict limit at a node
-    nBTLimitMiter              int32;     // conflict limit at an output
-//    int              nBTLimitGlobal;    // conflict limit global
-//    int              nInsLimitNode;     // inspection limit at a node
-//    int              nInsLimitMiter;    // inspection limit at an output
-//    int              nInsLimitGlobal;   // inspection limit global
+	nSimWords                                                int32
+	dSimSatur                                                float64
+	fPatScores, MaxScore                                     int32
+	dActConeRatio, dActConeBumpMax                           float64
+	fProve, fVerbose, fDoSparse, nBTLimitNode, nBTLimitMiter int32
 }
-
-
-const IVY_CUT_LIMIT =     256
-const IVY_CUT_INPUT =       6
-
-   
 type Ivy_Cut_t struct {
-    nLatches         int32;
-    nSize       int16;
-    nSizeMax       int16;
-    pArray [IVY_CUT_INPUT]int32;
-    uHash    uint32;
+	nLatches        int32
+	nSize, nSizeMax int16
+	pArray          [IVY_CUT_INPUT]int32
+	uHash           uint32
 }
-
-   
 type Ivy_Store_t struct {
-    nCuts         int32;
-    nCutsM         int32;
-    nCutsMax         int32;
-    fSatur         int32;
-    pCuts [IVY_CUT_LIMIT]Ivy_Cut_t; // storage for cuts
+	nCuts, nCutsM, nCutsMax, fSatur int32
+	pCuts                           [IVY_CUT_LIMIT]Ivy_Cut_t
 }
 
-const IVY_LEAF_MASK =     255
-const IVY_LEAF_BITS =       8
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-// Original macro:
-// #define IVY_MIN(a,b)       (((a) < (b))? (a) : (b))
-
-// Original macro:
-// #define IVY_MAX(a,b)       (((a) > (b))? (a) : (b))
-
-
-// extern void Ivy_ManAddMemory( Ivy_Man_t * p );
-
-
-func Ivy_BitWordNum(nBits int32) int32 { return (nBits>>5) + ((nBits&31) > 0);           }
-func Ivy_TruthWordNum(nVars int32) int32 { if nVars <= 5 {
-    return 1;
-} else {
-    return (1 << (nVars - 5));
-}     }
-func Ivy_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)>>5] & (1<<((i) & 31))) > 0;       }
-func Ivy_InfoSetBit(p *uint32, i int32) { p[(i)>>5] |= (1<<((i) & 31));                   }
-func Ivy_InfoXorBit(p *uint32, i int32) { p[(i)>>5] ^= (1<<((i) & 31));                   }
-
-func Ivy_Regular(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) & ~01); }
-func Ivy_Not(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }
-func Ivy_NotCond(p *Ivy_Obj_t, c int32) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }
-func Ivy_IsComplement(p *Ivy_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) & 01));          }
-
-func Ivy_ManConst0(p *Ivy_Man_t) *Ivy_Obj_t { return Ivy_Not(p.pConst1);                     }
-func Ivy_ManConst1(p *Ivy_Man_t) *Ivy_Obj_t { return p.pConst1;                              }
-func Ivy_ManGhost(p *Ivy_Man_t) *Ivy_Obj_t { return &p.Ghost;                               }
-func Ivy_ManPi(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPis, i);   }
-func Ivy_ManPo(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i);   }
-func Ivy_ManObj(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i);  }
-
-func Ivy_EdgeCreate(Id int32, fCompl int32) Ivy_Edge_t { return (Id << 1) | fCompl;             }
-func Ivy_EdgeId(Edge Ivy_Edge_t) int32 { return Edge >> 1;                      }
-func Ivy_EdgeIsComplement(Edge Ivy_Edge_t) int32 { return Edge & 1;                       }
-func Ivy_EdgeRegular(Edge Ivy_Edge_t) Ivy_Edge_t { return (Edge >> 1) << 1;               }
-func Ivy_EdgeNot(Edge Ivy_Edge_t) Ivy_Edge_t { return Edge ^ 1;                       }
-func Ivy_EdgeNotCond(Edge Ivy_Edge_t, fCond int32) Ivy_Edge_t { return Edge ^ fCond;                   }
-func Ivy_EdgeFromNode(pNode *Ivy_Obj_t) Ivy_Edge_t { return Ivy_EdgeCreate( Ivy_Regular(pNode).Id, Ivy_IsComplement(pNode) );          }
-func Ivy_EdgeToNode(p *Ivy_Man_t, Edge Ivy_Edge_t) *Ivy_Obj_t { return Ivy_NotCond( Ivy_ManObj(p, Ivy_EdgeId(Edge)), Ivy_EdgeIsComplement(Edge) ); }
-
-func Ivy_LeafCreate(Id int32, Lat int32) int32 { return (Id << IVY_LEAF_BITS) | Lat;         }
-func Ivy_LeafId(Leaf int32) int32 { return Leaf >> IVY_LEAF_BITS;               }
-func Ivy_LeafLat(Leaf int32) int32 { return Leaf & IVY_LEAF_MASK;                }
-
-func Ivy_ManPiNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PI];                    }
-func Ivy_ManPoNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PO];                    }
-func Ivy_ManAssertNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_ASSERT];                }
-func Ivy_ManLatchNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_LATCH];                 }
-func Ivy_ManAndNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND];                   }
-func Ivy_ManExorNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_EXOR];                  }
-func Ivy_ManBufNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_BUF];                   }
-func Ivy_ManObjNum(p *Ivy_Man_t) int32 { return p.nCreated - p.nDeleted;           }
-func Ivy_ManObjIdMax(p *Ivy_Man_t) int32 { return Vec_PtrSize(p.vObjs)-1;             }
-func Ivy_ManNodeNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR];}
-func Ivy_ManHashObjNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR]+p.nObjs[IVY_LATCH];     }
-func Ivy_ManGetCost(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+3*p.nObjs[IVY_EXOR]+8*p.nObjs[IVY_LATCH]; }
-
-func Ivy_ObjType(pObj *Ivy_Obj_t) Ivy_Type_t { return (Ivy_Type_t)pObj.Type;               }
-func Ivy_ObjInit(pObj *Ivy_Obj_t) Ivy_Init_t { return (Ivy_Init_t)pObj.Init;               }
-func Ivy_ObjIsConst1(pObj *Ivy_Obj_t) int32 { return pObj.Id == 0;            }
-func Ivy_ObjIsGhost(pObj *Ivy_Obj_t) int32 { return pObj.Id < 0;             }
-func Ivy_ObjIsNone(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_NONE;   }
-func Ivy_ObjIsPi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI;     }
-func Ivy_ObjIsPo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO;     }
-func Ivy_ObjIsCi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI || pObj.Type == IVY_LATCH; }
-func Ivy_ObjIsCo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO || pObj.Type == IVY_LATCH; }
-func Ivy_ObjIsAssert(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_ASSERT; }
-func Ivy_ObjIsLatch(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_LATCH;  }
-func Ivy_ObjIsAnd(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND;    }
-func Ivy_ObjIsExor(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_EXOR;   }
-func Ivy_ObjIsBuf(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_BUF;    }
-func Ivy_ObjIsNode(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR; }
-func Ivy_ObjIsTerm(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI  || pObj.Type == IVY_PO || pObj.Type == IVY_ASSERT; }
-func Ivy_ObjIsHash(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR || pObj.Type == IVY_LATCH; }
-func Ivy_ObjIsOneFanin(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO  || pObj.Type == IVY_ASSERT || pObj.Type == IVY_BUF || pObj.Type == IVY_LATCH; }
-
-func Ivy_ObjIsMarkA(pObj *Ivy_Obj_t) int32 { return pObj.fMarkA;  }
-func Ivy_ObjSetMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 1;     }
-func Ivy_ObjClearMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 0;     }
- 
-func Ivy_ObjSetTravId(pObj *Ivy_Obj_t, TravId int32) { pObj.TravId = TravId;                               }
-func Ivy_ObjSetTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds;                          }
-func Ivy_ObjSetTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds - 1;                      }
-func Ivy_ObjIsTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds));     }
-func Ivy_ObjIsTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds - 1)); }
-
-func Ivy_ObjId(pObj *Ivy_Obj_t) int32 { return pObj.Id;                               }
-func Ivy_ObjTravId(pObj *Ivy_Obj_t) int32 { return pObj.TravId;                           }
-func Ivy_ObjPhase(pObj *Ivy_Obj_t) int32 { return pObj.fPhase;                           }
-func Ivy_ObjExorFanout(pObj *Ivy_Obj_t) int32 { return pObj.fExFan;                           }
-func Ivy_ObjRefs(pObj *Ivy_Obj_t) int32 { return pObj.nRefs;                            }
-func Ivy_ObjRefsInc(pObj *Ivy_Obj_t) { pObj.nRefs++;                                 }
-func Ivy_ObjRefsDec(pObj *Ivy_Obj_t) { assert(pObj.nRefs > 0, "pObj.nRefs > 0"); pObj.nRefs--;      }
-func Ivy_ObjFaninId0(pObj *Ivy_Obj_t) int32 { if pObj.pFanin0 {
-    return Ivy_ObjId(Ivy_Regular(pObj.pFanin0));
-} else {
-    return 0;
-} }
-func Ivy_ObjFaninId1(pObj *Ivy_Obj_t) int32 { if pObj.pFanin1 {
-    return Ivy_ObjId(Ivy_Regular(pObj.pFanin1));
-} else {
-    return 0;
-} }
-func Ivy_ObjFaninC0(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin0);        }
-func Ivy_ObjFaninC1(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin1);        }
-func Ivy_ObjFanin0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin0);             }
-func Ivy_ObjFanin1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin1);             }
-func Ivy_ObjChild0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin0;                          }
-func Ivy_ObjChild1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin1;                          }
-func Ivy_ObjChild0Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), "!Ivy_IsComplement(pObj)"); if Ivy_ObjFanin0(pObj) != nil {
-    return Ivy_NotCond(Ivy_ObjFanin0(pObj).pEquiv, Ivy_ObjFaninC0(pObj));
-} else {
-    return nil;
-}  }
-func Ivy_ObjChild1Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), "!Ivy_IsComplement(pObj)"); if Ivy_ObjFanin1(pObj) != nil {
-    return Ivy_NotCond(Ivy_ObjFanin1(pObj).pEquiv, Ivy_ObjFaninC1(pObj));
-} else {
-    return nil;
-}  }
-func Ivy_ObjEquiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { if Ivy_Regular(pObj).pEquiv {
-    return Ivy_NotCond(Ivy_Regular(pObj).pEquiv, Ivy_IsComplement(pObj));
-} else {
-    return nil;
-} }
-func Ivy_ObjLevel(pObj *Ivy_Obj_t) int32 { return pObj.Level;                            }
-// inlining of macro IVY_MAX
-func Ivy_ObjLevelNew(pObj *Ivy_Obj_t) int32 { return 1 + Ivy_ObjIsExor(pObj) + (((Ivy_ObjFanin0(pObj).Level) > (Ivy_ObjFanin1(pObj).Level))? (Ivy_ObjFanin0(pObj).Level) : (Ivy_ObjFanin1(pObj).Level));       }
-func Ivy_ObjFaninPhase(pObj *Ivy_Obj_t) int32 { if Ivy_IsComplement(pObj) != 0 {
-    return !Ivy_Regular(pObj).fPhase;
-} else {
-    return pObj.fPhase;
-} }
-
-func Ivy_ObjClean(pObj *Ivy_Obj_t) { 
-    var IdSaved int32  = pObj.Id; 
-    *pObj = Ivy_Obj_t{}; 
-    pObj.Id = IdSaved; 
+func ivyBool(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
 }
-func Ivy_ObjOverwrite(pBase *Ivy_Obj_t, pData *Ivy_Obj_t) { 
-    var IdSaved int32  = pBase.Id; 
-    memcpy( pBase, pData, sizeof(Ivy_Obj_t) ); 
-    pBase.Id = IdSaved;         
+func Ivy_BitWordNum(n int32) int32 {
+	if n < 0 {
+		panic("negative bit count")
+	}
+	return n/32 + ivyBool(n%32 != 0)
 }
-func Ivy_ObjWhatFanin(pObj *Ivy_Obj_t, pFanin *Ivy_Obj_t) int32 { 
-    if Ivy_ObjFanin0(pObj) == pFanin { return 0; } 
-    if Ivy_ObjFanin1(pObj) == pFanin { return 1; } 
-    assert(false, "0"); return -1; 
+func Ivy_TruthWordNum(n int32) int32 {
+	if n < 0 || n > 35 {
+		panic("invalid truth support")
+	}
+	if n <= 5 {
+		return 1
+	}
+	return 1 << uint(n-5)
 }
-func Ivy_ObjFanoutC(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) int32 { 
-    if Ivy_ObjFanin0(pFanout) == pObj { return Ivy_ObjFaninC0(pObj); } 
-    if Ivy_ObjFanin1(pFanout) == pObj { return Ivy_ObjFaninC1(pObj); } 
-    assert(false, "0"); return -1; 
+func Ivy_InfoHasBit(p []uint32, i int32) int32 {
+	if i < 0 {
+		panic("negative bit index")
+	}
+	return int32(p[i>>5] >> uint(i&31) & 1)
 }
-
-// create the ghost of the new node
-func Ivy_ObjCreateGhost(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, Type Ivy_Type_t, Init Ivy_Init_t) *Ivy_Obj_t {
-    var pGhost, pTemp *Ivy_Obj_t;
-    assert(Type != IVY_AND || !(Ivy_ObjIsConst1(Ivy_Regular(p0)) != 0), "Type != IVY_AND || !Ivy_ObjIsConst1(Ivy_Regular(p0))");
-    assert(p1 == nil || !(Ivy_ObjIsConst1(Ivy_Regular(p1)) != 0), "p1 == nil || !Ivy_ObjIsConst1(Ivy_Regular(p1))");
-    assert(Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1), "Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1)");
-    assert(Type != IVY_LATCH || !(Ivy_IsComplement(p0) != 0), "Type != IVY_LATCH || !Ivy_IsComplement(p0)");
-//    assert( p1 == NULL || (!Ivy_ObjIsLatch(Ivy_Regular(p0)) || !Ivy_ObjIsLatch(Ivy_Regular(p1))) );
-    pGhost = Ivy_ManGhost(p);
-    pGhost.Type = Type;
-    pGhost.Init = Init;
-    pGhost.pFanin0 = p0;
-    pGhost.pFanin1 = p1;
-    if (p1 != nil) && Ivy_ObjFaninId0(pGhost) > Ivy_ObjFaninId1(pGhost) {
-        pTemp = pGhost.pFanin0;
-pGhost.pFanin0 = pGhost.pFanin1;
-pGhost.pFanin1 = pTemp; }
-    return pGhost;
+func Ivy_InfoSetBit(p []uint32, i int32) {
+	if i < 0 {
+		panic("negative bit index")
+	}
+	p[i>>5] |= 1 << uint(i&31)
 }
-
-// get the complemented initial state
-func Ivy_InitNotCond(Init Ivy_Init_t, fCompl int32) Ivy_Init_t {
-    assert(Init != IVY_INIT_NONE, "Init != IVY_INIT_NONE");
-    if fCompl == 0 {
-        return Init; }
-    if Init == IVY_INIT_0 {
-        return IVY_INIT_1; }
-    if Init == IVY_INIT_1 {
-        return IVY_INIT_0; }
-    return IVY_INIT_DC;
+func Ivy_InfoXorBit(p []uint32, i int32) {
+	if i < 0 {
+		panic("negative bit index")
+	}
+	p[i>>5] ^= 1 << uint(i&31)
 }
-
-// get the initial state after forward retiming over AND gate
-func Ivy_InitAnd(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {
-    assert(InitA != IVY_INIT_NONE && InitB != IVY_INIT_NONE, "InitA != IVY_INIT_NONE && InitB != IVY_INIT_NONE");
-    if InitA == IVY_INIT_0 || InitB == IVY_INIT_0 {
-        return IVY_INIT_0; }
-    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {
-        return IVY_INIT_DC; }
-    return IVY_INIT_1;
+func Ivy_Regular(p *Ivy_Obj_t) *Ivy_Obj_t {
+	if p != nil && p.regular != nil {
+		return p.regular
+	}
+	return p
 }
-
-// get the initial state after forward retiming over EXOR gate
-func Ivy_InitExor(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {
-    assert(InitA != IVY_INIT_NONE && InitB != IVY_INIT_NONE, "InitA != IVY_INIT_NONE && InitB != IVY_INIT_NONE");
-    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {
-        return IVY_INIT_DC; }
-    if InitA == IVY_INIT_0 && InitB == IVY_INIT_1 {
-        return IVY_INIT_1; }
-    if InitA == IVY_INIT_1 && InitB == IVY_INIT_0 {
-        return IVY_INIT_1; }
-    return IVY_INIT_0;
+func Ivy_Not(p *Ivy_Obj_t) *Ivy_Obj_t {
+	if p == nil {
+		return nil
+	}
+	if p.regular != nil {
+		return p.regular
+	}
+	if p.neg == nil {
+		p.neg = &Ivy_Obj_t{regular: p}
+	}
+	return p.neg
 }
-
-// internal memory manager
-func Ivy_ManFetchMemory(p *Ivy_Man_t) *Ivy_Obj_t { 
-    var pTemp *Ivy_Obj_t;
-    if p.pListFree == nil {
-        Ivy_ManAddMemory( p ); }
-    pTemp = p.pListFree;
-    p.pListFree = *((Ivy_Obj_t **)pTemp);
-    *pTemp = Ivy_Obj_t{}; 
-    return pTemp;
+func Ivy_NotCond(p *Ivy_Obj_t, c int32) *Ivy_Obj_t {
+	if c != 0 {
+		return Ivy_Not(p)
+	}
+	return p
 }
-func Ivy_ManRecycleMemory(p *Ivy_Man_t, pEntry *Ivy_Obj_t) {
-    pEntry.Type = IVY_NONE; // distinquishes dead node from live node
-    *((Ivy_Obj_t **)pEntry) = p.pListFree;
-    p.pListFree = pEntry;
+func Ivy_IsComplement(p *Ivy_Obj_t) int32         { return ivyBool(p != nil && p.regular != nil) }
+func Ivy_ManConst0(p *Ivy_Man_t) *Ivy_Obj_t       { return Ivy_Not(p.pConst1) }
+func Ivy_ManConst1(p *Ivy_Man_t) *Ivy_Obj_t       { return p.pConst1 }
+func Ivy_ManGhost(p *Ivy_Man_t) *Ivy_Obj_t        { return &p.Ghost }
+func Ivy_ManPi(p *Ivy_Man_t, i int32) *Ivy_Obj_t  { return p.vPis[i] }
+func Ivy_ManPo(p *Ivy_Man_t, i int32) *Ivy_Obj_t  { return p.vPos[i] }
+func Ivy_ManObj(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return p.vObjs[i] }
+func Ivy_EdgeCreate(id, c int32) Ivy_Edge_t {
+	if id < 0 {
+		panic("negative edge ID")
+	}
+	return Ivy_Edge_t(uint32(id)<<1 | uint32(ivyBool(c != 0)))
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                             ITERATORS                            ///
-////////////////////////////////////////////////////////////////////////
-
-// iterator over the primary inputs
-// Original macro:
-// #define Ivy_ManForEachPi( p, pObj, i )                                          \
-//     Vec_PtrForEachEntry( Ivy_Obj_t *, p->vPis, pObj, i )
-
-// iterator over the primary outputs
-// Original macro:
-// #define Ivy_ManForEachPo( p, pObj, i )                                          \
-//     Vec_PtrForEachEntry( Ivy_Obj_t *, p->vPos, pObj, i )
-
-// iterator over all objects, including those currently not used
-// Original macro:
-// #define Ivy_ManForEachObj( p, pObj, i )                                         \
-//     Vec_PtrForEachEntry( Ivy_Obj_t *, p->vObjs, pObj, i ) if ( (pObj) == NULL ) {} else
-
-// iterator over the combinational inputs
-// Original macro:
-// #define Ivy_ManForEachCi( p, pObj, i )                                          \
-//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsCi(pObj) ) {} else
-
-// iterator over the combinational outputs
-// Original macro:
-// #define Ivy_ManForEachCo( p, pObj, i )                                          \
-//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsCo(pObj) ) {} else
-
-// iterator over logic nodes (AND and EXOR gates)
-// Original macro:
-// #define Ivy_ManForEachNode( p, pObj, i )                                        \
-//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsNode(pObj) ) {} else
-
-// iterator over logic latches
-// Original macro:
-// #define Ivy_ManForEachLatch( p, pObj, i )                                       \
-//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsLatch(pObj) ) {} else
-
-// iterator over the nodes whose IDs are stored in the array
-// Original macro:
-// #define Ivy_ManForEachNodeVec( p, vIds, pObj, i )                               \
-//     for ( i = 0; i < Vec_IntSize(vIds) && ((pObj) = Ivy_ManObj(p, Vec_IntEntry(vIds,i))); i++ )
-
-// iterator over the fanouts of an object
-// Original macro:
-// #define Ivy_ObjForEachFanout( p, pObj, vArray, pFanout, i )                     \
-//     for ( i = 0, Ivy_ObjCollectFanouts(p, pObj, vArray);                        \
-//           i < Vec_PtrSize(vArray) && ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vArray,i)); i++ )
-
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== ivyBalance.c ========================================================*/
-// extern Ivy_Man_t *     Ivy_ManBalance( Ivy_Man_t * p, int fUpdateLevel );
-
-// extern Ivy_Obj_t *     Ivy_NodeBalanceBuildSuper( Ivy_Man_t * p, Vec_Ptr_t * vSuper, Ivy_Type_t Type, int fUpdateLevel );
-
-/*=== ivyCanon.c ========================================================*/
-// extern Ivy_Obj_t *     Ivy_CanonAnd( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );
-
-// extern Ivy_Obj_t *     Ivy_CanonExor( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );
-
-// extern Ivy_Obj_t *     Ivy_CanonLatch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init );
-
-/*=== ivyCheck.c ========================================================*/
-// extern int             Ivy_ManCheck( Ivy_Man_t * p );
-
-// extern int             Ivy_ManCheckFanoutNums( Ivy_Man_t * p );
-
-// extern int             Ivy_ManCheckFanouts( Ivy_Man_t * p );
-
-// extern int             Ivy_ManCheckChoices( Ivy_Man_t * p );
-
-/*=== ivyCut.c ==========================================================*/
-// extern void            Ivy_ManSeqFindCut( Ivy_Man_t * p, Ivy_Obj_t * pNode, Vec_Int_t * vFront, Vec_Int_t * vInside, int nSize );
-
-// extern Ivy_Store_t *   Ivy_NodeFindCutsAll( Ivy_Man_t * p, Ivy_Obj_t * pObj, int nLeaves );
-
-/*=== ivyDfs.c ==========================================================*/
-// extern Vec_Int_t *     Ivy_ManDfs( Ivy_Man_t * p );
-
-// extern Vec_Int_t *     Ivy_ManDfsSeq( Ivy_Man_t * p, Vec_Int_t ** pvLatches );
-
-// extern void            Ivy_ManCollectCone( Ivy_Obj_t * pObj, Vec_Ptr_t * vFront, Vec_Ptr_t * vCone );
-
-// extern Vec_Vec_t *     Ivy_ManLevelize( Ivy_Man_t * p );
-
-// extern Vec_Int_t *     Ivy_ManRequiredLevels( Ivy_Man_t * p );
-
-// extern int             Ivy_ManIsAcyclic( Ivy_Man_t * p );
-
-// extern int             Ivy_ManSetLevels( Ivy_Man_t * p, int fHaig );
-
-/*=== ivyDsd.c ==========================================================*/
-// extern int             Ivy_TruthDsd( unsigned uTruth, Vec_Int_t * vTree );
-
-// extern void            Ivy_TruthDsdPrint( FILE * pFile, Vec_Int_t * vTree );
-
-// extern unsigned        Ivy_TruthDsdCompute( Vec_Int_t * vTree );
-
-// extern void            Ivy_TruthDsdComputePrint( unsigned uTruth );
-
-// extern Ivy_Obj_t *     Ivy_ManDsdConstruct( Ivy_Man_t * p, Vec_Int_t * vFront, Vec_Int_t * vTree );
-
-/*=== ivyFanout.c ==========================================================*/
-// extern void            Ivy_ManStartFanout( Ivy_Man_t * p );
-
-// extern void            Ivy_ManStopFanout( Ivy_Man_t * p );
-
-// extern void            Ivy_ObjAddFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout );
-
-// extern void            Ivy_ObjDeleteFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout );
-
-// extern void            Ivy_ObjPatchFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanoutOld, Ivy_Obj_t * pFanoutNew );
-
-// extern void            Ivy_ObjCollectFanouts( Ivy_Man_t * p, Ivy_Obj_t * pObj, Vec_Ptr_t * vArray );
-
-// extern Ivy_Obj_t *     Ivy_ObjReadFirstFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern int             Ivy_ObjFanoutNum( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-/*=== ivyFastMap.c =============================================================*/
-// extern void            Ivy_FastMapPerform( Ivy_Man_t * pAig, int nLimit, int fRecovery, int fVerbose );
-
-// extern void            Ivy_FastMapStop( Ivy_Man_t * pAig );
-
-// extern void            Ivy_FastMapReadSupp( Ivy_Man_t * pAig, Ivy_Obj_t * pObj, Vec_Int_t * vLeaves );
-
-// extern void            Ivy_FastMapReverseLevel( Ivy_Man_t * pAig );
-
-/*=== ivyFraig.c ==========================================================*/
-// extern int             Ivy_FraigProve( Ivy_Man_t ** ppManAig, void * pPars );
-
-// extern Ivy_Man_t *     Ivy_FraigPerform( Ivy_Man_t * pManAig, Ivy_FraigParams_t * pParams );
-
-// extern Ivy_Man_t *     Ivy_FraigMiter( Ivy_Man_t * pManAig, Ivy_FraigParams_t * pParams );
-
-// extern void            Ivy_FraigParamsDefault( Ivy_FraigParams_t * pParams );
-
-/*=== ivyHaig.c ==========================================================*/
-// extern void            Ivy_ManHaigStart( Ivy_Man_t * p, int fVerbose );
-
-// extern void            Ivy_ManHaigTrasfer( Ivy_Man_t * p, Ivy_Man_t * pNew );
-
-// extern void            Ivy_ManHaigStop( Ivy_Man_t * p );
-
-// extern void            Ivy_ManHaigPostprocess( Ivy_Man_t * p, int fVerbose );
-
-// extern void            Ivy_ManHaigCreateObj( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_ManHaigCreateChoice( Ivy_Man_t * p, Ivy_Obj_t * pObjOld, Ivy_Obj_t * pObjNew );
-
-// extern void            Ivy_ManHaigSimulate( Ivy_Man_t * p );
-
-/*=== ivyMan.c ==========================================================*/
-// extern Ivy_Man_t *     Ivy_ManStart();
-
-// extern Ivy_Man_t *     Ivy_ManStartFrom( Ivy_Man_t * p );
-
-// extern Ivy_Man_t *     Ivy_ManDup( Ivy_Man_t * p );
-
-// extern Ivy_Man_t *     Ivy_ManFrames( Ivy_Man_t * pMan, int nLatches, int nFrames, int fInit, Vec_Ptr_t ** pvMapping );
-
-// extern void            Ivy_ManStop( Ivy_Man_t * p );
-
-// extern int             Ivy_ManCleanup( Ivy_Man_t * p );
-
-// extern int             Ivy_ManPropagateBuffers( Ivy_Man_t * p, int fUpdateLevel );
-
-// extern void            Ivy_ManPrintStats( Ivy_Man_t * p );
-
-// extern void            Ivy_ManMakeSeq( Ivy_Man_t * p, int nLatches, int * pInits );
-
-/*=== ivyMem.c ==========================================================*/
-// extern void            Ivy_ManStartMemory( Ivy_Man_t * p );
-
-// extern void            Ivy_ManStopMemory( Ivy_Man_t * p );
-
-/*=== ivyMulti.c ==========================================================*/
-// extern Ivy_Obj_t *     Ivy_Multi( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );
-
-// extern Ivy_Obj_t *     Ivy_Multi1( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );
-
-// extern Ivy_Obj_t *     Ivy_Multi_rec( Ivy_Man_t * p, Ivy_Obj_t ** ppObjs, int nObjs, Ivy_Type_t Type );
-
-// extern Ivy_Obj_t *     Ivy_MultiBalance_rec( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );
-
-// extern int             Ivy_MultiPlus( Ivy_Man_t * p, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vCone, Ivy_Type_t Type, int nLimit, Vec_Ptr_t * vSol );
-
-/*=== ivyObj.c ==========================================================*/
-// extern Ivy_Obj_t *     Ivy_ObjCreatePi( Ivy_Man_t * p );
-
-// extern Ivy_Obj_t *     Ivy_ObjCreatePo( Ivy_Man_t * p, Ivy_Obj_t * pDriver );
-
-// extern Ivy_Obj_t *     Ivy_ObjCreate( Ivy_Man_t * p, Ivy_Obj_t * pGhost );
-
-// extern void            Ivy_ObjConnect( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFan0, Ivy_Obj_t * pFan1 );
-
-// extern void            Ivy_ObjDisconnect( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_ObjPatchFanin0( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFaninNew );
-
-// extern void            Ivy_ObjDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop );
-
-// extern void            Ivy_ObjDelete_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop );
-
-// extern void            Ivy_ObjReplace( Ivy_Man_t * p, Ivy_Obj_t * pObjOld, Ivy_Obj_t * pObjNew, int fDeleteOld, int fFreeTop, int fUpdateLevel );
-
-// extern void            Ivy_NodeFixBufferFanins( Ivy_Man_t * p, Ivy_Obj_t * pNode, int fUpdateLevel );
-
-/*=== ivyOper.c =========================================================*/
-// extern Ivy_Obj_t *     Ivy_Oper( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1, Ivy_Type_t Type );
-
-// extern Ivy_Obj_t *     Ivy_And( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );
-
-// extern Ivy_Obj_t *     Ivy_Or( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );
-
-// extern Ivy_Obj_t *     Ivy_Exor( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );
-
-// extern Ivy_Obj_t *     Ivy_Mux( Ivy_Man_t * p, Ivy_Obj_t * pC, Ivy_Obj_t * p1, Ivy_Obj_t * p0 );
-
-// extern Ivy_Obj_t *     Ivy_Maj( Ivy_Man_t * p, Ivy_Obj_t * pA, Ivy_Obj_t * pB, Ivy_Obj_t * pC );
-
-// extern Ivy_Obj_t *     Ivy_Miter( Ivy_Man_t * p, Vec_Ptr_t * vPairs );
-
-// extern Ivy_Obj_t *     Ivy_Latch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init );
-
-/*=== ivyResyn.c =========================================================*/
-// extern Ivy_Man_t *     Ivy_ManResyn0( Ivy_Man_t * p, int fUpdateLevel, int fVerbose );
-
-// extern Ivy_Man_t *     Ivy_ManResyn( Ivy_Man_t * p, int fUpdateLevel, int fVerbose );
-
-// extern Ivy_Man_t *     Ivy_ManRwsat( Ivy_Man_t * pMan, int fVerbose );
-
-/*=== ivyRewrite.c =========================================================*/
-// extern int             Ivy_ManSeqRewrite( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost );
-
-// extern int             Ivy_ManRewriteAlg( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost );
-
-// extern int             Ivy_ManRewritePre( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost, int fVerbose );
-
-/*=== ivySeq.c =========================================================*/
-// extern int             Ivy_ManRewriteSeq( Ivy_Man_t * p, int fUseZeroCost, int fVerbose );
-
-/*=== ivyShow.c =========================================================*/
-// extern void            Ivy_ManShow( Ivy_Man_t * pMan, int fHaig, Vec_Ptr_t * vBold );
-
-/*=== ivyTable.c ========================================================*/
-// extern Ivy_Obj_t *     Ivy_TableLookup( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_TableInsert( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_TableDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_TableUpdate( Ivy_Man_t * p, Ivy_Obj_t * pObj, int ObjIdNew );
-
-// extern int             Ivy_TableCountEntries( Ivy_Man_t * p );
-
-// extern void            Ivy_TableProfile( Ivy_Man_t * p );
-
-/*=== ivyUtil.c =========================================================*/
-// extern void            Ivy_ManIncrementTravId( Ivy_Man_t * p );
-
-// extern void            Ivy_ManCleanTravId( Ivy_Man_t * p );
-
-// extern unsigned *      Ivy_ManCutTruth( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, Vec_Int_t * vTruth );
-
-// extern void            Ivy_ManCollectCut( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Vec_Int_t * vLeaves, Vec_Int_t * vNodes );
-
-// extern Vec_Int_t *     Ivy_ManLatches( Ivy_Man_t * p );
-
-// extern int             Ivy_ManLevels( Ivy_Man_t * p );
-
-// extern void            Ivy_ManResetLevels( Ivy_Man_t * p );
-
-// extern int             Ivy_ObjMffcLabel( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_ObjUpdateLevel_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj );
-
-// extern void            Ivy_ObjUpdateLevelR_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, int ReqNew );
-
-// extern int             Ivy_ObjIsMuxType( Ivy_Obj_t * pObj );
-
-// extern Ivy_Obj_t *     Ivy_ObjRecognizeMux( Ivy_Obj_t * pObj, Ivy_Obj_t ** ppObjT, Ivy_Obj_t ** ppObjE );
-
-// extern Ivy_Obj_t *     Ivy_ObjReal( Ivy_Obj_t * pObj );
-
-// extern void            Ivy_ObjPrintVerbose( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fHaig );
-
-// extern void            Ivy_ManPrintVerbose( Ivy_Man_t * p, int fHaig );
-
-// extern int             Ivy_CutTruthPrint( Ivy_Man_t * p, Ivy_Cut_t * pCut, unsigned uTruth );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func Ivy_EdgeId(e Ivy_Edge_t) int32           { return int32(e >> 1) }
+func Ivy_EdgeIsComplement(e Ivy_Edge_t) int32 { return int32(e & 1) }
+func Ivy_EdgeRegular(e Ivy_Edge_t) Ivy_Edge_t { return e &^ 1 }
+func Ivy_EdgeNot(e Ivy_Edge_t) Ivy_Edge_t     { return e ^ 1 }
+func Ivy_EdgeNotCond(e Ivy_Edge_t, c int32) Ivy_Edge_t {
+	if c != 0 {
+		return e ^ 1
+	}
+	return e
+}
+func Ivy_EdgeFromNode(node *Ivy_Obj_t) Ivy_Edge_t {
+	if node == nil {
+		panic("nil edge node")
+	}
+	return Ivy_EdgeCreate(Ivy_Regular(node).Id, Ivy_IsComplement(node))
+}
+func Ivy_EdgeToNode(p *Ivy_Man_t, e Ivy_Edge_t) *Ivy_Obj_t {
+	return Ivy_NotCond(Ivy_ManObj(p, Ivy_EdgeId(e)), Ivy_EdgeIsComplement(e))
+}
+func Ivy_LeafCreate(id, lat int32) int32 {
+	if id < 0 || id > 0xffffff || lat < 0 || lat > 255 {
+		panic("invalid sequential leaf")
+	}
+	return int32(uint32(id)<<8 | uint32(lat))
+}
+func Ivy_LeafId(leaf int32) int32          { return int32(uint32(leaf) >> 8) }
+func Ivy_LeafLat(leaf int32) int32         { return leaf & 255 }
+func Ivy_ManPiNum(p *Ivy_Man_t) int32      { return p.nObjs[IVY_PI] }
+func Ivy_ManPoNum(p *Ivy_Man_t) int32      { return p.nObjs[IVY_PO] }
+func Ivy_ManAssertNum(p *Ivy_Man_t) int32  { return p.nObjs[IVY_ASSERT] }
+func Ivy_ManLatchNum(p *Ivy_Man_t) int32   { return p.nObjs[IVY_LATCH] }
+func Ivy_ManAndNum(p *Ivy_Man_t) int32     { return p.nObjs[IVY_AND] }
+func Ivy_ManExorNum(p *Ivy_Man_t) int32    { return p.nObjs[IVY_EXOR] }
+func Ivy_ManBufNum(p *Ivy_Man_t) int32     { return p.nObjs[IVY_BUF] }
+func Ivy_ManObjNum(p *Ivy_Man_t) int32     { return p.nCreated - p.nDeleted }
+func Ivy_ManObjIdMax(p *Ivy_Man_t) int32   { return int32(len(p.vObjs)) - 1 }
+func Ivy_ManNodeNum(p *Ivy_Man_t) int32    { return p.nObjs[IVY_AND] + p.nObjs[IVY_EXOR] }
+func Ivy_ManHashObjNum(p *Ivy_Man_t) int32 { return Ivy_ManNodeNum(p) + p.nObjs[IVY_LATCH] }
+func Ivy_ManGetCost(p *Ivy_Man_t) int32 {
+	return p.nObjs[IVY_AND] + 3*p.nObjs[IVY_EXOR] + 8*p.nObjs[IVY_LATCH]
+}
+func Ivy_ObjType(o *Ivy_Obj_t) Ivy_Type_t { return Ivy_Regular(o).Type }
+func Ivy_ObjInit(o *Ivy_Obj_t) Ivy_Init_t { return Ivy_Regular(o).Init }
+func Ivy_ObjIsConst1(o *Ivy_Obj_t) int32  { return ivyBool(Ivy_Regular(o).Id == 0) }
+func Ivy_ObjIsGhost(o *Ivy_Obj_t) int32   { return ivyBool(Ivy_Regular(o).Id < 0) }
+func Ivy_ObjIsNone(o *Ivy_Obj_t) int32    { return ivyBool(Ivy_ObjType(o) == IVY_NONE) }
+func Ivy_ObjIsPi(o *Ivy_Obj_t) int32      { t := Ivy_ObjType(o); return ivyBool(t == IVY_PI) }
+func Ivy_ObjIsPo(o *Ivy_Obj_t) int32      { t := Ivy_ObjType(o); return ivyBool(t == IVY_PO) }
+func Ivy_ObjIsCi(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_PI || t == IVY_LATCH)
+}
+func Ivy_ObjIsCo(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_PO || t == IVY_LATCH)
+}
+func Ivy_ObjIsAssert(o *Ivy_Obj_t) int32 { t := Ivy_ObjType(o); return ivyBool(t == IVY_ASSERT) }
+func Ivy_ObjIsLatch(o *Ivy_Obj_t) int32  { t := Ivy_ObjType(o); return ivyBool(t == IVY_LATCH) }
+func Ivy_ObjIsAnd(o *Ivy_Obj_t) int32    { t := Ivy_ObjType(o); return ivyBool(t == IVY_AND) }
+func Ivy_ObjIsExor(o *Ivy_Obj_t) int32   { t := Ivy_ObjType(o); return ivyBool(t == IVY_EXOR) }
+func Ivy_ObjIsBuf(o *Ivy_Obj_t) int32    { t := Ivy_ObjType(o); return ivyBool(t == IVY_BUF) }
+func Ivy_ObjIsNode(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_AND || t == IVY_EXOR)
+}
+func Ivy_ObjIsTerm(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_PI || t == IVY_PO || t == IVY_ASSERT)
+}
+func Ivy_ObjIsHash(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_AND || t == IVY_EXOR || t == IVY_LATCH)
+}
+func Ivy_ObjIsOneFanin(o *Ivy_Obj_t) int32 {
+	t := Ivy_ObjType(o)
+	return ivyBool(t == IVY_PO || t == IVY_ASSERT || t == IVY_BUF || t == IVY_LATCH)
+}
+func Ivy_ObjIsMarkA(o *Ivy_Obj_t) int32                   { return Ivy_Regular(o).fMarkA }
+func Ivy_ObjSetMarkA(o *Ivy_Obj_t)                        { Ivy_Regular(o).fMarkA = 1 }
+func Ivy_ObjClearMarkA(o *Ivy_Obj_t)                      { Ivy_Regular(o).fMarkA = 0 }
+func Ivy_ObjSetTravId(o *Ivy_Obj_t, id int32)             { Ivy_Regular(o).TravId = id }
+func Ivy_ObjSetTravIdCurrent(p *Ivy_Man_t, o *Ivy_Obj_t)  { Ivy_ObjSetTravId(o, p.nTravIds) }
+func Ivy_ObjSetTravIdPrevious(p *Ivy_Man_t, o *Ivy_Obj_t) { Ivy_ObjSetTravId(o, p.nTravIds-1) }
+func Ivy_ObjIsTravIdCurrent(p *Ivy_Man_t, o *Ivy_Obj_t) int32 {
+	return ivyBool(Ivy_Regular(o).TravId == p.nTravIds)
+}
+func Ivy_ObjIsTravIdPrevious(p *Ivy_Man_t, o *Ivy_Obj_t) int32 {
+	return ivyBool(Ivy_Regular(o).TravId == p.nTravIds-1)
+}
+func Ivy_ObjId(o *Ivy_Obj_t) int32         { return Ivy_Regular(o).Id }
+func Ivy_ObjTravId(o *Ivy_Obj_t) int32     { return Ivy_Regular(o).TravId }
+func Ivy_ObjPhase(o *Ivy_Obj_t) int32      { return Ivy_Regular(o).fPhase }
+func Ivy_ObjExorFanout(o *Ivy_Obj_t) int32 { return Ivy_Regular(o).fExFan }
+func Ivy_ObjRefs(o *Ivy_Obj_t) int32       { return Ivy_Regular(o).nRefs }
+func Ivy_ObjRefsInc(o *Ivy_Obj_t)          { Ivy_Regular(o).nRefs++ }
+func Ivy_ObjRefsDec(o *Ivy_Obj_t) {
+	o = Ivy_Regular(o)
+	if o.nRefs <= 0 {
+		panic("reference count underflow")
+	}
+	o.nRefs--
+}
+func Ivy_ObjFaninId0(o *Ivy_Obj_t) int32 {
+	f := Ivy_ObjFanin0(o)
+	if f == nil {
+		return 0
+	}
+	return f.Id
+}
+func Ivy_ObjFaninId1(o *Ivy_Obj_t) int32 {
+	f := Ivy_ObjFanin1(o)
+	if f == nil {
+		return 0
+	}
+	return f.Id
+}
+func Ivy_ObjFaninC0(o *Ivy_Obj_t) int32     { return Ivy_IsComplement(Ivy_Regular(o).pFanin0) }
+func Ivy_ObjFaninC1(o *Ivy_Obj_t) int32     { return Ivy_IsComplement(Ivy_Regular(o).pFanin1) }
+func Ivy_ObjFanin0(o *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(Ivy_Regular(o).pFanin0) }
+func Ivy_ObjFanin1(o *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(Ivy_Regular(o).pFanin1) }
+func Ivy_ObjChild0(o *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(o).pFanin0 }
+func Ivy_ObjChild1(o *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(o).pFanin1 }
+func Ivy_ObjChild0Equiv(o *Ivy_Obj_t) *Ivy_Obj_t {
+	f := Ivy_ObjFanin0(o)
+	if f == nil {
+		return nil
+	}
+	return Ivy_NotCond(f.pEquiv, Ivy_ObjFaninC0(o))
+}
+func Ivy_ObjChild1Equiv(o *Ivy_Obj_t) *Ivy_Obj_t {
+	f := Ivy_ObjFanin1(o)
+	if f == nil {
+		return nil
+	}
+	return Ivy_NotCond(f.pEquiv, Ivy_ObjFaninC1(o))
+}
+func Ivy_ObjEquiv(o *Ivy_Obj_t) *Ivy_Obj_t {
+	if o == nil {
+		return nil
+	}
+	regular := Ivy_Regular(o)
+	if regular.pEquiv == nil {
+		return nil
+	}
+	return Ivy_NotCond(regular.pEquiv, Ivy_IsComplement(o))
+}
+func Ivy_ObjLevel(o *Ivy_Obj_t) int32 { return Ivy_Regular(o).Level }
+func Ivy_ObjLevelNew(o *Ivy_Obj_t) int32 {
+	level := 1 + Ivy_ObjIsExor(o) + max(Ivy_ObjLevel(Ivy_ObjFanin0(o)), Ivy_ObjLevel(Ivy_ObjFanin1(o)))
+	if level > 0x1fffff {
+		panic("Ivy level exceeds representation bound")
+	}
+	return level
+}
+func Ivy_ObjFaninPhase(o *Ivy_Obj_t) int32 {
+	if o == nil {
+		return 0
+	}
+	return Ivy_ObjPhase(o) ^ Ivy_IsComplement(o)
+}
+func Ivy_ObjClean(o *Ivy_Obj_t) {
+	o = Ivy_Regular(o)
+	id, owner, neg, recycled := o.Id, o.owner, o.neg, o.recycled
+	*o = Ivy_Obj_t{Id: id, owner: owner, neg: neg, recycled: recycled}
+}
+func Ivy_ObjOverwrite(base, data *Ivy_Obj_t) {
+	base, data = Ivy_Regular(base), Ivy_Regular(data)
+	if base.recycled {
+		panic("cannot overwrite recycled node")
+	}
+	id, owner, neg := base.Id, base.owner, base.neg
+	*base = *data
+	base.Id, base.owner, base.neg, base.regular = id, owner, neg, nil
+	base.recycled = false
+}
+func Ivy_ObjWhatFanin(o, f *Ivy_Obj_t) int32 {
+	f = Ivy_Regular(f)
+	if Ivy_ObjFanin0(o) == f {
+		return 0
+	}
+	if Ivy_ObjFanin1(o) == f {
+		return 1
+	}
+	panic("object does not have this fanin")
+}
+func Ivy_ObjFanoutC(o, fanout *Ivy_Obj_t) int32 {
+	o = Ivy_Regular(o)
+	if Ivy_ObjFanin0(fanout) == o {
+		return Ivy_ObjFaninC0(fanout)
+	}
+	if Ivy_ObjFanin1(fanout) == o {
+		return Ivy_ObjFaninC1(fanout)
+	}
+	panic("object does not drive this fanout")
+}
+func Ivy_ObjCreateGhost(p *Ivy_Man_t, a, b *Ivy_Obj_t, typ Ivy_Type_t, init Ivy_Init_t) *Ivy_Obj_t {
+	if p == nil || p.memoryStopped || typ <= IVY_NONE || typ >= IVY_VOID {
+		panic("invalid ghost manager/type")
+	}
+	for _, fanin := range []*Ivy_Obj_t{a, b} {
+		if fanin != nil && (Ivy_Regular(fanin).owner != p || Ivy_Regular(fanin).recycled) {
+			panic("ghost fanin is not live in this manager")
+		}
+	}
+	if typ == IVY_PI {
+		if a != nil || b != nil || init != IVY_INIT_NONE {
+			panic("PI ghost has fanins/initial state")
+		}
+	} else if a == nil {
+		panic("ghost requires first fanin")
+	}
+	if typ == IVY_AND || typ == IVY_EXOR {
+		if b == nil {
+			panic("binary ghost requires second fanin")
+		}
+	} else if b != nil {
+		panic("unary ghost has second fanin")
+	}
+	if typ == IVY_LATCH {
+		if init < IVY_INIT_0 || init > IVY_INIT_DC {
+			panic("latch ghost needs initial state")
+		}
+	} else if init != IVY_INIT_NONE {
+		panic("nonlatch ghost has initial state")
+	}
+	if typ == IVY_AND && (a == nil || Ivy_ObjIsConst1(a) != 0) {
+		panic("AND ghost needs nonconstant fanin")
+	}
+	if b != nil && Ivy_ObjIsConst1(b) != 0 {
+		panic("second ghost fanin must be nonconstant")
+	}
+	if typ != IVY_PI && a != nil && b != nil && Ivy_Regular(a) == Ivy_Regular(b) {
+		panic("ghost fanins need distinct regular nodes")
+	}
+	if typ == IVY_LATCH && Ivy_IsComplement(a) != 0 {
+		panic("latch ghost requires regular input")
+	}
+	ghost := Ivy_ManGhost(p)
+	ghost.Id = -1
+	ghost.Type = typ
+	ghost.Init = init
+	ghost.pFanin0, ghost.pFanin1 = a, b
+	if b != nil && Ivy_ObjFaninId0(ghost) > Ivy_ObjFaninId1(ghost) {
+		ghost.pFanin0, ghost.pFanin1 = b, a
+	}
+	return ghost
+}
+func Ivy_InitNotCond(init Ivy_Init_t, compl int32) Ivy_Init_t {
+	if init < IVY_INIT_0 || init > IVY_INIT_DC {
+		panic("missing latch initialization")
+	}
+	if compl == 0 || init == IVY_INIT_DC {
+		return init
+	}
+	if init == IVY_INIT_0 {
+		return IVY_INIT_1
+	}
+	if init == IVY_INIT_1 {
+		return IVY_INIT_0
+	}
+	panic("invalid initialization")
+}
+func Ivy_InitAnd(a, b Ivy_Init_t) Ivy_Init_t {
+	if a < IVY_INIT_0 || a > IVY_INIT_DC || b < IVY_INIT_0 || b > IVY_INIT_DC {
+		panic("missing latch initialization")
+	}
+	if a == IVY_INIT_0 || b == IVY_INIT_0 {
+		return IVY_INIT_0
+	}
+	if a == IVY_INIT_DC || b == IVY_INIT_DC {
+		return IVY_INIT_DC
+	}
+	return IVY_INIT_1
+}
+func Ivy_InitExor(a, b Ivy_Init_t) Ivy_Init_t {
+	if a < IVY_INIT_0 || a > IVY_INIT_DC || b < IVY_INIT_0 || b > IVY_INIT_DC {
+		panic("missing latch initialization")
+	}
+	if a == IVY_INIT_DC || b == IVY_INIT_DC {
+		return IVY_INIT_DC
+	}
+	if a != b {
+		return IVY_INIT_1
+	}
+	return IVY_INIT_0
+}

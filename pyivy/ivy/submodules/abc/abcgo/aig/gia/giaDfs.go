@@ -257,16 +257,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSuppSize_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return 0; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        return 1; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return Gia_ManSuppSize_rec( p, Gia_ObjFanin0(pObj) ) +
-        Gia_ManSuppSize_rec( p, Gia_ObjFanin1(pObj) );
-}
+
 
 /**Function*************************************************************
 
@@ -279,10 +270,7 @@ func Gia_ManSuppSize_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSuppSizeOne(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    Gia_ManIncrementTravId( p );
-    return Gia_ManSuppSize_rec( p, pObj );
-}
+
 
 /**Function*************************************************************
 
@@ -295,19 +283,7 @@ func Gia_ManSuppSizeOne(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSuppSizeTest(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32;
-    var clk abctime  = Abc_Clock();
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsAnd(pObj) {
-            Counter += (Gia_ManSuppSizeOne(p, pObj) <= 16); }
-    }
-    fmt.Printf("Nodes with small support %d (out of %d)\n", Counter, Gia_ManAndNum(p));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -320,20 +296,7 @@ func Gia_ManSuppSizeTest(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSuppSize(p *Gia_Man_t, pNodes *int32, nNodes int32) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32; 
-    Gia_ManIncrementTravId( p );
-    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );
-    for  i = 0; i < nNodes; i++  {
-        pObj = Gia_ManObj( p, pNodes[i] );
-        if Gia_ObjIsCo(pObj) {
-            Counter += Gia_ManSuppSize_rec( p, Gia_ObjFanin0(pObj) );
-        } else {
-            Counter += Gia_ManSuppSize_rec( p, pObj ); }
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 

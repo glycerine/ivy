@@ -114,10 +114,8 @@ func Gia_ManCreateResubMiter(p *Aig_Man_t) *Gia_Man_t {
         Gia_ManAppendCo( pNew, Gia_LitNot( Gia_ManHashXor(pNew, pOuts0[i], pOuts1[i]) ) );
     }
     Gia_ManHashStop( pNew );
-    // inlining of macro ABC_FREE
-    ((pOuts0) ? (free((char *) (pOuts0)), (pOuts0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pOuts1) ? (free((char *) (pOuts1)), (pOuts1) = 0) : 0);
+    pOuts0 = nil;
+    pOuts1 = nil;
 //    pNew = Gia_ManCleanup( pTemp = pNew );
 //    Gia_ManStop( pTemp );
     return pNew;

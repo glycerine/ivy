@@ -137,17 +137,12 @@ func Fxu_MatrixDelete(p *Fxu_Matrix) {
 #endif
 
     Vec_PtrFree( p.vPairs );
-    // inlining of macro ABC_FREE
-    ((p.pppPairs) ? (free((char *) (p.pppPairs)), (p.pppPairs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.ppPairs) ? (free((char *) (p.ppPairs)), (p.ppPairs) = 0) : 0);
+    p.pppPairs = nil;
+    p.ppPairs = nil;
 //    ABC_FREE( p->pPairsTemp );
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.ppVars) ? (free((char *) (p.ppVars)), (p.ppVars) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTable = nil;
+    p.ppVars = nil;
+    p = nil;
 }
 
 

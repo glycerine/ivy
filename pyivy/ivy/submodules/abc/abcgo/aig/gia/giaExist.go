@@ -139,14 +139,7 @@ var Size int32 = Vec_WrdSize(p.vSuppWords);
     Vec_IntPush( &p.vSuppVars, Gia_ObjCioId(pObj) );
     Abc_TtSetBit( Gia_ManQuantInfo(p, pObj), p.iSuppPi++ );
 }
-func Gia_ManQuantSetSuppAnd(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    var iObj int32   = Gia_ObjId(p, pObj);
-    var iFan0 int32  = Gia_ObjFaninId0(pObj, iObj);
-    var iFan1 int32  = Gia_ObjFaninId1(pObj, iObj);
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManQuantSetSuppZero( p );
-    Abc_TtOr( Gia_ManQuantInfo(p, pObj), Gia_ManQuantInfoId(p, iFan0), Gia_ManQuantInfoId(p, iFan1), p.nSuppWords );
-}
+
 func Gia_ManQuantCheckSupp(p *Gia_Man_t, iObj int32, iSupp int32) int32 {
     return Abc_TtGetBit( Gia_ManQuantInfoId(p, iObj), iSupp );
 }

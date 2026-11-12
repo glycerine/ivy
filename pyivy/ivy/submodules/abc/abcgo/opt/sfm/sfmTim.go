@@ -261,8 +261,7 @@ func Sfm_TimStop(p *Sfm_Tim_t) {
     Vec_WecErase( &p.vLevels );
     Vec_IntErase( &p.vPath );
     Vec_WrdErase( &p.vSortData );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Sfm_TimReadNtkDelay(p *Sfm_Tim_t) int32 {
     return p.Delay;

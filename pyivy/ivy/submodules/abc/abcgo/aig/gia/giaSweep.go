@@ -424,7 +424,7 @@ func Gia_ManCheckIntegrityWithBoxes(p *Gia_Man_t) {
     if p.pManTime == nil {
         return; }
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p );
     for  i = Gia_ManPoNum(p) - Gia_ManRegBoxNum(p); i < Gia_ManPoNum(p); i++  {
         pObj = Gia_ObjFanin0( Gia_ManPo(p, i) );
@@ -442,7 +442,7 @@ func Gia_ManCheckIntegrityWithBoxes(p *Gia_Man_t) {
     if nCountReg || (nCountCarry != 0) {
         fmt.Printf("Warning: AIG with boxes has internal fanout in %d complex flops and %d carries.\n", nCountReg, nCountCarry); }
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
 }
 
 /**Function*************************************************************
@@ -544,7 +544,7 @@ func Gia_ManFraigSelectReprs(p *Gia_Man_t, pClp *Gia_Man_t, fVerbose int32, pFlo
         }
     }
     // inlining of macro ABC_FREE
-    ((pClp2Gia) ? (free((char *) (pClp2Gia)), (pClp2Gia) = 0) : 0);
+    pClp2Gia = nil;
     // inlining of macro Gia_ManForEachCi
     for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
         pObj.fMark0 = 0;
@@ -687,7 +687,7 @@ func Gia_ManSweepWithBoxesAndDomains(p *Gia_Man_t, pParsS any, fConst int32, fEq
         Gia_ManTransferTiming( pNew, p );
         Gia_ManStop( pTemp );
         // inlining of macro ABC_FREE
-        ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+        pReprs = nil;
         // derive new AIG
         pNew = Gia_ManDupWithBoxes( pTemp = pNew, 1 );
         Gia_ManStop( pTemp );
@@ -755,7 +755,7 @@ func Gia_ManSweepWithBoxes(p *Gia_Man_t, pParsC any, pParsS any, fConst int32, f
     Gia_ManTransferTiming( pNew, p );
     Gia_ManStop( pTemp );
     // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pReprs = nil;
     // derive new AIG
     pNew = Gia_ManDupWithBoxes( pTemp = pNew, pParsC ? 0 : 1 );
     Gia_ManStop( pTemp );

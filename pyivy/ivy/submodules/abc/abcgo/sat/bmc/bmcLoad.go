@@ -140,8 +140,7 @@ func Bmc_LoadStart(pGia *Gia_Man_t) *Bmc_Load_t {
 func Bmc_LoadStop(p *Bmc_Load_t) {
     Vec_IntFree( p.vSat2Id );
     sat_solver_delete( p.pSat );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

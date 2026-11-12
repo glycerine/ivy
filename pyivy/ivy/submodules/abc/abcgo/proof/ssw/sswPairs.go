@@ -225,8 +225,7 @@ func Ssw_TransformPairsIntoTempClasses(vPairs *Vec_Int_t, nObjNumMax int32) **Ve
             }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pReprs = nil;
     return pvClasses;
 }
 
@@ -247,8 +246,7 @@ func Ssw_FreeTempClasses(pvClasses **Vec_Int_t, nObjNumMax int32) {
         if pvClasses[i] {
             Vec_IntFree( pvClasses[i] ); }
     }
-    // inlining of macro ABC_FREE
-    ((pvClasses) ? (free((char *) (pvClasses)), (pvClasses) = 0) : 0);
+    pvClasses = nil;
 }
 
 /**Function*************************************************************

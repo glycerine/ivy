@@ -366,8 +366,7 @@ func Nwk_ManSpeedup(pNtk *Nwk_Man_t, fUseLutLib int32, Percentage int32, Degree 
     }
     Vec_PtrFree( vTimeCries );
     Vec_PtrFree( vTimeFanins );
-    // inlining of macro ABC_FREE
-    ((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);
+    puTCEdges = nil;
     if fVerbose != 0 {
         fmt.Printf("Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\n", Nwk_ManNodeNum(pNtk), Counter, CounterRes, Counter? 1.0*CounterRes/Counter : 0.0); } 
 

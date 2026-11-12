@@ -366,10 +366,8 @@ func Cec_ManDetectIsomorphism(p *Gia_Man_t) *int32 {
 //    p->pIso = pIso;
 //    Cec_ManTransformClasses( p );
 
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pStore) ? (free((char *) (pStore)), (pStore) = 0) : 0);
+    pTable = nil;
+    pStore = nil;
     return pIso;
 }
 

@@ -237,8 +237,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
         if pFForms[i] {
             Dec_GraphFree( pFForms[i] ); }
     }
-    // inlining of macro ABC_FREE
-    ((pFForms) ? (free((char *) (pFForms)), (pFForms) = 0) : 0);
+    pFForms = nil;
     // finalize
 clk = Abc_Clock();
     Vec_PtrFree( vCopy );

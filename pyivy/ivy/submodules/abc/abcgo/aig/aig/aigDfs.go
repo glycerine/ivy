@@ -1,1146 +1,448 @@
 package aig
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/tim"
+)
 
-/**CFile****************************************************************
-
-  FileName    [aigDfs.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [DFS traversal procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigDfs.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-//#include "misc/tim/tim.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies that the objects are in a topo order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManVerifyTopoOrder(p *Aig_Man_t) int32 {
-    var pObj, pNext *Aig_Obj_t;
-    var i, k, iBox, iTerm1, nTerms int32;
-    Aig_ManSetCioIds( p );
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsNode(pObj) {
-            pNext = Aig_ObjFanin0(pObj);
-            if !Aig_ObjIsTravIdCurrent(p,pNext) {
-                fmt.Printf("Node %d has fanin %d that is not in a topological order.\n", pObj.Id, pNext.Id);
-                return 0;
-            }
-            pNext = Aig_ObjFanin1(pObj);
-            if !Aig_ObjIsTravIdCurrent(p,pNext) {
-                fmt.Printf("Node %d has fanin %d that is not in a topological order.\n", pObj.Id, pNext.Id);
-                return 0;
-            }
-        
-        } else if Aig_ObjIsCo(pObj) || Aig_ObjIsBuf(pObj) {
-            pNext = Aig_ObjFanin0(pObj);
-            if !Aig_ObjIsTravIdCurrent(p,pNext) {
-                fmt.Printf("Node %d has fanin %d that is not in a topological order.\n", pObj.Id, pNext.Id);
-                return 0;
-            }
-        
-        } else if Aig_ObjIsCi(pObj) {
-            if p.pManTime {
-                iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );
-                if iBox >= 0 { // this is not a true PI
-                
-                    iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );
-                    nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );
-                    for  k = 0; k < nTerms; k++  {
-                        pNext = Aig_ManCo( p, iTerm1 + k );
-                        assert(Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox, "Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox"); 
-                        if !Aig_ObjIsTravIdCurrent(p,pNext) {
-                            fmt.Printf("Box %d has input %d that is not in a topological order.\n", iBox, pNext.Id);
-                            return 0;
-                        }
-                    }
-                }
-            }
-        
-        } else if !Aig_ObjIsConst1(pObj) {
-            assert(false, "0"); }
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    }
-    }
-    Aig_ManCleanCioIds( p );
-    return 1;
+func Aig_ManVerifyTopoOrder(p *Graph) int32 {
+	if p.Check() != nil {
+		return 0
+	}
+	return 1
+}
+func (p *Graph) dfs(roots []Edge, nodesOnly, preorder, choices bool) []Edge {
+	seen := make(map[int]bool)
+	active := make(map[int]bool)
+	var result []Edge
+	var visit func(Edge)
+	visit = func(e Edge) {
+		id := e.NodeID()
+		if seen[id] {
+			return
+		}
+		if active[id] {
+			panic("aig: cyclic traversal")
+		}
+		active[id] = true
+		n := p.node(e)
+		include := !nodesOnly || n.Kind == And || n.Kind == ExclusiveOr
+		if preorder && include {
+			result = append(result, Aig_Regular(e))
+		}
+		if n.Kind == And || n.Kind == ExclusiveOr || (n.Kind == Buffer || n.Kind == Output) {
+			visit(n.Fanins[0])
+			if n.Kind != Buffer && n.Kind != Output {
+				visit(n.Fanins[1])
+			}
+		}
+		if choices {
+			if other, ok := p.equivs[id]; ok {
+				visit(other)
+			}
+		}
+		if !preorder && include {
+			result = append(result, Aig_Regular(e))
+		}
+		delete(active, id)
+		seen[id] = true
+	}
+	for _, e := range roots {
+		visit(e)
+	}
+	return result
+}
+func Aig_ManDfs(p *Graph, nodesOnly int32) []Edge {
+	return p.dfs(p.outputs, nodesOnly != 0, false, true)
+}
+func Aig_ManDfs_rec(p *Graph, e Edge, nodes *[]Edge) {
+	seen := make(map[int]bool)
+	for _, x := range *nodes {
+		seen[x.NodeID()] = true
+	}
+	for _, x := range p.dfs([]Edge{e}, true, false, false) {
+		if !seen[x.NodeID()] {
+			*nodes = append(*nodes, x)
+			seen[x.NodeID()] = true
+		}
+	}
+}
+func Aig_ManDfsAll_rec(p *Graph, e Edge, nodes *[]Edge) {
+	for _, x := range p.dfs([]Edge{e}, false, false, false) {
+		exists := false
+		for _, old := range *nodes {
+			if old == x {
+				exists = true
+				break
+			}
+		}
+		if !exists {
+			*nodes = append(*nodes, x)
+		}
+	}
+}
+func Aig_ManDfsArray(p *Graph, nodes []Edge, n int32) []Edge {
+	if n < 0 || int(n) > len(nodes) {
+		panic("aig: invalid DFS range")
+	}
+	return p.dfs(nodes[:n], false, false, false)
+}
+func Aig_ManDfsAll(p *Graph) []Edge {
+	roots := make([]Edge, 0, len(p.nodes))
+	for id := range p.nodes {
+		if !p.deleted[id] {
+			roots = append(roots, Edge(id)<<1)
+		}
+	}
+	return p.dfs(roots, false, false, false)
+}
+func Aig_ManDfsPreorder_rec(p *Graph, e Edge, nodes *[]Edge) {
+	*nodes = append(*nodes, p.dfs([]Edge{e}, true, true, false)...)
+}
+func Aig_ManDfsPreorder(p *Graph, nodesOnly int32) []Edge {
+	return p.dfs(p.outputs, nodesOnly != 0, true, true)
+}
+func Aig_ManDfsNodes(p *Graph, nodes []Edge, n int32) []Edge {
+	if n < 0 || int(n) > len(nodes) {
+		panic("aig: invalid DFS range")
+	}
+	return p.dfs(nodes[:n], true, false, false)
+}
+func Aig_ManDfsChoices_rec(p *Graph, e Edge, nodes *[]Edge) {
+	*nodes = append(*nodes, p.dfs([]Edge{e}, true, false, true)...)
+}
+func Aig_ManDfsChoices(p *Graph) []Edge { return p.dfs(p.outputs, true, false, true) }
+func Aig_ManDfsReverse(p *Graph) []Edge {
+	roots := make([]Edge, 0, len(p.nodes))
+	for id, n := range p.nodes {
+		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			roots = append(roots, Edge(id)<<1)
+		}
+	}
+	return p.reverseDfs(roots, nil)
+}
+func Aig_ManDfsReverse_rec(p *Graph, e Edge, nodes *[]Edge) { *nodes = p.reverseDfs([]Edge{e}, *nodes) }
+func Aig_ManLevelize(p *Graph) [][]Edge {
+	var levels [][]Edge
+	for id, n := range p.nodes {
+		if p.deleted[id] || n.Kind != And && n.Kind != ExclusiveOr {
+			continue
+		}
+		for len(levels) <= n.Level {
+			levels = append(levels, nil)
+		}
+		levels[n.Level] = append(levels[n.Level], Edge(id)<<1)
+	}
+	return levels
+}
+func Aig_ManLevelNum(p *Graph) int32 {
+	max := 0
+	for _, e := range p.outputs {
+		if level := p.node(e).Level; level > max {
+			max = level
+		}
+	}
+	return int32(max)
+}
+func Aig_ManChoiceLevel_rec(p *Graph, e Edge) { p.choiceLevels([]Edge{e}) }
+func Aig_ManChoiceLevel(p *Graph) int32 {
+	roots := append(append([]Edge(nil), p.outputs...), p.inputs...)
+	p.choiceLevels(roots)
+	max := int32(0)
+	for _, e := range roots {
+		if level := int32(p.node(e).Level); level > max {
+			max = level
+		}
+	}
+	return max
+}
+func (p *Graph) choiceLevels(roots []Edge) {
+	state := make([]uint8, len(p.nodes))
+	var visit func(Edge)
+	visit = func(e Edge) {
+		id := e.NodeID()
+		if state[id] == 2 {
+			return
+		}
+		if state[id] == 1 {
+			panic("aig: cyclic choice/box dependency")
+		}
+		state[id] = 1
+		n := p.nodes[id]
+		level := 0
+		if n.Kind == Input {
+			level = n.Level
+			if manager, ok := p.Timing.(*tim.Tim_Man_t); ok {
+				box := tim.Tim_ManBoxForCi(manager, int(Aig_ObjCioId(p, e)))
+				if box >= 0 {
+					first, count := tim.Tim_ManBoxInputFirst(manager, box), tim.Tim_ManBoxInputNum(manager, box)
+					level = 0
+					for i := 0; i < count; i++ {
+						if first+i >= len(p.outputs) {
+							panic("aig: timing box terminal outside graph")
+						}
+						co := p.outputs[first+i]
+						visit(co)
+						if l := p.node(co).Level; l > level {
+							level = l
+						}
+					}
+					level++
+				}
+			}
+		} else {
+			for _, child := range nodeFanins(n) {
+				visit(child)
+				if l := p.node(child).Level; l > level {
+					level = l
+				}
+			}
+			if n.Kind == And || n.Kind == ExclusiveOr {
+				level++
+			}
+		}
+		if other, ok := p.equivs[id]; ok {
+			visit(other)
+			if l := p.node(other).Level; l > level {
+				level = l
+			}
+		}
+		p.nodes[id].Level = level
+		state[id] = 2
+	}
+	for _, e := range roots {
+		visit(e)
+	}
+}
+func Aig_ConeMark_rec(p *Graph, e Edge) {
+	for _, x := range p.dfs([]Edge{e}, false, false, false) {
+		p.node(x).MarkA = true
+	}
+}
+func Aig_ConeCleanAndMark_rec(p *Graph, e Edge) {
+	for _, x := range p.dfs([]Edge{e}, false, false, false) {
+		p.node(x).MarkA = true
+		delete(p.copies, x.NodeID())
+	}
+}
+func Aig_ConeCountAndMark_rec(p *Graph, e Edge) int32 {
+	var n int32
+	for _, x := range p.dfs([]Edge{e}, true, false, false) {
+		if !p.node(x).MarkA {
+			n++
+			p.node(x).MarkA = true
+		}
+	}
+	return n
+}
+func Aig_ConeUnmark_rec(p *Graph, e Edge) {
+	for _, x := range p.dfs([]Edge{e}, false, false, false) {
+		p.node(x).MarkA = false
+	}
+}
+func Aig_DagSize(p *Graph, e Edge) int32 { return int32(len(p.dfs([]Edge{e}, true, false, false))) }
+func Aig_Support(p *Graph, e Edge) []Edge {
+	var result []Edge
+	for _, x := range p.dfs([]Edge{e}, false, false, false) {
+		if p.node(x).Kind == Input {
+			result = append(result, x)
+		}
+	}
+	return result
+}
+func Aig_SupportSize(p *Graph, e Edge) int32 { return int32(len(Aig_Support(p, e))) }
+func Aig_SupportSize_rec(p *Graph, e Edge, count *int32) {
+	for _, x := range Aig_Support(p, e) {
+		if p.node(x).TravID != p.travID {
+			p.node(x).TravID = p.travID
+			*count++
+		}
+	}
+}
+func Aig_SupportSizeTest(p *Graph) int32 {
+	var total int32
+	for _, e := range p.outputs {
+		total += Aig_SupportSize(p, e)
+	}
+	return total
+}
+func Aig_Support_rec(p *Graph, e Edge, support *[]Edge) { Aig_SupportNodes(p, []Edge{e}, 1, support) }
+func Aig_SupportNodes(p *Graph, roots []Edge, n int32, support *[]Edge) {
+	if n < 0 || int(n) > len(roots) {
+		panic("aig: invalid support range")
+	}
+	seen := make(map[int]bool)
+	for _, e := range *support {
+		seen[e.NodeID()] = true
+	}
+	for _, e := range p.dfs(roots[:n], false, false, false) {
+		if p.node(e).Kind == Input && !seen[e.NodeID()] {
+			*support = append(*support, e)
+			seen[e.NodeID()] = true
+		}
+	}
+}
+func Aig_Transfer_rec(source, destination *Graph, root Edge) {
+	Aig_ManDup_rec(destination, source, root)
+}
+func Aig_Transfer(source, destination *Graph, root Edge, nVars int32) Edge {
+	if source == destination {
+		return root
+	}
+	if nVars < 0 || int(nVars) > len(source.inputs) {
+		panic("aig: invalid transfer variable count")
+	}
+	source.copies = map[int]Edge{0: 0}
+	for i := int32(0); i < nVars; i++ {
+		source.copies[source.inputs[i].NodeID()] = Aig_IthVar(destination, i)
+	}
+	return Aig_ManDup_rec(destination, source, root)
+}
+func Aig_Compose_rec(p *Graph, root, function, variable Edge) {
+	index := -1
+	for i, e := range p.inputs {
+		if e == variable {
+			index = i
+			break
+		}
+	}
+	if index < 0 {
+		panic("aig: composition variable is not input")
+	}
+	result := Aig_Compose(p, root, function, int32(index))
+	Aig_ObjSetCopy(p, root, result)
+}
+func Aig_Compose(p *Graph, root, function Edge, index int32) Edge {
+	if index < 0 || int(index) >= len(p.inputs) {
+		panic("aig: invalid composition input")
+	}
+	variable := p.inputs[index]
+	memo := map[int]Edge{0: 0, variable.NodeID(): function}
+	var visit func(Edge) Edge
+	visit = func(e Edge) Edge {
+		id := e.NodeID()
+		value, ok := memo[id]
+		if !ok {
+			n := p.nodes[id]
+			if n.Kind == Input {
+				value = Edge(id) << 1
+			} else if n.Kind == And {
+				value = p.AND(visit(n.Fanins[0]), visit(n.Fanins[1]))
+			} else {
+				panic("aig: unsupported composition node")
+			}
+			memo[id] = value
+		}
+		if e.Complemented() {
+			value = value.Not()
+		}
+		return value
+	}
+	return visit(root)
+}
+func Aig_ObjCollectCut_rec(p *Graph, root Edge, nodes *[]Edge) {
+	if p.node(root).MarkA {
+		return
+	}
+	p.node(root).MarkA = true
+	n := p.nodes[root.NodeID()]
+	if n.Kind != And && n.Kind != ExclusiveOr {
+		panic("aig: incomplete cut")
+	}
+	Aig_ObjCollectCut_rec(p, n.Fanins[0], nodes)
+	Aig_ObjCollectCut_rec(p, n.Fanins[1], nodes)
+	*nodes = append(*nodes, Aig_Regular(root))
+}
+func Aig_ObjCollectCut(p *Graph, root Edge, leaves []Edge, nodes *[]Edge) {
+	*nodes = (*nodes)[:0]
+	for _, e := range leaves {
+		if p.node(e).MarkA {
+			panic("aig: marked cut leaf")
+		}
+		p.node(e).MarkA = true
+	}
+	defer func() {
+		for _, e := range leaves {
+			p.node(e).MarkA = false
+		}
+		for _, e := range *nodes {
+			p.node(e).MarkA = false
+		}
+	}()
+	Aig_ObjCollectCut_rec(p, root, nodes)
+}
+func Aig_ObjCollectSuper_rec(p *Graph, root, e Edge, super *[]Edge) int32 {
+	for _, old := range *super {
+		if old == e {
+			return 1
+		}
+		if old == e.Not() {
+			return -1
+		}
+	}
+	n := p.node(e)
+	if e != root && (e.Complemented() || n.Kind != p.node(root).Kind || n.Refs > 1) {
+		*super = append(*super, e)
+		return 0
+	}
+	if n.Kind != And && n.Kind != ExclusiveOr {
+		panic(fmt.Sprintf("aig: invalid supergate node %d", e))
+	}
+	a := Aig_ObjCollectSuper_rec(p, root, n.Fanins[0], super)
+	b := Aig_ObjCollectSuper_rec(p, root, n.Fanins[1], super)
+	if a < 0 || b < 0 {
+		return -1
+	}
+	if a != 0 || b != 0 {
+		return 1
+	}
+	return 0
+}
+func Aig_ObjCollectSuper(p *Graph, root Edge, super *[]Edge) int32 {
+	if root.Complemented() {
+		panic("aig: complemented supergate root")
+	}
+	*super = (*super)[:0]
+	result := Aig_ObjCollectSuper_rec(p, root, root, super)
+	if result < 0 {
+		*super = (*super)[:0]
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfs_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if pObj == nil {
-        return; }
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if p.pEquivs && Aig_ObjEquiv(p, pObj) {
-        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }
-    Aig_ManDfs_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_ManDfs_rec( p, Aig_ObjFanin1(pObj), vNodes );
-    Vec_PtrPush( vNodes, pObj );
+func (p *Graph) reverseDfs(roots, prior []Edge) []Edge {
+	fanouts := make([][]Edge, len(p.nodes))
+	for id, n := range p.nodes {
+		if p.deleted[id] {
+			continue
+		}
+		for _, e := range nodeFanins(n) {
+			fanouts[e.NodeID()] = append(fanouts[e.NodeID()], Edge(id)<<1)
+		}
+	}
+	result := append([]Edge(nil), prior...)
+	state := make([]uint8, len(p.nodes))
+	for _, e := range prior {
+		state[e.NodeID()] = 2
+	}
+	var visit func(Edge)
+	visit = func(e Edge) {
+		id := e.NodeID()
+		if state[id] == 2 || p.node(e).Kind == Output {
+			return
+		}
+		if state[id] == 1 {
+			panic("aig: cyclic reverse traversal")
+		}
+		state[id] = 1
+		for _, fan := range fanouts[id] {
+			visit(fan)
+		}
+		state[id] = 2
+		result = append(result, Aig_Regular(e))
+	}
+	for _, e := range roots {
+		visit(e)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects objects of the AIG in the DFS order.]
-
-  Description [Works with choice nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfs(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    // start the array of nodes
-    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );
-    // mark PIs if they should not be collected
-    if fNodesOnly != 0 {
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            Aig_ObjSetTravIdCurrent( p, pObj );
-        }
-    } else {
-        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }
-    // collect nodes reachable in the DFS order
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ManDfs_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );
-    }
-    if fNodesOnly != 0 {
-        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), "Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)");
-    } else {
-        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), "Vec_PtrSize(vNodes) == Aig_ManObjNum(p)"); }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsAll_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsCi(pObj) {
-        Vec_PtrPush( vNodes, pObj );
-        return;
-    }
-    if Aig_ObjIsCo(pObj) {
-        Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );
-        Vec_PtrPush( vNodes, pObj );
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_ManDfsAll_rec( p, Aig_ObjFanin1(pObj), vNodes );
-    Vec_PtrPush( vNodes, pObj );
-}
-func Aig_ManDfsArray(p *Aig_Man_t, pNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );
-    // add constant
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    Vec_PtrPush( vNodes, Aig_ManConst1(p) );
-    // collect nodes reachable in the DFS order
-    for  i = 0; i < nNodes; i++  {
-        Aig_ManDfsAll_rec( p, pNodes[i], vNodes );
-    }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects objects of the AIG in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsAll(p *Aig_Man_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );
-    // add constant
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    Vec_PtrPush( vNodes, Aig_ManConst1(p) );
-    // collect nodes reachable in the DFS order
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ManDfsAll_rec( p, pObj, vNodes );
-    }
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if !Aig_ObjIsTravIdCurrent(p, pObj) {
-            Vec_PtrPush( vNodes, pObj ); }
-    }
-    assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), "Vec_PtrSize(vNodes) == Aig_ManObjNum(p)");
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsPreorder_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if pObj == nil {
-        return; }
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    Vec_PtrPush( vNodes, pObj );
-    if p.pEquivs && Aig_ObjEquiv(p, pObj) {
-        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }
-    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin1(pObj), vNodes );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects objects of the AIG in the DFS order.]
-
-  Description [Works with choice nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsPreorder(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    // start the array of nodes
-    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );
-    // mark PIs if they should not be collected
-    if fNodesOnly != 0 {
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            Aig_ObjSetTravIdCurrent( p, pObj );
-        }
-    } else {
-        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }
-    // collect nodes reachable in the DFS order
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ManDfsPreorder_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );
-    }
-    if fNodesOnly != 0 {
-        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), "Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)");
-    } else {
-        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), "Vec_PtrSize(vNodes) == Aig_ManObjNum(p)"); }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Levelizes the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManLevelize(p *Aig_Man_t) *Vec_Vec_t {
-    var pObj *Aig_Obj_t;
-    var vLevels *Vec_Vec_t;
-    var nLevels, i int32;
-    nLevels = Aig_ManLevelNum( p );
-    vLevels = Vec_VecStart( nLevels + 1 );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(int32(pObj.Level) <= nLevels, "int32(pObj.Level) <= nLevels");
-        Vec_VecPush( vLevels, pObj.Level, pObj );
-    }
-    }
-    return vLevels;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes and PIs in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsNodes(p *Aig_Man_t, ppNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-//    Aig_Obj_t * pObj;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    // mark constant and PIs
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-//    Aig_ManForEachCi( p, pObj, i )
-//        Aig_ObjSetTravIdCurrent( p, pObj );
-    // go through the nodes
-    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );
-    for  i = 0; i < nNodes; i++  {
-        if Aig_ObjIsCo(ppNodes[i]) {
-            Aig_ManDfs_rec( p, Aig_ObjFanin0(ppNodes[i]), vNodes );
-        } else {
-            Aig_ManDfs_rec( p, ppNodes[i], vNodes ); }
-    }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsChoices_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if pObj == nil {
-        return; }
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_ManDfsChoices_rec( p, Aig_ObjFanin1(pObj), vNodes );
-    Aig_ManDfsChoices_rec( p, Aig_ObjEquiv(p, pObj), vNodes );
-    assert(!Aig_ObjIsTravIdCurrent(p, pObj), "!Aig_ObjIsTravIdCurrent(p, pObj)"); // loop detection
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    Vec_PtrPush( vNodes, pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsChoices(p *Aig_Man_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i, Counter int32;
-
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        if Aig_ObjEquiv(p, pObj) == nil {
-            continue; }
-        Counter = 0;
-        for  pObj = Aig_ObjEquiv(p, pObj) ; (pObj != nil); pObj = Aig_ObjEquiv(p, pObj)  {
-            Counter++;
-        }
-//        printf( "%d ", Counter );
-    }
-    }
-//    printf( "\n" );
-
-    assert(p.pEquivs != nil, "p.pEquivs != nil");
-    Aig_ManIncrementTravId( p );
-    // mark constant and PIs
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    }
-    // go through the nodes
-    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the reverse DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsReverse_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    var pFanout *Aig_Obj_t;
-    var iFanout int32 = -1;
-    var i int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), "Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)");
-    // inlining of macro Aig_ObjForEachFanout
-    for  assert(p.pFanData, "p.pFanData"), i = 0; (i < int32((pObj).nRefs)) &&                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) &&           (((pFanout) = Aig_ManObj(p, iFanout>>1)), 1); i++  {
-        Aig_ManDfsReverse_rec( p, pFanout, vNodes );
-    }
-    assert(!Aig_ObjIsTravIdCurrent(p, pObj), "!Aig_ObjIsTravIdCurrent(p, pObj)"); // loop detection
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    Vec_PtrPush( vNodes, pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the reverse DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDfsReverse(p *Aig_Man_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    // mark POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    }
-    // go through the nodes
-    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) {
-            Aig_ManDfsReverse_rec( p, pObj, vNodes ); }
-    }
-    return vNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the max number of levels in the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManLevelNum(p *Aig_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, LevelsMax int32;
-    LevelsMax = 0;
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        LevelsMax = Abc_MaxInt( LevelsMax, int32(Aig_ObjFanin0(pObj).Level) );
-    }
-    return LevelsMax;
-}
-
-//#if 0
-
-/**Function*************************************************************
-
-  Synopsis    [Computes levels for AIG with choices and white boxes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManChoiceLevel_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    var pNext *Aig_Obj_t;
-    var i, iBox, iTerm1, nTerms, LevelMax int32;
-    if Aig_ObjIsTravIdCurrent( p, pObj ) {
-        return; }
-    Aig_ObjSetTravIdCurrent( p, pObj );
-    if Aig_ObjIsCi(pObj) {
-        if p.pManTime {
-            iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );
-            if iBox >= 0 { // this is not a true PI
-            
-                iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );
-                nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );
-                for  i = 0; i < nTerms; i++  {
-                    pNext = Aig_ManCo(p, iTerm1 + i);
-                    Aig_ManChoiceLevel_rec( p, pNext );
-                    if LevelMax < Aig_ObjLevel(pNext) {
-                        LevelMax = Aig_ObjLevel(pNext); }
-                }
-                LevelMax++;
-            }
-        }
-//        printf( "%d ", pObj->Level );
-    
-    } else if Aig_ObjIsCo(pObj) {
-        pNext = Aig_ObjFanin0(pObj);
-        Aig_ManChoiceLevel_rec( p, pNext );
-        if LevelMax < Aig_ObjLevel(pNext) {
-            LevelMax = Aig_ObjLevel(pNext); }
-    
-    } else if Aig_ObjIsNode(pObj) { 
-        // get the maximum level of the two fanins
-        pNext = Aig_ObjFanin0(pObj);
-        Aig_ManChoiceLevel_rec( p, pNext );
-        if LevelMax < Aig_ObjLevel(pNext) {
-            LevelMax = Aig_ObjLevel(pNext); }
-        pNext = Aig_ObjFanin1(pObj);
-        Aig_ManChoiceLevel_rec( p, pNext );
-        if LevelMax < Aig_ObjLevel(pNext) {
-            LevelMax = Aig_ObjLevel(pNext); }
-        LevelMax++;
-
-        // get the level of the nodes in the choice node
-        if p.pEquivs && (pNext = Aig_ObjEquiv(p, pObj)) {
-            Aig_ManChoiceLevel_rec( p, pNext );
-            if LevelMax < Aig_ObjLevel(pNext) {
-                LevelMax = Aig_ObjLevel(pNext); }
-        }
-    
-    } else if !Aig_ObjIsConst1(pObj) {
-        assert(false, "0"); }
-    Aig_ObjSetLevel( pObj, LevelMax );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes levels for AIG with choices and white boxes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManChoiceLevel(p *Aig_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, LevelMax int32;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        Aig_ObjSetLevel( pObj, 0 ); }
-    }
-    Aig_ManSetCioIds( p );
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ManChoiceLevel_rec( p, pObj );
-        if LevelMax < Aig_ObjLevel(pObj) {
-            LevelMax = Aig_ObjLevel(pObj); }
-    }
-    // account for dangling boxes
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ManChoiceLevel_rec( p, pObj );
-        if LevelMax < Aig_ObjLevel(pObj) {
-            LevelMax = Aig_ObjLevel(pObj); }
-    }
-    Aig_ManCleanCioIds( p );
-//    Aig_ManForEachNode( p, pObj, i )
-//        assert( Aig_ObjLevel(pObj) > 0 );
-    return LevelMax;
-} 
-
-//#endif
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of AIG nodes rooted at this cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ConeMark_rec(pObj *Aig_Obj_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {
-        return; }
-    Aig_ConeMark_rec( Aig_ObjFanin0(pObj) );
-    Aig_ConeMark_rec( Aig_ObjFanin1(pObj) );
-    assert(!Aig_ObjIsMarkA(pObj), "!Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjSetMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of AIG nodes rooted at this cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ConeCleanAndMark_rec(pObj *Aig_Obj_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {
-        return; }
-    Aig_ConeCleanAndMark_rec( Aig_ObjFanin0(pObj) );
-    Aig_ConeCleanAndMark_rec( Aig_ObjFanin1(pObj) );
-    assert(!Aig_ObjIsMarkA(pObj), "!Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjSetMarkA( pObj );
-    pObj.pData = nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of AIG nodes rooted at this cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ConeCountAndMark_rec(pObj *Aig_Obj_t) int32 {
-    var Counter int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {
-        return 0; }
-    Counter = 1 + Aig_ConeCountAndMark_rec( Aig_ObjFanin0(pObj) ) + 
-        Aig_ConeCountAndMark_rec( Aig_ObjFanin1(pObj) );
-    assert(!Aig_ObjIsMarkA(pObj), "!Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjSetMarkA( pObj );
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of AIG nodes rooted at this cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ConeUnmark_rec(pObj *Aig_Obj_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if !Aig_ObjIsNode(pObj) || !Aig_ObjIsMarkA(pObj) {
-        return; }
-    Aig_ConeUnmark_rec( Aig_ObjFanin0(pObj) ); 
-    Aig_ConeUnmark_rec( Aig_ObjFanin1(pObj) );
-    assert(Aig_ObjIsMarkA(pObj), "Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjClearMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of AIG nodes rooted at this cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_DagSize(pObj *Aig_Obj_t) int32 {
-    var Counter int32;
-    Counter = Aig_ConeCountAndMark_rec( Aig_Regular(pObj) );
-    Aig_ConeUnmark_rec( Aig_Regular(pObj) );
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SupportSize_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pCounter *int32) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsCi(pObj) {
-        (*pCounter)++;
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), "Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)");
-    Aig_SupportSize_rec( p, Aig_ObjFanin0(pObj), pCounter );
-    if Aig_ObjFanin1(pObj) {
-        Aig_SupportSize_rec( p, Aig_ObjFanin1(pObj), pCounter ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SupportSize(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {
-    var Counter int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(!Aig_ObjIsCo(pObj), "!Aig_ObjIsCo(pObj)");
-    Aig_ManIncrementTravId( p );
-    Aig_SupportSize_rec( p, pObj, &Counter );
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SupportSizeTest(p *Aig_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, Counter int32;
-    var clk abctime  = Abc_Clock();
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if Aig_ObjIsNode(pObj) {
-            Counter += (Aig_SupportSize(p, pObj) <= 16); }
-    }
-    fmt.Printf("Nodes with small support %d (out of %d)\n", Counter, Aig_ManNodeNum(p));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Support_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-    if Aig_ObjIsCi(pObj) {
-        Vec_PtrPush( vSupp, pObj );
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), "Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)");
-    Aig_Support_rec( p, Aig_ObjFanin0(pObj), vSupp );
-    if Aig_ObjFanin1(pObj) {
-        Aig_Support_rec( p, Aig_ObjFanin1(pObj), vSupp ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Support(p *Aig_Man_t, pObj *Aig_Obj_t) *Vec_Ptr_t {
-    var vSupp *Vec_Ptr_t;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(!Aig_ObjIsCo(pObj), "!Aig_ObjIsCo(pObj)");
-    Aig_ManIncrementTravId( p );
-    vSupp = Vec_PtrAlloc( 100 );
-    Aig_Support_rec( p, pObj, vSupp );
-    return vSupp;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SupportNodes(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, vSupp *Vec_Ptr_t) {
-    var i int32;
-    Vec_PtrClear( vSupp );
-    Aig_ManIncrementTravId( p );
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    for  i = 0; i < nObjs; i++  {
-        assert(!Aig_IsComplement(ppObjs[i]), "!Aig_IsComplement(ppObjs[i])");
-        if Aig_ObjIsCo(ppObjs[i]) {
-            Aig_Support_rec( p, Aig_ObjFanin0(ppObjs[i]), vSupp );
-        } else {
-            Aig_Support_rec( p, ppObjs[i], vSupp ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the AIG from one manager into another.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Transfer_rec(pDest *Aig_Man_t, pObj *Aig_Obj_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {
-        return; }
-    Aig_Transfer_rec( pDest, Aig_ObjFanin0(pObj) ); 
-    Aig_Transfer_rec( pDest, Aig_ObjFanin1(pObj) );
-    pObj.pData = Aig_And( pDest, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    assert(!Aig_ObjIsMarkA(pObj), "!Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjSetMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the AIG from one manager into another.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Transfer(pSour *Aig_Man_t, pDest *Aig_Man_t, pRoot *Aig_Obj_t, nVars int32) *Aig_Obj_t {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // solve simple cases
-    if pSour == pDest {
-        return pRoot; }
-    if Aig_ObjIsConst1( Aig_Regular(pRoot) ) {
-        return Aig_NotCond( Aig_ManConst1(pDest), Aig_IsComplement(pRoot) ); }
-    // set the PI mapping
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pSour.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSour.vCis, i)), 1); i++  {
-        if i == nVars {
-           break; }
-        pObj.pData = Aig_IthVar(pDest, i);
-    }
-    // transfer and set markings
-    Aig_Transfer_rec( pDest, Aig_Regular(pRoot) );
-    // clear the markings
-    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );
-    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Compose_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pFunc *Aig_Obj_t, pVar *Aig_Obj_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsMarkA(pObj) {
-        return; }
-    if Aig_ObjIsConst1(pObj) || Aig_ObjIsCi(pObj) {
-        if pObj == pVar {
-            pObj.pData = pFunc;
-        } else {
-            pObj.pData = pObj;
-        }
-        return;
-    }
-    Aig_Compose_rec( p, Aig_ObjFanin0(pObj), pFunc, pVar ); 
-    Aig_Compose_rec( p, Aig_ObjFanin1(pObj), pFunc, pVar );
-    pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    assert(!Aig_ObjIsMarkA(pObj), "!Aig_ObjIsMarkA(pObj)"); // loop detection
-    Aig_ObjSetMarkA( pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Compose(p *Aig_Man_t, pRoot *Aig_Obj_t, pFunc *Aig_Obj_t, iVar int32) *Aig_Obj_t {
-    // quit if the PI variable is not defined
-    if iVar >= Aig_ManCiNum(p) {
-        fmt.Printf("Aig_Compose(): The PI variable %d is not defined.\n", iVar);
-        return nil;
-    }
-    // recursively perform composition
-    Aig_Compose_rec( p, Aig_Regular(pRoot), pFunc, Aig_ManCi(p, iVar) );
-    // clear the markings
-    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );
-    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the internal nodes of the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCollectCut_rec(pNode *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-//    Aig_Obj_t * pFan0 = Aig_ObjFanin0(pNode);
-//    Aig_Obj_t * pFan1 = Aig_ObjFanin1(pNode);
-    if pNode.fMarkA {
-        return; }
-    pNode.fMarkA = 1;
-    assert(Aig_ObjIsNode(pNode), "Aig_ObjIsNode(pNode)");
-    Aig_ObjCollectCut_rec( Aig_ObjFanin0(pNode), vNodes );
-    Aig_ObjCollectCut_rec( Aig_ObjFanin1(pNode), vNodes );
-    Vec_PtrPush( vNodes, pNode );
-//printf( "added %d  ", pNode->Id );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the internal nodes of the cut.]
-
-  Description [Does not include the leaves of the cut.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCollectCut(pRoot *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // collect and mark the leaves
-    Vec_PtrClear( vNodes );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        assert(pObj.fMarkA == 0, "pObj.fMarkA == 0");
-        pObj.fMarkA = 1;
-//        printf( "%d " , pObj->Id );
-    }
-//printf( "\n" );
-    // collect and mark the nodes
-    Aig_ObjCollectCut_rec( pRoot, vNodes );
-    // clean the nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        pObj.fMarkA = 0;
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pObj.fMarkA = 0;
-    }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes of the supergate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCollectSuper_rec(pRoot *Aig_Obj_t, pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {
-    var RetValue1, RetValue2, i int32;
-    // check if the node is visited
-    if Aig_Regular(pObj).fMarkA {
-        // check if the node occurs in the same polarity
-        for  i = 0; i < vSuper.nSize; i++  {
-            if vSuper.pArray[i] == pObj {
-                return 1; }
-        }
-        // check if the node is present in the opposite polarity
-        for  i = 0; i < vSuper.nSize; i++  {
-            if vSuper.pArray[i] == Aig_Not(pObj) {
-                return -1; }
-        }
-        assert(false, "0");
-        return 0;
-    }
-    // if the new node is complemented or a PI, another gate begins
-    if pObj != pRoot && (Aig_IsComplement(pObj) || Aig_ObjType(pObj) != Aig_ObjType(pRoot) || Aig_ObjRefs(pObj) > 1) {
-        Vec_PtrPush( vSuper, pObj );
-        Aig_Regular(pObj).fMarkA = 1;
-        return 0;
-    }
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    // go through the branches
-    RetValue1 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild0(pObj) ), vSuper );
-    RetValue2 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild1(pObj) ), vSuper );
-    if RetValue1 == -1 || RetValue2 == -1 {
-        return -1; }
-    // return 1 if at least one branch has a duplicate
-    return RetValue1 || RetValue2;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes of the supergate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCollectSuper(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {
-    var RetValue, i int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    // collect the nodes in the implication supergate
-    Vec_PtrClear( vSuper );
-    RetValue = Aig_ObjCollectSuper_rec( pObj, pObj, vSuper );
-    assert(Vec_PtrSize(vSuper) > 1, "Vec_PtrSize(vSuper) > 1");
-    // unmark the visited nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        Aig_Regular(pObj).fMarkA = 0;
-    }
-    // if we found the node and its complement in the same implication supergate, 
-    // return empty set of nodes (meaning that we should use constant-0 node)
-    if RetValue == -1 {
-        vSuper.nSize = 0; }
-    return RetValue;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

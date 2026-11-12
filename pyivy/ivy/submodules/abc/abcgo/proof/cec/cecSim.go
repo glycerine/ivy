@@ -95,10 +95,8 @@ func Cec_ManSStop(p *Cec_ManS_t) {
     Vec_IntFree( p.vInputs );
     Vec_WecFree( p.vLevels );
     Vec_WrdFree( p.vSims );
-    // inlining of macro ABC_FREE
-    ((p.pTemp[0]) ? (free((char *) (p.pTemp[0])), (p.pTemp[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTemp[0] = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

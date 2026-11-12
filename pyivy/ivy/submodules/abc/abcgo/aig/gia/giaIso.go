@@ -144,13 +144,13 @@ func Gia_IsoManStop(p *Gia_IsoMan_t) {
     Vec_IntFree( p.vClasses2 );
     // internal data
     // inlining of macro ABC_FREE
-    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);
+    p.pLevels = nil;
     // inlining of macro ABC_FREE
-    ((p.pUniques) ? (free((char *) (p.pUniques)), (p.pUniques) = 0) : 0);
+    p.pUniques = nil;
     // inlining of macro ABC_FREE
-    ((p.pStoreW) ? (free((char *) (p.pStoreW)), (p.pStoreW) = 0) : 0);
+    p.pStoreW = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Gia_IsoManTransferUnique(p *Gia_IsoMan_t) {
     var pObj *Gia_Obj_t;
@@ -260,9 +260,9 @@ func Gia_IsoPrepare(p *Gia_IsoMan_t) {
         Gia_IsoSetItem( p, pLevBegins[p.pLevels[i]]++, i );
     }
     // inlining of macro ABC_FREE
-    ((pLevBegins) ? (free((char *) (pLevBegins)), (pLevBegins) = 0) : 0);
+    pLevBegins = nil;
     // inlining of macro ABC_FREE
-    ((pLevSizes) ? (free((char *) (pLevSizes)), (pLevSizes) = 0) : 0);
+    pLevSizes = nil;
 /*
     // print the results
     for ( i = 0; i < p->nObjs; i++ )

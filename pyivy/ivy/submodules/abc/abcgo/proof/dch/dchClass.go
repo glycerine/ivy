@@ -190,14 +190,10 @@ void Dch_ClassesSetData( Dch_Cla_t * p, void * pManData,
 func Dch_ClassesStop(p *Dch_Cla_t) {
     if p.vClassNew {    Vec_PtrFree( p.vClassNew ); }
     if p.vClassOld {    Vec_PtrFree( p.vClassOld ); }
-    // inlining of macro ABC_FREE
-    ((p.pId2Class) ? (free((char *) (p.pId2Class)), (p.pId2Class) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pClassSizes) ? (free((char *) (p.pClassSizes)), (p.pClassSizes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemClasses) ? (free((char *) (p.pMemClasses)), (p.pMemClasses) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pId2Class = nil;
+    p.pClassSizes = nil;
+    p.pMemClasses = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -437,10 +433,8 @@ func Dch_ClassesPrepare(p *Dch_Cla_t, fLatchCorr int32, nMaxLevs int32) {
     }
     }
     assert(nEntries == nEntries2, "nEntries == nEntries2");
-    // inlining of macro ABC_FREE
-    ((ppTable) ? (free((char *) (ppTable)), (ppTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppNexts) ? (free((char *) (ppNexts)), (ppNexts) = 0) : 0);
+    ppTable = nil;
+    ppNexts = nil;
     // now it is time to refine the classes
     Dch_ClassesRefine( p );
     Dch_ClassesCheck( p );

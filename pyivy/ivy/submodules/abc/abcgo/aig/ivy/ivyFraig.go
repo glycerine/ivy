@@ -651,14 +651,10 @@ func Ivy_FraigStop(p *Ivy_FraigMan_t) {
         Ivy_FraigPrint( p ); }
     if p.vPiVars { Vec_PtrFree( p.vPiVars ); }
     if p.pSat { sat_solver_delete( p.pSat ); }
-    // inlining of macro ABC_FREE
-    ((p.pPatScores) ? (free((char *) (p.pPatScores)), (p.pPatScores) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSimWords) ? (free((char *) (p.pSimWords)), (p.pSimWords) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pPatScores = nil;
+    p.pPatWords = nil;
+    p.pSimWords = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1285,8 +1281,7 @@ func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
     }
     }
     // free the table
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
 }
 
 /**Function*************************************************************
@@ -2546,8 +2541,7 @@ func Ivy_FraigAddClausesSuper(p *Ivy_FraigMan_t, pNode *Ivy_Obj_t, vSuper *Vec_P
     pLits[nLits-1] = toLitCond(Ivy_ObjSatNum(pNode), 0);
     RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************

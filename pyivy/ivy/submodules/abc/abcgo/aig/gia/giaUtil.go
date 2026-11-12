@@ -148,19 +148,7 @@ func Gia_FileNameGenericAppend(pBase string, pSuffix string) string {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManIncrementTravId(p *Gia_Man_t) { 
-    if p.pTravIds == nil {
-        p.nTravIdsAlloc = Gia_ManObjNum(p) + 100; 
-        p.pTravIds = ABC_CALLOC( int, p.nTravIdsAlloc ); 
-        p.nTravIds = 0;  
-    }
-    for  p.nTravIdsAlloc < Gia_ManObjNum(p)  {
-        p.nTravIdsAlloc *= 2;
-        p.pTravIds = ABC_REALLOC( int, p.pTravIds, p.nTravIdsAlloc );
-        memset( p.pTravIds + p.nTravIdsAlloc/2, 0, sizeof(int) * p.nTravIdsAlloc/2 );
-    }
-    p.nTravIds++;                                                    
-}
+
 
 /**Function*************************************************************
 
@@ -703,24 +691,7 @@ func Gia_ManCreateValueRefs(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCreateRefs(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(p.pRefs == nil, "p.pRefs == nil");
-    p.pRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjRefFanin0Inc( p, pObj );
-            if !Gia_ObjIsBuf(pObj) {
-                Gia_ObjRefFanin1Inc( p, pObj ); }
-            if Gia_ObjIsMuxId(p, i) {
-                Gia_ObjRefFanin2Inc( p, pObj ); }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjRefFanin0Inc( p, pObj ); }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -1202,11 +1173,11 @@ func Gia_NodeMffcMapping(p *Gia_Man_t) int32 {
     var vSupp *Vec_Int_t = Vec_IntAlloc( 100 );
     vMapping = Vec_IntAlloc( 2 * Gia_ManObjNum(p) );
     Vec_IntFill( vMapping, Gia_ManObjNum(p), 0 );
-    pRefsOld = p.pRefs; p.pRefs = nil;
+    pRefsOld = p.Refs; p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     Gia_ManForEachCoDriverId( p, Id, i )
         Count += Gia_NodeMffcMapping_rec( p, Id, vMapping, vSupp );
-    p.pRefs = pRefsOld;
+    p.Refs = pRefsOld;
     Vec_IntFree( vSupp );
     p.vMapping = vMapping;
     //printf( "Mapping is %.2fx larger than AIG manager.\n", 1.0*Vec_IntSize(vMapping)/Gia_ManObjNum(p) );
@@ -1349,7 +1320,7 @@ func Gia_ObjPrint(p *Gia_Man_t, pObj *Gia_Obj_t) {
         fmt.Printf("MUX( %4d%s, %4d%s, %4d%s )", Gia_ObjFaninId2p(p, pObj), (Gia_ObjFaninC2(p, pObj)? "\'" : " "), Gia_ObjFaninId1p(p, pObj), (Gia_ObjFaninC1(pObj)? "\'" : " "), Gia_ObjFaninId0p(p, pObj), (Gia_ObjFaninC0(pObj)? "\'" : " "));
     } else {
         fmt.Printf("AND( %4d%s, %4d%s )", Gia_ObjFaninId0p(p, pObj), (Gia_ObjFaninC0(pObj)? "\'" : " "), Gia_ObjFaninId1p(p, pObj), (Gia_ObjFaninC1(pObj)? "\'" : " ")); }
-    if p.pRefs {
+    if p.Refs {
         fmt.Printf(" (refs = %3d)", Gia_ObjRefNum(p, pObj)); }
     if pObj.fMark0 {
         fmt.Printf(" mark0"); }
@@ -1760,7 +1731,7 @@ func Gia_ManHasChoices_very_old(p *Gia_Man_t) int32 {
     // check if there are any internal nodes without fanout
     // make sure all nodes without fanout have representatives
     // make sure all nodes with fanout have no representatives
-    ABC_FREE( p.pRefs );
+    p.Refs = nil;
     Gia_ManCreateRefs( p );
     Gia_ManForEachAnd( p, pObj, i )
     {
@@ -2019,7 +1990,7 @@ func Gia_AigerWriteLut(p *Gia_Man_t, pFileName string) {
         }
         _ = (pFile).Close();
     }
-    ABC_FREE( pLuts );
+    pLuts = nil;
     Vec_WrdFree( vTruths );
 }
 

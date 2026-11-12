@@ -65,9 +65,9 @@ func Gia_Sim2Delete(p *Gia_Sim2_t) {
     Vec_IntFreeP( &p.vClassOld );
     Vec_IntFreeP( &p.vClassNew );
     // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
+    p.pDataSim = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -514,7 +514,7 @@ func Gia_Sim2ProcessRefined(p *Gia_Sim2_t, vRefined *Vec_Int_t) {
     }
 */
     // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
 }
 /**Function*************************************************************
 
@@ -634,7 +634,7 @@ func Gia_Sim2GenerateCounter(pAig *Gia_Man_t, iFrame int32, iOut int32, nWords i
     }
     }
     // inlining of macro ABC_FREE
-    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);
+    pData = nil;
     return p;
 }
  
@@ -662,7 +662,7 @@ func Gia_ManSimSimulateEquiv(pAig *Gia_Man_t, pPars *Gia_ParSim_t) int32 {
     }
     assert(pAig.pReprs && pAig.pNexts, "pAig.pReprs && pAig.pNexts");
     // inlining of macro ABC_FREE
-    ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+    pAig.pCexSeq = nil;
     p = Gia_Sim2Create( pAig, pPars );
     Gia_ManResetRandom( pPars );
     // inlining of macro Gia_ManForEachRo

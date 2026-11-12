@@ -1,1442 +1,626 @@
 package aig
 
-import "fmt"
+import (
+	"slices"
+	"sort"
+)
 
-/**CFile****************************************************************
-
-  FileName    [aigDup.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [AIG duplication (re-strashing).]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigDup.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig/saig/saig.h"
-//#include "misc/tim/tim.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Orders nodes as follows: PIs, ANDs, POs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupSimple(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i int32;
-    assert(p.pManTime == nil, "p.pManTime == nil");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCi( pNew );
-        pObjNew.Level = pObj.Level;
-        pObj.pData = pObjNew;
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if Aig_ObjIsBuf(pObj) {
-            pObjNew = Aig_ObjChild0Copy(pObj);
-            pObj.pData = pObjNew;
-        
-        } else if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-            pObj.pData = pObjNew;
-        }
-    }
-    // add the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        pObj.pData = pObjNew;
-    }
-    assert(Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupSimple(): The check has failed.\n"); }
-    return pNew;
+// Duplication uses graph-local edge maps rather than mutating node payloads.
+// Source copy maps remain available to callers, as pData did in ABC.
+func dupMetadata(dst, src *Graph) {
+	dst.Name, dst.Spec = src.Name, src.Spec
+	dst.nRegs, dst.nConstrs = src.nRegs, src.nConstrs
+	dst.Assertions, dst.BarrierBuffers = src.Assertions, src.BarrierBuffers
+	dst.PartitionInputs = slices.Clone(src.PartitionInputs)
+	dst.PartitionOutputs = slices.Clone(src.PartitionOutputs)
+	dst.FlopNumbers = slices.Clone(src.FlopNumbers)
+	dst.FlopReprs = slices.Clone(src.FlopReprs)
+	dst.ClockDomains = slices.Clone(src.ClockDomains)
+	for i, domain := range dst.ClockDomains {
+		dst.ClockDomains[i] = slices.Clone(domain)
+	}
+	if src.Timing != nil {
+		if c, ok := src.Timing.(interface{ CloneTiming() any }); ok {
+			dst.Timing = c.CloneTiming()
+		} else {
+			panic("aig: timing metadata must implement CloneTiming")
+		}
+	}
+	if src.History != nil {
+		if c, ok := src.History.(interface{ CloneHistory() any }); ok {
+			dst.History = c.CloneHistory()
+		} else {
+			panic("aig: history metadata must implement CloneHistory")
+		}
+	}
+}
+func dupStart(src *Graph) *Graph {
+	dst := NewGraph()
+	dupMetadata(dst, src)
+	src.copies = map[int]Edge{0: 0}
+	for _, e := range src.inputs {
+		x := dst.NewInput()
+		dst.node(x).Level = src.node(e).Level
+		src.copies[e.NodeID()] = x
+	}
+	return dst
+}
+func dupPhase(e Edge, flip bool) Edge {
+	if flip {
+		return e.Not()
+	}
+	return e
+}
+func dupVisit(dst, src *Graph, e Edge, choices, representatives bool, active map[int]bool) Edge {
+	id := e.NodeID()
+	if !src.valid(e) {
+		panic("aig: invalid duplication edge")
+	}
+	if representatives {
+		if rep, ok := src.reprs[id]; ok && rep != InvalidEdge && rep.NodeID() != id {
+			if active[id] {
+				panic("aig: cyclic representative")
+			}
+			active[id] = true
+			result := dupVisit(dst, src, rep, choices, representatives, active)
+			delete(active, id)
+			result = dupPhase(result, src.node(e).Phase != src.node(rep).Phase)
+			src.copies[id] = result
+			return dupPhase(result, e.Complemented())
+		}
+	}
+	if result, ok := src.copies[id]; ok {
+		return dupPhase(result, e.Complemented())
+	}
+	if active[id] {
+		panic("aig: cyclic duplication graph")
+	}
+	active[id] = true
+	defer delete(active, id)
+	n := src.node(e)
+	var equivalent Edge = InvalidEdge
+	if choices {
+		if other, ok := src.equivs[id]; ok && other != InvalidEdge && other.NodeID() != id {
+			equivalent = dupVisit(dst, src, other, choices, representatives, active)
+		}
+	}
+	var result Edge
+	switch n.Kind {
+	case Constant:
+		result = dst.Const1()
+	case Input:
+		if choices {
+			return InvalidEdge
+		}
+		panic("aig: unbound input in duplication cone")
+	case Buffer, Output:
+		result = dupVisit(dst, src, n.Fanins[0], choices, representatives, active)
+	case And:
+		a := dupVisit(dst, src, n.Fanins[0], choices, representatives, active)
+		if a == InvalidEdge {
+			return InvalidEdge
+		}
+		b := dupVisit(dst, src, n.Fanins[1], choices, representatives, active)
+		if b == InvalidEdge {
+			return InvalidEdge
+		}
+		result = dst.AND(a, b)
+	case ExclusiveOr:
+		a := dupVisit(dst, src, n.Fanins[0], choices, representatives, active)
+		if a == InvalidEdge {
+			return InvalidEdge
+		}
+		b := dupVisit(dst, src, n.Fanins[1], choices, representatives, active)
+		if b == InvalidEdge {
+			return InvalidEdge
+		}
+		result = dst.NewXor(a, b)
+	default:
+		panic("aig: unsupported duplication node")
+	}
+	if result == InvalidEdge {
+		return InvalidEdge
+	}
+	src.copies[id] = result
+	if equivalent != InvalidEdge && equivalent.NodeID() != result.NodeID() {
+		if dst.equivs == nil {
+			dst.equivs = map[int]Edge{}
+		}
+		if dst.reprs == nil {
+			dst.reprs = map[int]Edge{}
+		}
+		dst.equivs[result.NodeID()] = Aig_Regular(equivalent)
+		dst.reprs[equivalent.NodeID()] = Aig_Regular(result)
+	}
+	return dupPhase(result, e.Complemented())
+}
+func dupEdge(dst, src *Graph, e Edge) Edge {
+	return dupVisit(dst, src, e, false, false, map[int]bool{})
+}
+func dupOutputDriver(src *Graph, e Edge) Edge {
+	if src.node(e).Kind == Output {
+		return dupPhase(src.node(e).Fanins[0], e.Complemented())
+	}
+	return e
+}
+func dupOutputs(dst, src *Graph, outputs []Edge, choices, reps bool) {
+	for _, e := range outputs {
+		result := dupVisit(dst, src, dupOutputDriver(src, e), choices, reps, map[int]bool{})
+		if result == InvalidEdge {
+			panic("aig: output has unavailable input")
+		}
+		if src.node(e).Kind == Output {
+			src.copies[e.NodeID()] = Aig_ObjCreateCo(dst, result)
+		} else {
+			dst.AddOutput(result)
+		}
+	}
+}
+func Aig_ManDupSimple(src *Graph) *Graph {
+	dst := dupStart(src)
+	for id, n := range src.nodes {
+		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupEdge(dst, src, Edge(id)<<1)
+		}
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	return dst
+}
+func Aig_ManDupSimpleWithHints(src *Graph, hints []int32) *Graph {
+	dst := dupStart(src)
+	for id, n := range src.nodes {
+		if src.deleted[id] || n.Kind == Constant || n.Kind == Output {
+			continue
+		}
+		if n.Kind != Input {
+			dupEdge(dst, src, Edge(id)<<1)
+		}
+		if id < len(hints) && (hints[id] == 0 || hints[id] == 1) {
+			src.copies[id] = Edge(hints[id])
+		}
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	Aig_ManCleanup(dst)
+	return dst
+}
+func Aig_ManDupSimpleDfs_rec(dst, src *Graph, e Edge) Edge { return dupEdge(dst, src, e) }
+func Aig_ManDupSimpleDfs(src *Graph) *Graph {
+	dst := dupStart(src)
+	dupOutputs(dst, src, src.outputs, false, false)
+	return dst
+}
+func Aig_ManDupSimpleDfsPart(src *Graph, inputs, outputs []Edge) *Graph {
+	dst := NewGraph()
+	src.copies = map[int]Edge{0: 0}
+	seenInputs := map[int]bool{}
+	for _, e := range inputs {
+		if seenInputs[e.NodeID()] {
+			panic("aig: duplicate partial CI")
+		}
+		seenInputs[e.NodeID()] = true
+		if src.node(e).Kind != Input {
+			panic("aig: partial input must be CI")
+		}
+		src.copies[e.NodeID()] = dst.NewInput()
+	}
+	dupOutputs(dst, src, outputs, false, false)
+	return dst
+}
+func Aig_ManDupOrdered(src *Graph) *Graph {
+	dst := NewGraph()
+	dupMetadata(dst, src)
+	src.copies = map[int]Edge{0: 0}
+	for id, n := range src.nodes {
+		if src.deleted[id] {
+			continue
+		}
+		e := Edge(id) << 1
+		switch n.Kind {
+		case Input:
+			x := dst.NewInput()
+			dst.node(x).Level = n.Level
+			src.copies[id] = x
+		case And, ExclusiveOr, Buffer:
+			dupEdge(dst, src, e)
+		case Output:
+			src.copies[id] = Aig_ObjCreateCo(dst, dupEdge(dst, src, n.Fanins[0]))
+		}
+	}
+	dst.outputs = nil
+	for _, out := range src.outputs {
+		if src.node(out).Kind == Output {
+			dst.outputs = append(dst.outputs, src.copies[out.NodeID()])
+		} else {
+			dst.outputs = append(dst.outputs, dupEdge(dst, src, out))
+		}
+	}
+	dst.recountReferences()
+	Aig_ManCleanup(dst)
+	dst.refreshFanouts()
+	return dst
+}
+func Aig_ManDupCof(src *Graph, index, value int32) *Graph {
+	if index < 0 || int(index) >= len(src.inputs) || (value != 0 && value != 1) {
+		panic("aig: invalid cofactor")
+	}
+	dst := NewGraph()
+	dupMetadata(dst, src)
+	src.copies = map[int]Edge{0: 0}
+	for i, e := range src.inputs {
+		if i == int(index) {
+			src.copies[e.NodeID()] = Edge(1 - value)
+		} else {
+			x := dst.NewInput()
+			dst.node(x).Level = src.node(e).Level
+			src.copies[e.NodeID()] = x
+		}
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	Aig_ManCleanup(dst)
+	return dst
+}
+func Aig_ManDupTrim(src *Graph) *Graph {
+	dst := NewGraph()
+	dupMetadata(dst, src)
+	src.copies = map[int]Edge{0: 0}
+	for i, e := range src.inputs {
+		if src.node(e).Refs > 0 || i >= len(src.inputs)-int(src.nRegs) {
+			x := dst.NewInput()
+			dst.node(x).Level = src.node(e).Level
+			src.copies[e.NodeID()] = x
+		}
+	}
+	for id, n := range src.nodes {
+		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupEdge(dst, src, Edge(id)<<1)
+		}
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	Aig_ManCleanup(dst)
+	return dst
+}
+func Aig_ManDupExor(src *Graph) *Graph {
+	dst := dupStart(src)
+	for id, n := range src.nodes {
+		if src.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
+			continue
+		}
+		if n.Kind == And && n.Fanins[0].Complemented() && n.Fanins[1].Complemented() {
+			a, b := src.node(n.Fanins[0]), src.node(n.Fanins[1])
+			if a.Kind == And && b.Kind == And && ((a.Fanins[0] == b.Fanins[0].Not() && a.Fanins[1] == b.Fanins[1].Not()) || (a.Fanins[0] == b.Fanins[1].Not() && a.Fanins[1] == b.Fanins[0].Not())) {
+				src.copies[id] = dst.NewXor(dupEdge(dst, src, a.Fanins[0]), dupEdge(dst, src, a.Fanins[1]))
+				continue
+			}
+		}
+		dupEdge(dst, src, Edge(id)<<1)
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	Aig_ManCleanup(dst)
+	return dst
+}
+func Aig_ManDupDfs_rec(dst, src *Graph, e Edge) Edge {
+	return dupVisit(dst, src, e, true, false, map[int]bool{})
+}
+func Aig_ManDupDfs(src *Graph) *Graph {
+	dst := dupStart(src)
+	dupOutputs(dst, src, src.outputs, true, false)
+	if len(src.equivs) == 0 && len(src.reprs) == 0 {
+		Aig_ManCleanup(dst)
+	}
+	return dst
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives AIG with hints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupSimpleWithHints(p *Aig_Man_t, vHints *Vec_Int_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i, Entry int32;
-    assert(p.nAsserts == 0 || p.nConstrs == 0, "p.nAsserts == 0 || p.nConstrs == 0");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-        Entry = Vec_IntEntry( vHints, Aig_ObjId(pObj) );
-        if Entry == 0 || Entry == 1 {
-            pObj.pData = Aig_NotCond( Aig_ManConst1(pNew), Entry ); } // restrict to the complement of constraint!!!
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-        Entry = Vec_IntEntry( vHints, Aig_ObjId(pObj) );
-        if Entry == 0 || Entry == 1 {
-            pObj.pData = Aig_NotCond( Aig_ManConst1(pNew), Entry ); } // restrict to the complement of constraint!!!
-    }
-    }
-    // add the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Llb_ManDeriveAigWithHints(): The check has failed.\n"); }
-    return pNew;
+// PIO describes a logical terminal even when outputs are stored as driver edges.
+type PIO struct {
+	Input bool
+	Index int
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupSimpleDfs_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    Aig_ManDupSimpleDfs_rec( pNew, p, Aig_ObjFanin0(pObj) );
-    if Aig_ObjIsBuf(pObj) {
-        return (Aig_Obj_t *)(pObj.pData = Aig_ObjChild0Copy(pObj)); }
-    Aig_ManDupSimpleDfs_rec( pNew, p, Aig_ObjFanin1(pObj) );
-    pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    return (Aig_Obj_t *)pObj.pData;
+func Aig_ManOrderPios(src, order *Graph) []PIO {
+	if len(src.inputs) != len(order.inputs) || len(src.outputs) != len(order.outputs) {
+		panic("aig: PIO count mismatch")
+	}
+	inputs := map[int]int{}
+	outputs := map[int]int{}
+	for i, e := range order.inputs {
+		inputs[e.NodeID()] = i
+	}
+	for i, e := range order.outputs {
+		if order.node(e).Kind == Output {
+			outputs[e.NodeID()] = i
+		}
+	}
+	var result []PIO
+	used := map[int]bool{}
+	for id := range order.nodes {
+		if i, ok := inputs[id]; ok {
+			result = append(result, PIO{true, i})
+		}
+		if i, ok := outputs[id]; ok {
+			result = append(result, PIO{false, i})
+			used[i] = true
+		}
+	}
+	for i := range order.outputs {
+		if !used[i] {
+			result = append(result, PIO{false, i})
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Orders nodes as follows: PIs, ANDs, POs.]
-               
-  SideEffects [This procedure assumes that buffers are not used during
-  HAIG recording. This way, each HAIG node is in one-to-one correspondence 
-  with old HAIG node. There is no need to create new nodes, just reassign 
-  the pointers. If it were not the case, we would need to create HAIG nodes 
-  for each new node duplicated. ]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupSimpleDfs(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i int32;
-    assert(p.pManTime == nil, "p.pManTime == nil");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCi( pNew );
-        pObjNew.Level = pObj.Level;
-        pObj.pData = pObjNew;
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if !Aig_ObjIsCo(pObj) {
-            Aig_ManDupSimpleDfs_rec( pNew, p, pObj );        
-            assert(pObj.Level == ((Aig_Obj_t*)pObj.pData).Level, "pObj.Level == ((Aig_Obj_t*)pObj.pData).Level");
-        }
-    }
-    // add the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        pObj.pData = pObjNew;
-    }
-    assert(Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupSimple(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupDfsGuided_rec(dst, src *Graph, e Edge) Edge {
+	if src.node(e).Kind == Input {
+		if copy, ok := src.copies[e.NodeID()]; ok {
+			return dupPhase(copy, e.Complemented())
+		}
+		return InvalidEdge
+	}
+	// A guided cone may depend on a CI not yet introduced by the PIO ordering.
+	seen := map[int]bool{}
+	var available func(Edge) bool
+	available = func(x Edge) bool {
+		if _, ok := src.copies[x.NodeID()]; ok {
+			return true
+		}
+		if seen[x.NodeID()] {
+			return true
+		}
+		seen[x.NodeID()] = true
+		n := src.node(x)
+		if n.Kind == Input {
+			return false
+		}
+		if n.Kind == Constant {
+			return true
+		}
+		if !available(n.Fanins[0]) {
+			return false
+		}
+		return n.Kind == Buffer || n.Kind == Output || available(n.Fanins[1])
+	}
+	if !available(e) {
+		return InvalidEdge
+	}
+	return dupVisit(dst, src, e, true, false, map[int]bool{})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates part of the AIG manager.]
-
-  Description [Orders nodes as follows: PIs, ANDs, POs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupSimpleDfsPart(p *Aig_Man_t, vPis *Vec_Ptr_t, vPos *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1( pNew );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // duplicate internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPos, i)), 1); i++  {
-        pObjNew = Aig_ManDupSimpleDfs_rec( pNew, p, Aig_ObjFanin0(pObj) );        
-        pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObj) );
-        Aig_ObjCreateCo( pNew, pObjNew );
-    }
-    Aig_ManSetRegNum( pNew, 0 );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupSimple(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupDfsGuided(src *Graph, order []PIO) *Graph {
+	dst := NewGraph()
+	dupMetadata(dst, src)
+	src.copies = map[int]Edge{0: 0}
+	seenInputs, seenOutputs := map[int]bool{}, map[int]bool{}
+	for _, pio := range order {
+		if pio.Input {
+			if pio.Index < 0 || pio.Index >= len(src.inputs) || seenInputs[pio.Index] {
+				panic("aig: invalid guided CI order")
+			}
+			seenInputs[pio.Index] = true
+			e := src.inputs[pio.Index]
+			x := dst.NewInput()
+			dst.node(x).Level = src.node(e).Level
+			src.copies[e.NodeID()] = x
+		} else {
+			if pio.Index < 0 || pio.Index >= len(src.outputs) || seenOutputs[pio.Index] {
+				panic("aig: invalid guided CO order")
+			}
+			seenOutputs[pio.Index] = true
+			e := Aig_ManDupDfsGuided_rec(dst, src, dupOutputDriver(src, src.outputs[pio.Index]))
+			if e == InvalidEdge {
+				panic("aig: output precedes required CI")
+			}
+			dst.AddOutput(e)
+		}
+	}
+	if len(dst.inputs) != len(src.inputs) || len(dst.outputs) != len(src.outputs) {
+		panic("aig: incomplete PIO order")
+	}
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Assumes topological ordering of the nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupOrdered(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i, nNodes int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsBuf(pObj) {
-            pObjNew = Aig_ObjChild0Copy(pObj);
-        
-        } else if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-        
-        } else if Aig_ObjIsCi(pObj) {
-            pObjNew = Aig_ObjCreateCi( pNew );
-            pObjNew.Level = pObj.Level;
-        
-        } else if Aig_ObjIsCo(pObj) {
-            pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        
-        } else if Aig_ObjIsConst1(pObj) {
-            pObjNew = Aig_ManConst1(pNew);
-        
-        } else {
-            assert(false, "0"); }
-        pObj.pData = pObjNew;
-    }
-    }
-    assert(Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    if nNodes = Aig_ManCleanup( pNew ) {
-        fmt.Printf("Aig_ManDupOrdered(): Cleanup after AIG duplication removed %d nodes.\n", nNodes); }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // duplicate the timing manager
-    if p.pManTime {
-        pNew.pManTime = Tim_ManDup( (Tim_Man_t *)p.pManTime, 0 ); }
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupOrdered(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupLevelized(src *Graph) *Graph {
+	dst := dupStart(src)
+	var nodes []int
+	for id, n := range src.nodes {
+		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			nodes = append(nodes, id)
+		}
+	}
+	sort.SliceStable(nodes, func(i, j int) bool { return src.nodes[nodes[i]].Level < src.nodes[nodes[j]].Level })
+	for _, id := range nodes {
+		dupEdge(dst, src, Edge(id)<<1)
+	}
+	dupOutputs(dst, src, src.outputs, false, false)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Orders nodes as follows: PIs, ANDs, POs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupCof(p *Aig_Man_t, iInput int32, Value int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i int32;
-    assert(p.pManTime == nil, "p.pManTime == nil");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if i == iInput {
-            if Value != 0 {
-                pObjNew = Aig_ManConst1(pNew);
-            } else {
-                pObjNew = Aig_ManConst0(pNew);
-            }
-        } else {
-            pObjNew = Aig_ObjCreateCi( pNew );
-            pObjNew.Level = pObj.Level;
-        }
-        pObj.pData = pObjNew;
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if Aig_ObjIsBuf(pObj) {
-            pObjNew = Aig_ObjChild0Copy(pObj);
-            pObj.pData = pObjNew;
-        
-        } else if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-            pObj.pData = pObjNew;
-        }
-    }
-    // add the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        pObj.pData = pObjNew;
-    }
-//    assert( Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew) );
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupSimple(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupWithoutPos(src *Graph) *Graph {
+	dst := dupStart(src)
+	dst.nRegs = 0
+	dst.nConstrs = 0
+	for id, n := range src.nodes {
+		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupEdge(dst, src, Edge(id)<<1)
+		}
+	}
+	return dst
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Assumes topological ordering of the nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupTrim(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i, nNodes int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    // create the PIs
-    Aig_ManCleanData( p );
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-        } else if Aig_ObjIsCi(pObj) {
-            if Aig_ObjRefs(pObj) > 0 || Saig_ObjIsLo(p, pObj) {
-                pObjNew = Aig_ObjCreateCi(pNew);
-            } else {
-                pObjNew = nil;
-            }
-        } else if Aig_ObjIsCo(pObj) {
-            pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        } else if Aig_ObjIsConst1(pObj) {
-            pObjNew = Aig_ManConst1(pNew);
-        } else {
-            assert(false, "0"); }
-        pObj.pData = pObjNew;
-    }
-    }
-    assert(Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    if nNodes = Aig_ManCleanup( pNew ) {
-        fmt.Printf("Aig_ManDupTrim(): Cleanup after AIG duplication removed %d nodes.\n", nNodes); }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupTrim(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupFlopsOnly(src *Graph) *Graph {
+	dst := Aig_ManDupWithoutPos(src)
+	dupOutputs(dst, src, src.outputs[len(src.outputs)-int(src.nRegs):], false, false)
+	dst.nRegs = src.nRegs
+	Aig_ManCleanup(dst)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager to have EXOR gates.]
-
-  Description [Assumes topological ordering of the nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupExor(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.fCatchExor = 1;
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsBuf(pObj) {
-            pObjNew = Aig_ObjChild0Copy(pObj);
-        
-        } else if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-        
-        } else if Aig_ObjIsCi(pObj) {
-            pObjNew = Aig_ObjCreateCi( pNew );
-            pObjNew.Level = pObj.Level;
-        
-        } else if Aig_ObjIsCo(pObj) {
-            pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        
-        } else if Aig_ObjIsConst1(pObj) {
-            pObjNew = Aig_ManConst1(pNew);
-        
-        } else {
-            assert(false, "0"); }
-        pObj.pData = pObjNew;
-    }
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // duplicate the timing manager
-    if p.pManTime {
-        pNew.pManTime = Tim_ManDup( (Tim_Man_t *)p.pManTime, 0 ); }
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupExor(): The check has failed.\n"); }
-    return pNew;
+func Aig_ObjGetRepres(src *Graph, e Edge) Edge {
+	if rep, ok := src.reprs[e.NodeID()]; ok && rep != InvalidEdge {
+		copy, found := src.copies[rep.NodeID()]
+		if !found {
+			return InvalidEdge
+		}
+		phaseDiff := src.node(e).Phase != src.node(rep).Phase
+		phaseDiff = phaseDiff != e.Complemented()
+		return dupPhase(copy, phaseDiff != rep.Complemented())
+	}
+	if copy, ok := src.copies[e.NodeID()]; ok {
+		return dupPhase(copy, e.Complemented())
+	}
+	return InvalidEdge
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupDfs_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pObjNew *Aig_Obj_t;
-    var pEquivNew *Aig_Obj_t = nil;
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    if p.pEquivs && Aig_ObjEquiv(p, pObj) {
-        pEquivNew = Aig_ManDupDfs_rec( pNew, p, Aig_ObjEquiv(p, pObj) ); }
-    Aig_ManDupDfs_rec( pNew, p, Aig_ObjFanin0(pObj) );
-    if Aig_ObjIsBuf(pObj) {
-        return (Aig_Obj_t *)(pObj.pData = Aig_ObjChild0Copy(pObj)); }
-    Aig_ManDupDfs_rec( pNew, p, Aig_ObjFanin1(pObj) );
-    pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-    if pEquivNew != nil {
-        assert(Aig_Regular(pEquivNew).Id < Aig_Regular(pObjNew).Id, "Aig_Regular(pEquivNew).Id < Aig_Regular(pObjNew).Id");
-        if pNew.pEquivs {
-            pNew.pEquivs[Aig_Regular(pObjNew).Id] = Aig_Regular(pEquivNew); }        
-        if pNew.pReprs {
-            pNew.pReprs[Aig_Regular(pEquivNew).Id] = Aig_Regular(pObjNew); }
-    }
-    return (Aig_Obj_t *)(pObj.pData = pObjNew);
+func Aig_ObjChild0Repres(src *Graph, e Edge) Edge {
+	return Aig_ObjGetRepres(src, src.node(e).Fanins[0])
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [This duplicator works for AIGs with choices.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupDfs(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i, nNodes int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // duplicate representation of choice nodes
-    if p.pEquivs {
-        // inlining of macro ABC_CALLOC
-        pNew.pEquivs = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p)), sizeof(Aig_Obj_t *))); }
-    if p.pReprs {
-        // inlining of macro ABC_CALLOC
-        pNew.pReprs = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p)), sizeof(Aig_Obj_t *))); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    // duplicate internal nodes
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsCi(pObj) {
-            pObjNew = Aig_ObjCreateCi( pNew );
-            pObjNew.Level = pObj.Level;
-            pObj.pData = pObjNew;
-        
-        } else if Aig_ObjIsCo(pObj) {
-            Aig_ManDupDfs_rec( pNew, p, Aig_ObjFanin0(pObj) );        
-//            assert( pObj->Level == ((Aig_Obj_t*)pObj->pData)->Level );
-            pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-            pObj.pData = pObjNew;
-        }
-    }
-    }
-    assert(p.pEquivs != nil || Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "p.pEquivs != nil || Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    if p.pEquivs == nil && p.pReprs == nil && (nNodes = Aig_ManCleanup( pNew )) {
-        fmt.Printf("Aig_ManDupDfs(): Cleanup after AIG duplication removed %d nodes.\n", nNodes); }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // duplicate the timing manager
-    if p.pManTime {
-        pNew.pManTime = Tim_ManDup( (Tim_Man_t *)p.pManTime, 0 ); }
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupDfs(): The check has failed.\n"); }
-    return pNew;
+func Aig_ObjChild1Repres(src *Graph, e Edge) Edge {
+	return Aig_ObjGetRepres(src, src.node(e).Fanins[1])
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [This duplicator works for AIGs with choices.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManOrderPios(p *Aig_Man_t, pOrder *Aig_Man_t) *Vec_Ptr_t {
-    var vPios *Vec_Ptr_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    assert(Aig_ManCiNum(p) == Aig_ManCiNum(pOrder), "Aig_ManCiNum(p) == Aig_ManCiNum(pOrder)");
-    assert(Aig_ManCoNum(p) == Aig_ManCoNum(pOrder), "Aig_ManCoNum(p) == Aig_ManCoNum(pOrder)");
-    Aig_ManSetCioIds( pOrder );
-    vPios = Vec_PtrAlloc( Aig_ManCiNum(p) + Aig_ManCoNum(p) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pOrder.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOrder.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsCi(pObj) {
-            Vec_PtrPush( vPios, Aig_ManCi(p, Aig_ObjCioId(pObj)) );
-        } else if Aig_ObjIsCo(pObj) {
-            Vec_PtrPush( vPios, Aig_ManCo(p, Aig_ObjCioId(pObj)) ); }
-    }
-    }
-    Aig_ManCleanCioIds( pOrder );
-    return vPios;
+func Aig_ManDupRepres(src *Graph) *Graph {
+	dst := dupStart(src)
+	for id, n := range src.nodes {
+		if !src.deleted[id] && (n.Kind == Input || n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupVisit(dst, src, Edge(id)<<1, false, true, map[int]bool{})
+		}
+	}
+	dupOutputs(dst, src, src.outputs, false, true)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupDfsGuided_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pObjNew *Aig_Obj_t;
-    var pEquivNew *Aig_Obj_t = nil;
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    if Aig_ObjIsCi(pObj) {
-        return nil; }
-    if p.pEquivs && Aig_ObjEquiv(p, pObj) {
-        pEquivNew = Aig_ManDupDfsGuided_rec( pNew, p, Aig_ObjEquiv(p, pObj) ); }
-    if !(Aig_ManDupDfsGuided_rec( pNew, p, Aig_ObjFanin0(pObj) ) != nil) {
-        return nil; }
-    if Aig_ObjIsBuf(pObj) {
-        return (Aig_Obj_t *)(pObj.pData = Aig_ObjChild0Copy(pObj)); }
-    if !(Aig_ManDupDfsGuided_rec( pNew, p, Aig_ObjFanin1(pObj) ) != nil) {
-        return nil; }
-    pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-    if pEquivNew != nil {
-        if pNew.pEquivs {
-            pNew.pEquivs[Aig_Regular(pObjNew).Id] = Aig_Regular(pEquivNew); }        
-        if pNew.pReprs {
-            pNew.pReprs[Aig_Regular(pEquivNew).Id] = Aig_Regular(pObjNew); }
-    }
-    return (Aig_Obj_t *)(pObj.pData = pObjNew);
+func Aig_ManDupRepres_rec(dst, src *Graph, e Edge) Edge {
+	return dupVisit(dst, src, e, false, true, map[int]bool{})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [This duplicator works for AIGs with choices.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupDfsGuided(p *Aig_Man_t, vPios *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i, nNodes int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // duplicate representation of choice nodes
-    if p.pEquivs {
-        // inlining of macro ABC_ALLOC
-        pNew.pEquivs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));
-        memset( pNew.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );
-    }
-    if p.pReprs {
-        // inlining of macro ABC_ALLOC
-        pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));
-        memset( pNew.pReprs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );
-    }
-    // create the PIs
-    Aig_ManCleanData( p );
-    // duplicate internal nodes
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPios)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPios, i)), 1); i++  {
-        if Aig_ObjIsCi(pObj) {
-            pObjNew = Aig_ObjCreateCi( pNew );
-            pObjNew.Level = pObj.Level;
-            pObj.pData = pObjNew;
-        
-        } else if Aig_ObjIsCo(pObj) {
-            Aig_ManDupDfsGuided_rec( pNew, p, Aig_ObjFanin0(pObj) );        
-//            assert( pObj->Level == ((Aig_Obj_t*)pObj->pData)->Level );
-            pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-            pObj.pData = pObjNew;
-        }
-    }
-//    assert( Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew) );
-    if p.pEquivs == nil && p.pReprs == nil && (nNodes = Aig_ManCleanup( pNew )) {
-        fmt.Printf("Aig_ManDupDfs(): Cleanup after AIG duplication removed %d nodes.\n", nNodes); }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // duplicate the timing manager
-    if p.pManTime {
-        pNew.pManTime = Tim_ManDup( (Tim_Man_t *)p.pManTime, 0 ); }
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupDfs(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManDupRepresDfs(src *Graph) *Graph {
+	dst := dupStart(src)
+	dupOutputs(dst, src, src.outputs, false, true)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [This duplicator works for AIGs with choices.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupLevelized(p *Aig_Man_t) *Aig_Man_t {
-    var vLevels *Vec_Vec_t;
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pObjNew *Aig_Obj_t = nil;
-    var i, k int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // duplicate representation of choice nodes
-    if p.pEquivs {
-        // inlining of macro ABC_ALLOC
-        pNew.pEquivs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));
-        memset( pNew.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );
-    }
-    if p.pReprs {
-        // inlining of macro ABC_ALLOC
-        pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));
-        memset( pNew.pReprs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );
-    }
-    // create the PIs
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCi( pNew );
-        pObjNew.Level = pObj.Level;
-        pObj.pData = pObjNew;
-    }
-    // duplicate internal nodes
-    vLevels = Aig_ManLevelize( p );
-    // inlining of macro Vec_VecForEachEntry
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; i < Vec_VecSize(vLevels); i++  {                                                        for  k = 0; (k < Vec_PtrSize(Vec_VecEntry(vLevels, i))) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vLevels, i), k)), 1); k++  {
-        pObjNew = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) );
-        pObj.pData = pObjNew;
-    }
-    }
-    Vec_VecFree( vLevels );
-    // duplicate POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        pObj.pData = pObjNew;
-    }
-    assert(Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-//    if ( (nNodes = Aig_ManCleanup( pNew )) )
-//        printf( "Aig_ManDupLevelized(): Cleanup after AIG duplication removed %d nodes.\n", nNodes );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // duplicate the timing manager
-    if p.pManTime {
-        pNew.pManTime = Tim_ManDup( (Tim_Man_t *)p.pManTime, 0 ); }
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupLevelized(): The check has failed.\n"); }
-    return pNew;
+func Aig_ManCreateMiter(a, b *Graph, operation int32) *Graph {
+	if a.nRegs != 0 || b.nRegs != 0 || len(a.inputs) != len(b.inputs) || len(a.outputs) != 1 || len(b.outputs) != 1 {
+		panic("aig: invalid miter operands")
+	}
+	dst := dupStart(a)
+	x := dupEdge(dst, a, dupOutputDriver(a, a.outputs[0]))
+	b.copies = map[int]Edge{0: 0}
+	for i, e := range b.inputs {
+		b.copies[e.NodeID()] = dst.inputs[i]
+	}
+	y := dupEdge(dst, b, dupOutputDriver(b, b.outputs[0]))
+	var out Edge
+	switch operation {
+	case 0:
+		out = dst.XOR(x, y)
+	case 1:
+		out = dst.AND(x, y.Not())
+	case 2:
+		out = dst.OR(x, y)
+	case 3:
+		out = dst.AND(x, y)
+	default:
+		panic("aig: invalid miter operation")
+	}
+	dst.AddOutput(out)
+	Aig_ManCleanup(dst)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Assumes topological ordering of nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupWithoutPos(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(!Aig_ObjIsBuf(pObj), "!Aig_ObjIsBuf(pObj)");
-        if Aig_ObjIsNode(pObj) {
-            pObj.pData = Aig_Oper( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj), Aig_ObjType(pObj) ); }
-    }
-    }
-    assert(Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew), "Aig_ManBufNum(p) != 0 || Aig_ManNodeNum(p) == Aig_ManNodeNum(pNew)");
-    return pNew;
+func dupSequentialOutputs(src *Graph, outputs []Edge, addRegs int32) *Graph {
+	dst := dupStart(src)
+	dst.nConstrs = 0
+	if addRegs == 0 {
+		dst.nRegs = 0
+	}
+	dupOutputs(dst, src, outputs, false, false)
+	if addRegs != 0 {
+		dupOutputs(dst, src, src.outputs[len(src.outputs)-int(src.nRegs):], false, false)
+	}
+	Aig_ManCleanup(dst)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager.]
-
-  Description [Assumes topological ordering of nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupFlopsOnly(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    pNew = Aig_ManDupWithoutPos( p );
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupFlopsOnly(): The check has failed.\n"); }
-    return pNew;
-
+func Aig_ManDupOrpos(src *Graph, addRegs int32) *Graph {
+	if src.nConstrs > 0 {
+		return nil
+	}
+	dst := dupStart(src)
+	dst.nConstrs = 0
+	if addRegs == 0 {
+		dst.nRegs = 0
+	}
+	out := dst.Const0()
+	for _, e := range src.outputs[:len(src.outputs)-int(src.nRegs)] {
+		out = dst.OR(out, dupEdge(dst, src, dupOutputDriver(src, e)))
+	}
+	dst.AddOutput(out)
+	if addRegs != 0 {
+		dupOutputs(dst, src, src.outputs[len(src.outputs)-int(src.nRegs):], false, false)
+	}
+	Aig_ManCleanup(dst)
+	return dst
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns representatives of fanin in approapriate polarity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjGetRepres(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pRepr *Aig_Obj_t;
-    if pRepr = Aig_ObjRepr(p, pObj) {
-        return Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pObj.fPhase ^ pRepr.fPhase ); }
-    return (Aig_Obj_t *)pObj.pData;
+func Aig_ManDupOneOutput(src *Graph, index, addRegs int32) *Graph {
+	if index < 0 || int(index) >= len(src.outputs)-int(src.nRegs) {
+		panic("aig: PO index")
+	}
+	return dupSequentialOutputs(src, []Edge{src.outputs[index]}, addRegs)
 }
-func Aig_ObjChild0Repres(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepres(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) ); }
-func Aig_ObjChild1Repres(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepres(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) ); }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG while substituting representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupRepres(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    // start the HOP package
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // map the const and primary inputs
-    Aig_ManCleanData( p );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsNode(pObj) {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Repres(p, pObj), Aig_ObjChild1Repres(p, pObj) );
-        } else if Aig_ObjIsCi(pObj) {
-            pObj.pData = Aig_ObjCreateCi(pNew);
-            pObj.pData = Aig_ObjGetRepres( p, pObj );
-        
-        } else if Aig_ObjIsCo(pObj) {
-            pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Repres(p, pObj) );
-        } else if Aig_ObjIsConst1(pObj) {
-            pObj.pData = Aig_ManConst1(pNew);
-        } else {
-            assert(false, "0"); }
-    }
-    }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the new manager
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupRepres: Check has failed.\n"); }
-    return pNew;
+func Aig_ManDupUnsolvedOutputs(src *Graph, addRegs int32) *Graph {
+	if src.nConstrs > 0 {
+		return nil
+	}
+	var outputs []Edge
+	for _, e := range src.outputs[:len(src.outputs)-int(src.nRegs)] {
+		if dupOutputDriver(src, e).NodeID() != 0 {
+			outputs = append(outputs, e)
+		}
+	}
+	return dupSequentialOutputs(src, outputs, addRegs)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupRepres_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pRepr *Aig_Obj_t;
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    if pRepr = Aig_ObjRepr(p, pObj) {
-        Aig_ManDupRepres_rec( pNew, p, pRepr );
-        return (Aig_Obj_t *)(pObj.pData = Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pRepr.fPhase ^ pObj.fPhase ));
-    }
-    Aig_ManDupRepres_rec( pNew, p, Aig_ObjFanin0(pObj) );
-    Aig_ManDupRepres_rec( pNew, p, Aig_ObjFanin1(pObj) );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Repres(p, pObj), Aig_ObjChild1Repres(p, pObj) ));
+func Aig_ManDupArray(graphs []*Graph) *Graph {
+	if len(graphs) == 0 {
+		return nil
+	}
+	dst := NewGraph()
+	dst.Name = graphs[0].Name
+	for range graphs[0].inputs {
+		dst.NewInput()
+	}
+	for _, src := range graphs {
+		if src.nRegs != 0 || len(src.inputs) != len(dst.inputs) {
+			panic("aig: incompatible graph array")
+		}
+		src.copies = map[int]Edge{0: 0}
+		for i, e := range src.inputs {
+			src.copies[e.NodeID()] = dst.inputs[i]
+		}
+		dupOutputs(dst, src, src.outputs, false, false)
+	}
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG while substituting representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupRepresDfs(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    // start the HOP package
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // map the const and primary inputs
-    Aig_ManCleanData( p );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsNode(pObj) {
-            continue; }
-        if Aig_ObjIsCi(pObj) {
-            pObj.pData = Aig_ObjCreateCi(pNew);
-        } else if Aig_ObjIsCo(pObj) {
-            Aig_ManDupRepres_rec( pNew, p, Aig_ObjFanin0(pObj) );
-            pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Repres(p, pObj) );
-        
-        } else if Aig_ObjIsConst1(pObj) {
-            pObj.pData = Aig_ManConst1(pNew);
-        } else { 
-            assert(false, "0"); }
-    }
-    }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the new manager
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupRepresDfs: Check has failed.\n"); }
-    return pNew;
+func Aig_ManDupNodes(src *Graph, roots []Edge) *Graph {
+	if len(roots) == 0 {
+		return nil
+	}
+	dst := NewGraph()
+	dst.Name = src.Name
+	src.copies = map[int]Edge{0: 0}
+	visited := map[int]bool{}
+	var leaves []Edge
+	var visit func(Edge)
+	visit = func(e Edge) {
+		if visited[e.NodeID()] {
+			return
+		}
+		visited[e.NodeID()] = true
+		n := src.node(e)
+		if n.Kind == Input {
+			leaves = append(leaves, Aig_Regular(e))
+			return
+		}
+		if n.Kind == Constant {
+			return
+		}
+		visit(n.Fanins[0])
+		if n.Kind == And || n.Kind == ExclusiveOr {
+			visit(n.Fanins[1])
+		}
+	}
+	for _, e := range roots {
+		visit(dupOutputDriver(src, e))
+	}
+	for _, e := range leaves {
+		src.copies[e.NodeID()] = dst.NewInput()
+	}
+	dupOutputs(dst, src, roots, false, false)
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the miter of the two AIG managers.]
-
-  Description [Oper is the operation to perform on the outputs of the miter.
-  Oper == 0 is XOR
-  Oper == 1 is complemented implication (p1 => p2)
-  Oper == 2 is OR
-  Oper == 3 is AND
-  ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManCreateMiter(p1 *Aig_Man_t, p2 *Aig_Man_t, Oper int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    assert(Aig_ManRegNum(p1) == 0, "Aig_ManRegNum(p1) == 0");
-    assert(Aig_ManRegNum(p2) == 0, "Aig_ManRegNum(p2) == 0");
-    assert(Aig_ManCoNum(p1) == 1, "Aig_ManCoNum(p1) == 1");
-    assert(Aig_ManCoNum(p2) == 1, "Aig_ManCoNum(p2) == 1");
-    assert(Aig_ManCiNum(p1) == Aig_ManCiNum(p2), "Aig_ManCiNum(p1) == Aig_ManCiNum(p2)");
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p1) + Aig_ManObjNumMax(p2) );
-    // add first AIG
-    Aig_ManConst1(p1).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p1.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p1.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // add second AIG
-    Aig_ManConst1(p2).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p2.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ManCi( pNew, i );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p2.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // add the output
-    if Oper == 0 { // XOR
-        pObj = Aig_Exor( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1,0)), Aig_ObjChild0Copy(Aig_ManCo(p2,0)) );
-    } else if Oper == 1 { // implication is PO(p1) -> PO(p2)  ...  complement is PO(p1) & !PO(p2) 
-        pObj = Aig_And( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1,0)), Aig_Not(Aig_ObjChild0Copy(Aig_ManCo(p2,0))) );
-    } else if Oper == 2 { // OR
-        pObj = Aig_Or( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1,0)), Aig_ObjChild0Copy(Aig_ManCo(p2,0)) );
-    } else if Oper == 3 { // AND
-        pObj = Aig_And( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1,0)), Aig_ObjChild0Copy(Aig_ManCo(p2,0)) );
-    } else {
-        assert(false, "0"); }
-    Aig_ObjCreateCo( pNew, pObj );
-    Aig_ManCleanup( pNew );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with only one primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupOrpos(p *Aig_Man_t, fAddRegs int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pMiter *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    if p.nConstrs > 0 {
-        fmt.Printf("The AIG manager should have no constraints.\n");
-        return nil;
-    }
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // set registers
-    if fAddRegs != 0 {
-        pNew.nRegs = p.nRegs;
-    } else {
-        pNew.nRegs = 0;
-    }
-    if fAddRegs != 0 {
-        pNew.nTruePis = p.nTruePis;
-    } else {
-        pNew.nTruePis = p.nTruePis + p.nRegs;
-    }
-    pNew.nTruePos = 1;
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create the PO
-    pMiter = Aig_ManConst0(pNew);
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pMiter = Aig_Or( pNew, pMiter, Aig_ObjChild0Copy(pObj) );
-    } 
-    Aig_ObjCreateCo( pNew, pMiter );
-    // create register inputs with MUXes
-    if fAddRegs != 0 {
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        }
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with only one primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupOneOutput(p *Aig_Man_t, iPoNum int32, fAddRegs int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    assert(iPoNum < Aig_ManCoNum(p)-Aig_ManRegNum(p), "iPoNum < Aig_ManCoNum(p)-Aig_ManRegNum(p)");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // set registers
-    if fAddRegs != 0 {
-        pNew.nRegs = p.nRegs;
-    } else {
-        pNew.nRegs = 0;
-    }
-    if fAddRegs != 0 {
-        pNew.nTruePis = p.nTruePis;
-    } else {
-        pNew.nTruePis = p.nTruePis + p.nRegs;
-    }
-    pNew.nTruePos = 1;
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create the PO
-    pObj = Aig_ManCo( p, iPoNum );
-    Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    // create register inputs with MUXes
-    if fAddRegs != 0 {
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        }
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with only one primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupUnsolvedOutputs(p *Aig_Man_t, fAddRegs int32) *Aig_Man_t { 
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i, nOuts int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    if p.nConstrs > 0 {
-        fmt.Printf("The AIG manager should have no constraints.\n");
-        return nil;
-    }
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // create the POs
-    nOuts = 0;
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        nOuts += ( Aig_ObjFanin0(pObj) != Aig_ManConst1(p) );
-    }
-    // set registers
-    if fAddRegs != 0 {
-        pNew.nRegs = p.nRegs;
-    } else {
-        pNew.nRegs = 0;
-    }
-    if fAddRegs != 0 {
-        pNew.nTruePis = p.nTruePis;
-    } else {
-        pNew.nTruePis = p.nTruePis + p.nRegs;
-    }
-    pNew.nTruePos = nOuts;
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create the PO
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if Aig_ObjFanin0(pObj) != Aig_ManConst1(p) {
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) ); }
-    }
-    // create register inputs with MUXes
-    if fAddRegs != 0 {
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        }
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with only one primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupArray(vArray *Vec_Ptr_t) *Aig_Man_t {
-    var p, pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i, k int32;
-    if Vec_PtrSize(vArray) == 0 {
-        return nil; }
-    p = (Aig_Man_t *)Vec_PtrEntry( vArray, 0 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vArray)) && (((pNew) = (Aig_Man_t *)Vec_PtrEntry(vArray, k)), 1); k++  {
-        assert(Aig_ManRegNum(pNew) == 0, "Aig_ManRegNum(pNew) == 0");
-        assert(Aig_ManCiNum(pNew) == Aig_ManCiNum(p), "Aig_ManCiNum(pNew) == Aig_ManCiNum(p)");
-    }
-    // create the new manager
-    pNew = Aig_ManStart( 10000 );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ObjCreateCi(pNew);
-    }
-    // create the PIs
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vArray)) && (((p) = (Aig_Man_t *)Vec_PtrEntry(vArray, k)), 1); k++  {
-        Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pObj.pData = Aig_ManCi( pNew, i );
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        }
-    }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupSimple(): The check has failed.\n"); }
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with only one primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupNodes(pMan *Aig_Man_t, vArray *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var vObjs *Vec_Ptr_t;
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    if Vec_PtrSize(vArray) == 0 {
-        return nil; }
-    vObjs = Aig_ManDfsNodes( pMan, (Aig_Obj_t **)Vec_PtrArray(vArray), Vec_PtrSize(vArray) );
-    // create the new manager
-    pNew = Aig_ManStart( 10000 );
-    pNew.pName = Abc_UtilStrsav( pMan.pName );
-    Aig_ManConst1(pMan).pData = Aig_ManConst1(pNew);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {
-        if Aig_ObjIsCi(pObj) {
-            pObj.pData = Aig_ObjCreateCi(pNew); }
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {
-        if Aig_ObjIsNode(pObj) {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vArray)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vArray, i)), 1); i++  {
-            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj.pData );
-    }
-    Aig_ManSetRegNum( pNew, 0 );
-    Vec_PtrFree( vObjs );
-    return pNew;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

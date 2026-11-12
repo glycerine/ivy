@@ -346,8 +346,7 @@ func Fpga_MappingSetRefsAndArea(pMan *Fpga_Man_t) float32 {
             Fpga_NodeVecPush( pMan.vMapping, pNode );
         }
     }
-    // inlining of macro ABC_FREE
-    ((ppStore) ? (free((char *) (ppStore)), (ppStore) = 0) : 0);
+    ppStore = nil;
     return aArea;
 }
 

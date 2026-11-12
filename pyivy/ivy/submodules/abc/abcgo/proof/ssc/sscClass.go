@@ -256,8 +256,7 @@ func Ssc_GiaSimProcessRefined(p *Gia_Man_t, vRefined *Vec_Int_t) {
         if Gia_ObjIsHead( p, i ) {
             Ssc_GiaSimClassRefineOne( p, i ); }
     }
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
 }
 
 /**Function*************************************************************

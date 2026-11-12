@@ -355,7 +355,7 @@ func Gia_ManRex2Gia(pStrInit string, fOrder int32, fVerbose int32) *Gia_Man_t {
     Vec_IntFree( vStack );
     Vec_IntFree( vVisited );
     // inlining of macro ABC_FREE
-    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);
+    pStr = "";
     return pNew;
 }
 

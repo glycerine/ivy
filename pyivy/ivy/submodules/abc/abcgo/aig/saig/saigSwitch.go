@@ -310,8 +310,7 @@ clk = Abc_Clock();
             pSwitching[pEntry-pAig] = Saig_ManComputeSwitching( pEntry.Number, nFramesReal - nPref ); }
 //printf( "%3d : %7.2f\n", pEntry-pAig, pSwitching[pEntry-pAig] );
     }
-    // inlining of macro ABC_FREE
-    ((pAig) ? (free((char *) (pAig)), (pAig) = 0) : 0);
+    pAig = nil;
 //ABC_PRT( "Switch    ", Abc_Clock() - clk );
 //ABC_PRT( "TOTAL     ", Abc_Clock() - clkTotal );
 
@@ -380,8 +379,7 @@ func Aig_CManStart(nIns int32, nNodes int32, nOuts int32) *Aig_CMan_t {
 
 ***********************************************************************/
 func Aig_CManStop(p *Aig_CMan_t) {
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

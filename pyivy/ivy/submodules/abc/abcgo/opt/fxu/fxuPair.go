@@ -489,10 +489,8 @@ func Fxu_PairClearStorage(pCube *Fxu_Cube) {
 ***********************************************************************/
 func Fxu_PairFreeStorage(pVar *Fxu_Var) {
     if pVar.ppPairs {
-        // inlining of macro ABC_FREE
-        ((pVar.ppPairs[0]) ? (free((char *) (pVar.ppPairs[0])), (pVar.ppPairs[0]) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pVar.ppPairs) ? (free((char *) (pVar.ppPairs)), (pVar.ppPairs) = 0) : 0);
+        pVar.ppPairs[0] = nil;
+        pVar.ppPairs = nil;
     }
 }
 

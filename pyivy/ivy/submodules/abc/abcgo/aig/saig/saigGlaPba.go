@@ -377,8 +377,7 @@ func Aig_Gla2ManStop(p *Aig_Gla2Man_t) {
 
     if p.pSat {
         sat_solver_delete( p.pSat ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

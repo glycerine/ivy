@@ -251,8 +251,8 @@ func Jf_ManInitRefs(pMan *Jf_Man_t) *float32 {
     var p *Gia_Man_t  = pMan.pGia;
     var pObj, pCtrl, pData0, pData1 *Gia_Obj_t;
     var pRes *float32; var i int32;
-    assert(p.pRefs == nil, "p.pRefs == nil");
-    p.pRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );
+    assert(p.Refs == nil, "p.Refs == nil");
+    p.Refs = ABC_CALLOC( int, Gia_ManObjNum(p) );
     Gia_ManForEachAnd( p, pObj, i )
     {
         Gia_ObjRefFanin0Inc( p, pObj );
@@ -293,7 +293,7 @@ pMan.nCoarse++;
     // multiply by factor
     pRes = ABC_ALLOC( float, Gia_ManObjNum(p) );
     for  i = 0; i < Gia_ManObjNum(p); i++  {
-        pRes[i] = Abc_MaxInt( 1, p.pRefs[i] );
+        pRes[i] = Abc_MaxInt( 1, p.Refs[i] );
     }
     return pRes;
 }
@@ -402,12 +402,12 @@ func Jf_ManFree(p *Jf_Man_t) {
         Jf_ManProfileClasses( p ); }
     if p.pPars.fCoarsen {
         Gia_ManCleanMark0( p.pGia ); }
-    ABC_FREE( p.pGia.pRefs );
-    ABC_FREE( p.vCuts.pArray );
-    ABC_FREE( p.vArr.pArray );
-    ABC_FREE( p.vDep.pArray );
-    ABC_FREE( p.vFlow.pArray );
-    ABC_FREE( p.vRefs.pArray );
+    p.pGia.Refs = nil;
+    p.vCuts.pArray = nil;
+    p.vArr.pArray = nil;
+    p.vDep.pArray = nil;
+    p.vFlow.pArray = nil;
+    p.vRefs.pArray = nil;
     if p.pPars.fCutMin && !p.pPars.fFuncDsd {
         Vec_MemHashFree( p.vTtMem );
         Vec_MemFree( p.vTtMem );
@@ -415,7 +415,7 @@ func Jf_ManFree(p *Jf_Man_t) {
     Vec_IntFreeP( &p.vCnfs );
     Vec_SetFree_( &p.pMem );
     Vec_IntFreeP( &p.vTemp );
-    ABC_FREE( p );
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1291,8 +1291,8 @@ func Jf_ManComputeRefs(p *Jf_Man_t) int32 {
 var pCut *int32;
     var pRefs *float32  = Vec_FltArray(&p.vRefs);
     var pFlow *float32  = Vec_FltArray(&p.vFlow);
-    assert(p.pGia.pRefs != nil, "p.pGia.pRefs != nil");
-    memset( p.pGia.pRefs, 0, sizeof(int) * Gia_ManObjNum(p.pGia) );
+    assert(p.pGia.Refs != nil, "p.pGia.Refs != nil");
+    memset( p.pGia.Refs, 0, sizeof(int) * Gia_ManObjNum(p.pGia) );
     p.pPars.Area = p.pPars.Edge = 0;
     Gia_ManForEachObjReverse( p.pGia, pObj, i )
     {
@@ -1311,9 +1311,9 @@ var pCut *int32;
     // blend references and normalize flow
     for  i = 0; i < Gia_ManObjNum(p.pGia); i++  {
         if p.pPars.fOptEdge {
-            nRefsNew = Abc_MaxFloat( 1, 0.8 * pRefs[i] + 0.2 * p.pGia.pRefs[i] );
+            nRefsNew = Abc_MaxFloat( 1, 0.8 * pRefs[i] + 0.2 * p.pGia.Refs[i] );
         } else {
-            nRefsNew = Abc_MaxFloat( 1, 0.2 * pRefs[i] + 0.8 * p.pGia.pRefs[i] ); }
+            nRefsNew = Abc_MaxFloat( 1, 0.2 * pRefs[i] + 0.8 * p.pGia.Refs[i] ); }
         pFlow[i] = pFlow[i] * pRefs[i] / nRefsNew;
         pRefs[i] = nRefsNew;
         assert(pFlow[i] >= 0, "pFlow[i] >= 0");

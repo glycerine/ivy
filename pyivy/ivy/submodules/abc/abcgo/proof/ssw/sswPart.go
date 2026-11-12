@@ -118,8 +118,7 @@ func Ssw_SignalCorrespondencePart(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Aig_Man_t
             Aig_ManStop( pNew );
         }
         Aig_ManStop( pTemp );
-        // inlining of macro ABC_FREE
-        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);
+        pMapBack = nil;
     }
     // remap the AIG
     pNew = Aig_ManDupRepr( pAig, 0 );

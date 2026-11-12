@@ -249,18 +249,12 @@ func Fpga_ManFree(p *Fpga_Man_t) {
         Fpga_NodeVecFree( p.vNodesAll ); }
     Extra_MmFixedStop( p.mmNodes );
     Extra_MmFixedStop( p.mmCuts );
-    // inlining of macro ABC_FREE
-    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.ppOutputNames = nil;
+    p.pInputArrivals = nil;
+    p.pInputs = nil;
+    p.pOutputs = nil;
+    p.pBins = nil;
+    p = nil;
 }
 
 
@@ -500,8 +494,7 @@ clk = time.Now().UnixNano();
 //        ABC_PRT( "Time", clock() - clk );
     }
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);
+    pMan.pBins = nil;
     pMan.pBins = pBinsNew;
     pMan.nBins = nBinsNew;
 }

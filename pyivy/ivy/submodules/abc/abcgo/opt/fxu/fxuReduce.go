@@ -102,18 +102,14 @@ func Fxu_PreprocessCubePairs(p *Fxu_Matrix, vCovers *Vec_Ptr_t, nPairsTotal int3
     // determine what pairs to take starting from the lower
     // so that there would be exactly pPairsMax pairs
     if pnPairCounters[0] != 0 {
-        // inlining of macro ABC_FREE
-        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);
+        pnLitsDiff = nil;
+        pnPairCounters = nil;
         fmt.Printf("The SOPs of the nodes contain duplicated cubes. Run \"bdd; sop\" before \"fx\".\n");
         return 0;
     }
     if pnPairCounters[1] != 0 {
-        // inlining of macro ABC_FREE
-        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);
+        pnLitsDiff = nil;
+        pnPairCounters = nil;
         fmt.Printf("The SOPs of the nodes are not SCC-free. Run \"bdd; sop\" before \"fx\".\n");
         return 0;
     }
@@ -128,8 +124,7 @@ func Fxu_PreprocessCubePairs(p *Fxu_Matrix, vCovers *Vec_Ptr_t, nPairsTotal int3
             break;
         }
     }
-    // inlining of macro ABC_FREE
-    ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);
+    pnPairCounters = nil;
 
     // set to 0 all the pairs above the cut-off number and quantity
     iQuant = 0;
@@ -174,8 +169,7 @@ func Fxu_PreprocessCubePairs(p *Fxu_Matrix, vCovers *Vec_Ptr_t, nPairsTotal int3
         }
     }
     assert(iPair == nPairsTotal, "iPair == nPairsTotal");
-    // inlining of macro ABC_FREE
-    ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);
+    pnLitsDiff = nil;
 //ABC_PRT( "Preprocess", Abc_Clock() - clk );
     return 1;
 }

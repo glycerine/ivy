@@ -419,8 +419,7 @@ func Cec_ManSeqSemiformal(pAig *Gia_Man_t, pPars *Cec_ParSmf_t) int32 {
         } else if nCountNoRef++; nCountNoRef == pPars.nNonRefines {
             break; }
     }
-    // inlining of macro ABC_FREE
-    ((pState) ? (free((char *) (pState)), (pState) = 0) : 0);
+    pState = nil;
     if pPars.fCheckMiter {
         var nNonConsts int32  = Cec_ManCountNonConstOutputs( pAig );
         if nNonConsts != 0 {

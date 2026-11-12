@@ -818,16 +818,11 @@ func Ssw_RarManStop(p *Ssw_RarMan_t) {
     Vec_IntFreeP( &p.vPatBests );
     Vec_PtrFreeP( &p.vUpdConst );
     Vec_PtrFreeP( &p.vUpdClass );
-    // inlining of macro ABC_FREE
-    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatData) ? (free((char *) (p.pPatData)), (p.pPatData) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatCosts) ? (free((char *) (p.pPatCosts)), (p.pPatCosts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRarity) ? (free((char *) (p.pRarity)), (p.pRarity) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjData = nil;
+    p.pPatData = nil;
+    p.pPatCosts = nil;
+    p.pRarity = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -985,8 +980,7 @@ func Ssw_RarCheckTrivial(pAig *Aig_Man_t, fVerbose int32) int32 {
         if pAig.nConstrs && i >= Saig_ManPoNum(pAig) - pAig.nConstrs {
             return 0; }
         if pObj.fPhase {
-            // inlining of macro ABC_FREE
-            ((pAig.pSeqModel) ? (free((char *) (pAig.pSeqModel)), (pAig.pSeqModel) = 0) : 0);
+            pAig.pSeqModel = nil;
             pAig.pSeqModel = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), 1 );
             pAig.pSeqModel.iPo = i;
             if fVerbose != 0 {
@@ -1029,8 +1023,7 @@ func Ssw_RarSimulate(pAig *Aig_Man_t, pPars *Ssw_RarPars_t) int32 {
     var iFrameFail int32  = -1;
     assert(Aig_ManRegNum(pAig) > 0, "Aig_ManRegNum(pAig) > 0");
     assert(Aig_ManConstrNum(pAig) == 0, "Aig_ManConstrNum(pAig) == 0");
-    // inlining of macro ABC_FREE
-    ((pAig.pSeqModel) ? (free((char *) (pAig.pSeqModel)), (pAig.pSeqModel) = 0) : 0);
+    pAig.pSeqModel = nil;
     // consider the case of empty AIG
 //    if ( Aig_ManNodeNum(pAig) == 0 )
 //        return -1;
@@ -1387,10 +1380,8 @@ func Ssw_RarSignalFilterGia(p *Gia_Man_t, pPars *Ssw_RarPars_t) int32 {
     pAig = Gia_ManToAigSimple( p );
     if p.pReprs != nil {
         Gia_ManReprToAigRepr2( pAig, p );
-        // inlining of macro ABC_FREE
-        ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+        p.pReprs = nil;
+        p.pNexts = nil;
     }
     RetValue = Ssw_RarSignalFilter( pAig, pPars );
     Gia_ManReprFromAigRepr( pAig, p );

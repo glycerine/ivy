@@ -353,10 +353,8 @@ func Unr_ManFree(p *Unr_Man_t) {
     Vec_IntFreeP( &p.vCiMap );
     Vec_IntFreeP( &p.vCoMap );
     Vec_IntFreeP( &p.vPiLits );
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

@@ -308,22 +308,14 @@ func Au_NtkAlloc(pMan *Au_Man_t, pName string) *Au_Ntk_t {
 func Au_NtkFree(p *Au_Ntk_t) {
     Au_ManFree( p.pMan );
     Vec_PtrFreeFree( p.vChunks );
-    // inlining of macro ABC_FREE
-    ((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vObjs.pArray) ? (free((char *) (p.vObjs.pArray)), (p.vObjs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vPis.pArray) ? (free((char *) (p.vPis.pArray)), (p.vPis.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vPos.pArray) ? (free((char *) (p.vPos.pArray)), (p.vPos.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pHTable) ? (free((char *) (p.pHTable)), (p.pHTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.vCopies.pArray = nil;
+    p.vPages.pArray = nil;
+    p.vObjs.pArray = nil;
+    p.vPis.pArray = nil;
+    p.vPos.pArray = nil;
+    p.pHTable = nil;
+    p.pName = nil;
+    p = nil;
 }
 func Au_NtkMemUsage(p *Au_Ntk_t) int32 {
     var Mem int32  = sizeof(Au_Ntk_t);
@@ -393,12 +385,9 @@ func Au_ManFree(p *Au_Man_t) {
         return; }
     if p.pFuncs {
         Abc_NamStop( p.pFuncs ); }
-    // inlining of macro ABC_FREE
-    ((p.vNtks.pArray) ? (free((char *) (p.vNtks.pArray)), (p.vNtks.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.vNtks.pArray = nil;
+    p.pName = nil;
+    p = nil;
 }
 func Au_ManDelete(p *Au_Man_t) {
     var pNtk *Au_Ntk_t;
@@ -539,8 +528,7 @@ func Au_ManReorderModels(p *Au_Man_t, pRoot *Au_Ntk_t) {
         }
     }
     // update
-    // inlining of macro ABC_FREE
-    ((p.vNtks.pArray) ? (free((char *) (p.vNtks.pArray)), (p.vNtks.pArray) = 0) : 0);
+    p.vNtks.pArray = nil;
     p.vNtks.pArray = vNtksNew.pArray;
     vNtksNew.pArray = nil;
     Vec_PtrFree( vNtksNew );
@@ -1158,8 +1146,7 @@ func Au_NtkParseCBlif(pFileName string) *Au_Ntk_t {
         }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     // order models in topological order
     pRoot = Au_ManNtkRoot( pMan );
     Au_ManReorderModels( pMan, pRoot );

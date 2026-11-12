@@ -180,7 +180,7 @@ func Abc_FrameGiaOutputMiniAig(pAbc *Abc_Frame_t) any {
 func Gia_ManReadMiniAig(pFileName string) *Gia_Man_t {
     var p *Mini_Aig_t  = Mini_AigLoad( pFileName );
     var pGia *Gia_Man_t  = Gia_ManFromMiniAig( p, nil );
-    ABC_FREE( pGia.pName );
+    pGia.pName = "";
     pGia.pName = Extra_FileNameGeneric( pFileName ); 
     Mini_AigStop( p );
     return pGia;
@@ -458,7 +458,7 @@ func Abc_FrameGiaOutputMiniLutAttr(pAbc *Abc_Frame_t, pMiniLut any) string {
 func Gia_ManReadMiniLut(pFileName string) *Gia_Man_t {
     var p *Mini_Lut_t  = Mini_LutLoad( pFileName );
     var pGia *Gia_Man_t  = Gia_ManFromMiniLut( p, nil );
-    ABC_FREE( pGia.pName );
+    pGia.pName = "";
     pGia.pName = Extra_FileNameGeneric( pFileName ); 
     Mini_LutStop( p );
     return pGia;
@@ -786,7 +786,7 @@ func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {
     fmt.Printf("Dumped reduced AIG in file \"%s\".\n", pFileReduced);
     Gia_ManStop( pGia );
     // cleanup
-    ABC_FREE( pEquivs );
+    pEquivs = nil;
     Mini_AigStop( p );
 }
 

@@ -86,8 +86,7 @@ func Sim_UtilInfoAlloc(nSize int32, nWords int32, fClean int32) *Vec_Ptr_t {
 
 ***********************************************************************/
 func Sim_UtilInfoFree(p *Vec_Ptr_t) {
-    // inlining of macro ABC_FREE
-    ((p.pArray[0]) ? (free((char *) (p.pArray[0])), (p.pArray[0]) = 0) : 0);
+    p.pArray[0] = nil;
     Vec_PtrFree( p );
 }
 

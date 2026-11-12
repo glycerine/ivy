@@ -146,7 +146,7 @@ func Swp_ManStop(pGia *Gia_Man_t) {
     Vec_IntFree( p.vCondProbes );
     Vec_IntFree( p.vCondAssump );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
     pGia.pData = nil;
 }
 func Gia_SweeperStart(pGia *Gia_Man_t) *Gia_Man_t {

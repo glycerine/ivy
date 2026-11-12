@@ -197,8 +197,7 @@ func If_ManStart(pPars *If_Par_t) *If_Man_t {
 
 ***********************************************************************/
 func If_ManRestart(p *If_Man_t) {
-    // inlining of macro ABC_FREE
-    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);
+    p.pMemCi = nil;
     Vec_PtrClear( p.vCis );
     Vec_PtrClear( p.vCos );
     Vec_PtrClear( p.vObjs );
@@ -309,19 +308,13 @@ func If_ManStop(p *If_Man_t) {
         Vec_MemHashFree( p.vTtMem6 );
         Vec_MemFreeP( &p.vTtMem6 );
     }
-    // inlining of macro ABC_FREE
-    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemAnd) ? (free((char *) (p.pMemAnd)), (p.pMemAnd) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.puTempW) ? (free((char *) (p.puTempW)), (p.puTempW) = 0) : 0);
+    p.pMemCi = nil;
+    p.pMemAnd = nil;
+    p.puTemp[0] = nil;
+    p.puTempW = nil;
     // free pars memory
-    // inlining of macro ABC_FREE
-    ((p.pPars.pTimesArr) ? (free((char *) (p.pPars.pTimesArr)), (p.pPars.pTimesArr) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPars.pTimesReq) ? (free((char *) (p.pPars.pTimesReq)), (p.pPars.pTimesReq) = 0) : 0);
+    p.pPars.pTimesArr = nil;
+    p.pPars.pTimesReq = nil;
     if p.pManTim {
         Tim_ManStop( p.pManTim ); }
     if p.vSwitching {
@@ -335,16 +328,12 @@ func If_ManStop(p *If_Man_t) {
 //        printf( "Hash table 2:  Entries = %7d.  Size = %7d.\n", p->nTableEntries[0], p->nTableSize[0] );
 //    if ( p->pPars->fVerbose && p->nTableEntries[1] )
 //        printf( "Hash table 3:  Entries = %7d.  Size = %7d.\n", p->nTableEntries[1], p->nTableSize[1] );
-    // inlining of macro ABC_FREE
-    ((p.pHashTable[0]) ? (free((char *) (p.pHashTable[0])), (p.pHashTable[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pHashTable[1]) ? (free((char *) (p.pHashTable[1])), (p.pHashTable[1]) = 0) : 0);
+    p.pHashTable[0] = nil;
+    p.pHashTable[1] = nil;
     if p.pMemEntries {
         Mem_FixedStop( p.pMemEntries, 0 ); }
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

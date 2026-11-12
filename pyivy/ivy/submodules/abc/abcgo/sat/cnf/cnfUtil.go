@@ -309,10 +309,8 @@ func Cnf_DataDeriveLitPolarities(p *Cnf_Dat_t) *unsigned char {
             }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pPols0) ? (free((char *) (pPols0)), (pPols0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pPols1) ? (free((char *) (pPols1)), (pPols1) = 0) : 0);
+    pPols0 = nil;
+    pPols1 = nil;
 /*
 //    for ( c = 0; c < p->nClauses; c++ )
     for ( c = 0; c < 100; c++ )
@@ -429,8 +427,7 @@ finish:
     _ = (pFile).Close();
     Vec_IntFreeP( &vClas );
     Vec_IntFreeP( &vLits );
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return pCnf;
 }
 

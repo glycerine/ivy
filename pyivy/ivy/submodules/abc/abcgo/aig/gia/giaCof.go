@@ -151,7 +151,7 @@ func Cof_ManCreateLogicSimple(pGia *Gia_Man_t) *Cof_Man_t {
     // inlining of macro ABC_CALLOC
     p.pObjData = ((int *) calloc((size_t)(p.nObjData), sizeof(int)));
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     Gia_ManCreateRefs( pGia );
     // inlining of macro Gia_ManForEachObj
     for  i = 0; (i < pGia.nObjs) && ((pObj) = Gia_ManObj(pGia, i)); i++  {
@@ -198,7 +198,7 @@ func Cof_ManCreateLogicSimple(pGia *Gia_Man_t) *Cof_Man_t {
         pObjLog.nFanoutsM = pMuxRefs[i];
     }
     // inlining of macro ABC_FREE
-    ((pMuxRefs) ? (free((char *) (pMuxRefs)), (pMuxRefs) = 0) : 0);
+    pMuxRefs = nil;
     return p;
 }
 
@@ -217,11 +217,11 @@ func Cof_ManStop(p *Cof_Man_t) {
     Vec_IntFree( p.vCis );
     Vec_IntFree( p.vCos );
     // inlining of macro ABC_FREE
-    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);
+    p.pObjData = nil;
     // inlining of macro ABC_FREE
-    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);
+    p.pLevels = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -902,7 +902,7 @@ func Gia_ManCofVars(p *Gia_Man_t, nFanLim int32) *Vec_Int_t {
     var pObj *Gia_Obj_t;
     var i int32;
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p );
     vVars = Vec_IntAlloc( 100 );
     // inlining of macro Gia_ManForEachObj
@@ -911,7 +911,7 @@ func Gia_ManCofVars(p *Gia_Man_t, nFanLim int32) *Vec_Int_t {
             Vec_IntPush( vVars, i ); }
     }
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     return vVars;
 }
 

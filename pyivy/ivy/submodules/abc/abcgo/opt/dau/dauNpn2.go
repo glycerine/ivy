@@ -465,14 +465,10 @@ func Dtt_ManAlloc(nVars int32, fMulti int32) *Dtt_Man_t {
 }
 func Dtt_ManFree(p *Dtt_Man_t) {
     Vec_IntFreeP( &p.vVisited );
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNodes) ? (free((char *) (p.pNodes)), (p.pNodes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pVisited) ? (free((char *) (p.pVisited)), (p.pVisited) = 0) : 0);
+    p.pTable = nil;
+    p.pNodes = nil;
+    p.pTimes = nil;
+    p.pVisited = nil;
     Vec_IntFreeP( &p.vFanins );
     Vec_IntFreeP( &p.vTruths );
     Vec_IntFreeP( &p.vConfigs );
@@ -482,16 +478,11 @@ func Dtt_ManFree(p *Dtt_Man_t) {
     Vec_IntFreeP( &p.vTemp );
     Vec_IntFreeP( &p.vTemp2 );
     Vec_IntFreeP( &p.vUsedBins );
-    // inlining of macro ABC_FREE
-    ((p.pPerms) ? (free((char *) (p.pPerms)), (p.pPerms) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pComps) ? (free((char *) (p.pComps)), (p.pComps) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPres) ? (free((char *) (p.pPres)), (p.pPres) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pPerms = nil;
+    p.pComps = nil;
+    p.pPres = nil;
+    p.pBins = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -993,8 +984,7 @@ func Dtt_DumpLibrary(p *Dtt_Man_t, FileName string) {
             }
         }
         if fRepeat != 0 {
-            // inlining of macro ABC_FREE
-            ((pFun) ? (free((char *) (pFun)), (pFun) = 0) : 0);
+            pFun = nil;
             continue;
         }
 

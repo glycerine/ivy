@@ -1147,10 +1147,8 @@ func Cec_ManLSCorrespondence(pAig *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {
     var pNew, pTemp *Gia_Man_t;
     var pInitState *uint32;
     var RetValue int32;
-    // inlining of macro ABC_FREE
-    ((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);
+    pAig.pReprs = nil;
+    pAig.pNexts = nil;
     if pPars.nPrefix == 0 {
         RetValue = Cec_ManLSCorrespondenceClasses( pAig, pPars );
         if RetValue == 0 {
@@ -1160,8 +1158,7 @@ func Cec_ManLSCorrespondence(pAig *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {
         // compute the cycles AIG
         pInitState = Cec_ManComputeInitState( pAig, pPars.nPrefix );
         pTemp = Gia_ManDupFlip( pAig, (int *)pInitState );
-        // inlining of macro ABC_FREE
-        ((pInitState) ? (free((char *) (pInitState)), (pInitState) = 0) : 0);
+        pInitState = nil;
         // compute classes of this AIG
         RetValue = Cec_ManLSCorrespondenceClasses( pTemp, pPars );
         // transfer the class info
@@ -1218,8 +1215,7 @@ func Cec_ManLSCorrespondence(pAig *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {
         pNew.vNamesIn = Vec_PtrDupStr( pAig.vNamesIn );
         // inlining of macro Vec_PtrForEachEntryStart
         for  i = Gia_ManCiNum(pNew); (i < Vec_PtrSize(pNew.vNamesIn)) && (((pName) = (char *)Vec_PtrEntry(pNew.vNamesIn, i)), 1); i++  {
-            // inlining of macro ABC_FREE
-            ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);
+            pName = nil;
         }
         Vec_PtrShrink( pNew.vNamesIn, Gia_ManCiNum(pNew) );
     }
@@ -1228,8 +1224,7 @@ func Cec_ManLSCorrespondence(pAig *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {
         pNew.vNamesOut = Vec_PtrDupStr( pAig.vNamesOut );
         // inlining of macro Vec_PtrForEachEntryStart
         for  i = Gia_ManCoNum(pNew); (i < Vec_PtrSize(pNew.vNamesOut)) && (((pName) = (char *)Vec_PtrEntry(pNew.vNamesOut, i)), 1); i++  {
-            // inlining of macro ABC_FREE
-            ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);
+            pName = nil;
         }
         Vec_PtrShrink( pNew.vNamesOut, Gia_ManCoNum(pNew) );
     }

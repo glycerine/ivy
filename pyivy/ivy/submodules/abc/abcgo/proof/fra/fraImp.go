@@ -242,10 +242,8 @@ func Fra_SmlSortUsingOnes(p *Fra_Sml_t, fLatchCorr int32) *Vec_Ptr_t {
         nTotal += pnNodes[i];
     }
     assert(nTotal == nNodes + nBits + 1, "nTotal == nNodes + nBits + 1");
-    // inlining of macro ABC_FREE
-    ((pnNodes) ? (free((char *) (pnNodes)), (pnNodes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pnBits) ? (free((char *) (pnBits)), (pnBits) = 0) : 0);
+    pnNodes = nil;
+    pnBits = nil;
     return vNodes;
 }
 
@@ -295,8 +293,7 @@ func Fra_SmlSelectMaxCost(vImps *Vec_Int_t, pCosts *int32, nCostMax int32, nImpL
         if Vec_IntSize( vImpsNew ) == nImpLimit {
             break; }
     }
-    // inlining of macro ABC_FREE
-    ((pCostCount) ? (free((char *) (pCostCount)), (pCostCount) = 0) : 0);
+    pCostCount = nil;
     if pCostRange != nil {
         *pCostRange = c; }
     return vImpsNew;
@@ -412,12 +409,10 @@ finish:
     }
 
     // dealloc
-    // inlining of macro ABC_FREE
-    ((pImpCosts) ? (free((char *) (pImpCosts)), (pImpCosts) = 0) : 0); 
+    pImpCosts = nil; 
     {
     var pTemp any  = Vec_PtrEntry(vNodes, 0);
-    // inlining of macro ABC_FREE
-    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+    pTemp = nil;
     }
     Vec_PtrFree( vNodes );
     // reorder implications topologically
@@ -707,8 +702,7 @@ func Fra_ImpVerifyUsingSimulation(p *Fra_Man_t) int32 {
     for  i = 0; i < Vec_IntSize(p.pCla.vImps); i++  {
         Counter += pfFails[i];
     }
-    // inlining of macro ABC_FREE
-    ((pfFails) ? (free((char *) (pfFails)), (pfFails) = 0) : 0);
+    pfFails = nil;
     Fra_SmlStop( pSeq );
     return Counter;
 }

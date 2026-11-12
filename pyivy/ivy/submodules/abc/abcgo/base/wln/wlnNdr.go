@@ -110,11 +110,9 @@ func Wln_NtkToNdrTest(p *Wln_Ntk_t) {
     Ndr_Delete( pDesign );
     // inlining of macro Wln_NtkForEachObj
     for  i = 1; i < Wln_NtkObjNum(p); i++  { 
-        // inlining of macro ABC_FREE
-        ((ppNames[i]) ? (free((char *) (ppNames[i])), (ppNames[i]) = 0) : 0);
+        ppNames[i] = nil;
     }
-    // inlining of macro ABC_FREE
-    ((ppNames) ? (free((char *) (ppNames)), (ppNames) = 0) : 0);
+    ppNames = nil;
 }
 
 /**Function*************************************************************

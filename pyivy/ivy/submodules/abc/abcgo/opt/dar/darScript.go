@@ -875,10 +875,8 @@ pPars.timeSynth = Abc_Clock() - clk;
     Aig_ManChoiceLevel( pMan );
 
     // copy names
-    // inlining of macro ABC_FREE
-    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);
+    pMan.pName = nil;
+    pMan.pSpec = nil;
     pMan.pName = pName;
     pMan.pSpec = pSpec;
     return pMan;
@@ -944,10 +942,8 @@ pPars.timeSynth = Abc_Clock() - clk;
     Aig_ManChoiceLevel( pMan );
 
     // copy names
-    // inlining of macro ABC_FREE
-    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);
+    pMan.pName = nil;
+    pMan.pSpec = nil;
     pMan.pName = pName;
     pMan.pSpec = pSpec;
     return pMan;

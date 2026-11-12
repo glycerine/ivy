@@ -82,8 +82,7 @@ func Res_WinFree(p *Res_Win_t) {
     Vec_PtrFree( p.vNodes  );
     Vec_PtrFree( p.vDivs   );
     Vec_VecFree( p.vMatrix );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

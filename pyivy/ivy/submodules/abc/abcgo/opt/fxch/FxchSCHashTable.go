@@ -103,15 +103,12 @@ func Fxch_SCHashTableCreate(pFxchMan *Fxch_Man_t, nEntries int32) *Fxch_SCHashTa
 func Fxch_SCHashTableDelete(pSCHashTable *Fxch_SCHashTable_t) {
     var i uint32;
     for  i = 0; i <= pSCHashTable.SizeMask; i++  {
-        // inlining of macro ABC_FREE
-        ((pSCHashTable.pBins[i].vSCData) ? (free((char *) (pSCHashTable.pBins[i].vSCData)), (pSCHashTable.pBins[i].vSCData) = 0) : 0);
+        pSCHashTable.pBins[i].vSCData = nil;
     }
     Vec_IntErase( &pSCHashTable.vSubCube0 );
     Vec_IntErase( &pSCHashTable.vSubCube1 );
-    // inlining of macro ABC_FREE
-    ((pSCHashTable.pBins) ? (free((char *) (pSCHashTable.pBins)), (pSCHashTable.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pSCHashTable) ? (free((char *) (pSCHashTable)), (pSCHashTable) = 0) : 0);
+    pSCHashTable.pBins = nil;
+    pSCHashTable = nil;
 }
 
 static inline Fxch_SCHashTable_Entry_t* Fxch_SCHashTableBin( Fxch_SCHashTable_t* pSCHashTable,

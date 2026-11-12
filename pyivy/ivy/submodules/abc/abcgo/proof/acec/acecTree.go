@@ -52,8 +52,7 @@ func Acec_BoxFree(pBox *Acec_Box_t) {
     Vec_WecFreeP( &pBox.vRootLits );
     Vec_WecFreeP( &pBox.vUnique );
     Vec_WecFreeP( &pBox.vShared );
-    // inlining of macro ABC_FREE
-    ((pBox) ? (free((char *) (pBox)), (pBox) = 0) : 0);
+    pBox = nil;
 }
 func Acec_BoxFreeP(ppBox **Acec_Box_t) {
     if *ppBox {

@@ -808,12 +808,9 @@ if ( memcmp( pLoads, p->pLoads, sizeof(SC_Pair) * p->nObjs ) )
     printf( "Loads differ!\n" );
 */
 
-    // inlining of macro ABC_FREE
-    ((pTimes) ? (free((char *) (pTimes)), (pTimes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pSlews) ? (free((char *) (pSlews)), (pSlews) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pLoads) ? (free((char *) (pLoads)), (pLoads) = 0) : 0);
+    pTimes = nil;
+    pSlews = nil;
+    pLoads = nil;
 }
 
 /**Function*************************************************************

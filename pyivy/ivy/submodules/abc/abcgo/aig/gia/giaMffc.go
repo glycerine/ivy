@@ -248,7 +248,7 @@ func Gia_ManComputeDomsTry(p *Gia_Man_t) {
     var i, nSize, Entry, k int32;
     var clk abctime  = Abc_Clock();
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManLevelNum( p );
     Gia_ManCreateRefs( p );
     Gia_ManComputeDoms( p );

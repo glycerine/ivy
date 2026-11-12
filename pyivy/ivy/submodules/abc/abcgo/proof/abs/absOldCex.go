@@ -148,8 +148,7 @@ func Saig_ManCbaFilterFlops(pAig *Aig_Man_t, pAbsCex *Abc_Cex_t, vFlopClasses *V
     }
 //    printf( "\n" );
     // cleanup
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
     Vec_IntFree( vMapEntries );
     Vec_IntFree( vFlopCosts );
     Vec_IntFree( vFlopAddCosts );
@@ -562,8 +561,7 @@ func Saig_ManCbaStop(p *Saig_ManCba_t) {
     Vec_VecFreeP( &p.vReg2Value );
     Aig_ManStopP( &p.pFrames );
     Vec_IntFreeP( &p.vMapPiF2A );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

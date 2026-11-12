@@ -168,7 +168,7 @@ func Gls_ManStop(p *Gls_Man_t) {
     Vec_IntFree( p.vOrderLuts );
     Vec_IntFree( p.vOrderSeqs );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -231,7 +231,7 @@ func Gls_ManCount(pFile *os.File, pCounts []int32) *Vec_Str_t {
         pCounts[Type]++;
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return vLines;
 }
 func Gls_ManParseOne(ppLine *string) int32 {
@@ -372,7 +372,7 @@ func Gls_ManParse(pFile *os.File, p *Gls_Man_t) int32 {
         } else { assert(false, "0"); }
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return 1;
 }
 

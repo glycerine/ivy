@@ -1,5 +1,7 @@
 package cudd
 
+import core "github.com/glycerine/abcgo/bdd/cudd/core"
+
 /**CFile***********************************************************************
 
   FileName    [cuddBridge.c]
@@ -402,15 +404,7 @@ if !(dd.reordered == 1) { break }
 
 ******************************************************************************/
 func Cudd_bddTransfer(ddSource *DdManager, ddDestination *DdManager, f *DdNode) *DdNode {
-    var res *DdNode;
-    for {
-        ddDestination.reordered = 0;
-        res = cuddBddTransfer(ddSource, ddDestination, f);
-    
-if !(ddDestination.reordered == 1) { break }
-} 
-    return(res);
-
+ return core.Cudd_bddTransfer(ddSource,ddDestination,f)
 } /* end of Cudd_bddTransfer */
 
 

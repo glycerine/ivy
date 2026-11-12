@@ -980,18 +980,12 @@ func Fpga_CutTableStart(pMan *Fpga_Man_t) *Fpga_CutTable_t {
 
 ***********************************************************************/
 func Fpga_CutTableStop(p *Fpga_CutTable_t) {
-    // inlining of macro ABC_FREE
-    ((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pCuts1 = nil;
+    p.pCuts2 = nil;
+    p.pArray = nil;
+    p.pBins = nil;
+    p.pCuts = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

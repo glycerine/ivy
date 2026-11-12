@@ -78,8 +78,7 @@ func Int2_ManStop(p *Int2_Man_t) {
     Gia_ManStopP( &p.pGia );
     Vec_IntFree( p.vGloVars );
     Vec_IntFree( p.vVar2Glo );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Int2_ManReadInterpolant(pSat *sat_solver2) any {
     var p *Int2_Man_t  = pSat.pInt2;

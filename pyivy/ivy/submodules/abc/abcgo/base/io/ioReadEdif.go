@@ -180,8 +180,7 @@ func Io_ReadEdifNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {
             }
         
         } else if int32(strings.Compare((char *)vTokens.pArray[0], "design")) == 0 {
-            // inlining of macro ABC_FREE
-            ((pNtk.pName) ? (free((char *) (pNtk.pName)), (pNtk.pName) = 0) : 0); 
+            pNtk.pName = nil; 
             pNtk.pName = (char *)Extra_UtilStrsav( (char *)vTokens.pArray[3] );
             break;
         }

@@ -271,8 +271,7 @@ func Cec3_AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSa
     }
     RetValue = bmcg_sat_solver_addclause( pSat, pLits, nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************
@@ -628,10 +627,8 @@ func Cec3_ManCreateClasses(p *Gia_Man_t, pMan *Cec3_Man_t) {
     var i int32;
     var Key int32;
     // allocate representation
-    // inlining of macro ABC_FREE
-    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+    p.pReprs = nil;
+    p.pNexts = nil;
     // inlining of macro ABC_CALLOC
     p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));
     // inlining of macro ABC_FALLOC
@@ -660,8 +657,7 @@ func Cec3_ManCreateClasses(p *Gia_Man_t, pMan *Cec3_Man_t) {
         Gia_ObjSetNext( p, i, Gia_ObjNext(p, iRepr) );
         Gia_ObjSetNext( p, iRepr, i );
     }
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
     clk = Abc_Clock();
     // inlining of macro Gia_ManForEachClass0
     for  i = 0; i < Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {
@@ -765,8 +761,7 @@ Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((timeTotal)))/(float64(int64
     Vec_IntFreeP( &p.vSatVars );
     Vec_IntFreeP( &p.vObjSatPairs );
     Vec_IntFreeP( &p.vCexTriples );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

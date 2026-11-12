@@ -91,7 +91,7 @@ func Gia_ManFrontTransform(p *Gia_Man_t) {
         pObj.Value = 0;
     }
     // inlining of macro ABC_FREE
-    ((pFrontToId) ? (free((char *) (pFrontToId)), (pFrontToId) = 0) : 0);
+    pFrontToId = nil;
 }
 
 /**Function*************************************************************
@@ -237,7 +237,7 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
         assert(pFront[i] == 0, "pFront[i] == 0");
     }
     // inlining of macro ABC_FREE
-    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);
+    pFront = "";
 //printf( "Crosscut = %6d. Frontier = %6d. ", nCrossCutMaxInit, pNew->nFront );
 //ABC_PRT( "Time", Abc_Clock() - clk );
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );

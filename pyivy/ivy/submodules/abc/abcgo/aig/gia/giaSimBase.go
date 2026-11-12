@@ -512,13 +512,13 @@ func Gia_SimRsbFree(p *Gia_SimRsbMan_t) {
     Vec_WrdFree( p.vSimsObj );
     Vec_WrdFree( p.vSimsObj2 );
     // inlining of macro ABC_FREE
-    ((p.pFunc[0]) ? (free((char *) (p.pFunc[0])), (p.pFunc[0]) = 0) : 0);
+    p.pFunc[0] = nil;
     // inlining of macro ABC_FREE
-    ((p.pFunc[1]) ? (free((char *) (p.pFunc[1])), (p.pFunc[1]) = 0) : 0);
+    p.pFunc[1] = nil;
     // inlining of macro ABC_FREE
-    ((p.pFunc[2]) ? (free((char *) (p.pFunc[2])), (p.pFunc[2]) = 0) : 0);
+    p.pFunc[2] = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -595,9 +595,9 @@ func Gia_SimRsbResubVerify(p *Gia_SimRsbMan_t, iObj int32, vFanins *Vec_Int_t) i
     var pTruth1 *word  = Gia_SimRsbFunc( p, iObj, p.vFanins, 1 );
     var Res int32  = !Abc_TtIntersect( pTruth0, pTruth1, p.nWords, 0 );
     // inlining of macro ABC_FREE
-    ((pTruth0) ? (free((char *) (pTruth0)), (pTruth0) = 0) : 0);
+    pTruth0 = nil;
     // inlining of macro ABC_FREE
-    ((pTruth1) ? (free((char *) (pTruth1)), (pTruth1) = 0) : 0);
+    pTruth1 = nil;
     return Res;
 }
 
@@ -1155,7 +1155,7 @@ func Gia_SimAbsFree(p *Gia_SimAbsMan_t) {
     Vec_WrdFree( p.vCoverTable );
     Vec_IntFree( p.vTtMints );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -1349,13 +1349,13 @@ func Gia_SimAbsRefine(p *Gia_SimAbsMan_t) int32 {
         Count++;
         if Count == 64 {
             // inlining of macro ABC_FREE
-            ((pFanins) ? (free((char *) (pFanins)), (pFanins) = 0) : 0);
+            pFanins = nil;
             return 1;
         }
     }
     //printf( "Refinement added %d minterm pairs.\n", Count );
     // inlining of macro ABC_FREE
-    ((pFanins) ? (free((char *) (pFanins)), (pFanins) = 0) : 0);
+    pFanins = nil;
     return Count != 0;
 }
 func Gia_SimAbsFind(vValues *Vec_Int_t, Value int32) *Vec_Int_t {
@@ -1498,13 +1498,13 @@ func Gia_RsbFree(p *Gia_RsbMan_t) {
     Vec_WecFree( p.vSets[0] );
     Vec_WecFree( p.vSets[1] );
     // inlining of macro ABC_FREE
-    ((p.pSet[0]) ? (free((char *) (p.pSet[0])), (p.pSet[0]) = 0) : 0);
+    p.pSet[0] = nil;
     // inlining of macro ABC_FREE
-    ((p.pSet[1]) ? (free((char *) (p.pSet[1])), (p.pSet[1]) = 0) : 0);
+    p.pSet[1] = nil;
     // inlining of macro ABC_FREE
-    ((p.pSet[2]) ? (free((char *) (p.pSet[2])), (p.pSet[2]) = 0) : 0);
+    p.pSet[2] = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

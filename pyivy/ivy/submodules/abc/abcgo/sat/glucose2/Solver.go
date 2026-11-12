@@ -1,12 +1,10 @@
 package glucose2
 
-import "fmt"
-
 /****************************************************************************************[Solver.h]
  Glucose -- Copyright (c) 2009, Gilles Audemard, Laurent Simon
                 CRIL - Univ. Artois, France
                 LRI  - Univ. Paris Sud, France
- 
+
 Glucose sources are based on MiniSat (see below MiniSat copyrights). Permissions and copyrights of
 Glucose are exactly the same as Minisat on which it is based on. (see below).
 
@@ -30,608 +28,317 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "sat/glucose2/Vec.h"
-//#include "sat/glucose2/Heap.h"
-//#include "sat/glucose2/Alg.h"
-//#include "sat/glucose2/Options.h"
-//#include "sat/glucose2/SolverTypes.h"
-//#include "sat/glucose2/BoundedQueue.h"
-//#include "sat/glucose2/Constants.h"
-
-//#include "sat/glucose2/CGlucose.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco2 {
-
-//=================================================================================================
-// Solver -- the main class:
-
-class Solver {
-public:
-
-    int SolverType; // ABC identifies Glucose's type as 0
-
-    // Constructor/Destructor:
-    //
-    Solver();
-    virtual ~Solver();
-
-    // ABC callbacks
-    void * pCnfMan;                      // external CNF manager
-    int(*pCnfFunc)(void * p, int, int*); // external callback. messages: 0: unsat; 1: sat; -1: still working
-    int nCallConfl;                      // callback will be called every this number of conflicts
-    bool terminate_search_early;         // used to stop the solver early if it as instructed by an external caller
-    int * pstop;                         // another callback
-    uint64_t nRuntimeLimit;              // runtime limit
-    vec<int> user_vec;
-    vec<Lit> user_lits;
-
-    // circuit-based solving
-    int jftr;
-    void sat_solver_set_var_fanin_lit(int, int, int);  
-    void sat_solver_start_new_round();  
-    void sat_solver_mark_cone(int);  
-
-    // Problem specification:
-    //
-    Var     newVar    (bool polarity = true, bool dvar = true); // Add a new variable with parameters specifying variable mode.
-    void    addVar    (Var v);                                  // Add enough variables to make sure there is variable v.
-
-    bool    addClause (vec<Lit>& ps);                     // Add a clause to the solver. 
-    bool    addEmptyClause();                                   // Add the empty clause, making the solver contradictory.
-    bool    addClause (Lit p);                                  // Add a unit clause to the solver. 
-    bool    addClause (Lit p, Lit q);                           // Add a binary clause to the solver. 
-    bool    addClause (Lit p, Lit q, Lit r);                    // Add a ternary clause to the solver. 
-    bool    addClause_(      vec<Lit>& ps);                     // Add a clause to the solver without making superflous internal copy. Will
-                                                                // change the passed vector 'ps'.
-
-    // Solving:
-    //
-    bool    simplify     ();                        // Removes already satisfied clauses.
-    bool    solve        (vec<Lit>& assumps); // Search for a model that respects a given set of assumptions.
-    lbool   solveLimited (vec<Lit>& assumps); // Search for a model that respects a given set of assumptions (With resource constraints).
-    bool    solve        ();                        // Search without assumptions.
-    bool    solve        (Lit p);                   // Search for a model that respects a single assumption.
-    bool    solve        (Lit p, Lit q);            // Search for a model that respects two assumptions.
-    bool    solve        (Lit p, Lit q, Lit r);     // Search for a model that respects three assumptions.
-    bool    okay         () ;                  // FALSE means solver is in a conflicting state
-
-    void    toDimacs     (FILE* f, vec<Lit>& assumps);            // Write CNF to file in DIMACS-format.
-    void    toDimacs     (char *file, vec<Lit>& assumps);
-    void    toDimacs     (FILE* f, Clause& c, vec<Var>& map, Var& max);
-    void printLit(Lit l);
-    void printClause(CRef c);
-    void printInitialClause(CRef c);
-    // Convenience versions of 'toDimacs()':
-    void    toDimacs     (char* file);
-    void    toDimacs     (char* file, Lit p);
-    void    toDimacs     (char* file, Lit p, Lit q);
-    void    toDimacs     (char* file, Lit p, Lit q, Lit r);
-    
-    // Variable mode:
-    // 
-    void    setPolarity    (Var v, bool b); // Declare which polarity the decision heuristic should use for a variable. Requires mode 'polarity_user'.
-    void    setDecisionVar (Var v, bool b); // Declare if a variable should be eligible for selection in the decision heuristic.
-
-    // Read state:
-    //
-    lbool   value      (Var x) ;       // The current value of a variable.
-    lbool   value      (Lit p) ;       // The current value of a literal.
-    lbool   modelValue (Var x) ;       // The value of a variable in the last model. The last call to solve must have been satisfiable.
-    lbool   modelValue (Lit p) ;       // The value of a literal in the last model. The last call to solve must have been satisfiable.
-    int     nAssigns   ()      ;       // The current number of assigned literals.
-    int     nClauses   ()      ;       // The current number of original clauses.
-    int     nLearnts   ()      ;       // The current number of learnt clauses.
-    int     nVars      ()      ;       // The current number of variables.
-    int     nFreeVars  ()      ;
-    int *   getCex     ()      ;
-    int     level      (Var x) ;       // moved level() to public to compile "struct JustOrderLt" -- alanmi
-
-    // Incremental mode
-    void setIncrementalMode();
-    void initNbInitialVars(int nb);
-    void printIncrementalStats();
-
-    // Resource contraints:
-    //
-    void    setConfBudget(int64_t x);
-    void    setPropBudget(int64_t x);
-    void    budgetOff();
-    void    interrupt();          // Trigger a (potentially asynchronous) interruption of the solver.
-    void    clearInterrupt();     // Clear interrupt indicator flag.
-
-    // Memory managment:
-    //
-    virtual void reset();
-    virtual void garbageCollect(); // virtuality causes segfault for some reason
-    void    checkGarbage(double gf);
-    void    checkGarbage();
-
-
-
-
-    // Extra results: (read-only member variable)
-    //
-    vec<lbool> model;             // If problem is satisfiable, this vector contains the model (if any).
-    vec<Lit>   conflict;          // If problem is unsatisfiable (possibly under assumptions),
-                                  // this vector represent the final conflict clause expressed in the assumptions.
-
-    // Mode of operation:
-    //
-    int       verbosity;
-    int       verbEveryConflicts;
-    int       showModel;
-    // Constants For restarts
-    double    K;
-    double    R;
-    double    sizeLBDQueue;
-    double    sizeTrailQueue;
-
-    // Constants for reduce DB
-    int firstReduceDB;
-    int incReduceDB;
-    int specialIncReduceDB;
-    unsigned int lbLBDFrozenClause;
-
-    // Constant for reducing clause
-    int lbSizeMinimizingClause;
-    unsigned int lbLBDMinimizingClause;
-
-    double    var_decay;
-    double    clause_decay;
-    double    random_var_freq;
-    double    random_seed;
-    int       ccmin_mode;         // Controls conflict clause minimization (0=none, 1=basic, 2=deep).
-    int       phase_saving;       // Controls the level of phase saving (0=none, 1=limited, 2=full).
-    bool      rnd_pol;            // Use random polarities for branching heuristics.
-    bool      rnd_init_act;       // Initialize variable activities with a small random value.
-    double    garbage_frac;       // The fraction of wasted memory allowed before a garbage collection is triggered.
-
-    // Certified UNSAT ( Thanks to Marijn Heule)
-    FILE*               certifiedOutput;
-    bool                certifiedUNSAT;
-
-    
-    // Statistics: (read-only member variable)
-    //
-    int64_t nbRemovedClauses,nbReducedClauses,nbDL2,nbBin,nbUn,nbReduceDB,solves, starts, decisions, rnd_decisions, propagations, conflicts,conflictsRestarts,nbstopsrestarts,nbstopsrestartssame,lastblockatrestart;
-    int64_t dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
-
-protected:
-    long curRestart;
-    // Helper structures:
-    //
-    struct VarData { CRef reason; int level; };
-    static inline VarData mkVarData(CRef cr, int l){ VarData d = {cr, l}; return d; }
-
-    struct Watcher {
-        CRef cref;
-        Lit  blocker;
-        Watcher(CRef cr, Lit p) : cref(cr), blocker(p) {}
-        bool operator==(Watcher& w) { return cref == w.cref; }
-        bool operator!=(Watcher& w) { return cref != w.cref; }
-    };
-
-    struct WatcherDeleted
-    {
-        ClauseAllocator& ca;
-        WatcherDeleted(ClauseAllocator& _ca) : ca(_ca) {}
-        bool operator()(Watcher& w) { return ca[w.cref].mark() == 1; }
-    };
-
-    struct VarOrderLt {
-        vec<double>&  activity;
-        bool operator () (Var x, Var y) { return activity[x] > activity[y]; }
-        VarOrderLt(vec<double>&  act) : activity(act) { }
-    };
-
-
-    // Solver state:
-    //
-    int lastIndexRed;
-    bool                ok;               // If FALSE, the constraints are already unsatisfiable. No part of the solver state may be used!
-    double              cla_inc;          // Amount to bump next clause with.
-    vec<double>         activity;         // A heuristic measurement of the activity of a variable.
-    double              var_inc;          // Amount to bump next variable with.
-    OccLists<Lit, vec<Watcher>, WatcherDeleted>
-                        watches;          // 'watches[lit]' is a list of constraints watching 'lit' (will go there if literal becomes true).
-    OccLists<Lit, vec<Watcher>, WatcherDeleted>
-                        watchesBin;          // 'watches[lit]' is a list of constraints watching 'lit' (will go there if literal becomes true).
-    vec<CRef>           clauses;          // List of problem clauses.
-    vec<CRef>           learnts;          // List of learnt clauses.
-
-    vec<lbool>          assigns;          // The current assignments.
-    vec<char>           polarity;         // The preferred polarity of each variable.
-    vec<char>           decision;         // Declares if a variable is eligible for selection in the decision heuristic.
-    vec<Lit>            trail;            // Assignment stack; stores all assigments made in the order they were made.
-    vec<int>            nbpos;
-    vec<int>            trail_lim;        // Separator indices for different decision levels in 'trail'.
-    vec<VarData>        vardata;          // Stores reason and level for each variable.
-    int                 qhead;            // Head of queue (as index into the trail -- no more explicit propagation queue in MiniSat).
-    int                 simpDB_assigns;   // Number of top-level assignments since last execution of 'simplify()'.
-    int64_t             simpDB_props;     // Remaining number of propagations that must be made before next execution of 'simplify()'.
-    vec<Lit>            assumptions;      // Current set of assumptions provided to solve by the user.
-    Heap<VarOrderLt>    order_heap;       // A priority queue of variables ordered with respect to the variable activity.
-    double              progress_estimate;// Set by 'search()'.
-    bool                remove_satisfied; // Indicates whether possibly inefficient linear scan for satisfied clauses should be performed in 'simplify'.
-    vec<unsigned int> permDiff;      // permDiff[var] contains the current conflict number... Used to count the number of  LBD
-    
-#ifdef UPDATEVARACTIVITY
-    // UPDATEVARACTIVITY trick (see competition'09 companion paper)
-    vec<Lit> lastDecisionLevel; 
-#endif
-
-    ClauseAllocator     ca;
-
-    int nbclausesbeforereduce;            // To know when it is time to reduce clause database
-    
-    bqueue<unsigned int> trailQueue,lbdQueue; // Bounded queues for restarts.
-    float sumLBD; // used to compute the global average of LBD. Restarts...
-    int sumAssumptions;
-
-
-    // Temporaries (to reduce allocation overhead). Each variable is prefixed by the method in which it is
-    // used, exept 'seen' wich is used in several places.
-    //
-    vec<char>           seen;
-    vec<Lit>            analyze_stack;
-    vec<Lit>            analyze_toclear;
-    vec<Lit>            add_tmp;
-    unsigned int  MYFLAG;
-
-
-    double              max_learnts;
-    double              learntsize_adjust_confl;
-    int                 learntsize_adjust_cnt;
-
-    // Resource contraints:
-    //
-    int64_t             conflict_budget;    // -1 means no budget.
-    int64_t             propagation_budget; // -1 means no budget.
-    bool                asynch_interrupt;
-
-
-    // Variables added for incremental mode
-    int incremental; // Use incremental SAT Solver
-    int nbVarsInitialFormula; // nb VAR in formula without assumptions (incremental SAT)
-    double totalTime4Sat,totalTime4Unsat;
-    int nbSatCalls,nbUnsatCalls;
-    vec<int> assumptionPositions,initialPositions;
-
-
-    // Main internal methods:
-    //
-    void     insertVarOrder   (Var x);                                                 // Insert a variable in the decision order priority queue.
-    Lit      pickBranchLit    ();                                                      // Return the next decision variable.
-    void     newDecisionLevel ();                                                      // Begins a new decision level.
-    void     uncheckedEnqueue (Lit p, CRef from = CRef_Undef);                         // Enqueue a literal. Assumes value of literal is undefined.
-    bool     enqueue          (Lit p, CRef from = CRef_Undef);                         // Test if fact 'p' contradicts current state, enqueue otherwise.
-    CRef     propagate        ();                                                      // Perform unit propagation. Returns possibly conflicting clause.
-    void     cancelUntil      (int level);                                             // Backtrack until a certain level.
-    void     analyze          (CRef confl, vec<Lit>& out_learnt, vec<Lit> & selectors, int& out_btlevel,unsigned int &nblevels,unsigned int &szWithoutSelectors);    // (bt = backtrack)
-    void     analyzeFinal     (Lit p, vec<Lit>& out_conflict);                         // COULD THIS BE IMPLEMENTED BY THE ORDINARIY "analyze" BY SOME REASONABLE GENERALIZATION?
-    bool     litRedundant     (Lit p, uint32_t abstract_levels);                       // (helper method for 'analyze()')
-    lbool    search           (int nof_conflicts);                                     // Search for a given number of conflicts.
-    lbool    solve_           ();                                                      // Main solve method (assumptions given in 'assumptions').
-    void     reduceDB         ();                                                      // Reduce the set of learnt clauses.
-    void     removeSatisfied  (vec<CRef>& cs);                                         // Shrink 'cs' to contain only non-satisfied clauses.
-    void     rebuildOrderHeap ();
-
-    // Maintaining Variable/Clause activity:
-    //
-    void     varDecayActivity ();                      // Decay all variables with the specified factor. Implemented by increasing the 'bump' value instead.
-    void     varBumpActivity  (Var v, double inc);     // Increase a variable with the current 'bump' value.
-    void     varBumpActivity  (Var v);                 // Increase a variable with the current 'bump' value.
-    void     claDecayActivity ();                      // Decay all clauses with the specified factor. Implemented by increasing the 'bump' value instead.
-    void     claBumpActivity  (Clause& c);             // Increase a clause with the current 'bump' value.
-
-    // Operations on clauses:
-    //
-    void     attachClause     (CRef cr);               // Attach a clause to watcher lists.
-    void     detachClause     (CRef cr, bool strict = false); // Detach a clause to watcher lists.
-    void     removeClause     (CRef cr);               // Detach and free a clause.
-    bool     locked           (Clause& c) ; // Returns TRUE if a clause is a reason for some implication in the current state.
-    bool     satisfied        (Clause& c) ; // Returns TRUE if a clause is satisfied in the current state.
-
-    unsigned int computeLBD(vec<Lit> & lits,int end=-1);
-    unsigned int computeLBD(Clause &c);
-    void minimisationWithBinaryResolution(vec<Lit> &out_learnt);
-
-    void     relocAll         (ClauseAllocator& to);
-
-    // Misc:
-    //
-    int      decisionLevel    ()      ; // Gives the current decisionlevel.
-    uint32_t abstractLevel    (Var x) ; // Used to represent an abstraction of sets of decision levels.
-    CRef     reason           (Var x) ;
-    double   progressEstimate ()      ; // DELETE THIS ?? IT'S NOT VERY USEFUL ...
-    bool     withinBudget     ()      ;
-    inline bool isSelector(Var v) {return (incremental && v>nbVarsInitialFormula);}
-
-    // Static helpers:
-    //
-
-    // Returns a random float 0 <= x < 1. Seed must never be 0.
-    static inline double drand(double& seed) {
-        seed *= 1389796;
-        int q = int32((seed / 2147483647));
-        seed -= float64(q) * 2147483647;
-        return seed / 2147483647; }
-
-    // Returns a random integer 0 <= x < size. Seed must never be 0.
-    static inline int irand(double& seed, int size) {
-        return int32((drand(seed) * size)); }
-
-
-    // circuit-based solver
-protected:
-    struct JustData { now uint32; /* C bitfield: 1 bits; review packing and truncation */ double act_fanin; };
-    vec<JustData> jdata;
-    static inline JustData mkJustData(bool n){ JustData d = {n,0}; return d; }
-
-    struct JustOrderLt {
-        Solver * pS;
-        bool operator () (Var x, Var y) {
-            if( pS.justActivity(x) != pS.justActivity(y) )
-                return pS.justActivity(x) > pS.justActivity(y);
-            if( pS.level(x) != pS.level(y) )
-                return pS.level(x) < pS.level(y);
-            return x > y;
-        }
-        JustOrderLt(Solver * _pS) : pS(_pS) { }
-    };
-
-    struct JustWatch { struct { dir uint32; /* C bitfield: 1 bits; review packing and truncation */ }
- header; Var head; Var next; Var prev; };
-    vec<JustWatch> jwatch;
-    static inline JustWatch mkJustWatch(){ JustWatch w = {0, var_Undef, var_Undef, var_Undef}; return w; }
-    void addJwatch( Var host, Var member );
-    void delJwatch( Var member );
-
-    vec<Lit> var2FaninLits; // (~0): undefine
-    vec<unsigned> var2TravId;
-    vec<Lit> var2Fanout0, var2FanoutN, var2FanoutP;
-    CRef itpc; // the interpreted clause of a gate 
-
-    bool isTwoFanin  ( Var v ) ; // this var has two fanins 
-    bool isAND       ( Var v ) { return getFaninVar0(v) < getFaninVar1(v); }
-    bool isJReason   ( Var v ) { return isTwoFanin(v) && ( l_False == value(v) || (!isAND(v) && l_Undef != value(v)) ); }
-    Lit  getFaninLit0( Var v ) { return var2FaninLits[ (v<<1) + 0 ]; }
-    Lit  getFaninLit1( Var v ) { return var2FaninLits[ (v<<1) + 1 ]; }
-    bool getFaninC0  ( Var v ) { return sign(getFaninLit0(v)); }
-    bool getFaninC1  ( Var v ) { return sign(getFaninLit1(v)); }
-    Var  getFaninVar0( Var v ) { return  var(getFaninLit0(v)); }
-    Var  getFaninVar1( Var v ) { return  var(getFaninLit1(v)); }
-    Lit  getFaninPlt0( Var v ) { return mkLit(getFaninVar0(v), 1 == polarity[getFaninVar0(v)]); }
-    Lit  getFaninPlt1( Var v ) { return mkLit(getFaninVar1(v), 1 == polarity[getFaninVar1(v)]); }
-    Lit  maxActiveLit(Lit lit0, Lit lit1) { return activity[var(lit0)] < activity[var(lit1)]? lit1: lit0; }
-
-    Lit  gateJustFanin(Var v) ; // l_Undef=satisfied, 0/1 = fanin0/fanin1 requires justify
-    void gateAddJwatch(Var v);
-    CRef gatePropagateCheck( Var v, Var t );
-    CRef gatePropagateCheckThis( Var v );
-    CRef gatePropagateCheckFanout( Var v, Lit lfo );
-    void setItpcSize( int sz ); // sz <= 3
-
-    // directly call by original glucose functions 
-    void updateJustActivity( Var v );
-    void ResetJustData(bool fCleanMemory);
-    Lit  pickJustLit( Var& j_reason );
-    void justCheck();
-    void pushJustQueue(Var v);
-    void restoreJustQueue(int level); // call with cancelUntil
-    void gateClearJwatch( Var v, int backtrack_level );
-
-    CRef gatePropagate( Lit p );
-
-    CRef interpret( Var v, Var t );
-    CRef castCRef( Lit p );  // interpret a gate into a clause 
-    CRef getConfClause( CRef r );
-
-    CRef Var2CRef( Var  v  ) { return v  |  (1<<(sizeof(CRef)*8-1)); }
-    Var  CRef2Var( CRef cr ) { return cr & ~(1<<(sizeof(CRef)*8-1)); }
-    bool isGateCRef( CRef cr ) { return CRef_Undef != cr && 0 != (cr & (1<<(sizeof(CRef)*8-1))); }
-
-    int64_t travId_prev, travId;
-
-    Heap<JustOrderLt> jheap;
-    /* jstack
-    call by unchecked_enqueue
-    consumed by pickJustLit
-    cleaned by cancelUntil
-    */
-    vec<Var> jstack;
-public:
-    void setVarFaninLits( Var v, Lit lit1, Lit lit2 );
-    //void delVarFaninLits( Var v);
-
-    int setNewRound(){ return travId ++ ; }
-    void markCone( Var v );
-    bool isRoundWatch( Var v ) { return travId==var2TravId[v]; }
-
-
-    JustData& getJustData(int v) { return jdata[v]; }
-    double varActivity(int v) { return activity[v];}
-    double justActivity(int v) { return jdata[v].act_fanin;}
-    int varPolarity(int v){ return polarity[v]? 1: 0;}
-    vec<Lit> JustModel; // model obtained by justification enabled
-
-    int justUsage() ;
-};
-
-
-//=================================================================================================
-// Implementation of inline methods:
-
-inline CRef Solver::reason(Var x) { return vardata[x].reason; }
-inline int  Solver::level (Var x) { return vardata[x].level; }
-
-inline void Solver::insertVarOrder(Var x) {
-    if (!order_heap.inHeap(x) && decision[x]) order_heap.insert(x); }
-
-inline void Solver::varDecayActivity() { var_inc *= (1 / var_decay); }
-inline void Solver::varBumpActivity(Var v) { varBumpActivity(v, var_inc); }
-inline void Solver::varBumpActivity(Var v, double inc) {
-    if (activity[v] += inc) > 1e100 {
-        // Rescale:
-        for (int i = 0; i < nVars(); i++)
-            activity[i] *= 1e-100;
-        
-        if( justUsage() )
-            for int i = 0; i < jheap.size(); i++{
-                Var j = jheap[i];
-                jdata[j].act_fanin = activity[getFaninVar0(j)] > activity[getFaninVar1(j)]? activity[getFaninVar0(j)]: activity[getFaninVar1(j)];
-            }
-        var_inc *= 1e-100; }
-
-    // Update order_heap with respect to new activity:
-    if (order_heap.inHeap(v))
-        order_heap.decrease(v); 
-
-    #ifdef CGLUCOSE_EXP
-    if( justUsage() )
-        updateJustActivity(v);
-
-    #endif
+import (
+	"io"
+	"sync/atomic"
+	"time"
+)
+
+// Watcher keeps a satisfied blocking literal alongside a watched clause.
+type Watcher struct {
+	Clause  *Clause
+	Blocker Lit
 }
 
-inline void Solver::claDecayActivity() { cla_inc *= (1 / clause_decay); }
-inline void Solver::claBumpActivity (Clause& c) {
-        if (c.activity() += cla_inc) > 1e20 {
-            // Rescale:
-            for (int i = 0; i < learnts.size(); i++)
-                ca[learnts[i]].activity() *= float32(1e-20);
-            cla_inc *= 1e-20; } }
+// Solver implements Glucose's first-UIP CDCL search. Clause references are stable
+// Go pointers, so collection never changes implication reasons or watch entries.
+type Solver struct {
+	JustificationMode int
+	JustModel         []Lit
+	circuit           *circuitState
 
-inline void Solver::checkGarbage(void){ checkGarbage(garbage_frac); }
-inline void Solver::checkGarbage(double gf){
-    if (ca.wasted() > ca.size() * gf)
-        garbageCollect();}
+	// ABC integration callbacks use Go values rather than unmanaged C buffers.
+	CnfManager           any
+	CnfCallback          func(manager any, message int, model []int) int
+	Stop                 func() bool
+	Deadline             time.Time
+	TerminateSearchEarly bool
 
-// NOTE: enqueue does not set the ok flag! (only public methods do)
-inline bool     Solver::enqueue         (Lit p, CRef from)      { return value(p) != l_Undef ? value(p) != l_False : (uncheckedEnqueue(p, from), true); }
-inline bool     Solver::addClause       (vec<Lit>& ps)    { ps.copyTo(add_tmp); return addClause_(add_tmp); }
-inline bool     Solver::addEmptyClause  ()                      { add_tmp.clear(); return addClause_(add_tmp); }
-inline bool     Solver::addClause       (Lit p)                 { add_tmp.clear(); add_tmp.push(p); return addClause_(add_tmp); }
-inline bool     Solver::addClause       (Lit p, Lit q)          { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); return addClause_(add_tmp); }
-inline bool     Solver::addClause       (Lit p, Lit q, Lit r)   { add_tmp.clear(); add_tmp.push(p); add_tmp.push(q); add_tmp.push(r); return addClause_(add_tmp); }
-inline bool     Solver::locked          (Clause& c) { 
-   #ifdef CGLUCOSE_EXP
-
-    if(c.size()>2) 
-     return value(c[0]) == l_True && reason(var(c[0])) != CRef_Undef && !isGateCRef(reason(var(c[0]))) && ca.lea(reason(var(c[0]))) == &c; 
-   return 
-     (value(c[0]) == l_True && reason(var(c[0])) != CRef_Undef && !isGateCRef(reason(var(c[0]))) && ca.lea(reason(var(c[0]))) == &c)
-     || 
-     (value(c[1]) == l_True && reason(var(c[1])) != CRef_Undef && !isGateCRef(reason(var(c[1]))) && ca.lea(reason(var(c[1]))) == &c);
-
-   #else
-   
-   if(c.size()>2) 
-     return value(c[0]) == l_True && reason(var(c[0])) != CRef_Undef && ca.lea(reason(var(c[0]))) == &c; 
-   return 
-     (value(c[0]) == l_True && reason(var(c[0])) != CRef_Undef && ca.lea(reason(var(c[0]))) == &c)
-     || 
-     (value(c[1]) == l_True && reason(var(c[1])) != CRef_Undef && ca.lea(reason(var(c[1]))) == &c);
-
-   #endif
- }
-inline void     Solver::newDecisionLevel()                      {trail_lim.push(trail.size());}
-
-inline int      Solver::decisionLevel ()      { return trail_lim.size(); }
-inline uint32_t Solver::abstractLevel (Var x) { return 1 << (level(x) & 31); }
-inline lbool    Solver::value         (Var x) { return assigns[x]; }
-inline lbool    Solver::value         (Lit p) { return assigns[var(p)] ^ sign(p); }
-inline lbool    Solver::modelValue    (Var x) { return model[x]; }
-inline lbool    Solver::modelValue    (Lit p) { return model[var(p)] ^ sign(p); }
-inline int      Solver::nAssigns      ()      { return trail.size(); }
-inline int      Solver::nClauses      ()      { return clauses.size(); }
-inline int      Solver::nLearnts      ()      { return learnts.size(); }
-inline int      Solver::nVars         ()      { return vardata.size(); }
-inline int      Solver::nFreeVars     ()      { return int32(dec_vars) - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }
-inline int *    Solver::getCex        ()      { return (int*) &JustModel[0]; }
-inline void     Solver::setPolarity   (Var v, bool b) { polarity[v] = b; }
-inline void     Solver::setDecisionVar(Var v, bool b) 
-{ 
-    if      ( b && !decision[v]) dec_vars++;
-    else if (!b &&  decision[v]) dec_vars--;
-
-    decision[v] = b;
-    insertVarOrder(v);
-}
-inline void     Solver::setConfBudget(int64_t x){ conflict_budget    = conflicts    + x; }
-inline void     Solver::setPropBudget(int64_t x){ propagation_budget = propagations + x; }
-inline void     Solver::interrupt(){ asynch_interrupt = true; }
-inline void     Solver::clearInterrupt(){ asynch_interrupt = false; }
-inline void     Solver::budgetOff(){ conflict_budget = propagation_budget = -1; }
-inline bool     Solver::withinBudget() {
-    return !asynch_interrupt &&
-           (conflict_budget    < 0 || conflicts < (uint64_t)conflict_budget) &&
-           (propagation_budget < 0 || propagations < (uint64_t)propagation_budget); }
-
-// FIXME: after the introduction of asynchronous interrruptions the solve-versions that return a
-// pure bool do not give a safe interface. Either interrupts must be possible to turn off here, or
-// all calls to solve must return an 'lbool'. I'm not yet sure which I prefer.
-inline bool     Solver::solve         ()                    { budgetOff(); assumptions.clear(); return solve_() == l_True; }
-inline bool     Solver::solve         (Lit p)               { budgetOff(); assumptions.clear(); assumptions.push(p); return solve_() == l_True; }
-inline bool     Solver::solve         (Lit p, Lit q)        { budgetOff(); assumptions.clear(); assumptions.push(p); assumptions.push(q); return solve_() == l_True; }
-inline bool     Solver::solve         (Lit p, Lit q, Lit r) { budgetOff(); assumptions.clear(); assumptions.push(p); assumptions.push(q); assumptions.push(r); return solve_() == l_True; }
-inline bool     Solver::solve         (vec<Lit>& assumps){ budgetOff(); assumps.copyTo(assumptions); return solve_() == l_True; }
-inline lbool    Solver::solveLimited  (vec<Lit>& assumps){ assumps.copyTo(assumptions); return solve_(); }
-inline bool     Solver::okay          ()      { return ok; }
-
-inline void     Solver::toDimacs      (char* file){ vec<Lit> as; toDimacs(file, as); }
-inline void     Solver::toDimacs      (char* file, Lit p){ vec<Lit> as; as.push(p); toDimacs(file, as); }
-inline void     Solver::toDimacs      (char* file, Lit p, Lit q){ vec<Lit> as; as.push(p); as.push(q); toDimacs(file, as); }
-inline void     Solver::toDimacs      (char* file, Lit p, Lit q, Lit r){ vec<Lit> as; as.push(p); as.push(q); as.push(r); toDimacs(file, as); }
-
-inline void     Solver::addVar(Var v) { while (v >= nVars()) newVar(); }
-
-inline void     Solver::sat_solver_set_var_fanin_lit(int v, int lit0, int lit1) { setVarFaninLits( Var(v), toLit(lit0), toLit(lit1) ); }
-inline void     Solver::sat_solver_start_new_round()  { setNewRound(); }
-inline void     Solver::sat_solver_mark_cone(int v) { markCone(v); }
-
-//=================================================================================================
-// Debug etc:
-
-
-inline void Solver::printLit(Lit l)
-{
-    fmt.Printf("%s%d:%c", sign(l) ? "-" : "", var(l)+1, value(l) == l_True ? '1' : (value(l) == l_False ? '0' : 'X'));
+	Model                                                               []LBool
+	Conflict                                                            []Lit
+	K, R                                                                float64
+	SizeLBDQueue, SizeTrailQueue                                        int
+	FirstReduceDB, IncReduceDB, SpecialIncReduceDB                      int
+	LBLBDFrozenClause, LBSizeMinimizingClause, LBLBDMinimizingClause    int
+	VarDecay, ClauseDecay, RandomVarFreq, RandomSeed                    float64
+	CCMinMode, PhaseSaving                                              int
+	RandomPolarity, RandomInitialActivity                               bool
+	Verbosity                                                           int
+	CertifiedOutput                                                     io.Writer
+	CertifiedUNSAT                                                      bool
+	Solves, Starts, Decisions, RandomDecisions, Propagations, Conflicts int64
+	ConflictsRestarts, RemovedClauses, ReducedClauses, ReduceDBs        int64
+	clauses, learnts                                                    []*Clause
+	assigns                                                             []LBool
+	levels                                                              []int
+	reasons                                                             []*Clause
+	polarity, decision, seen                                            []bool
+	activity                                                            []float64
+	watches, watchesBin                                                 [][]Watcher
+	trail                                                               []Lit
+	trailLim                                                            []int
+	qhead                                                               int
+	assumptions                                                         []Lit
+	orderHeap                                                           *Heap
+	allocator                                                           ClauseAllocator
+	ok                                                                  bool
+	varInc, clauseInc                                                   float64
+	incremental                                                         bool
+	nbVarsInitialFormula                                                int
+	lbdQueue, trailQueue                                                *BoundedQueue
+	sumLBD                                                              float64
+	nextReduce, curRestart                                              int
+	simpAssigns, simpProps                                              int
+	removeSatisfied                                                     bool
+	conflictBudget, propagationBudget                                   int64
+	interrupted                                                         atomic.Bool
+	analyzeToClear                                                      []Lit
 }
 
-
-inline void Solver::printClause(CRef cr)
-{
-  Clause &c = ca[cr];
-    for int i = 0; i < c.size(); i++{
-        printLit(c[i]);
-        fmt.Printf(" ");
-    }
+func NewSolver() *Solver {
+	s := &Solver{K: .8, R: 1.4, SizeLBDQueue: 50, SizeTrailQueue: 5000, FirstReduceDB: 2000, IncReduceDB: 300, SpecialIncReduceDB: 1000, LBLBDFrozenClause: 30, LBSizeMinimizingClause: 30, LBLBDMinimizingClause: 6, VarDecay: .8, ClauseDecay: .999, RandomSeed: 91648253, CCMinMode: 2, PhaseSaving: 2, ok: true, varInc: 1, clauseInc: 1, nbVarsInitialFormula: 1<<31 - 1, nextReduce: 2000, curRestart: 1, simpAssigns: -1, removeSatisfied: true, conflictBudget: -1, propagationBudget: -1}
+	s.orderHeap = NewHeap(func(a, b int) bool { return s.activity[a] > s.activity[b] })
+	s.lbdQueue = NewBoundedQueue(s.SizeLBDQueue)
+	s.trailQueue = NewBoundedQueue(s.SizeTrailQueue)
+	return s
+}
+func (s *Solver) NVars() int              { return len(s.assigns) }
+func (s *Solver) NClauses() int           { return len(s.clauses) }
+func (s *Solver) NLearnts() int           { return len(s.learnts) }
+func (s *Solver) Okay() bool              { return s.ok }
+func (s *Solver) DecisionLevel() int      { return len(s.trailLim) }
+func (s *Solver) ValueVar(v Var) LBool    { return s.assigns[v] }
+func (s *Solver) ValueLit(p Lit) LBool    { return s.assigns[p.Var()].Xor(p.Sign()) }
+func (s *Solver) ModelValue(p Lit) LBool  { return s.Model[p.Var()].Xor(p.Sign()) }
+func (s *Solver) SetIncrementalMode()     { s.incremental = true }
+func (s *Solver) InitNbInitialVars(n int) { s.nbVarsInitialFormula = n }
+func (s *Solver) isSelector(v Var) bool   { return s.incremental && int(v) > s.nbVarsInitialFormula }
+func (s *Solver) NewVar(sign, decision bool) Var {
+	v := Var(len(s.assigns))
+	s.assigns = append(s.assigns, LUndef)
+	s.levels = append(s.levels, 0)
+	s.reasons = append(s.reasons, nil)
+	s.polarity = append(s.polarity, sign)
+	s.decision = append(s.decision, decision)
+	s.seen = append(s.seen, false)
+	a := 0.
+	if s.RandomInitialActivity {
+		a = s.random() * 1e-5
+	}
+	s.activity = append(s.activity, a)
+	s.watches = append(s.watches, nil, nil)
+	s.watchesBin = append(s.watchesBin, nil, nil)
+	if decision {
+		s.orderHeap.Insert(int(v))
+	}
+	if s.JustificationMode > 0 {
+		s.ensureCircuit()
+	}
+	return v
+}
+func (s *Solver) SetDecisionVar(v Var, b bool) {
+	s.decision[v] = b
+	if b && !s.orderHeap.InHeap(int(v)) {
+		s.orderHeap.Insert(int(v))
+	}
+}
+func (s *Solver) SetPolarity(v Var, b bool) { s.polarity[v] = b }
+func (s *Solver) SetConfBudget(n int64)     { s.conflictBudget = s.Conflicts + n }
+func (s *Solver) SetPropBudget(n int64)     { s.propagationBudget = s.Propagations + n }
+func (s *Solver) BudgetOff()                { s.conflictBudget = -1; s.propagationBudget = -1 }
+func (s *Solver) Interrupt()                { s.interrupted.Store(true) }
+func (s *Solver) ClearInterrupt()           { s.interrupted.Store(false) }
+func (s *Solver) WithinBudget() bool {
+	return !s.interrupted.Load() && !s.TerminateSearchEarly && (s.Stop == nil || !s.Stop()) && (s.Deadline.IsZero() || time.Now().Before(s.Deadline)) && (s.conflictBudget < 0 || s.Conflicts < s.conflictBudget) && (s.propagationBudget < 0 || s.Propagations < s.propagationBudget)
+}
+func (s *Solver) random() float64 {
+	s.RandomSeed *= 1389796
+	q := int64(s.RandomSeed / 2147483647)
+	s.RandomSeed -= float64(q) * 2147483647
+	return s.RandomSeed / 2147483647
+}
+func (s *Solver) newDecisionLevel() { s.trailLim = append(s.trailLim, len(s.trail)) }
+func (s *Solver) uncheckedEnqueue(p Lit, c *Clause) {
+	s.assigns[p.Var()] = LTrue.Xor(p.Sign())
+	s.levels[p.Var()] = s.DecisionLevel()
+	s.reasons[p.Var()] = c
+	s.trail = append(s.trail, p)
+	if s.JustificationMode > 0 {
+		c := s.ensureCircuit()
+		c.data[p.Var()] = JustData{Now: s.isJReason(p.Var())}
+		if s.isJReason(p.Var()) {
+			f := c.fanins[p.Var()]
+			if s.ValueVar(f[0].Var()).IsUndef() && s.ValueVar(f[1].Var()).IsUndef() {
+				c.stack = append(c.stack, p.Var())
+			}
+		}
+	}
+}
+func (s *Solver) enqueue(p Lit, c *Clause) bool {
+	v := s.ValueLit(p)
+	if !v.IsUndef() {
+		return v == LTrue
+	}
+	s.uncheckedEnqueue(p, c)
+	return true
+}
+func (s *Solver) CancelUntil(level int) {
+	if s.DecisionLevel() <= level {
+		return
+	}
+	end := s.trailLim[level]
+	last := s.trailLim[len(s.trailLim)-1]
+	for i := len(s.trail) - 1; i >= end; i-- {
+		v := s.trail[i].Var()
+		s.assigns[v] = LUndef
+		if s.PhaseSaving > 1 || (s.PhaseSaving == 1 && i > last) {
+			s.polarity[v] = s.trail[i].Sign()
+		}
+		if s.decision[v] && !s.orderHeap.InHeap(int(v)) {
+			s.orderHeap.Insert(int(v))
+		}
+	}
+	if s.JustificationMode > 0 && s.circuit != nil {
+		for i := len(s.trail) - 1; i >= end; i-- {
+			v := s.trail[i].Var()
+			s.gateClearJwatch(v, level)
+			s.circuit.data[v].Now = false
+		}
+		s.circuit.stack = s.circuit.stack[:0]
+	}
+	s.qhead = end
+	s.trail = s.trail[:end]
+	s.trailLim = s.trailLim[:level]
+}
+func (s *Solver) bumpVar(v Var) {
+	s.activity[v] += s.varInc
+	if s.activity[v] > 1e100 {
+		for i := range s.activity {
+			s.activity[i] *= 1e-100
+		}
+		s.varInc *= 1e-100
+	}
+	if s.orderHeap.InHeap(int(v)) {
+		s.orderHeap.Decrease(int(v))
+	}
+	if s.JustificationMode > 0 {
+		s.updateJustActivity(v)
+	}
+}
+func (s *Solver) bumpClause(c *Clause) {
+	c.activity += s.clauseInc
+	if c.activity > 1e20 {
+		for _, a := range s.learnts {
+			a.activity *= 1e-20
+		}
+		s.clauseInc *= 1e-20
+	}
 }
 
-inline void Solver::printInitialClause(CRef cr)
-{
-  Clause &c = ca[cr];
-    for int i = 0; i < c.size(); i++{
-      if !isSelector(var(c[i])) {
-    printLit(c[i]);
-        fmt.Printf(" ");
-      }
-    }
+func (s *Solver) AddVar(v Var) {
+	for s.NVars() <= int(v) {
+		s.NewVar(true, true)
+	}
+}
+func (s *Solver) AddEmptyClause() bool { return s.AddClause(nil) }
+func (s *Solver) NAssigns() int        { return len(s.trail) }
+func (s *Solver) NFreeVars() int {
+	n := 0
+	for v, b := range s.decision {
+		if b && s.assigns[v].IsUndef() {
+			n++
+		}
+	}
+	return n
+}
+func (s *Solver) Level(v Var) int           { return s.levels[v] }
+func (s *Solver) ModelValueVar(v Var) LBool { return s.Model[v] }
+func (s *Solver) GetCex() []int {
+	result := make([]int, len(s.Model))
+	for i, v := range s.Model {
+		if v == LTrue {
+			result[i] = 1
+		}
+	}
+	return result
 }
 
-
-//=================================================================================================
+// GarbageCollect drops dead watch entries and allocator ownership. Live clauses
+// keep stable addresses; Go's collector reclaims storage no longer referenced.
+func (s *Solver) GarbageCollect() {
+	clean := func(ws []Watcher) []Watcher {
+		dst := ws[:0]
+		for _, w := range ws {
+			if !w.Clause.freed {
+				dst = append(dst, w)
+			}
+		}
+		clear(ws[len(dst):])
+		return dst
+	}
+	for i := range s.watches {
+		s.watches[i] = clean(s.watches[i])
+		s.watchesBin[i] = clean(s.watchesBin[i])
+	}
+	live := s.allocator.clauses[:0]
+	for _, c := range s.allocator.clauses {
+		if !c.freed {
+			live = append(live, c)
+		}
+	}
+	clear(s.allocator.clauses[len(live):])
+	s.allocator.clauses = live
+	s.allocator.wasted = 0
 }
-
-
-//ABC_NAMESPACE_CXX_HEADER_END
-
-//#include "sat/glucose2/CGlucoseCore.h"
-
-
+func (s *Solver) Reset() {
+	// Preserve caller configuration while restoring original reset defaults.
+	s.K = .8
+	s.R = 1.4
+	s.FirstReduceDB = 2000
+	s.VarDecay = .8
+	s.Model = nil
+	s.JustModel = nil
+	s.circuit = nil
+	s.Conflict = nil
+	s.clauses = nil
+	s.learnts = nil
+	s.assigns = nil
+	s.levels = nil
+	s.reasons = nil
+	s.polarity = nil
+	s.decision = nil
+	s.seen = nil
+	s.activity = nil
+	s.watches = nil
+	s.watchesBin = nil
+	s.trail = nil
+	s.trailLim = nil
+	s.qhead = 0
+	s.assumptions = nil
+	s.allocator = ClauseAllocator{}
+	s.analyzeToClear = nil
+	s.ok = true
+	s.varInc = 1
+	s.clauseInc = 1
+	s.nbVarsInitialFormula = 1<<31 - 1
+	s.sumLBD = 0
+	s.nextReduce = s.FirstReduceDB
+	s.curRestart = 1
+	s.simpAssigns = -1
+	s.simpProps = 0
+	s.BudgetOff()
+	s.ClearInterrupt()
+	s.Solves = 0
+	s.Starts = 0
+	s.Decisions = 0
+	s.RandomDecisions = 0
+	s.Propagations = 0
+	s.Conflicts = 0
+	s.ConflictsRestarts = 0
+	s.RemovedClauses = 0
+	s.ReducedClauses = 0
+	s.ReduceDBs = 0
+	s.orderHeap = NewHeap(func(a, b int) bool { return s.activity[a] > s.activity[b] })
+	s.lbdQueue = NewBoundedQueue(s.SizeLBDQueue)
+	s.trailQueue = NewBoundedQueue(s.SizeTrailQueue)
+}

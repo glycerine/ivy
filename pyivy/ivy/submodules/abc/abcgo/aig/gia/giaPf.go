@@ -243,11 +243,11 @@ func Pf_StoDeriveMatches(p *Pf_Man_t, fVerbose int32) {
     }
     for  i = 2; i <= 6; i++  {
         // inlining of macro ABC_FREE
-        ((pComp[i]) ? (free((char *) (pComp[i])), (pComp[i]) = 0) : 0);
+        pComp[i] = nil;
     }
     for  i = 2; i <= 6; i++  {
         // inlining of macro ABC_FREE
-        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);
+        pPerm[i] = nil;
     }
 //    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
 }
@@ -322,16 +322,16 @@ func Pf_StoCreate(pGia *Gia_Man_t, pPars *Jf_Par_t) *Pf_Man_t {
     assert(pPars.nCutNum > 1  && pPars.nCutNum <= PF_CUT_MAX, "pPars.nCutNum > 1  && pPars.nCutNum <= PF_CUT_MAX");
     assert(pPars.nLutSize > 1 && pPars.nLutSize <= PF_LEAF_MAX, "pPars.nLutSize > 1 && pPars.nLutSize <= PF_LEAF_MAX");
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     Vec_IntFreeP( &pGia.vCellMapping );
     if Gia_ManHasChoices(pGia) {
         Gia_ManSetPhase(pGia); }
     // create references
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     vFlowRefs = Vec_IntAlloc(0);
     Mf_ManSetFlowRefs( pGia, vFlowRefs );
-    pGia.pRefs= Vec_IntReleaseArray(vFlowRefs);
+    pGia.Refs= Vec_IntReleaseArray(vFlowRefs);
     Vec_IntFree(vFlowRefs);
     // create
     // inlining of macro ABC_CALLOC
@@ -364,23 +364,23 @@ func Pf_StoCreate(pGia *Gia_Man_t, pPars *Jf_Par_t) *Pf_Man_t {
 func Pf_StoDelete(p *Pf_Man_t) {
     Vec_PtrFreeData( &p.vPages );
     // inlining of macro ABC_FREE
-    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);
+    p.vPages.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vCutSets.pArray) ? (free((char *) (p.vCutSets.pArray)), (p.vCutSets.pArray) = 0) : 0);
+    p.vCutSets.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vCutFlows.pArray) ? (free((char *) (p.vCutFlows.pArray)), (p.vCutFlows.pArray) = 0) : 0);
+    p.vCutFlows.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vCutDelays.pArray) ? (free((char *) (p.vCutDelays.pArray)), (p.vCutDelays.pArray) = 0) : 0);
+    p.vCutDelays.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.pPfObjs) ? (free((char *) (p.pPfObjs)), (p.pPfObjs) = 0) : 0);
+    p.pPfObjs = nil;
     // matching
     Vec_WecFree( p.vTt2Match );
     Vec_MemHashFree( p.vTtMem );
     Vec_MemFree( p.vTtMem );
     // inlining of macro ABC_FREE
-    ((p.pCells) ? (free((char *) (p.pCells)), (p.pCells) = 0) : 0);
+    p.pCells = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

@@ -143,8 +143,7 @@ func Cnf_DeriveMapping(p *Cnf_Man_t) {
     }
     }
     Vec_PtrFree( vSuper );
-    // inlining of macro ABC_FREE
-    ((pAreaFlows) ? (free((char *) (pAreaFlows)), (pAreaFlows) = 0) : 0);
+    pAreaFlows = nil;
 
 /*
     // compute the area of mapping

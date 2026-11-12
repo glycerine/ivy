@@ -277,8 +277,7 @@ func Fra_FramesAddMore(p *Aig_Man_t, nFrames int32) {
         }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);
+    pLatches = nil;
 }
 
 
@@ -352,8 +351,7 @@ func Fra_FraigInductionPart(pAig *Aig_Man_t, pPars *Fra_Ssw_t) *Aig_Man_t {
             fmt.Printf("%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\n", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp), pPars.nIters, nClasses); }
         Aig_ManStop( pNew );
         Aig_ManStop( pTemp );
-        // inlining of macro ABC_FREE
-        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);
+        pMapBack = nil;
     }
     // remap the AIG
     pNew = Aig_ManDupRepr( pAig, 0 );

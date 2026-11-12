@@ -112,13 +112,10 @@ func Fraig_MemFixedStop(p *Fraig_MemFixed_t, fVerbose int32) {
         fmt.Printf("   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\n", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);
     }
     for  i = 0; i < p.nChunks; i++  {
-        // inlining of macro ABC_FREE
-        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);
+        p.pChunks[i] = nil;
     }
-    // inlining of macro ABC_FREE
-    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pChunks = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -211,8 +208,7 @@ func Fraig_MemFixedRestart(p *Fraig_MemFixed_t) {
 
     // deallocate all chunks except the first one
     for  i = 1; i < p.nChunks; i++  {
-        // inlining of macro ABC_FREE
-        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);
+        p.pChunks[i] = nil;
     }
     p.nChunks = 1;
     // transform these entries into a linked list

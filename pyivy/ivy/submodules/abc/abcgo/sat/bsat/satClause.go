@@ -13,7 +13,7 @@ import "fmt"
   Synopsis    [Memory management.]
 
   Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 1, 2004.]
@@ -21,471 +21,252 @@ import "fmt"
   Revision    [$Id: satMem.h,v 1.0 2004/01/01 1:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
 
+// Clauses use typed storage; handles retain ABC's alternating-page encoding.
+const (
+	LEARNT_MAX_START_DEFAULT = 10000
+	LEARNT_MAX_INCRE_DEFAULT = 1000
+	LEARNT_MAX_RATIO_DEFAULT = 50
+)
 
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "misc/util/abc_global.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-//#define LEARNT_MAX_START_DEFAULT  0
-const LEARNT_MAX_START_DEFAULT =  10000
-const LEARNT_MAX_INCRE_DEFAULT =   1000
-const LEARNT_MAX_RATIO_DEFAULT =     50
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-//=================================================================================================
-// Clause datatype + minor functions:
-
-   
 type clause struct {
-    lrn uint32; /* C bitfield: 1 bits; review packing and truncation */
-    mark uint32; /* C bitfield: 1 bits; review packing and truncation */
-    partA uint32; /* C bitfield: 1 bits; review packing and truncation */
-    lbd uint32; /* C bitfield: 8 bits; review packing and truncation */
-    size uint32; /* C bitfield: 21 bits; review packing and truncation */
-    lit        lits[0];
+	lrn, mark, partA, lbd, size int32
+	lits                        []lit
 }
-
-// learned clauses have "hidden" literal (c->lits[c->size]) to store clause ID
-
-// data-structure for logging entries
-// memory is allocated in 2^nPageSize word-sized pages
-// the first 'word' of each page are stores the word limit
-
-// although clause memory pieces are aligned to 64-bit words
-// the integer clause handles are in terms of 32-bit unsigneds
-// allowing for the first bit to be used for labeling 2-lit clauses
-
-
-   
 type Sat_Mem_t struct {
-    nEntries [2]int32;  // entry count
-    BookMarkH [2]int32; // bookmarks for handles
-    BookMarkE [2]int32; // bookmarks for entries
-    iPage [2]int32;     // current memory page
-    nPageSize                 int32;    // page log size in terms of ints
-    uPageMask            uint32;    // page mask
-    uLearnedMask            uint32; // learned mask
-    nPagesAlloc                 int32;  // page count allocated
-    pPages               **int32;       // page pointers
-} 
-
-func Sat_MemLimit(p *int32) int32 { return p[0];                                 }
-func Sat_MemIncLimit(p *int32, nInts int32) int32 { return p[0] += nInts;                        }
-func Sat_MemWriteLimit(p *int32, nInts int32) { p[0] = nInts;                                }
-
-func Sat_MemHandPage(p *Sat_Mem_t, h cla) int32 { return h >> p.nPageSize;                    }
-func Sat_MemHandShift(p *Sat_Mem_t, h cla) int32 { return h & p.uPageMask;                     }
-
-//static inline int       Sat_MemIntSize( int size, int lrn )          { return (size + 2 + lrn) & ~01;               }
-func Sat_MemIntSize(size int32, lrn int32) int32 { return 2*((size + 2 + lrn)/2);               }
-func Sat_MemClauseSize(p *clause) int32 { return Sat_MemIntSize(p.size, p.lrn);      }
-func Sat_MemClauseSize2(p *clause) int32 { return Sat_MemIntSize(p.size, 1);           }
-
-//static inline clause *  Sat_MemClause( Sat_Mem_t * p, int i, int k ) { assert(i <= p->iPage[i&1] && k <= Sat_MemLimit(p->pPages[i]));  return (clause *)(p->pPages[i] + k ); }
-func Sat_MemClause(p *Sat_Mem_t, i int32, k int32) *clause { assert((k != 0), "k"); return (clause *)(p.pPages[i] + k);         }
-//static inline clause *  Sat_MemClauseHand( Sat_Mem_t * p, cla h )    { assert(Sat_MemHandPage(p, h) <= p->iPage[(h & p->uLearnedMask) > 0]); assert(Sat_MemHandShift(p, h) >= 2 && Sat_MemHandShift(p, h) < (int)p->uLearnedMask); return Sat_MemClause( p, Sat_MemHandPage(p, h), Sat_MemHandShift(p, h) );     }
-func Sat_MemClauseHand(p *Sat_Mem_t, h cla) *clause { if h != 0 {
-    return Sat_MemClause( p, Sat_MemHandPage(p, h), Sat_MemHandShift(p, h) );
-} else {
-    return nil;
-}                  }
-func Sat_MemEntryNum(p *Sat_Mem_t, lrn int32) int32 { return p.nEntries[lrn];                                                                              }
-
-func Sat_MemHand(p *Sat_Mem_t, i int32, k int32) cla { return (i << p.nPageSize) | k;                                                                       }
-func Sat_MemHandCurrent(p *Sat_Mem_t, lrn int32) cla { return (p.iPage[lrn] << p.nPageSize) | Sat_MemLimit( p.pPages[p.iPage[lrn]] );                    }
-
-func Sat_MemClauseUsed(p *Sat_Mem_t, h cla) int32 { return h < p.BookMarkH[(h & p.uLearnedMask) > 0];                                                   }
-
-func Sat_MemMemoryHand(p *Sat_Mem_t, h cla) float64 { return 1.0 * ((Sat_MemHandPage(p, h) + 2)/2 * (1 << (p.nPageSize+2)) + Sat_MemHandShift(p, h) * 4);  }
-func Sat_MemMemoryUsed(p *Sat_Mem_t, lrn int32) float64 { return Sat_MemMemoryHand( p, Sat_MemHandCurrent(p, lrn) );                                            }
-func Sat_MemMemoryAllUsed(p *Sat_Mem_t) float64 { return Sat_MemMemoryUsed( p, 0 ) + Sat_MemMemoryUsed( p, 1 );                                         }
-func Sat_MemMemoryAll(p *Sat_Mem_t) float64 { return 1.0 * (p.iPage[0] + p.iPage[1] + 2) * (1 << (p.nPageSize+2));                               }
-
-// p is memory storage
-// c is clause pointer
-// i is page number
-// k is page offset
-
-// print problem clauses NOT in proof mode
-// Original macro:
-// #define Sat_MemForEachClause( p, c, i, k )      \
-//     for ( i = 0; i <= p->iPage[0]; i += 2 )     \
-//         for ( k = 2; k < Sat_MemLimit(p->pPages[i]) && ((c) = Sat_MemClause( p, i, k )); k += Sat_MemClauseSize(c) ) if ( i == 0 && k == 2 ) {} else
-
-
-// print problem clauses in proof mode
-// Original macro:
-// #define Sat_MemForEachClause2( p, c, i, k )      \
-//     for ( i = 0; i <= p->iPage[0]; i += 2 )     \
-//         for ( k = 2; k < Sat_MemLimit(p->pPages[i]) && ((c) = Sat_MemClause( p, i, k )); k += Sat_MemClauseSize2(c) ) if ( i == 0 && k == 2 ) {} else
-
-
-// Original macro:
-// #define Sat_MemForEachLearned( p, c, i, k )     \
-//     for ( i = 1; i <= p->iPage[1]; i += 2 )     \
-//         for ( k = 2; k < Sat_MemLimit(p->pPages[i]) && ((c) = Sat_MemClause( p, i, k )); k += Sat_MemClauseSize(c) )
-
-
-////////////////////////////////////////////////////////////////////////
-///                       GLOBAL VARIABLES                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
-
-func clause_from_lit(l lit) int32 { return l + l + 1;                            }
-func clause_is_lit(h cla) int32 { return (h & 1);                              }
-func clause_read_lit(h cla) lit { return (lit)(h >> 1);                        }
-
-func clause_learnt_h(p *Sat_Mem_t, h cla) int32 { return (h & p.uLearnedMask) > 0;            }
-func clause_learnt(c *clause) int32 { return c.lrn;                               }
-func clause_id(c *clause) int32 { return c.lits[c.size];                     }
-func clause_set_id(c *clause, id int32) { c.lits[c.size] = id;                       }
-func clause_size(c *clause) int32 { return c.size;                              }
-func clause_begin(c *clause) *lit { return c.lits;                              }
-func clause_end(c *clause) *lit { return c.lits + c.size;                    }
-func clause_print_(c *clause) { 
-    var i int32;
-    fmt.Printf("{ ");
-    for  i = 0; i < clause_size(c); i++  {
-        fmt.Printf("%d ", (clause_begin(c)[i] & 1)? -(clause_begin(c)[i] >> 1) : clause_begin(c)[i] >> 1);
-    }
-    fmt.Printf("}\n");
+	nEntries, BookMarkH, BookMarkE, iPage [2]int32
+	nPageSize                             int32
+	uPageMask, uLearnedMask               int32
+	nPagesAlloc                           int32
+	pPages                                [][]int32
+	clauses                               map[cla]*clause
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DECLARATIONS                        ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocating vector.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemCountL(p *Sat_Mem_t) int32 {
-    var c *clause;
-    var i, k, Count int32;
-    // inlining of macro Sat_MemForEachLearned
-    for  i = 1; i <= p.iPage[1]; i += 2  {             for  k = 2; k < Sat_MemLimit(p.pPages[i]) && ((c) = Sat_MemClause( p, i, k )); k += Sat_MemClauseSize(c)  {
-        Count++;
-    }
-    }
-    return Count;
+func Sat_MemLimit(p []int32) int32               { return p[0] }
+func Sat_MemIncLimit(p []int32, n int32) int32   { p[0] += n; return p[0] }
+func Sat_MemWriteLimit(p []int32, n int32)       { p[0] = n }
+func Sat_MemHandPage(p *Sat_Mem_t, h cla) int32  { return h >> p.nPageSize }
+func Sat_MemHandShift(p *Sat_Mem_t, h cla) int32 { return h & p.uPageMask }
+func Sat_MemIntSize(size, lrn int32) int32       { return 2 * ((size + 2 + lrn) / 2) }
+func Sat_MemClauseSize(c *clause) int32          { return Sat_MemIntSize(c.size, c.lrn) }
+func Sat_MemClauseSize2(c *clause) int32         { return Sat_MemIntSize(c.size, 1) }
+func Sat_MemClause(p *Sat_Mem_t, i, k int32) *clause {
+	return Sat_MemClauseHand(p, Sat_MemHand(p, i, k))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Allocating vector.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemAlloc_(p *Sat_Mem_t, nPageSize int32) {
-    assert(nPageSize > 8 && nPageSize < 32, "nPageSize > 8 && nPageSize < 32");
-    memset( p, 0, sizeof(Sat_Mem_t) );
-    p.nPageSize    = nPageSize;
-    p.uLearnedMask = uint32((1 << nPageSize));
-    p.uPageMask    = uint32(((1 << nPageSize) - 1));
-    p.nPagesAlloc  = 256;
-    // inlining of macro ABC_CALLOC
-    p.pPages       = ((int * *) calloc((size_t)(p.nPagesAlloc), sizeof(int *)));
-    // inlining of macro ABC_ALLOC
-    p.pPages[0]    = ((int *) malloc(sizeof(int) * (size_t)(int32((((word)1) << p.nPageSize)))));
-    // inlining of macro ABC_ALLOC
-    p.pPages[1]    = ((int *) malloc(sizeof(int) * (size_t)(int32((((word)1) << p.nPageSize)))));
-    p.iPage[0]     = 0;
-    p.iPage[1]     = 1;
-    Sat_MemWriteLimit( p.pPages[0], 2 );
-    Sat_MemWriteLimit( p.pPages[1], 2 );
+func Sat_MemClauseHand(p *Sat_Mem_t, h cla) *clause {
+	if h == 0 {
+		return nil
+	}
+	c, ok := p.clauses[h]
+	if !ok {
+		panic("invalid clause handle")
+	}
+	return c
 }
-func Sat_MemAlloc(nPageSize int32) *Sat_Mem_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Sat_Mem_t{};
-    Sat_MemAlloc_( p, nPageSize );
-    return p;
+func Sat_MemEntryNum(p *Sat_Mem_t, lrn int32) int32 { return p.nEntries[lrn] }
+func Sat_MemHand(p *Sat_Mem_t, i, k int32) cla      { return i<<p.nPageSize | k }
+func Sat_MemHandCurrent(p *Sat_Mem_t, lrn int32) cla {
+	return Sat_MemHand(p, p.iPage[lrn], Sat_MemLimit(p.pPages[p.iPage[lrn]]))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resetting vector.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Sat_MemClauseUsed(p *Sat_Mem_t, h cla) int32 {
+	lrn := clause_learnt_h(p, h)
+	if h < p.BookMarkH[lrn] {
+		return 1
+	}
+	return 0
+}
+func Sat_MemMemoryHand(p *Sat_Mem_t, h cla) float64 {
+	return float64((Sat_MemHandPage(p, h)+2)/2)*float64(uint64(1)<<uint(p.nPageSize+2)) + float64(Sat_MemHandShift(p, h))*4
+}
+func Sat_MemMemoryUsed(p *Sat_Mem_t, lrn int32) float64 {
+	return Sat_MemMemoryHand(p, Sat_MemHandCurrent(p, lrn))
+}
+func Sat_MemMemoryAllUsed(p *Sat_Mem_t) float64 {
+	return Sat_MemMemoryUsed(p, 0) + Sat_MemMemoryUsed(p, 1)
+}
+func Sat_MemMemoryAll(p *Sat_Mem_t) float64 {
+	return float64(p.iPage[0]+p.iPage[1]+2) * float64(uint64(1)<<uint(p.nPageSize+2))
+}
+func clause_from_lit(l lit) int32 { return l + l + 1 }
+func clause_is_lit(h cla) int32   { return h & 1 }
+func clause_read_lit(h cla) lit   { return h >> 1 }
+func clause_learnt_h(p *Sat_Mem_t, h cla) int32 {
+	if h&p.uLearnedMask != 0 {
+		return 1
+	}
+	return 0
+}
+func clause_learnt(c *clause) int32     { return c.lrn }
+func clause_id(c *clause) int32         { return c.lits[c.size] }
+func clause_set_id(c *clause, id int32) { c.lits[c.size] = id }
+func clause_size(c *clause) int32       { return c.size }
+func clause_begin(c *clause) []lit      { return c.lits[:c.size] }
+func clause_end(c *clause) []lit        { return c.lits[c.size:c.size] }
+func clause_print_(c *clause) {
+	fmt.Print("{ ")
+	for _, l := range clause_begin(c) {
+		n := l >> 1
+		if l&1 != 0 {
+			n = -n
+		}
+		fmt.Printf("%d ", n)
+	}
+	fmt.Println("}")
+}
+func Sat_MemCountL(p *Sat_Mem_t) int32 { return int32(len(p.handles(1))) }
+func Sat_MemAlloc_(p *Sat_Mem_t, n int32) {
+	if n <= 8 || n >= 32 {
+		panic("invalid SAT page size")
+	}
+	*p = Sat_Mem_t{nPageSize: n, uPageMask: int32((uint64(1) << uint(n)) - 1), uLearnedMask: int32(uint64(1) << uint(n)), nPagesAlloc: 256, pPages: make([][]int32, 256), clauses: make(map[cla]*clause)}
+	p.iPage = [2]int32{0, 1}
+	p.pPages[0] = []int32{2}
+	p.pPages[1] = []int32{2}
+}
+func Sat_MemAlloc(n int32) *Sat_Mem_t { p := new(Sat_Mem_t); Sat_MemAlloc_(p, n); return p }
 func Sat_MemRestart(p *Sat_Mem_t) {
-    p.nEntries[0]  = 0;
-    p.nEntries[1]  = 0;
-    p.iPage[0]     = 0;
-    p.iPage[1]     = 1;
-    Sat_MemWriteLimit( p.pPages[0], 2 );
-    Sat_MemWriteLimit( p.pPages[1], 2 );
+	p.nEntries = [2]int32{}
+	p.iPage = [2]int32{0, 1}
+	p.pPages[0][0] = 2
+	p.pPages[1][0] = 2
+	clear(p.clauses)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the bookmark.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Sat_MemBookMark(p *Sat_Mem_t) {
-    p.BookMarkE[0] = p.nEntries[0];
-    p.BookMarkE[1] = p.nEntries[1];
-    p.BookMarkH[0] = Sat_MemHandCurrent( p, 0 );
-    p.BookMarkH[1] = Sat_MemHandCurrent( p, 1 );
+	p.BookMarkE = p.nEntries
+	for l := int32(0); l < 2; l++ {
+		p.BookMarkH[l] = Sat_MemHandCurrent(p, l)
+	}
 }
 func Sat_MemRollBack(p *Sat_Mem_t) {
-    p.nEntries[0]  = p.BookMarkE[0];
-    p.nEntries[1]  = p.BookMarkE[1];
-    p.iPage[0]     = Sat_MemHandPage( p, p.BookMarkH[0] );
-    p.iPage[1]     = Sat_MemHandPage( p, p.BookMarkH[1] );
-    Sat_MemWriteLimit( p.pPages[p.iPage[0]], Sat_MemHandShift( p, p.BookMarkH[0] ) );
-    Sat_MemWriteLimit( p.pPages[p.iPage[1]], Sat_MemHandShift( p, p.BookMarkH[1] ) );
+	for l := int32(0); l < 2; l++ {
+		Sat_MemShrink(p, p.BookMarkH[l], l)
+	}
+	p.nEntries = p.BookMarkE
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Freeing vector.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemFree_(p *Sat_Mem_t) {
-    var i int32;
-    for  i = 0; i < p.nPagesAlloc; i++  {
-        // inlining of macro ABC_FREE
-        ((p.pPages[i]) ? (free((char *) (p.pPages[i])), (p.pPages[i]) = 0) : 0);
-    }
-    // inlining of macro ABC_FREE
-    ((p.pPages) ? (free((char *) (p.pPages)), (p.pPages) = 0) : 0);
+func Sat_MemFree_(p *Sat_Mem_t) { *p = Sat_Mem_t{} }
+func Sat_MemFree(p *Sat_Mem_t)  { Sat_MemFree_(p) }
+func (p *Sat_Mem_t) ensurePage(page int32) {
+	for page >= int32(len(p.pPages)) {
+		p.pPages = append(p.pPages, make([][]int32, len(p.pPages))...)
+	}
+	p.nPagesAlloc = int32(len(p.pPages))
+	if p.pPages[page] == nil {
+		p.pPages[page] = []int32{2}
+	}
 }
-func Sat_MemFree(p *Sat_Mem_t) {
-    Sat_MemFree_( p );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
+	if size < 0 || lrn < 0 || lrn > 1 || plus < 0 || plus > 1 || data != nil && int32(len(data)) < size {
+		panic("invalid clause append")
+	}
+	words := Sat_MemIntSize(size, lrn|plus)
+	limit := int64(1) << uint(p.nPageSize)
+	if int64(words)+3 >= limit {
+		panic("clause exceeds page")
+	}
+	page := p.iPage[lrn]
+	offset := p.pPages[page][0]
+	if int64(offset+words+2) >= limit {
+		page += 2
+		p.ensurePage(page)
+		p.pPages[page][0] = 2
+		p.iPage[lrn] = page
+		offset = 2
+	}
+	c := &clause{size: size, lrn: lrn, lits: make([]lit, size+1)}
+	copy(c.lits[:size], data)
+	if lrn|plus != 0 {
+		c.lits[size] = p.nEntries[lrn]
+	}
+	h := Sat_MemHand(p, page, offset)
+	p.clauses[h] = c
+	p.nEntries[lrn]++
+	p.pPages[page][0] += words
+	return h
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates new clause.]
-
-  Description [The resulting clause is fully initialized.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemAppend(p *Sat_Mem_t, pArray *int32, nSize int32, lrn int32, fPlus1 int32) int32 {
-    var c *clause;
-    var pPage *int32  = p.pPages[p.iPage[lrn]];
-    var nInts int32  = Sat_MemIntSize( nSize, lrn | fPlus1 );
-    assert(nInts + 3 < (1 << p.nPageSize), "nInts + 3 < (1 << p.nPageSize)");
-    // need two extra at the begining of the page and one extra in the end
-    if Sat_MemLimit(pPage) + nInts + 2 >= (1 << p.nPageSize) { 
-        p.iPage[lrn] += 2;
-        if p.iPage[lrn] >= p.nPagesAlloc {
-            // inlining of macro ABC_REALLOC
-            
-            if p.pPages {
-                p.pPages = ((int * *) realloc((char *)(p.pPages), sizeof(int *) * (size_t)(p.nPagesAlloc * 2)));
-            } else {
-                p.pPages = ((int * *) malloc(sizeof(int *) * (size_t)(p.nPagesAlloc * 2)));
-            }
-            memset( p.pPages + p.nPagesAlloc, 0, sizeof(int *) * p.nPagesAlloc );
-            p.nPagesAlloc *= 2;
-        }
-        if p.pPages[p.iPage[lrn]] == nil {
-            // inlining of macro ABC_ALLOC
-            p.pPages[p.iPage[lrn]] = ((int *) malloc(sizeof(int) * (size_t)(int32((((word)1) << p.nPageSize))))); }
-        pPage = p.pPages[p.iPage[lrn]];
-        Sat_MemWriteLimit( pPage, 2 );
-    }
-    pPage[Sat_MemLimit(pPage)] = 0;
-    c = (clause *)(pPage + Sat_MemLimit(pPage));
-    c.size = nSize;
-    c.lrn = lrn;
-    if pArray != nil {
-        memcpy( c.lits, pArray, sizeof(int) * nSize ); }
-    if lrn | fPlus1 {
-        c.lits[c.size] = p.nEntries[lrn]; }
-    p.nEntries[lrn]++;
-    Sat_MemIncLimit( pPage, nInts );
-    return Sat_MemHandCurrent(p, lrn) - nInts;
+func Sat_MemShrink(p *Sat_Mem_t, h, lrn int32) {
+	if h == 0 || clause_learnt_h(p, h) != lrn || h > Sat_MemHandCurrent(p, lrn) {
+		panic("invalid clause shrink")
+	}
+	for handle := range p.clauses {
+		if clause_learnt_h(p, handle) == lrn && handle >= h {
+			delete(p.clauses, handle)
+		}
+	}
+	page := Sat_MemHandPage(p, h)
+	p.iPage[lrn] = page
+	p.pPages[page][0] = Sat_MemHandShift(p, h)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Shrinking vector size.]
-
-  Description []
-
-  SideEffects [This procedure does not update the number of entries.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemShrink(p *Sat_Mem_t, h int32, lrn int32) {
-    assert(clause_learnt_h(p, h) == lrn, "clause_learnt_h(p, h) == lrn");
-    assert((h != 0) && h <= Sat_MemHandCurrent(p, lrn), "h && h <= Sat_MemHandCurrent(p, lrn)");
-    p.iPage[lrn] = Sat_MemHandPage(p, h);
-    Sat_MemWriteLimit( p.pPages[p.iPage[lrn]], Sat_MemHandShift(p, h) );
+func (p *Sat_Mem_t) handles(lrn int32) []cla {
+	var out []cla
+	for page := lrn; page <= p.iPage[lrn]; page += 2 {
+		for k := int32(2); k < p.pPages[page][0]; {
+			h := Sat_MemHand(p, page, k)
+			c := p.clauses[h]
+			if c == nil {
+				panic("missing clause in page")
+			}
+			out = append(out, h)
+			k += Sat_MemClauseSize(c)
+		}
+	}
+	return out
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compacts learned clauses by removing marked entries.]
-
-  Description [Returns the number of remaining entries.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sat_MemCompactLearned(p *Sat_Mem_t, fDoMove int32) int32 {
-    var c *clause;
-    var cPivot *clause = nil;
-    var i int32;
-    var k int32;
-    var iNew int32 = 1;
-    var kNew int32 = 2;
-    var nInts int32;
-    var fStartLooking int32;
-    var Counter int32;
-    var hLimit int32  = Sat_MemHandCurrent(p, 1);
-    if hLimit == Sat_MemHand(p, 1, 2) {
-        return 0; }
-    if (fDoMove != 0) && p.BookMarkH[1] {
-        // move the pivot
-        assert(p.BookMarkH[1] >= Sat_MemHand(p, 1, 2) && p.BookMarkH[1] <= hLimit, "p.BookMarkH[1] >= Sat_MemHand(p, 1, 2) && p.BookMarkH[1] <= hLimit");
-        // get the pivot and remember it may be pointed offlimit
-        cPivot = Sat_MemClauseHand( p, p.BookMarkH[1] );
-        if p.BookMarkH[1] < hLimit && !cPivot.mark {
-            p.BookMarkH[1] = cPivot.lits[cPivot.size];
-            cPivot = nil;
-        }
-        // else find the next used clause after cPivot
-    }
-    // iterate through the learned clauses
-    fStartLooking = 0;
-    // inlining of macro Sat_MemForEachLearned
-    for  i = 1; i <= p.iPage[1]; i += 2  {             for  k = 2; k < Sat_MemLimit(p.pPages[i]) && ((c) = Sat_MemClause( p, i, k )); k += Sat_MemClauseSize(c)  {
-        assert(c.lrn, "c.lrn");
-        // skip marked entry
-        if c.mark {
-            // if pivot is a marked clause, start looking for the next non-marked one
-            if (cPivot != nil) && cPivot == c {
-                fStartLooking = 1;
-                cPivot = nil;
-            }
-            continue;
-        }
-        // if we started looking before, we found it!
-        if fStartLooking != 0 {
-            fStartLooking = 0;
-            p.BookMarkH[1] = c.lits[c.size];
-        }
-        // compute entry size
-        nInts = Sat_MemClauseSize(c);
-        assert(!(nInts & 1), "!(nInts & 1)");
-        // check if we need to scroll to the next page
-        if kNew + nInts >= (1 << p.nPageSize) {
-            // set the limit of the current page
-            if fDoMove != 0 {
-                Sat_MemWriteLimit( p.pPages[iNew], kNew ); }
-            // move writing position to the new page
-            iNew += 2;
-            kNew = 2;
-        }
-        if fDoMove != 0 {
-            // make sure the result is the same as previous dry run
-            assert(c.lits[c.size] == Sat_MemHand(p, iNew, kNew), "c.lits[c.size] == Sat_MemHand(p, iNew, kNew)");
-            // only copy the clause if it has changed
-            if i != iNew || k != kNew {
-                memmove( p.pPages[iNew] + kNew, c, sizeof(int) * nInts );
-//                c = Sat_MemClause( p, iNew, kNew ); // assersions do not hold during dry run
-                c = (clause *)(p.pPages[iNew] + kNew);
-                assert(nInts == Sat_MemClauseSize(c), "nInts == Sat_MemClauseSize(c)");
-            }
-            // set the new ID value
-            c.lits[c.size] = Counter;
-        
-        } else { // remember the address of the clause in the new location
-            c.lits[c.size] = Sat_MemHand(p, iNew, kNew); }
-        // update writing position
-        kNew += nInts;
-        assert(iNew <= i && kNew < (1 << p.nPageSize), "iNew <= i && kNew < (1 << p.nPageSize)");
-        // update counter
-        Counter++;
-    }
-    }
-    if fDoMove != 0 {
-        // update the counter
-        p.nEntries[1] = Counter;
-        // update the page count
-        p.iPage[1] = iNew;
-        // set the limit of the last page
-        Sat_MemWriteLimit( p.pPages[iNew], kNew );
-        // check if the pivot need to be updated
-        if p.BookMarkH[1] {
-            if cPivot != nil {
-                p.BookMarkH[1] = Sat_MemHandCurrent(p, 1);
-                p.BookMarkE[1] = p.nEntries[1];
-            
-            } else {
-                p.BookMarkE[1] = clause_id(Sat_MemClauseHand( p, p.BookMarkH[1] )); }
-        }
-
-    }
-    return Counter;
+func Sat_MemCompactLearned(p *Sat_Mem_t, move int32) int32 {
+	handles := p.handles(1)
+	page, offset, count := int32(1), int32(2), int32(0)
+	limit := int64(1) << uint(p.nPageSize)
+	relocated := make(map[cla]*clause)
+	bookmark := p.BookMarkH[1]
+	bookmarkNew := int32(0)
+	bookmarkCount := int32(0)
+	for _, h := range handles {
+		c := p.clauses[h]
+		if c.mark != 0 {
+			continue
+		}
+		words := Sat_MemClauseSize(c)
+		if int64(offset+words) >= limit {
+			if move != 0 {
+				p.pPages[page][0] = offset
+			}
+			page += 2
+			offset = 2
+		}
+		newH := Sat_MemHand(p, page, offset)
+		if bookmark != 0 && bookmarkNew == 0 && h >= bookmark {
+			bookmarkNew = newH
+			bookmarkCount = count
+		}
+		if move != 0 {
+			if clause_id(c) != newH {
+				panic("clause compaction requires dry run")
+			}
+			clause_set_id(c, count)
+			relocated[newH] = c
+		} else {
+			clause_set_id(c, newH)
+		}
+		offset += words
+		count++
+	}
+	if move != 0 {
+		for _, h := range handles {
+			delete(p.clauses, h)
+		}
+		for h, c := range relocated {
+			p.clauses[h] = c
+		}
+		p.iPage[1] = page
+		p.pPages[page][0] = offset
+		p.nEntries[1] = count
+		if bookmark != 0 {
+			if bookmarkNew == 0 {
+				bookmarkNew = Sat_MemHandCurrent(p, 1)
+				bookmarkCount = count
+			}
+			p.BookMarkH[1] = bookmarkNew
+			p.BookMarkE[1] = bookmarkCount
+		}
+	}
+	return count
 }
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-

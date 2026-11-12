@@ -80,8 +80,7 @@ func Abc_NtkCecSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, nInsLim
         // report the error
         pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel );
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         return;
     }
@@ -109,8 +108,7 @@ func Abc_NtkCecSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, nInsLim
         fmt.Printf("Networks are equivalent after SAT.\n"); }
     if pCnf.pModel {
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pCnf.pModel ); }
-    // inlining of macro ABC_FREE
-    ((pCnf.pModel) ? (free((char *) (pCnf.pModel)), (pCnf.pModel) = 0) : 0);
+    pCnf.pModel = nil;
     Abc_NtkDelete( pCnf );
 }
 
@@ -174,8 +172,7 @@ func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbos
         // report the error
         pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel );
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
         return;
@@ -229,8 +226,7 @@ func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbos
             fmt.Printf("ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\n");
         } else {
             fmt.Printf("Networks are NOT EQUIVALENT.  "); }
-        // inlining of macro ABC_FREE
-        ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);
+        pSimInfo = nil;
     
     } else {
         fmt.Printf("Networks are equivalent.  "); }
@@ -277,8 +273,7 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
         // report the error
         pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel );
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         return;
     }
@@ -322,8 +317,7 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
                 fmt.Printf("ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\n");
             } else {
                 fmt.Printf("Networks are NOT EQUIVALENT.                 \n"); }
-            // inlining of macro ABC_FREE
-            ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);
+            pSimInfo = nil;
             Status = 0;
             break;
         
@@ -385,8 +379,7 @@ func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32,
         // report the error
         pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel );
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         return;
     }
@@ -436,8 +429,7 @@ func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32,
                 fmt.Printf("ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\n");
             } else {
                 fmt.Printf("Networks are NOT EQUIVALENT.                 \n"); }
-            // inlining of macro ABC_FREE
-            ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);
+            pSimInfo = nil;
             Status = 0;
             Abc_NtkDelete( pMiterPart );
             break;
@@ -565,8 +557,7 @@ func Abc_NtkSecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nFrames
         // report the error
         pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, nFrames );
         Abc_NtkVerifyReportErrorSeq( pNtk1, pNtk2, pMiter.pModel, nFrames );
-        // inlining of macro ABC_FREE
-        ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+        pMiter.pModel = nil;
         Abc_NtkDelete( pMiter );
         return 0;
     }
@@ -589,8 +580,7 @@ func Abc_NtkSecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nFrames
         // report the error
         pFrames.pModel = Abc_NtkVerifyGetCleanModel( pFrames, 1 );
 //        Abc_NtkVerifyReportErrorSeq( pNtk1, pNtk2, pFrames->pModel, nFrames );
-        // inlining of macro ABC_FREE
-        ((pFrames.pModel) ? (free((char *) (pFrames.pModel)), (pFrames.pModel) = 0) : 0);
+        pFrames.pModel = nil;
         Abc_NtkDelete( pFrames );
         return 0;
     }
@@ -773,10 +763,8 @@ func Abc_NtkVerifyReportError(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pModel *int32)
         fmt.Printf("\n");
         Vec_PtrFree( vNodes );
     }
-    // inlining of macro ABC_FREE
-    ((pValues1) ? (free((char *) (pValues1)), (pValues1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pValues2) ? (free((char *) (pValues2)), (pValues2) = 0) : 0);
+    pValues1 = nil;
+    pValues2 = nil;
 }
 
 
@@ -1078,14 +1066,10 @@ func Abc_NtkSimulteBuggyMiter(pNtk *Abc_Ntk_t) {
     pResult2 = Abc_NtkVerifySimulatePattern( pNtk, pModel2 );
     fmt.Printf("Value = %d\n", pResult2[0]);
 
-    // inlining of macro ABC_FREE
-    ((pModel1) ? (free((char *) (pModel1)), (pModel1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pModel2) ? (free((char *) (pModel2)), (pModel2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pResult1) ? (free((char *) (pResult1)), (pResult1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pResult2) ? (free((char *) (pResult2)), (pResult2) = 0) : 0);
+    pModel1 = nil;
+    pModel2 = nil;
+    pResult1 = nil;
+    pResult2 = nil;
 }
 
 

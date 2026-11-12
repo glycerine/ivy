@@ -133,11 +133,11 @@ func Gia_ManEraFree(p *Gia_ManEra_t) {
     Vec_PtrFree( p.vStates );
     if p.vBugTrace { Vec_IntFree( p.vBugTrace ); }
     // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
+    p.pDataSim = nil;
     // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+    p.pBins = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -264,7 +264,7 @@ func Gia_ManEraHashResize(p *Gia_ManEra_t) {
     }
     assert(Counter == Vec_PtrSize( p.vStates ) - 1, "Counter == Vec_PtrSize( p.vStates ) - 1");
     // inlining of macro ABC_FREE
-    ((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);
+    pBinsOld = nil;
 }
 
 /**Function*************************************************************

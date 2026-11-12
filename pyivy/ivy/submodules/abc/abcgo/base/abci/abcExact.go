@@ -405,17 +405,14 @@ func Ses_StoreClean(pStore *Ses_Store_t) {
             for  pTEntry != nil  {
                 pTiEntry = pTEntry.head;
                 for  pTiEntry != nil  {
-                    // inlining of macro ABC_FREE
-                    ((pTiEntry.pNetwork) ? (free((char *) (pTiEntry.pNetwork)), (pTiEntry.pNetwork) = 0) : 0);
+                    pTiEntry.pNetwork = nil;
                     pTiEntry2 = pTiEntry;
                     pTiEntry = pTiEntry.next;
-                    // inlining of macro ABC_FREE
-                    ((pTiEntry2) ? (free((char *) (pTiEntry2)), (pTiEntry2) = 0) : 0);
+                    pTiEntry2 = nil;
                 }
                 pTEntry2 = pTEntry;
                 pTEntry = pTEntry.next;
-                // inlining of macro ABC_FREE
-                ((pTEntry2) ? (free((char *) (pTEntry2)), (pTEntry2) = 0) : 0);
+                pTEntry2 = nil;
             }
         }
     }
@@ -423,10 +420,8 @@ func Ses_StoreClean(pStore *Ses_Store_t) {
     sat_solver_delete( pStore.pSat );
 
     if pStore.szDBName {
-        // inlining of macro ABC_FREE
-        ((pStore.szDBName) ? (free((char *) (pStore.szDBName)), (pStore.szDBName) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    ((pStore) ? (free((char *) (pStore)), (pStore) = 0) : 0);
+        pStore.szDBName = nil; }
+    pStore = nil;
 }
 
 var spStatic_Ses_StoreTableHash_s_Primes [4]int32 = [4]int32{ 1291, 1699, 1999, 2357 };
@@ -929,8 +924,7 @@ func Ses_ManCleanLight(pSes *Ses_Man_t) {
     Vec_IntFree( pSes.vAssump );
     Vec_IntFree( pSes.vStairDecVars );
 
-    // inlining of macro ABC_FREE
-    ((pSes) ? (free((char *) (pSes)), (pSes) = 0) : 0);
+    pSes = nil;
 }
 
 func Ses_ManClean(pSes *Ses_Man_t) {
@@ -1726,8 +1720,7 @@ func Ses_ManExtractSolution(pSes *Ses_Man_t) string {
 
     /* pin-to-pin delays */
     if pSes.nMaxDepth != -1 {
-        // inlining of macro ABC_FREE
-        ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0); }
+        pPerm = nil; }
 
     /* have we used all the fields? */
     assert(( p - pSol ) == nSol, "( p - pSol ) == nSol");
@@ -1778,8 +1771,7 @@ func Ses_ManExtractNtk(pSol string) *Abc_Ntk_t {
         pObj = Abc_NtkCreateNode( pNtk );
         pObj.pData = Abc_SopRegister( (Mem_Flex_t*)pNtk.pManFunc, pSopCover );
         Vec_PtrPush( pGates, pObj );
-        // inlining of macro ABC_FREE
-        ((pSopCover) ? (free((char *) (pSopCover)), (pSopCover) = 0) : 0);
+        pSopCover = nil;
 
         Abc_ObjAddFanin( pObj, (Abc_Obj_t *)Vec_PtrEntry( pGates, *p++ ) );
         Abc_ObjAddFanin( pObj, (Abc_Obj_t *)Vec_PtrEntry( pGates, *p++ ) );
@@ -2240,8 +2232,7 @@ func Ses_ManFindNetworkExactCEGAR(pSes *Ses_Man_t, nGates int32, pSol *string) i
             assert(fRes == 1, "fRes == 1");
             return 1;
         }
-        // inlining of macro ABC_FREE
-        ((*pSol) ? (free((char *) (*pSol)), (*pSol) = 0) : 0);
+        *pSol = nil;
 
         if pSes.fKeepRowAssigns {
             Abc_TtSetBit( pSes.pTtValues, iMint - 1 ); }
@@ -2407,8 +2398,7 @@ func Abc_NtkFindExact(pTruth *word, nVars int32, nFunc int32, nMaxDepth int32, p
 
     if ( pSol = Ses_ManFindMinimumSize( pSes ) ) != nil {
         pNtk = Ses_ManExtractNtk( pSol );
-        // inlining of macro ABC_FREE
-        ((pSol) ? (free((char *) (pSol)), (pSol) = 0) : 0);
+        pSol = nil;
     }
 
     pSes.timeTotal = Abc_Clock() - timeStart;
@@ -2444,8 +2434,7 @@ func Gia_ManFindExact(pTruth *word, nVars int32, nFunc int32, nMaxDepth int32, p
 
     if ( pSol = Ses_ManFindMinimumSize( pSes ) ) != nil {
         pGia = Ses_ManExtractGia( pSol );
-        // inlining of macro ABC_FREE
-        ((pSol) ? (free((char *) (pSol)), (pSol) = 0) : 0);
+        pSol = nil;
     }
 
     pSes.timeTotal = Abc_Clock() - timeStart;
@@ -2793,8 +2782,7 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
                     spFmt.Printf("\b" ANSI_COLOR_GREEN "%d" ANSI_COLOR_RESET, pSes.nMaxDepth);
                 }
                 if pSol {
-                    // inlining of macro ABC_FREE
-                    ((pSol) ? (free((char *) (pSol)), (pSol) = 0) : 0); }
+                    pSol = nil; }
                 pSol = pSol2;
                 pSes.nMaxDepth--;
             
@@ -2943,8 +2931,7 @@ func Abc_ExactBuildNode(pTruth *word, nVars int32, pArrTimeProfile *int32, pFani
         assert((pObj != nil), "pObj");
         pObj.pData = Abc_SopRegister( (Mem_Flex_t*)pNtk.pManFunc, pSopCover );
         Vec_PtrPush( pGates, pObj );
-        // inlining of macro ABC_FREE
-        ((pSopCover) ? (free((char *) (pSopCover)), (pSopCover) = 0) : 0);
+        pSopCover = nil;
 
         Abc_ObjAddFanin( pObj, (Abc_Obj_t *)Vec_PtrEntry( pGates, *p++ ) );
         Abc_ObjAddFanin( pObj, (Abc_Obj_t *)Vec_PtrEntry( pGates, *p++ ) );

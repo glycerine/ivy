@@ -77,10 +77,8 @@ func Tab_TabAlloc(LogSize int32) *Tab_Tab_t {
     return p;
 }
 func Tab_TabFree(p *Tab_Tab_t) {
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p = nil;
 }
 func Tab_TabFindBest(p *Tab_Tab_t, nDivs int32) *Vec_Int_t {
     var pNames [5]string = [5]string{"const1", "and", "xor", "mux", "none"};
@@ -103,8 +101,7 @@ func Tab_TabFindBest(p *Tab_Tab_t, nDivs int32) *Vec_Int_t {
         Vec_IntPushTwo( vDivs, pEnt.LitB, pEnt.LitC );
     }
     Vec_IntFree( vCosts );
-    // inlining of macro ABC_FREE
-    ((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);
+    pOrder = nil;
     return vDivs;
 }
 func Tab_Hash(LitA int32, LitB int32, LitC int32, Func int32, Mask int32) int32 {

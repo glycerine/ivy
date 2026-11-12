@@ -242,12 +242,9 @@ func Sfm_LibStop(p *Sfm_Lib_t) {
     Vec_IntErase( &p.vProfs );
     Vec_IntErase( &p.vStore );
     Vec_IntErase( &p.vTemp );
-    // inlining of macro ABC_FREE
-    ((p.pCells) ? (free((char *) (p.pCells)), (p.pCells) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pCells = nil;
+    p.pObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -557,8 +554,7 @@ func Sfm_LibPrepare(nVars int32, fTwo int32, fDelay int32, fVerbose int32, fLibV
     } }
     // cleanup
     for  i = 2; i <= nVars; i++  {
-        // inlining of macro ABC_FREE
-        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);
+        pPerm[i] = nil;
     }
     if fVerbose != 0 {
         fmt.Printf("Library processing: Var = %d. Cell = %d.  Fun = %d. Obj = %d. Ave = %.2f.  Skip = %d. Rem = %d.  ", nVars, p.nCells, Vec_MemEntryNum(p.vTtMem)-2, p.nObjs-p.nObjRemoved, 1.0*(p.nObjs-p.nObjRemoved)/(Vec_MemEntryNum(p.vTtMem)-2), p.nObjSkipped, p.nObjRemoved);

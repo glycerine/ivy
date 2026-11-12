@@ -119,8 +119,7 @@ func Bus_ManStop(p *Bus_Man_t) {
     Vec_FltFreeP( &p.vETimes );
     Vec_FltFreeP( &p.vLoads );
     Vec_FltFreeP( &p.vDepts );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

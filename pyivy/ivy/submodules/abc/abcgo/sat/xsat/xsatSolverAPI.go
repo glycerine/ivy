@@ -150,8 +150,7 @@ func xSAT_SolverDestroy(s *xSAT_Solver_t) {
     xSAT_BQueueFree(s.bqLBD);
     xSAT_BQueueFree(s.bqTrail);
 
-    // inlining of macro ABC_FREE
-    ((s) ? (free((char *) (s)), (s) = 0) : 0);
+    s = nil;
 }
 
 /**Function*************************************************************

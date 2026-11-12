@@ -476,12 +476,9 @@ func Saig_StrSimDetectUnique(p0 *Aig_Man_t, p1 *Aig_Man_t) int32 {
 
     // cleanup
     Aig_ManCleanMarkA( p0 );
-    // inlining of macro ABC_FREE
-    ((ppTable) ? (free((char *) (ppTable)), (ppTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppNexts) ? (free((char *) (ppNexts)), (ppNexts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppCands) ? (free((char *) (ppCands)), (ppCands) = 0) : 0);
+    ppTable = nil;
+    ppNexts = nil;
+    ppCands = nil;
     return Counter;
 }
 

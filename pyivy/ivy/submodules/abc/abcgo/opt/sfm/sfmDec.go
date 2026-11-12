@@ -281,8 +281,7 @@ func Sfm_DecStop(p *Sfm_Dec_t) {
     if p.pMit { Sfm_MitStop( p.pMit ); }
     // divisors
     for  i = 0; i < SFM_SUPP_MAX; i++  {
-        // inlining of macro ABC_FREE
-        ((p.pDivWords[i]) ? (free((char *) (p.pDivWords[i])), (p.pDivWords[i]) = 0) : 0);
+        p.pDivWords[i] = nil;
     }
     // library
     Vec_IntErase( &p.vGateSizes );
@@ -316,8 +315,7 @@ func Sfm_DecStop(p *Sfm_Dec_t) {
     Vec_IntErase( &p.vGateTemp );
     Vec_IntErase( &p.vGateMffc );
     Vec_IntErase( &p.vCands );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
     pNtk.pData = nil;
 }
 

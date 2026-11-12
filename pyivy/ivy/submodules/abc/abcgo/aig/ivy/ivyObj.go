@@ -44,9 +44,8 @@ package ivy
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjCreatePi(p *Ivy_Man_t) *Ivy_Obj_t {
-    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, nil, nil, IVY_PI, IVY_INIT_NONE) );
-}
+// Ivy_ObjCreatePi is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -59,9 +58,8 @@ func Ivy_ObjCreatePi(p *Ivy_Man_t) *Ivy_Obj_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjCreatePo(p *Ivy_Man_t, pDriver *Ivy_Obj_t) *Ivy_Obj_t {
-    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pDriver, nil, IVY_PO, IVY_INIT_NONE) );
-}
+// Ivy_ObjCreatePo is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -74,65 +72,8 @@ func Ivy_ObjCreatePo(p *Ivy_Man_t, pDriver *Ivy_Obj_t) *Ivy_Obj_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjCreate(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {
-    var pObj *Ivy_Obj_t;
-    assert(!Ivy_IsComplement(pGhost), "!Ivy_IsComplement(pGhost)");
-    assert(Ivy_ObjIsGhost(pGhost), "Ivy_ObjIsGhost(pGhost)");
-    assert(Ivy_TableLookup(p, pGhost) == nil, "Ivy_TableLookup(p, pGhost) == nil");
-    // get memory for the new object
-    pObj = Ivy_ManFetchMemory( p );
-    assert(Ivy_ObjIsNone(pObj), "Ivy_ObjIsNone(pObj)");
-    pObj.Id = Vec_PtrSize(p.vObjs);
-    Vec_PtrPush( p.vObjs, pObj );
-    // add basic info (fanins, compls, type, init)
-    pObj.Type = pGhost.Type;
-    pObj.Init = pGhost.Init;
-    // add connections
-    Ivy_ObjConnect( p, pObj, pGhost.pFanin0, pGhost.pFanin1 );
-    // compute level
-    if Ivy_ObjIsNode(pObj) {
-        pObj.Level = Ivy_ObjLevelNew(pObj);
-    } else if Ivy_ObjIsLatch(pObj) {
-        pObj.Level = 0;
-    } else if Ivy_ObjIsOneFanin(pObj) {
-        pObj.Level = Ivy_ObjFanin0(pObj).Level;
-    } else if !Ivy_ObjIsPi(pObj) {
-        assert(false, "0"); }
-    // create phase
-    if Ivy_ObjIsNode(pObj) {
-        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)) & Ivy_ObjFaninPhase(Ivy_ObjChild1(pObj));
-    } else if Ivy_ObjIsOneFanin(pObj) {
-        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)); }
-    // set the fail TFO flag
-    if Ivy_ObjIsNode(pObj) {
-        pObj.fFailTfo = Ivy_ObjFanin0(pObj).fFailTfo | Ivy_ObjFanin1(pObj).fFailTfo; }
-    // mark the fanins in a special way if the node is EXOR
-    if Ivy_ObjIsExor(pObj) {
-        Ivy_ObjFanin0(pObj).fExFan = 1;
-        Ivy_ObjFanin1(pObj).fExFan = 1;
-    }
-    // add PIs/POs to the arrays
-    if Ivy_ObjIsPi(pObj) {
-        Vec_PtrPush( p.vPis, pObj );
-    } else if Ivy_ObjIsPo(pObj) {
-        Vec_PtrPush( p.vPos, pObj ); }
-//    else if ( Ivy_ObjIsBuf(pObj) )
-//        Vec_PtrPush( p->vBufs, pObj );
-    if p.vRequired && Vec_IntSize(p.vRequired) <= pObj.Id {
-        Vec_IntFillExtra( p.vRequired, 2 * Vec_IntSize(p.vRequired), 1000000 ); }
-    // update node counters of the manager
-    p.nObjs[Ivy_ObjType(pObj)]++;
-    p.nCreated++;
+// Ivy_ObjCreate is implemented in the ported core API group.
 
-//    printf( "Adding %sAIG node: ", p->pHaig==NULL? "H":" " );
-//    Ivy_ObjPrintVerbose( p, pObj, p->pHaig==NULL );
-//    printf( "\n" );
-
-    // if HAIG is defined, create a corresponding node
-    if p.pHaig {
-        Ivy_ManHaigCreateObj( p, pObj ); }
-    return pObj;
-}
 
 /**Function*************************************************************
 
@@ -145,26 +86,8 @@ func Ivy_ObjCreate(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjConnect(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFan0 *Ivy_Obj_t, pFan1 *Ivy_Obj_t) {
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil, "Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil");
-    // add the first fanin
-    pObj.pFanin0 = pFan0;
-    pObj.pFanin1 = pFan1;
-    // increment references of the fanins and add their fanouts
-    if Ivy_ObjFanin0(pObj) != nil {
-        Ivy_ObjRefsInc( Ivy_ObjFanin0(pObj) );
-        if p.fFanout {
-            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj ); }
-    }
-    if Ivy_ObjFanin1(pObj) != nil {
-        Ivy_ObjRefsInc( Ivy_ObjFanin1(pObj) );
-        if p.fFanout {
-            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj ); }
-    }
-    // add the node to the structural hash table
-    Ivy_TableInsert( p, pObj );
-}
+// Ivy_ObjConnect is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -177,30 +100,8 @@ func Ivy_ObjConnect(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFan0 *Ivy_Obj_t, pFan1 *Ivy_
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjDisconnect(p *Ivy_Man_t, pObj *Ivy_Obj_t) {
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil, "Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil");
-    // remove connections
-    if pObj.pFanin0 != nil {
-        Ivy_ObjRefsDec(Ivy_ObjFanin0(pObj));
-        if p.fFanout {
-            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin0(pObj), pObj ); }
-    }
-    if pObj.pFanin1 != nil {
-        Ivy_ObjRefsDec(Ivy_ObjFanin1(pObj));
-        if p.fFanout {
-            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin1(pObj), pObj ); }
-    }
-    assert(pObj.pNextFan0 == nil, "pObj.pNextFan0 == nil");
-    assert(pObj.pNextFan1 == nil, "pObj.pNextFan1 == nil");
-    assert(pObj.pPrevFan0 == nil, "pObj.pPrevFan0 == nil");
-    assert(pObj.pPrevFan1 == nil, "pObj.pPrevFan1 == nil");
-    // remove the node from the structural hash table
-    Ivy_TableDelete( p, pObj );
-    // add the first fanin
-    pObj.pFanin0 = nil;
-    pObj.pFanin1 = nil;
-}
+// Ivy_ObjDisconnect is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -213,24 +114,8 @@ func Ivy_ObjDisconnect(p *Ivy_Man_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjPatchFanin0(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFaninNew *Ivy_Obj_t) {
-    var pFaninOld *Ivy_Obj_t;
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    pFaninOld = Ivy_ObjFanin0(pObj);
-    // decrement ref and remove fanout
-    Ivy_ObjRefsDec( pFaninOld );
-    if p.fFanout {
-        Ivy_ObjDeleteFanout( p, pFaninOld, pObj ); }
-    // update the fanin
-    pObj.pFanin0 = pFaninNew;
-    // increment ref and add fanout
-    Ivy_ObjRefsInc( Ivy_Regular(pFaninNew) );
-    if p.fFanout {
-        Ivy_ObjAddFanout( p, Ivy_Regular(pFaninNew), pObj ); }
-    // get rid of old fanin
-    if !Ivy_ObjIsPi(pFaninOld) && !Ivy_ObjIsConst1(pFaninOld) && Ivy_ObjRefs(pFaninOld) == 0 {
-        Ivy_ObjDelete_rec( p, pFaninOld, 1 ); }
-}
+// Ivy_ObjPatchFanin0 is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -243,35 +128,8 @@ func Ivy_ObjPatchFanin0(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFaninNew *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    assert(Ivy_ObjRefs(pObj) == 0 || !(fFreeTop != 0), "Ivy_ObjRefs(pObj) == 0 || !fFreeTop");
-    // update node counters of the manager
-    p.nObjs[pObj.Type]--;
-    p.nDeleted++;
-    // remove connections
-    Ivy_ObjDisconnect( p, pObj );
-    // remove PIs/POs from the arrays
-    if Ivy_ObjIsPi(pObj) {
-        Vec_PtrRemove( p.vPis, pObj );
-    } else if Ivy_ObjIsPo(pObj) {
-        Vec_PtrRemove( p.vPos, pObj );
-    } else if p.fFanout && Ivy_ObjIsBuf(pObj) {
-        Vec_PtrRemove( p.vBufs, pObj ); }
-    // clean and recycle the entry
-    if fFreeTop != 0 {
-        // free the node
-        Vec_PtrWriteEntry( p.vObjs, pObj.Id, nil );
-        Ivy_ManRecycleMemory( p, pObj );
-    
-    } else {
-        var nRefsOld int32  = pObj.nRefs;
-        var pFanout *Ivy_Obj_t  = pObj.pFanout;
-        Ivy_ObjClean( pObj );
-        pObj.pFanout = pFanout;
-        pObj.nRefs = nRefsOld;
-    }
-}
+// Ivy_ObjDelete is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -284,20 +142,8 @@ func Ivy_ObjDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjDelete_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {
-    var pFanin0, pFanin1 *Ivy_Obj_t;
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    assert(!Ivy_ObjIsNone(pObj), "!Ivy_ObjIsNone(pObj)");
-    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsPi(pObj) {
-        return; }
-    pFanin0 = Ivy_ObjFanin0(pObj);
-    pFanin1 = Ivy_ObjFanin1(pObj);
-    Ivy_ObjDelete( p, pObj, fFreeTop );
-    if pFanin0 && !Ivy_ObjIsNone(pFanin0) && Ivy_ObjRefs(pFanin0) == 0 {
-        Ivy_ObjDelete_rec( p, pFanin0, 1 ); }
-    if (pFanin1 != nil) && !Ivy_ObjIsNone(pFanin1) && Ivy_ObjRefs(pFanin1) == 0 {
-        Ivy_ObjDelete_rec( p, pFanin1, 1 ); }
-}
+// Ivy_ObjDelete_rec is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

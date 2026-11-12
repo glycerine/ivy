@@ -52,7 +52,7 @@ func Gia_ManTisDupMuxes(p *Gia_Man_t) *Gia_Man_t {
     var i int32;
     assert(p.pMuxes == nil, "p.pMuxes == nil");
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     // start the new manager
     pNew = Gia_ManStart( 5000 );

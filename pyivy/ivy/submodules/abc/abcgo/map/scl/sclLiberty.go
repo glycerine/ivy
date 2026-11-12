@@ -579,16 +579,11 @@ func Scl_LibertyStop(p *Scl_Tree_t, fVerbose int32) {
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - p.clkStart)))/(float64(int64(time.Second))));;
     }
     Vec_StrFree( p.vBuffer );
-    // inlining of macro ABC_FREE
-    ((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pContents) ? (free((char *) (p.pContents)), (p.pContents) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pItems) ? (free((char *) (p.pItems)), (p.pItems) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pError) ? (free((char *) (p.pError)), (p.pError) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pFileName = nil;
+    p.pContents = nil;
+    p.pItems = nil;
+    p.pError = nil;
+    p = nil;
 }
 func Scl_LibertyParse(pFileName string, fVerbose int32) *Scl_Tree_t {
     var p *Scl_Tree_t;
@@ -1487,10 +1482,8 @@ pVar1 = Abc_UtilStrsav( Scl_LibertyReadString(p, pItem.Head) );
 pVar2 = Abc_UtilStrsav( Scl_LibertyReadString(p, pItem.Head) ); }
         }
         if pVar1 == nil || pVar2 == nil {
-            // inlining of macro ABC_FREE
-            ((pVar1) ? (free((char *) (pVar1)), (pVar1) = 0) : 0);  
-            // inlining of macro ABC_FREE
-            ((pVar2) ? (free((char *) (pVar2)), (pVar2) = 0) : 0);
+            pVar1 = nil;  
+            pVar2 = nil;
             Vec_FltFreeP( &vIndex1 );
             Vec_FltFreeP( &vIndex2 );
             continue;
@@ -1498,10 +1491,8 @@ pVar2 = Abc_UtilStrsav( Scl_LibertyReadString(p, pItem.Head) ); }
         assert(pVar1 != nil && pVar2 != nil, "pVar1 != nil && pVar2 != nil");
         fFlag0 = (!int32(strings.Compare(pVar1, "input_net_transition")) && !int32(strings.Compare(pVar2, "total_output_net_capacitance")));
         fFlag1 = (!int32(strings.Compare(pVar2, "input_net_transition")) && !int32(strings.Compare(pVar1, "total_output_net_capacitance")));
-        // inlining of macro ABC_FREE
-        ((pVar1) ? (free((char *) (pVar1)), (pVar1) = 0) : 0);  
-        // inlining of macro ABC_FREE
-        ((pVar2) ? (free((char *) (pVar2)), (pVar2) = 0) : 0);
+        pVar1 = nil;  
+        pVar2 = nil;
         if !fFlag0 && !(fFlag1 != 0) {
             Vec_FltFreeP( &vIndex1 );
             Vec_FltFreeP( &vIndex2 );
@@ -1740,8 +1731,7 @@ func Scl_LibertyReadSclStr(p *Scl_Tree_t, fVerbose int32, fVeryVerbose int32) *V
             if vArray == nil {
                 continue; }
             if i % 4 == 0 {
-                // inlining of macro ABC_FREE
-                ((vArray) ? (free((char *) (vArray)), (vArray) = 0) : 0);
+                vArray = nil;
             } else if i % 4 == 2 || i % 4 == 3 {
                 Vec_FltFree( vArray ); }
         }

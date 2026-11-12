@@ -1,187 +1,80 @@
 package aig
 
-/**CFile****************************************************************
-
-  FileName    [aigWin.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Window computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigWin.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Evaluate the cost of removing the node from the set of leaves.]
-
-  Description [Returns the number of new leaves that will be brought in.
-  Returns large number if the node cannot be removed from the set of leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_NodeGetLeafCostOne(pNode *Aig_Obj_t, nFanoutLimit int32) int32 {
-    var Cost int32;
-    // make sure the node is in the construction zone
-    assert(pNode.fMarkA, "pNode.fMarkA");  
-    // cannot expand over the PI node
-    if Aig_ObjIsCi(pNode) {
-        return 999; }
-    // get the cost of the cone
-    Cost = (!Aig_ObjFanin0(pNode).fMarkA) + (!Aig_ObjFanin1(pNode).fMarkA);
-    // always accept if the number of leaves does not increase
-    if Cost < 2 {
-        return Cost; }
-    // skip nodes with many fanouts
-    if int32(pNode.nRefs) > nFanoutLimit {
-        return 999; }
-    // return the number of nodes that will be on the leaves if this node is removed
-    return Cost;
+// Aig_NodeGetLeafCostOne scores the number of new frontier leaves needed to
+// expand a marked node. High-fanout nodes expand only when frontier size cannot
+// increase, matching ABC's reconvergence-driven one-level heuristic.
+func Aig_NodeGetLeafCostOne(p *Graph, e Edge, fanoutLimit int32) int32 {
+	n := p.node(e)
+	if !n.MarkA {
+		panic("aig: unmarked cut frontier")
+	}
+	if n.Kind == Input || n.Kind == Constant {
+		return 999
+	}
+	var cost int32
+	for _, fanin := range nodeFanins(*n) {
+		if !p.node(fanin).MarkA {
+			cost++
+		}
+	}
+	if cost < 2 {
+		return cost
+	}
+	if n.Refs > int(fanoutLimit) {
+		return 999
+	}
+	return cost
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Builds reconvergence-driven cut by changing one leaf at a time.]
-
-  Description [This procedure looks at the current leaves and tries to change 
-  one leaf at a time in such a way that the cut grows as little as possible.
-  In evaluating the fanins, this procedure looks only at their immediate 
-  predecessors (this is why it is called a one-level construction procedure).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindCut_int(vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t, nSizeLimit int32, nFanoutLimit int32) int32 {
-    var pNode, pFaninBest, pNext *Aig_Obj_t;
-    var CostBest, CostCur, i int32;
-    // find the best fanin
-    CostBest   = 100;
-    pFaninBest = nil;
-//printf( "Evaluating fanins of the cut:\n" );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFront)) && (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {
-        CostCur = Aig_NodeGetLeafCostOne( pNode, nFanoutLimit );
-//printf( "    Fanin %s has cost %d.\n", Aig_ObjName(pNode), CostCur );
-        if CostBest > CostCur ||
-            (CostBest == CostCur && pNode.Level > pFaninBest.Level) {
-            CostBest   = CostCur;
-            pFaninBest = pNode;
-        }
-        if CostBest == 0 {
-            break; }
-    }
-    if pFaninBest == nil {
-        return 0; }
-    assert(CostBest < 3, "CostBest < 3");
-    if Vec_PtrSize(vFront) - 1 + CostBest > nSizeLimit {
-        return 0; }
-    assert(Aig_ObjIsNode(pFaninBest), "Aig_ObjIsNode(pFaninBest)");
-    // remove the node from the array
-    Vec_PtrRemove( vFront, pFaninBest );
-//printf( "Removing fanin %s.\n", Aig_ObjName(pFaninBest) );
-
-    // add the left child to the fanins
-    pNext = Aig_ObjFanin0(pFaninBest);
-    if !pNext.fMarkA {
-//printf( "Adding fanin %s.\n", Aig_ObjName(pNext) );
-        pNext.fMarkA = 1;
-        Vec_PtrPush( vFront, pNext );
-        Vec_PtrPush( vVisited, pNext );
-    }
-    // add the right child to the fanins
-    pNext = Aig_ObjFanin1(pFaninBest);
-    if !pNext.fMarkA {
-//printf( "Adding fanin %s.\n", Aig_ObjName(pNext) );
-        pNext.fMarkA = 1;
-        Vec_PtrPush( vFront, pNext );
-        Vec_PtrPush( vVisited, pNext );
-    }
-    assert(Vec_PtrSize(vFront) <= nSizeLimit, "Vec_PtrSize(vFront) <= nSizeLimit");
-    // keep doing this
-    return 1;
+func Aig_ManFindCut_int(p *Graph, front, visited *[]Edge, sizeLimit, fanoutLimit int32) bool {
+	best := -1
+	costBest := int32(100)
+	for i, e := range *front {
+		cost := Aig_NodeGetLeafCostOne(p, e, fanoutLimit)
+		if cost < costBest || (cost == costBest && best >= 0 && p.node(e).Level > p.node((*front)[best]).Level) {
+			best = i
+			costBest = cost
+		}
+		if costBest == 0 {
+			break
+		}
+	}
+	if best < 0 || len(*front)-1+int(costBest) > int(sizeLimit) {
+		return false
+	}
+	e := (*front)[best]
+	*front = append((*front)[:best], (*front)[best+1:]...)
+	for _, fanin := range nodeFanins(*p.node(e)) {
+		fanin = Aig_Regular(fanin)
+		if !p.node(fanin).MarkA {
+			p.node(fanin).MarkA = true
+			*front = append(*front, fanin)
+			*visited = append(*visited, fanin)
+		}
+	}
+	return true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes one sequential cut of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindCut(pRoot *Aig_Obj_t, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t, nSizeLimit int32, nFanoutLimit int32) {
-    var pNode *Aig_Obj_t;
-    var i int32;
-
-    assert(!Aig_IsComplement(pRoot), "!Aig_IsComplement(pRoot)");
-    assert(Aig_ObjIsNode(pRoot), "Aig_ObjIsNode(pRoot)");
-    assert(Aig_ObjChild0(pRoot), "Aig_ObjChild0(pRoot)");
-    assert(Aig_ObjChild1(pRoot), "Aig_ObjChild1(pRoot)");
-
-    // start the cut 
-    Vec_PtrClear( vFront );
-    Vec_PtrPush( vFront, Aig_ObjFanin0(pRoot) );
-    Vec_PtrPush( vFront, Aig_ObjFanin1(pRoot) );
-
-    // start the visited nodes
-    Vec_PtrClear( vVisited );
-    Vec_PtrPush( vVisited, pRoot );
-    Vec_PtrPush( vVisited, Aig_ObjFanin0(pRoot) );
-    Vec_PtrPush( vVisited, Aig_ObjFanin1(pRoot) );
-
-    // mark these nodes
-    assert(!pRoot.fMarkA, "!pRoot.fMarkA");
-    assert(!Aig_ObjFanin0(pRoot).fMarkA, "!Aig_ObjFanin0(pRoot).fMarkA");
-    assert(!Aig_ObjFanin1(pRoot).fMarkA, "!Aig_ObjFanin1(pRoot).fMarkA");
-    pRoot.fMarkA = 1;
-    Aig_ObjFanin0(pRoot).fMarkA = 1;
-    Aig_ObjFanin1(pRoot).fMarkA = 1;
-
-    // compute the cut
-    for  Aig_ManFindCut_int( vFront, vVisited, nSizeLimit, nFanoutLimit ) != 0  {; }
-    assert(Vec_PtrSize(vFront) <= nSizeLimit, "Vec_PtrSize(vFront) <= nSizeLimit");
-
-    // clean the visit markings
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vVisited)) && (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(vVisited, i)), 1); i++  {
-        pNode.fMarkA = 0;
-    }
+func Aig_ManFindCut(p *Graph, root Edge, front, visited *[]Edge, sizeLimit, fanoutLimit int32) {
+	if root.Complemented() || !Aig_ObjIsNode(p, root) {
+		panic("aig: cut root must be a regular internal node")
+	}
+	if sizeLimit < 2 {
+		panic("aig: cut limit is smaller than root frontier")
+	}
+	n := p.node(root)
+	a, b := Aig_Regular(n.Fanins[0]), Aig_Regular(n.Fanins[1])
+	if p.node(root).MarkA || p.node(a).MarkA || p.node(b).MarkA {
+		panic("aig: cut marks were not cleared")
+	}
+	*front = append((*front)[:0], a, b)
+	*visited = append((*visited)[:0], root, a, b)
+	for _, e := range *visited {
+		p.node(e).MarkA = true
+	}
+	defer func() {
+		for _, e := range *visited {
+			p.node(e).MarkA = false
+		}
+	}()
+	for Aig_ManFindCut_int(p, front, visited, sizeLimit, fanoutLimit) {
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

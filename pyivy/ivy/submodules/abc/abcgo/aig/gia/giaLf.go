@@ -347,7 +347,7 @@ func Lf_ManComputeSwitching(p *Gia_Man_t, vSwitches *Vec_Flt_t) {
     assert(Vec_FltCap(vSwitches) == 0, "Vec_FltCap(vSwitches) == 0");
     *vSwitches = *vSwitching;
     // inlining of macro ABC_FREE
-    ((vSwitching) ? (free((char *) (vSwitching)), (vSwitching) = 0) : 0);
+    vSwitching = nil;
 //    Abc_PrintTime( 1, "Computing switching activity", Abc_Clock() - clk );
 }
 
@@ -2015,7 +2015,7 @@ func Lf_ManAlloc(pGia *Gia_Man_t, pPars *Jf_Par_t) *Lf_Man_t {
     assert(pPars.nCutNum > 1  && pPars.nCutNum <= LF_CUT_MAX, "pPars.nCutNum > 1  && pPars.nCutNum <= LF_CUT_MAX");
     assert(pPars.nLutSize > 1 && pPars.nLutSize <= LF_LEAF_MAX, "pPars.nLutSize > 1 && pPars.nLutSize <= LF_LEAF_MAX");
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     Vec_IntFreeP( &pGia.vMapping );
     Gia_ManCleanValue( pGia );
     if Gia_ManHasChoices(pGia) {
@@ -2064,9 +2064,9 @@ func Lf_ManAlloc(pGia *Gia_Man_t, pPars *Jf_Par_t) *Lf_Man_t {
 }
 func Lf_ManFree(p *Lf_Man_t) {
     // inlining of macro ABC_FREE
-    ((p.pPars.pTimesArr) ? (free((char *) (p.pPars.pTimesArr)), (p.pPars.pTimesArr) = 0) : 0);
+    p.pPars.pTimesArr = nil;
     // inlining of macro ABC_FREE
-    ((p.pPars.pTimesReq) ? (free((char *) (p.pPars.pTimesReq)), (p.pPars.pTimesReq) = 0) : 0);
+    p.pPars.pTimesReq = nil;
     if p.pPars.fCutMin {
         Vec_MemHashFree( p.vTtMem ); }
     if p.pPars.fCutMin {
@@ -2076,35 +2076,35 @@ func Lf_ManFree(p *Lf_Man_t) {
     Vec_PtrFreeData( &p.vStoreOld.vPages );
     Vec_PtrFreeData( &p.vStoreNew.vPages );
     // inlining of macro ABC_FREE
-    ((p.vMemSets.pArray) ? (free((char *) (p.vMemSets.pArray)), (p.vMemSets.pArray) = 0) : 0);
+    p.vMemSets.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vFreePages.pArray) ? (free((char *) (p.vFreePages.pArray)), (p.vFreePages.pArray) = 0) : 0);
+    p.vFreePages.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vStoreOld.vPages.pArray) ? (free((char *) (p.vStoreOld.vPages.pArray)), (p.vStoreOld.vPages.pArray) = 0) : 0);
+    p.vStoreOld.vPages.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vStoreNew.vPages.pArray) ? (free((char *) (p.vStoreNew.vPages.pArray)), (p.vStoreNew.vPages.pArray) = 0) : 0);
+    p.vStoreNew.vPages.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vFreePages.pArray) ? (free((char *) (p.vFreePages.pArray)), (p.vFreePages.pArray) = 0) : 0);
+    p.vFreePages.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vFreeSets.pArray) ? (free((char *) (p.vFreeSets.pArray)), (p.vFreeSets.pArray) = 0) : 0);
+    p.vFreeSets.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vOffsets.pArray) ? (free((char *) (p.vOffsets.pArray)), (p.vOffsets.pArray) = 0) : 0);
+    p.vOffsets.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vRequired.pArray) ? (free((char *) (p.vRequired.pArray)), (p.vRequired.pArray) = 0) : 0);
+    p.vRequired.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vCutSets.pArray) ? (free((char *) (p.vCutSets.pArray)), (p.vCutSets.pArray) = 0) : 0);
+    p.vCutSets.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vFlowRefs.pArray) ? (free((char *) (p.vFlowRefs.pArray)), (p.vFlowRefs.pArray) = 0) : 0);
+    p.vFlowRefs.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vMapRefs.pArray) ? (free((char *) (p.vMapRefs.pArray)), (p.vMapRefs.pArray) = 0) : 0);
+    p.vMapRefs.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vSwitches.pArray) ? (free((char *) (p.vSwitches.pArray)), (p.vSwitches.pArray) = 0) : 0);
+    p.vSwitches.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.vCiArrivals.pArray) ? (free((char *) (p.vCiArrivals.pArray)), (p.vCiArrivals.pArray) = 0) : 0);
+    p.vCiArrivals.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.pObjBests) ? (free((char *) (p.pObjBests)), (p.pObjBests) = 0) : 0);
+    p.pObjBests = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -2415,9 +2415,9 @@ func Gia_ManPerformLfMapping(p *Gia_Man_t, pPars *Jf_Par_t, fNormalized int32) *
     if pNew != p {
         // transfer name
         // inlining of macro ABC_FREE
-        ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);
+        pNew.pName = "";
         // inlining of macro ABC_FREE
-        ((pNew.pSpec) ? (free((char *) (pNew.pSpec)), (pNew.pSpec) = 0) : 0);
+        pNew.pSpec = "";
         pNew.pName = Abc_UtilStrsav( p.pName );
         pNew.pSpec = Abc_UtilStrsav( p.pSpec );
         Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );

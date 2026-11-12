@@ -98,14 +98,14 @@ func Gia_ShowPath(p *Gia_Man_t, pFileName string) {
 
     if nNodes > NODE_MAX {
         // inlining of macro ABC_FREE
-        ((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);
+        pLevels = nil;
         Vec_BitFree( vPath );
         fmt.Fprintf(os.Stdout, "Cannot visualize AIG with more than %d critical nodes.\n", NODE_MAX);
         return;
     }
     if (pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {
         // inlining of macro ABC_FREE
-        ((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);
+        pLevels = nil;
         Vec_BitFree( vPath );
         fmt.Fprintf(os.Stdout, "Cannot open the intermediate file \"%s\".\n", pFileName);
         return;

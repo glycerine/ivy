@@ -123,34 +123,24 @@ func Abc_NtkAttach(pNtk *Abc_Ntk_t) int32 {
         
         } else if nFanins > 6 {
             fmt.Printf("Cannot attach gate with more than 6 inputs to node %s.\n", Abc_ObjName(pNode));
-            // inlining of macro ABC_FREE
-            ((puTruthGates[0]) ? (free((char *) (puTruthGates[0])), (puTruthGates[0]) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((puTruthGates) ? (free((char *) (puTruthGates)), (puTruthGates) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((ppGates) ? (free((char *) (ppGates)), (ppGates) = 0) : 0);
+            puTruthGates[0] = nil;
+            puTruthGates = nil;
+            ppGates = nil;
             return 0;
         
         } else if !(Abc_NodeAttach( pNode, ppGates, puTruthGates, nGates, uTruths ) != 0) {
             fmt.Printf("Could not attach the library gate to node %s.\n", Abc_ObjName(pNode));
-            // inlining of macro ABC_FREE
-            ((puTruthGates[0]) ? (free((char *) (puTruthGates[0])), (puTruthGates[0]) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((puTruthGates) ? (free((char *) (puTruthGates)), (puTruthGates) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((ppGates) ? (free((char *) (ppGates)), (ppGates) = 0) : 0);
+            puTruthGates[0] = nil;
+            puTruthGates = nil;
+            ppGates = nil;
             return 0;
         }
     }
     }
-    // inlining of macro ABC_FREE
-    ((puTruthGates[0]) ? (free((char *) (puTruthGates[0])), (puTruthGates[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((puTruthGates) ? (free((char *) (puTruthGates)), (puTruthGates) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppGates) ? (free((char *) (ppGates)), (ppGates) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_pPerms) ? (free((char *) (s_pPerms)), (s_pPerms) = 0) : 0);
+    puTruthGates[0] = nil;
+    puTruthGates = nil;
+    ppGates = nil;
+    s_pPerms = nil;
 
     // perform the final transformation
     // inlining of macro Abc_NtkForEachNode

@@ -252,16 +252,11 @@ func Abc_SclManFree(p *SC_Man) {
     Vec_IntFreeP( &p.vBestFans );
     Vec_FltFreeP( &p.vInDrive );
     Vec_FltFreeP( &p.vWireCaps );
-    // inlining of macro ABC_FREE
-    ((p.pLoads) ? (free((char *) (p.pLoads)), (p.pLoads) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDepts) ? (free((char *) (p.pDepts)), (p.pDepts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSlews) ? (free((char *) (p.pSlews)), (p.pSlews) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pLoads = nil;
+    p.pDepts = nil;
+    p.pTimes = nil;
+    p.pSlews = nil;
+    p = nil;
 }
 /*
 static inline void Abc_SclManCleanTime( SC_Man * p )

@@ -106,7 +106,7 @@ func Bal_ManFree(p *Bal_Man_t) {
     Vec_PtrFreeFree( p.vCutSets );
     Vec_IntFree( p.vCosts );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

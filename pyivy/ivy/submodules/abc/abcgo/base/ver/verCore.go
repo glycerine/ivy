@@ -158,8 +158,7 @@ func Ver_ParseStart(pFileName string, pGateLib *Abc_Des_t) *Ver_Man_t {
     p.pFileName = pFileName;
     p.pReader   = Ver_StreamAlloc( pFileName );
     if p.pReader == nil {
-        // inlining of macro ABC_FREE
-        ((p) ? (free((char *) (p)), (p) = 0) : 0);
+        p = nil;
         return nil;
     }
     p.Output    = os.Stdout;
@@ -196,8 +195,7 @@ func Ver_ParseStop(p *Ver_Man_t) {
     Vec_PtrFree( p.vStackFn );
     Vec_IntFree( p.vStackOp );
     Vec_IntFree( p.vPerm );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
  
 /**Function*************************************************************
@@ -640,8 +638,7 @@ func Ver_ParseRemoveSuffixTable(pMan *Ver_Man_t) {
         return; }
     // inlining of macro st__foreach_item
     for gen= st__init_gen(pMan.tName2Suffix); st__gen(gen,(char **)&pKey,(char **)&pValue) || ( st__free_gen(gen),0); {
-        // inlining of macro ABC_FREE
-        ((pKey) ? (free((char *) (pKey)), (pKey) = 0) : 0);
+        pKey = nil;
     }
     st__free_table( pMan.tName2Suffix );
     pMan.tName2Suffix = nil;
@@ -1996,11 +1993,9 @@ func Ver_ParseBox(pMan *Ver_Man_t, pNtk *Abc_Ntk_t, pNtkBox *Abc_Ntk_t) int32 {
 
 ***********************************************************************/
 func Ver_ParseFreeBundle(pBundle *Ver_Bundle_t) {
-    // inlining of macro ABC_FREE
-    ((pBundle.pNameFormal) ? (free((char *) (pBundle.pNameFormal)), (pBundle.pNameFormal) = 0) : 0);
+    pBundle.pNameFormal = nil;
     Vec_PtrFree( pBundle.vNetsActual );
-    // inlining of macro ABC_FREE
-    ((pBundle) ? (free((char *) (pBundle)), (pBundle) = 0) : 0);
+    pBundle = nil;
 }
 
 /**Function*************************************************************
@@ -2579,8 +2574,7 @@ func Ver_ParseDriveFormal(pMan *Ver_Man_t, pNtk *Abc_Ntk_t, pBundle0 *Ver_Bundle
         Ver_ParseFreeBundle( pBundle ); pBundle = nil;
         Vec_PtrWriteEntry( (Vec_Ptr_t *)pBox.pCopy, j, nil );
     }
-    // inlining of macro ABC_FREE
-    ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);
+    pName = nil;
     return 1;
 }
 
@@ -2740,8 +2734,7 @@ func Ver_ParsePrintLog(pMan *Ver_Man_t) {
     // open the log file
     pNameGeneric = Extra_FileNameGeneric( pMan.pFileName );
     Buffer = fmt.Sprintf("%s.log", pNameGeneric);
-    // inlining of macro ABC_FREE
-    ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);
+    pNameGeneric = nil;
     pFile = fopen( Buffer, "w" );
 
     // count the total number of instances and how many times they occur

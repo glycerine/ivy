@@ -1,10 +1,5 @@
 package bsat
 
-import (
-	"fmt"
-	"os"
-)
-
 /**************************************************************************************************
 MiniSat -- Copyright (c) 2005, Niklas Sorensson
 http://www.cs.chalmers.se/Cs/Research/FormalMethods/MiniSat/
@@ -24,172 +19,162 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
-// Modified to compile with MS Visual Studio 6.0 by Alan Mishchenko
-
-
-
-
-//#include "misc/util/abc_global.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-// vector of 32-bit intergers (added for 64-bit portability)
+// SAT vectors own Go slices. begin returns a live view; growing may relocate it.
 type veci_t struct {
-    cap    int32;
-    size    int32;
-    ptr   *int32;
+	cap, size int32
+	ptr       []int32
 }
-type veci = veci_t;
+type veci = veci_t
 
-func veci_new(v *veci) {
-    v.cap  = 4;
-    v.size = 0;
-    // inlining of macro ABC_ALLOC
-    v.ptr  = (int*)((char *) malloc(sizeof(char) * (size_t)(sizeof(int)*v.cap)));
+func veci_new(v *veci)           { v.cap = 4; v.size = 0; v.ptr = make([]int32, 4) }
+func veci_delete(v *veci)        { *v = veci{} }
+func veci_begin(v *veci) []int32 { return v.ptr[:v.size] }
+func veci_size(v *veci) int32    { return v.size }
+func veci_resize(v *veci, k int32) {
+	if k < 0 || k > v.size {
+		panic("veci_resize: only shrinking is allowed")
+	}
+	v.size = k
 }
-
-// inlining of macro ABC_FREE
-func veci_delete(v *veci) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }
-func veci_begin(v *veci) *int32 { return v.ptr;  }
-func veci_size(v *veci) int32 { return v.size; }
-func veci_resize(v *veci, k int32) { 
-    assert(k <= v.size, "k <= v.size"); 
-//    memset( veci_begin(v) + k, -1, sizeof(int) * (veci_size(v) - k) );
-    v.size = k;         
-} // only safe to shrink !!
-func veci_pop(v *veci) int32 { assert(v.size, "v.size"); return v.ptr[--v.size]; }
+func veci_pop(v *veci) int32 {
+	if v.size == 0 {
+		panic("veci_pop: empty vector")
+	}
+	v.size--
+	return v.ptr[v.size]
+}
 func veci_push(v *veci, e int32) {
-    if v.size == v.cap {
-//        int newsize = v->cap * 2;//+1;
-        var newsize int32;
-        if v.cap < 4 {
-            newsize = v.cap * 2;
-        } else {
-            newsize = (v.cap / 2) * 3;
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if v.ptr {
-            v.ptr = ((int *) realloc((char *)(v.ptr), sizeof(int) * (size_t)(newsize)));
-        } else {
-            v.ptr = ((int *) malloc(sizeof(int) * (size_t)(newsize)));
-        }
-        if v.ptr == nil {
-            fmt.Printf("Failed to realloc memory from %.1f MB to %.1f MB.\n", 1.0 * v.cap / (1<<20), 1.0 * newsize / (1<<20));
-            fflush( os.Stdout );
-        }
-        v.cap = newsize; }
-    v.ptr[v.size++] = e;
+	if v.size == v.cap {
+		n := satVectorCapacity(v.cap)
+		p := make([]int32, n)
+		copy(p, v.ptr)
+		v.ptr = p
+		v.cap = n
+	}
+	v.ptr[v.size] = e
+	v.size++
 }
 func veci_remove(v *veci, e int32) {
-    var ws *int32  = (int*)veci_begin(v);
-    var j int32;
-    for ; ws[j] != e  ; j++ {}
-    assert(j < veci_size(v), "j < veci_size(v)");
-    for ; j < veci_size(v)-1; j++ { ws[j] = ws[j+1]; }
-    veci_resize(v,veci_size(v)-1);
+	for j := int32(0); j < v.size; j++ {
+		if v.ptr[j] == e {
+			copy(v.ptr[j:], v.ptr[j+1:v.size])
+			v.size--
+			return
+		}
+	}
+	panic("veci_remove: missing element")
+}
+func satVectorCapacity(old int32) int32 {
+	if old == 0 {
+		return 4
+	}
+	n := old * 2
+	if old >= 4 {
+		n = (old / 2) * 3
+	}
+	if n <= old {
+		panic("SAT vector capacity overflow")
+	}
+	return n
 }
 
-
-// vector of 32- or 64-bit pointers
 type vecp_t struct {
-    cap    int32;
-    size    int32;
-    ptr *any;
+	cap, size int32
+	ptr       []any
 }
-type vecp = vecp_t;
+type vecp = vecp_t
 
-func vecp_new(v *vecp) {
-    v.size = 0;
-    v.cap  = 4;
-    // inlining of macro ABC_ALLOC
-    v.ptr  = (void**)((char *) malloc(sizeof(char) * (size_t)(sizeof(void*)*v.cap)));
+func vecp_new(v *vecp)         { v.cap = 4; v.size = 0; v.ptr = make([]any, 4) }
+func vecp_delete(v *vecp)      { *v = vecp{} }
+func vecp_begin(v *vecp) []any { return v.ptr[:v.size] }
+func vecp_size(v *vecp) int32  { return v.size }
+func vecp_resize(v *vecp, k int32) {
+	if k < 0 || k > v.size {
+		panic("vecp_resize: only shrinking is allowed")
+	}
+	clear(v.ptr[k:v.size])
+	v.size = k
 }
-
-// inlining of macro ABC_FREE
-func vecp_delete(v *vecp) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }
-func vecp_begin(v *vecp) *any { return v.ptr;  }
-func vecp_size(v *vecp) int32 { return v.size; }
-func vecp_resize(v *vecp, k int32) { assert(k <= v.size, "k <= v.size"); v.size = k;    } // only safe to shrink !!
 func vecp_push(v *vecp, e any) {
-    if v.size == v.cap {
-//        int newsize = v->cap * 2;//+1;
-        var newsize int32;
-        if v.cap < 4 {
-            newsize = v.cap * 2;
-        } else {
-            newsize = (v.cap / 2) * 3;
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if v.ptr {
-            v.ptr = ((void* *) realloc((char *)(v.ptr), sizeof(void*) * (size_t)(newsize)));
-        } else {
-            v.ptr = ((void* *) malloc(sizeof(void*) * (size_t)(newsize)));
-        }
-        v.cap = newsize; }
-    v.ptr[v.size++] = e;
+	if v.size == v.cap {
+		n := satVectorCapacity(v.cap)
+		p := make([]any, n)
+		copy(p, v.ptr)
+		v.ptr = p
+		v.cap = n
+	}
+	v.ptr[v.size] = e
+	v.size++
 }
+
+// Pointer-vector values must be comparable (the original elements were pointers).
 func vecp_remove(v *vecp, e any) {
-    var ws *any  = vecp_begin(v);
-    var j int32;
-    for ; ws[j] != e  ; j++ {}
-    assert(j < vecp_size(v), "j < vecp_size(v)");
-    for ; j < vecp_size(v)-1; j++ { ws[j] = ws[j+1]; }
-    vecp_resize(v,vecp_size(v)-1);
+	for j := int32(0); j < v.size; j++ {
+		if v.ptr[j] == e {
+			copy(v.ptr[j:], v.ptr[j+1:v.size])
+			v.size--
+			v.ptr[v.size] = nil
+			return
+		}
+	}
+	panic("vecp_remove: missing element")
 }
 
+type lit = int32
+type cla = int32
+type lbool = int8
 
+const (
+	var_Undef int32 = -1
+	lit_Undef lit   = -2
+	l_Undef         = 0
+	l_True          = 1
+	l_False         = -1
+)
 
-//=================================================================================================
-// Simple types:
-
-#ifndef __cplusplus
-#ifndef false
-#  define false 0
-#endif
-#ifndef true
-#  define true 1
-#endif
-#endif
-
-typedef int    lit;
-typedef int    cla;
-
-typedef char               lbool;
-
-var var_Undef int32 = -1;
-var lit_Undef lit = -2;
-
-var l_Undef lbool;
-var l_True lbool = 1;
-var l_False lbool = -1;
-
-func toLit(v int32) lit { return v + v; }
-func toLitCond(v int32, c int32) lit { return v + v + (c != 0); }
-func lit_neg(l lit) lit { return l ^ 1; }
-func lit_var(l lit) int32 { return l >> 1; }
-func lit_sign(l lit) int32 { return l & 1; }
-func lit_print(l lit) int32 { if lit_sign(l) != 0 {
-    return -lit_var(l)-1;
-} else {
-    return lit_var(l)+1;
-} }
-func lit_read(s int32) lit { if s > 0 {
-    return toLit(s-1);
-} else {
-    return lit_neg(toLit(-s-1));
-} }
-func lit_check(l lit, n int32) int32 { return l >= 0 && lit_var(l) < n;                  }
+func toLit(v int32) lit {
+	if v < 0 || v > 0x3fffffff {
+		panic("SAT variable exceeds literal range")
+	}
+	return v + v
+}
+func toLitCond(v, c int32) lit {
+	l := toLit(v)
+	if c != 0 {
+		l++
+	}
+	return l
+}
+func lit_neg(l lit) lit    { return l ^ 1 }
+func lit_var(l lit) int32  { return l >> 1 }
+func lit_sign(l lit) int32 { return l & 1 }
+func lit_print(l lit) int32 {
+	if lit_sign(l) != 0 {
+		return -lit_var(l) - 1
+	}
+	return lit_var(l) + 1
+}
+func lit_read(s int32) lit {
+	if s < -0x40000000 || s > 0x40000000 {
+		panic("DIMACS literal exceeds SAT literal range")
+	}
+	if s == 0 {
+		panic("lit_read: DIMACS zero is a clause terminator")
+	}
+	if s > 0 {
+		return toLit(s - 1)
+	}
+	return lit_neg(toLit(-s - 1))
+}
+func lit_check(l lit, n int32) int32 {
+	if l >= 0 && lit_var(l) < n {
+		return 1
+	}
+	return 0
+}
 
 type stats_t struct {
-    starts, clauses, learnts uint32;
-    ABC_INT64_T decisions, propagations, inspects, conflicts;
-    ABC_INT64_T clauses_literals, learnts_literals, tot_literals;
+	starts, clauses, learnts                         uint32
+	decisions, propagations, inspects, conflicts     int64
+	clauses_literals, learnts_literals, tot_literals int64
 }
-   
-
-//ABC_NAMESPACE_HEADER_END
-
-

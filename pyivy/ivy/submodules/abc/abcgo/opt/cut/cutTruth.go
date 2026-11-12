@@ -1,230 +1,126 @@
 package cut
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/bool/kit"
+	"math/bits"
+	"time"
+)
 
-  FileName    [cutTruth.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [K-feasible cut computation package.]
-
-  Synopsis    [Incremental truth table computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cutTruth.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cutInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/* 
-    Truth tables computed in this package are represented as bit-strings
-    stored in the cut data structure. Cuts of any number of inputs have 
-    the truth table with 2^k bits, where k is the max number of cut inputs.
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// used in abcCut.c
-var nTotal int32;
-var nGood int32;
-var nEqual int32;
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the stretching phase of the cut w.r.t. the merged cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_TruthPhase(pCut *Cut_Cut_t, pCut1 *Cut_Cut_t) uint32 {
-    var uPhase uint32;
-    var i, k int32;
-    for  i = k = 0; i < int32(pCut.nLeaves); i++  {
-        if k == int32(pCut1.nLeaves) {
-            break; }
-        if pCut.pLeaves[i] < pCut1.pLeaves[k] {
-            continue; }
-        assert(pCut.pLeaves[i] == pCut1.pLeaves[k], "pCut.pLeaves[i] == pCut1.pLeaves[k]");
-        uPhase |= (1 << i);
-        k++;
-    }
-    return uPhase;
+func cutTruthValue(c *Cut_Cut_t, merged []int32, assignment int) bool {
+	index := 0
+	for v, leaf := range c.leaves {
+		found := false
+		for pos, target := range merged {
+			if leaf == target {
+				index |= ((assignment >> uint(pos)) & 1) << uint(v)
+				found = true
+				break
+			}
+		}
+		if !found {
+			panic("cut: truth input not contained in merged support")
+		}
+	}
+	return (c.truth[index>>5]&(1<<uint(index&31)) != 0) != c.FCompl
+}
+func cutTruthComputeOp(c, a, b *Cut_Cut_t, compl0, compl1 int32, xor bool) {
+	clear(c.truth)
+	for assignment := 0; assignment < len(c.truth)*32; assignment++ {
+		x, y := cutTruthValue(a, c.leaves, assignment), cutTruthValue(b, c.leaves, assignment)
+		if compl0 != 0 {
+			x = !x
+		}
+		if compl1 != 0 {
+			y = !y
+		}
+		value := x && y
+		if xor {
+			value = x != y
+		}
+		if c.FCompl {
+			value = !value
+		}
+		if value {
+			c.truth[assignment>>5] |= 1 << uint(assignment&31)
+		}
+	}
+}
+func Cut_TruthCompute(p *Cut_Man_t, c, a, b *Cut_Cut_t, compl0, compl1 int32) {
+	started := time.Now()
+	cutTruthComputeOp(c, a, b, compl0, compl1, p.xor)
+	p.stats.TruthTime += time.Since(started)
+	if p.params.FFancy != 0 && len(c.leaves) == 7 {
+		p.stats.FancyCuts++
+		minOverlap := 7
+		low, high := make([]uint32, 4), make([]uint32, 4)
+		for v := int32(0); v < 7; v++ {
+			kit.Kit_TruthCofactor0New(low, c.truth, 7, v)
+			kit.Kit_TruthCofactor1New(high, c.truth, 7, v)
+			minOverlap = min(minOverlap, bits.OnesCount32(kit.Kit_TruthSupport(low, 7)&kit.Kit_TruthSupport(high, 7)))
+		}
+		if minOverlap <= 4 {
+			p.stats.FancyGood++
+		}
+	}
+}
+func Cut_TruthPhase(merged, child *Cut_Cut_t) uint32 {
+	var phase uint32
+	for _, leaf := range child.leaves {
+		found := false
+		for pos, target := range merged.leaves {
+			if leaf == target {
+				phase |= 1 << uint(pos)
+				found = true
+				break
+			}
+		}
+		if !found {
+			panic("cut: input support not contained")
+		}
+	}
+	return phase
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs truth table computation.]
-
-  Description [This procedure cannot be used while recording oracle
-  because it will overwrite Num0 and Num1.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_TruthNCanonicize(pCut *Cut_Cut_t) {
-    var uTruth uint32;
-    var uCanon2 *uint32;
-    var pPhases2 string;
-    assert(pCut.nVarsMax < 6, "pCut.nVarsMax < 6");
-
-    // get the direct truth table
-    uTruth = *Cut_CutReadTruth(pCut);
-
-    // compute the direct truth table
-    Extra_TruthCanonFastN( pCut.nVarsMax, pCut.nLeaves, &uTruth, &uCanon2, &pPhases2 );
-//    uCanon[0] = uCanon2[0];
-//    uCanon[1] = (p->nVarsMax == 6)? uCanon2[1] : uCanon2[0];
-//    uPhases[0] = pPhases2[0];
-    pCut.uCanon0 = uCanon2[0];
-    pCut.Num0    = pPhases2[0];
-
-    // get the complemented truth table
-    uTruth = ~*Cut_CutReadTruth(pCut);
-
-    // compute the direct truth table
-    Extra_TruthCanonFastN( pCut.nVarsMax, pCut.nLeaves, &uTruth, &uCanon2, &pPhases2 );
-//    uCanon[0] = uCanon2[0];
-//    uCanon[1] = (p->nVarsMax == 6)? uCanon2[1] : uCanon2[0];
-//    uPhases[0] = pPhases2[0];
-    pCut.uCanon1 = uCanon2[0];
-    pCut.Num1    = pPhases2[0];
+// N-canonicalization chooses the lexicographically smallest table among input
+// phases and output phases. It is only used for optional small-cut statistics.
+func Cut_TruthNCanonicize(c *Cut_Cut_t) {
+	n := len(c.leaves)
+	if n > 6 {
+		panic("cut: N-canonicalization limited to six variables")
+	}
+	best := append([]uint32(nil), c.truth...)
+	for phase := 0; phase < 1<<uint(n); phase++ {
+		for output := 0; output < 2; output++ {
+			candidate := make([]uint32, len(c.truth))
+			for bit := 0; bit < len(candidate)*32; bit++ {
+				index := bit ^ phase
+				value := c.truth[index>>5] >> uint(index&31) & 1
+				if output != 0 {
+					value ^= 1
+				}
+				candidate[bit>>5] |= value << uint(bit&31)
+			}
+			less := false
+			for i := len(best) - 1; i >= 0; i-- {
+				if candidate[i] != best[i] {
+					less = candidate[i] < best[i]
+					break
+				}
+			}
+			if less {
+				best = candidate
+			}
+		}
+	}
+	if len(best) > 0 {
+		c.UCanon0 = best[0]
+		c.UCanon1 = best[0]
+	}
+	if len(best) > 1 {
+		c.UCanon1 = best[1]
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs truth table computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Cut_TruthComputeOld_uTruth0, spStatic_Cut_TruthComputeOld_uTruth1 [8]uint32;
-func Cut_TruthComputeOld(pCut *Cut_Cut_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t, fCompl0 int32, fCompl1 int32) {
-    
-    var nTruthWords int32  = Cut_TruthWords( pCut.nVarsMax );
-    var pTruthRes *uint32;
-    var i, uPhase int32;
-
-    // permute the first table
-    uPhase = Cut_TruthPhase( pCut, pCut0 );
-    Extra_TruthExpand( pCut.nVarsMax, nTruthWords, Cut_CutReadTruth(pCut0), uPhase, spStatic_Cut_TruthComputeOld_uTruth0 );
-    if fCompl0 != 0 {
-        for  i = 0; i < nTruthWords; i++  {
-            spStatic_Cut_TruthComputeOld_uTruth0[i] = ~spStatic_Cut_TruthComputeOld_uTruth0[i];
-        }
-    }
-
-    // permute the second table
-    uPhase = Cut_TruthPhase( pCut, pCut1 );
-    Extra_TruthExpand( pCut.nVarsMax, nTruthWords, Cut_CutReadTruth(pCut1), uPhase, spStatic_Cut_TruthComputeOld_uTruth1 );
-    if fCompl1 != 0 {
-        for  i = 0; i < nTruthWords; i++  {
-            spStatic_Cut_TruthComputeOld_uTruth1[i] = ~spStatic_Cut_TruthComputeOld_uTruth1[i];
-        }
-    }
-
-    // write the resulting table
-    pTruthRes = Cut_CutReadTruth(pCut);
-
-    if pCut.fCompl {
-        for  i = 0; i < nTruthWords; i++  {
-            pTruthRes[i] = ~(spStatic_Cut_TruthComputeOld_uTruth0[i] & spStatic_Cut_TruthComputeOld_uTruth1[i]);
-        }
-    
-    } else {
-        for  i = 0; i < nTruthWords; i++  {
-            pTruthRes[i] = spStatic_Cut_TruthComputeOld_uTruth0[i] & spStatic_Cut_TruthComputeOld_uTruth1[i];
-        }
-    }
+func Cut_TruthComputeOld(c, a, b *Cut_Cut_t, compl0, compl1 int32) {
+	cutTruthComputeOp(c, a, b, compl0, compl1, false)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs truth table computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_TruthCompute(p *Cut_Man_t, pCut *Cut_Cut_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t, fCompl0 int32, fCompl1 int32) {
-    // permute the first table
-    if fCompl0 != 0 { 
-        Extra_TruthNot( p.puTemp[0], Cut_CutReadTruth(pCut0), pCut.nVarsMax );
-    } else {
-        Extra_TruthCopy( p.puTemp[0], Cut_CutReadTruth(pCut0), pCut.nVarsMax ); }
-    Extra_TruthStretch( p.puTemp[2], p.puTemp[0], pCut0.nLeaves, pCut.nVarsMax, Cut_TruthPhase(pCut, pCut0) );
-    // permute the second table
-    if fCompl1 != 0 { 
-        Extra_TruthNot( p.puTemp[1], Cut_CutReadTruth(pCut1), pCut.nVarsMax );
-    } else {
-        Extra_TruthCopy( p.puTemp[1], Cut_CutReadTruth(pCut1), pCut.nVarsMax ); }
-    Extra_TruthStretch( p.puTemp[3], p.puTemp[1], pCut1.nLeaves, pCut.nVarsMax, Cut_TruthPhase(pCut, pCut1) );
-    // produce the resulting table
-    if pCut.fCompl {
-        Extra_TruthNand( Cut_CutReadTruth(pCut), p.puTemp[2], p.puTemp[3], pCut.nVarsMax );
-    } else {
-        Extra_TruthAnd( Cut_CutReadTruth(pCut), p.puTemp[2], p.puTemp[3], pCut.nVarsMax ); }
-
-//    Ivy_TruthTestOne( *Cut_CutReadTruth(pCut) );
-
-    // quit if no fancy computation is needed
-    if !p.pParams.fFancy {
-        return; }
-
-    if pCut.nLeaves != 7 {
-        return; }
-
-    // count the total number of truth tables computed
-    nTotal++;
-
-    // MAPPING INTO ALTERA 6-2 LOGIC BLOCKS
-    // call this procedure to find the minimum number of common variables in the cofactors
-    // if this number is less or equal than 3, the cut can be implemented using the 6-2 logic block
-    if Extra_TruthMinCofSuppOverlap( Cut_CutReadTruth(pCut), pCut.nVarsMax, nil ) <= 4 {
-        nGood++; }
-
-    // MAPPING INTO ACTEL 2x2 CELLS
-    // call this procedure to see if a semi-canonical form can be found in the lookup table 
-    // (if it exists, then a two-level 3-input LUT implementation of the cut exists)
-    // Before this procedure is called, cell manager should be defined by calling
-    // Cut_CellLoad (make sure file "cells22_daomap_iwls.txt" is available in the working dir)
-//    if ( Cut_CellIsRunning() && pCut->nVarsMax <= 9 )
-//        nGood += Cut_CellTruthLookup( Cut_CutReadTruth(pCut), pCut->nVarsMax );
-}
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

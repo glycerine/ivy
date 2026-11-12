@@ -144,8 +144,7 @@ func Dch_ManSweep(p *Dch_Man_t) {
     }
     Bar_ProgressStop( pProgress );
     // update the representatives of the nodes (makes classes invalid)
-    // inlining of macro ABC_FREE
-    ((p.pAigTotal.pReprs) ? (free((char *) (p.pAigTotal.pReprs)), (p.pAigTotal.pReprs) = 0) : 0);
+    p.pAigTotal.pReprs = nil;
     p.pAigTotal.pReprs = p.pReprsProved;
     p.pReprsProved = nil;
     // clean the mark

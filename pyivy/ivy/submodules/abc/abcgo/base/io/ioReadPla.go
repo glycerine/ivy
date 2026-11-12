@@ -329,10 +329,8 @@ if !( Count ) { break }
     if fVerbose != 0 {
         fmt.Printf("\n"); }
     Vec_BitFree( vMarks );
-    // inlining of macro ABC_FREE
-    ((pCs[0]) ? (free((char *) (pCs[0])), (pCs[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pCs) ? (free((char *) (pCs)), (pCs) = 0) : 0);
+    pCs[0] = nil;
+    pCs = nil;
 }
 
 /**Function*************************************************************
@@ -415,8 +413,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
 
         // if it is the model name, get the name
         if int32(strings.Compare((char *)vTokens.pArray[0], ".model")) == 0 {
-            // inlining of macro ABC_FREE
-            ((pNtk.pName) ? (free((char *) (pNtk.pName)), (pNtk.pName) = 0) : 0);
+            pNtk.pName = nil;
             pNtk.pName = Extra_UtilStrsav( (char *)vTokens.pArray[1] );
             continue;
         }
@@ -425,8 +422,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
             fmt.Printf("%s (line %d): Wrong number of token.\n", Extra_FileReaderGetFileName(p), iLine);
             Abc_NtkDelete( pNtk );
             Extra_ProgressBarStop( pProgress );
-            // inlining of macro ABC_FREE
-            ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+            ppSops = nil;
             return nil;
         }
 
@@ -457,8 +453,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
                     fmt.Printf("%s: The number of inputs is not specified.\n", Extra_FileReaderGetFileName(p));
                     Abc_NtkDelete( pNtk );
                     Extra_ProgressBarStop( pProgress );
-                    // inlining of macro ABC_FREE
-                    ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+                    ppSops = nil;
                     return nil;
                 }
                 nDigits = Abc_Base10Log( nInputs );
@@ -472,8 +467,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
                     fmt.Printf("%s: The number of outputs is not specified.\n", Extra_FileReaderGetFileName(p));
                     Abc_NtkDelete( pNtk );
                     Extra_ProgressBarStop( pProgress );
-                    // inlining of macro ABC_FREE
-                    ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+                    ppSops = nil;
                     return nil;
                 }
                 nDigits = Abc_Base10Log( nOutputs );
@@ -506,8 +500,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
                 fmt.Printf("%s (line %d): Input and output cubes are not specified.\n", Extra_FileReaderGetFileName(p), iLine);
                 Abc_NtkDelete( pNtk );
                 Extra_ProgressBarStop( pProgress );
-                // inlining of macro ABC_FREE
-                ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+                ppSops = nil;
                 return nil;
             }
             pCubeIn  = (char *)vTokens.pArray[0];
@@ -515,16 +508,14 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
             if int32(len(pCubeIn)) != nInputs {
                 fmt.Printf("%s (line %d): Input cube length (%d) differs from the number of inputs (%d).\n", Extra_FileReaderGetFileName(p), iLine, int32(len(pCubeIn)), nInputs);
                 Abc_NtkDelete( pNtk );
-                // inlining of macro ABC_FREE
-                ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+                ppSops = nil;
                 return nil;
             }
             if int32(len(pCubeOut)) != nOutputs {
                 fmt.Printf("%s (line %d): Output cube length (%d) differs from the number of outputs (%d).\n", Extra_FileReaderGetFileName(p), iLine, int32(len(pCubeOut)), nOutputs);
                 Abc_NtkDelete( pNtk );
                 Extra_ProgressBarStop( pProgress );
-                // inlining of macro ABC_FREE
-                ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+                ppSops = nil;
                 return nil;
             }
             if fZeros != 0 {
@@ -582,8 +573,7 @@ func Io_ReadPlaNetwork(p *Extra_FileReader_t, fZeros int32, fBoth int32, fOnDc i
         pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, ppSops[i].pArray );
         Vec_StrFree( ppSops[i] );
     }
-    // inlining of macro ABC_FREE
-    ((ppSops) ? (free((char *) (ppSops)), (ppSops) = 0) : 0);
+    ppSops = nil;
     Abc_NtkFinalizeRead( pNtk );
     return pNtk;
 }

@@ -167,3 +167,47 @@ func TestMaximumSizeHandleEntry(t *testing.T) {
 		t.Fatal("maximum entry recycling")
 	}
 }
+
+func TestFixedCustomChunkPolicy(t *testing.T) {
+	p := Mem_FixedStartWithChunk(8, 3)
+	for i := 0; i < 4; i++ {
+		Mem_FixedEntryFetch(p)
+	}
+	if Mem_FixedReadMemUsage(p) != 48 {
+		t.Fatal("custom growth")
+	}
+	Mem_FixedRestart(p)
+	if Mem_FixedReadMemUsage(p) != 24 {
+		t.Fatal("custom restart")
+	}
+}
+
+func TestCustomFlexAndStepPolicies(t *testing.T) {
+	f := Mem_FlexStartWithChunk(1 << 18)
+	Mem_FlexEntryFetch(f, 10)
+	if len(f.chunks[0]) != 1<<18 {
+		t.Fatal("flex chunk policy")
+	}
+	p := Mem_StepStartWithChunk(4, 1024)
+	Mem_StepEntryFetch(p, 40)
+	if Mem_StepReadMemUsage(p) != 64*1024 {
+		t.Fatal("step chunk policy")
+	}
+}
+
+func TestStepRestart(t *testing.T) {
+	p := Mem_StepStartWithChunk(2, 3)
+	first := Mem_StepEntryFetch(p, 5)
+	for i := 0; i < 4; i++ {
+		Mem_StepEntryFetch(p, 5)
+	}
+	Mem_StepEntryFetch(p, 100)
+	Mem_StepRestart(p)
+	if len(p.large) != 0 || Mem_StepReadMemUsage(p) != 24 {
+		t.Fatal("restart storage")
+	}
+	next := Mem_StepEntryFetch(p, 5)
+	if &next[0] != &first[0] {
+		t.Fatal("restart did not reuse first chunk")
+	}
+}

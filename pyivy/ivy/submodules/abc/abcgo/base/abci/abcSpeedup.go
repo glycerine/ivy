@@ -125,8 +125,7 @@ func Abc_NtkDelayTraceLut(pNtk *Abc_Ntk_t, fUseLutLib int32) float32 {
     }
 
     // initialize the arrival times
-    // inlining of macro ABC_FREE
-    ((pNtk.pLutTimes) ? (free((char *) (pNtk.pLutTimes)), (pNtk.pLutTimes) = 0) : 0);
+    pNtk.pLutTimes = nil;
     // inlining of macro ABC_ALLOC
     pNtk.pLutTimes = ((float *) malloc(sizeof(float) * (size_t)(3 * Abc_NtkObjNumMax(pNtk))));
     for  i = 0; i < Abc_NtkObjNumMax(pNtk); i++  {
@@ -300,8 +299,7 @@ func Abc_NtkDelayTracePrint(pNtk *Abc_Ntk_t, fUseLutLib int32, fVerbose int32) {
         Nodes += pCounters[i];
         fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", fUseLutLib? 5*(i+1) : i+1, fUseLutLib? "%":"lev", Nodes, 100.0*Nodes/Abc_NtkNodeNum(pNtk));
     }
-    // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
+    pCounters = nil;
 }
 
 /**Function*************************************************************
@@ -673,8 +671,7 @@ func Abc_NtkSpeedup(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree 
     }
     Vec_PtrFree( vTimeCries );
     Vec_PtrFree( vTimeFanins );
-    // inlining of macro ABC_FREE
-    ((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);
+    puTCEdges = nil;
     if fVerbose != 0 {
         fmt.Printf("Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\n", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } 
 
@@ -984,8 +981,7 @@ func Abc_NtkPowerdown(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degre
     }
     Vec_PtrFree( vTimeCries );
     Vec_PtrFree( vTimeFanins );
-    // inlining of macro ABC_FREE
-    ((puPCEdges) ? (free((char *) (puPCEdges)), (puPCEdges) = 0) : 0);
+    puPCEdges = nil;
     if fVerbose != 0 {
         fmt.Printf("Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\n", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } 
 

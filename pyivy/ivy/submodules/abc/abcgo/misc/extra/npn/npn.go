@@ -32,6 +32,16 @@ func Permutations() [24][4]byte {
 // Transform applies input negations, variable permutation, then optional output
 // negation. Phase bits 0..3 negate inputs; bit 4 negates the output.
 func Transform(truth uint16, phase byte, permutation [4]byte) uint16 {
+	var variables byte
+	for _, v := range permutation {
+		if v >= 4 || variables&(1<<v) != 0 {
+			panic("invalid four-variable permutation")
+		}
+		variables |= 1 << v
+	}
+	if phase&^31 != 0 {
+		panic("invalid four-variable phase")
+	}
 	var result uint16
 	for mint := 0; mint < 16; mint++ {
 		if truth&(uint16(1)<<uint(mint^int(phase&15))) == 0 {
@@ -69,25 +79,20 @@ func Extra_Truth4VarNPN() (canons []uint16, phases, perms, classes []byte) {
 		}
 		classes[truth] = byte(nClasses)
 		nClasses++
+		// Filling both outputs below makes the C complemented-input loop redundant.
 		for phase := byte(0); phase < 16; phase++ {
-			for _, complement := range []bool{false, true} {
-				value := uint16(truth)
-				if complement {
-					value = ^value
-				}
-				for k, permutation := range permutations {
-					transformed := Transform(value, phase, permutation)
-					if canons[transformed] == 0 {
-						canons[transformed] = uint16(truth)
-						phases[transformed] = phase
-						perms[transformed] = byte(k)
-						opposite := ^transformed
-						canons[opposite] = uint16(truth)
-						phases[opposite] = phase | 16
-						perms[opposite] = byte(k)
-					} else if canons[transformed] != uint16(truth) {
-						panic("overlapping NPN classes")
-					}
+			for k, permutation := range permutations {
+				transformed := Transform(uint16(truth), phase, permutation)
+				if canons[transformed] == 0 {
+					canons[transformed] = uint16(truth)
+					phases[transformed] = phase
+					perms[transformed] = byte(k)
+					opposite := ^transformed
+					canons[opposite] = uint16(truth)
+					phases[opposite] = phase | 16
+					perms[opposite] = byte(k)
+				} else if canons[transformed] != uint16(truth) {
+					panic("overlapping NPN classes")
 				}
 			}
 		}

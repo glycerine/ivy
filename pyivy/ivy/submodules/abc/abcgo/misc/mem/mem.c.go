@@ -21,8 +21,21 @@ func Mem_FixedStart(size int32) *Mem_Fixed_t {
 	if n < 8 {
 		n = 8
 	}
-	return &Mem_Fixed_t{entrySize: int(size), chunkSize: n}
+	return Mem_FixedStartWithChunk(size, int32(n))
 }
+
+// Mem_FixedStartWithChunk allows clients such as GIA to retain their original
+// entry-count chunk policy while sharing the allocator implementation.
+func Mem_FixedStartWithChunk(size, entries int32) *Mem_Fixed_t {
+	if size <= 0 || entries <= 0 {
+		panic("invalid fixed allocation dimensions")
+	}
+	if int64(size)*int64(entries) > int64(int(^uint(0)>>1)) {
+		panic("fixed chunk size overflows int")
+	}
+	return &Mem_Fixed_t{entrySize: int(size), chunkSize: int(entries)}
+}
+
 func Mem_FixedEntryFetch(p *Mem_Fixed_t) []byte {
 	if len(p.free) == 0 {
 		chunk := make([]byte, p.entrySize*p.chunkSize)
@@ -78,7 +91,15 @@ type Mem_Flex_t struct {
 	offset, chunkSize, used, entries int
 }
 
-func Mem_FlexStart() *Mem_Flex_t { return &Mem_Flex_t{chunkSize: 4096} }
+func Mem_FlexStart() *Mem_Flex_t { return Mem_FlexStartWithChunk(4096) }
+
+// Mem_FlexStartWithChunk selects the initial flexible-arena page size.
+func Mem_FlexStartWithChunk(bytes int32) *Mem_Flex_t {
+	if bytes <= 0 {
+		panic("invalid flexible chunk size")
+	}
+	return &Mem_Flex_t{chunkSize: int(bytes)}
+}
 func Mem_FlexEntryFetch(p *Mem_Flex_t, n int32) []byte {
 	if n < 0 {
 		panic("negative allocation")
@@ -123,13 +144,28 @@ type Mem_Step_t struct {
 	large    [][]byte
 }
 
-func Mem_StepStart(n int32) *Mem_Step_t {
+func Mem_StepStart(n int32) *Mem_Step_t { return memStepStart(n, 0) }
+
+// Mem_StepStartWithChunk uses a fixed entry count for every size class.
+func Mem_StepStartWithChunk(n, entriesPerChunk int32) *Mem_Step_t {
+	if entriesPerChunk <= 0 {
+		panic("invalid step chunk size")
+	}
+	return memStepStart(n, entriesPerChunk)
+}
+func memStepStart(n, entriesPerChunk int32) *Mem_Step_t {
 	if n <= 0 || n > 24 {
 		panic("invalid step count")
 	}
 	p := &Mem_Step_t{}
 	for i := int32(0); i < n; i++ {
-		p.managers = append(p.managers, Mem_FixedStart(8<<i))
+		var manager *Mem_Fixed_t
+		if entriesPerChunk > 0 {
+			manager = Mem_FixedStartWithChunk(8<<i, entriesPerChunk)
+		} else {
+			manager = Mem_FixedStart(8 << i)
+		}
+		p.managers = append(p.managers, manager)
 	}
 	return p
 }
@@ -178,4 +214,16 @@ func Mem_StepStop(p *Mem_Step_t, v int32) {
 		Mem_FixedStop(m, v)
 	}
 	*p = Mem_Step_t{}
+}
+
+// Mem_StepRestart restarts every fixed-size class and drops large allocations.
+// Previously fetched entries lose ownership, exactly as with FixedRestart.
+func Mem_StepRestart(p *Mem_Step_t) {
+	if p == nil {
+		return
+	}
+	for _, manager := range p.managers {
+		Mem_FixedRestart(manager)
+	}
+	p.large = nil
 }

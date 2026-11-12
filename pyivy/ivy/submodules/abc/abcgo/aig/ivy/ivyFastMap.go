@@ -223,10 +223,8 @@ clk = Abc_Clock();
 func Ivy_FastMapStop(pAig *Ivy_Man_t) {
     var p *Ivy_SuppMan_t  = (Ivy_SuppMan_t *)pAig.pData;
     Vec_VecFree( p.vLuts );
-    // inlining of macro ABC_FREE
-    ((p.pMem) ? (free((char *) (p.pMem)), (p.pMem) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMem = nil;
+    p = nil;
     pAig.pData = nil;
 }
 

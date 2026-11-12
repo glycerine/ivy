@@ -1328,8 +1328,7 @@ func Abc_TtHieManStop(p *Abc_TtHieMan_t) {
         Vec_IntFree(p.vRepres[i]);
     }
     Vec_IntFree( p.vPhase );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 func Abc_TtHieRetrieveOrInsert(p *Abc_TtHieMan_t, level int32, pTruth *word, pResult *word) int32 {

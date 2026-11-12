@@ -175,8 +175,7 @@ func Mio_GateParseFormula(pGate *Mio_Gate_t) int32 {
     if int32(strings.Compare(pGate.pPins.pName, "*")) == 0 {
         // get the topmost (generic) pin
         pPin = pGate.pPins;
-        // inlining of macro ABC_FREE
-        ((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);
+        pPin.pName = nil;
 
         // create individual pins from the generic pin
         ppPin = &pPin.pNext;
@@ -204,8 +203,7 @@ func Mio_GateParseFormula(pGate *Mio_Gate_t) int32 {
                     // free pPinNames[i] because it is already available as pPin->pName
                     // setting pPinNames[i] to NULL is useful to make sure that
                     // this name is not assigned to two pins in the list
-                    // inlining of macro ABC_FREE
-                    ((pPinNames[i]) ? (free((char *) (pPinNames[i])), (pPinNames[i]) = 0) : 0);
+                    pPinNames[i] = nil;
                     pPinNamesCopy[iPin++] = pPin.pName;
                     break;
                 }

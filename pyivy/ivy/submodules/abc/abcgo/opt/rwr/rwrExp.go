@@ -150,10 +150,8 @@ func Rwt_Man4ExplorePrint() {
             fmt.Printf("\n");
         }
     }
-    // inlining of macro ABC_FREE
-    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pDistrib = nil;
+    pReprs = nil;
     // write into a file all classes above limit (5)
     CountWrite = 0;
     pFile = os.OpenFile("npnclass_stats4.txt", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
@@ -269,10 +267,8 @@ func Rwt_Man5ExplorePrint() {
             fmt.Printf("\n");
         }
     }
-    // inlining of macro ABC_FREE
-    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pDistrib = nil;
+    pReprs = nil;
 
 
     // put them into an array

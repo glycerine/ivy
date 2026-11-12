@@ -1,712 +1,484 @@
 package aig
 
-import "fmt"
+const (
+	// SupportMinSuccess means a care-equivalent cofactored cone was constructed.
+	SupportMinSuccess        int32 = 0
+	SupportMinNotOrCondition int32 = -1
+	SupportMinInapplicable   int32 = -2
+	SupportMinNoReduction    int32 = -3
+	aigSupportLimit                = 16
+)
 
-/**CFile****************************************************************
+// The factoring routines use typed cone frontiers and local truth tables rather
+// than placing pointers, simulation words and temporary copies in one C union.
+// Public traversal helpers retain ABC's current/previous traversal-ID protocol.
 
-  FileName    [aigFactor.c]
-
-  SystemName  []
-
-  PackageName []
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation []
-
-  Date        [Ver. 1.0. Started - April 17, 2009.]
-
-  Revision    [$Id: aigFactor.c,v 1.00 2009/04/17 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Detects multi-input AND gate rooted at this node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindImplications_rec(pObj *Aig_Obj_t, vImplics *Vec_Ptr_t) {
-    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) {
-        Vec_PtrPushUnique( vImplics, pObj );
-        return;
-    }
-    Aig_ManFindImplications_rec( Aig_ObjChild0(pObj), vImplics );
-    Aig_ManFindImplications_rec( Aig_ObjChild1(pObj), vImplics );
+func Aig_ManFindImplications_rec(p *Graph, root Edge, implications *[]Edge) {
+	seen := map[Edge]bool{}
+	for _, e := range *implications {
+		seen[e] = true
+	}
+	active, done := map[int]bool{}, map[int]bool{}
+	var visit func(Edge)
+	visit = func(e Edge) {
+		n := p.node(e)
+		if e.Complemented() || n.Kind != And {
+			if !seen[e] {
+				*implications = append(*implications, e)
+				seen[e] = true
+			}
+			return
+		}
+		if active[e.NodeID()] {
+			panic("aig: cyclic implication cone")
+		}
+		if done[e.NodeID()] {
+			return
+		}
+		active[e.NodeID()] = true
+		visit(n.Fanins[0])
+		visit(n.Fanins[1])
+		delete(active, e.NodeID())
+		done[e.NodeID()] = true
+	}
+	visit(root)
+}
+func Aig_ManFindImplications(p *Graph, root Edge) []Edge {
+	result := []Edge{}
+	Aig_ManFindImplications_rec(p, root, &result)
+	return result
+}
+func Aig_ManFindConeOverlap_rec(p *Graph, root Edge) bool {
+	n := p.node(root)
+	if n.TravID == p.travID-1 {
+		return true
+	}
+	if n.TravID == p.travID {
+		return false
+	}
+	n.TravID = p.travID
+	for _, e := range nodeFanins(*n) {
+		if Aig_ManFindConeOverlap_rec(p, e) {
+			return true
+		}
+	}
+	return false
+}
+func Aig_ManFindConeOverlap(p *Graph, implications []Edge, root Edge) bool {
+	Aig_ManIncrementTravId(p)
+	for _, e := range implications {
+		p.node(e).TravID = p.travID
+	}
+	Aig_ManIncrementTravId(p)
+	return Aig_ManFindConeOverlap_rec(p, root)
+}
+func aigFactRebuild(p *Graph, n Node, a, b Edge) Edge {
+	switch n.Kind {
+	case And:
+		return p.AND(a, b)
+	case ExclusiveOr:
+		return p.NewXor(a, b)
+	case Buffer, Output:
+		return a
+	}
+	panic("aig: cannot rebuild a terminal as a gate")
+}
+func Aig_ManDeriveNewCone_rec(p *Graph, root Edge) Edge {
+	e := Aig_Regular(root)
+	n := *p.node(e)
+	var result Edge
+	if n.TravID == p.travID {
+		var ok bool
+		result, ok = p.copies[e.NodeID()]
+		if !ok {
+			panic("aig: missing current-traversal copy")
+		}
+	} else {
+		p.node(e).TravID = p.travID
+		if n.Kind == Input || n.Kind == Constant {
+			result = e
+		} else {
+			fanins := nodeFanins(n)
+			a := Aig_ManDeriveNewCone_rec(p, fanins[0])
+			b := InvalidEdge
+			if len(fanins) > 1 {
+				b = Aig_ManDeriveNewCone_rec(p, fanins[1])
+			}
+			result = aigFactRebuild(p, n, a, b)
+		}
+		p.copies[e.NodeID()] = result
+	}
+	if root.Complemented() {
+		result = result.Not()
+	}
+	return result
+}
+func Aig_ManDeriveNewCone(p *Graph, implications []Edge, root Edge) Edge {
+	Aig_ManIncrementTravId(p)
+	if p.copies == nil {
+		p.copies = map[int]Edge{}
+	}
+	for _, e := range implications {
+		p.node(e).TravID = p.travID
+		value := p.Const1()
+		if e.Complemented() {
+			value = value.Not()
+		}
+		p.copies[e.NodeID()] = value
+	}
+	return Aig_ManDeriveNewCone_rec(p, root)
+}
+func Aig_ManFactorAlgebraic_int(p *Graph, outputA, outputB Edge, value int32) Edge {
+	if value != 0 && value != 1 {
+		panic("aig: factoring value must be zero or one")
+	}
+	a, b := p.outputDriver(outputA), p.outputDriver(outputB)
+	if p.node(a).Kind == Constant || p.node(b).Kind == Constant || p.node(b).Kind == Input {
+		return InvalidEdge
+	}
+	if value == 0 {
+		a = a.Not()
+	}
+	implications := Aig_ManFindImplications(p, a)
+	if !Aig_ManFindConeOverlap(p, implications, Aig_Regular(b)) {
+		return InvalidEdge
+	}
+	return Aig_ManDeriveNewCone(p, implications, b)
+}
+func Aig_ManFactorAlgebraic(p *Graph, outputA, outputB, value int32) Edge {
+	if outputA < 0 || int(outputA) >= len(p.outputs) || outputB < 0 || int(outputB) >= len(p.outputs) {
+		panic("aig: factoring output index")
+	}
+	return Aig_ManFactorAlgebraic_int(p, p.outputs[outputA], p.outputs[outputB], value)
+}
+func Aig_ManFactorAlgebraicTest(p *Graph) Edge {
+	result := Aig_ManFactorAlgebraic(p, 0, 1, 0)
+	if result != InvalidEdge {
+		Aig_ObjPrintVerbose(p, Aig_Regular(result), 0)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the nodes whose values are implied by pNode.]
-
-  Description [Attention!  Both pNode and results can be complemented!
-  Also important: Currently, this procedure only does backward propagation. 
-  In general, it may find more implications if forward propagation is enabled.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindImplications(p *Aig_Man_t, pNode *Aig_Obj_t) *Vec_Ptr_t {
-    var vImplics *Vec_Ptr_t;
-    vImplics = Vec_PtrAlloc( 100 );
-    Aig_ManFindImplications_rec( pNode, vImplics );
-    return vImplics;
+// supportTruth builds cut truth tables with one bit per assignment. A support
+// node is an independent boundary variable even when it is an internal gate.
+func supportTruth(p *Graph, nodes, support []Edge) map[int][]bool {
+	if len(support) > aigSupportLimit {
+		panic("aig: support truth limit is sixteen variables")
+	}
+	assignments := 1 << len(support)
+	tables := make(map[int][]bool, len(nodes)+len(support)+1)
+	one := make([]bool, assignments)
+	for i := range one {
+		one[i] = true
+	}
+	tables[0] = one
+	seenSupport := map[int]bool{}
+	for i, e := range support {
+		if e.NodeID() == 0 || seenSupport[e.NodeID()] {
+			panic("aig: support boundaries must be distinct nonconstant nodes")
+		}
+		seenSupport[e.NodeID()] = true
+		if e.Complemented() {
+			panic("aig: complemented support boundary")
+		}
+		values := make([]bool, assignments)
+		for mask := range values {
+			values[mask] = mask&(1<<i) != 0
+		}
+		tables[e.NodeID()] = values
+	}
+	for _, e := range nodes {
+		n := *p.node(e)
+		fanins := nodeFanins(n)
+		if len(fanins) == 0 {
+			panic("aig: terminal in reconstructed cone")
+		}
+		a := tables[fanins[0].NodeID()]
+		if a == nil {
+			panic("aig: support does not bound the cone")
+		}
+		var b []bool
+		if len(fanins) > 1 {
+			b = tables[fanins[1].NodeID()]
+			if b == nil {
+				panic("aig: support does not bound the cone")
+			}
+		}
+		values := make([]bool, assignments)
+		for mask := range values {
+			av := a[mask] != fanins[0].Complemented()
+			value := av
+			if len(fanins) > 1 {
+				bv := b[mask] != fanins[1].Complemented()
+				if n.Kind == ExclusiveOr {
+					value = av != bv
+				} else {
+					value = av && bv
+				}
+			}
+			values[mask] = value
+		}
+		tables[e.NodeID()] = values
+	}
+	return tables
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindConeOverlap_rec(p *Aig_Man_t, pNode *Aig_Obj_t) int32 {
-    if Aig_ObjIsTravIdPrevious( p, pNode ) {
-        return 1; }
-    if Aig_ObjIsTravIdCurrent( p, pNode ) {
-        return 0; }
-    Aig_ObjSetTravIdCurrent( p, pNode );
-    if Aig_ObjIsCi(pNode) {
-        return 0; }
-    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin0(pNode) ) != 0 {
-        return 1; }
-    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin1(pNode) ) != 0 {
-        return 1; }
-    return 0;
+// A cofactor is a literal forced true: a complemented Edge forces its node
+// to zero, and an uncomplemented Edge forces its node to one.
+// Each accepted cofactor is checked against the *updated* function on the care
+// set. Individually valid cofactors need not remain jointly valid; progressive
+// checking prevents that source-level heuristic from changing cared values.
+func Aig_SuppMinPerform(p *Graph, orGate, nodes, support []Edge) []Edge {
+	if len(nodes) == 0 {
+		return nil
+	}
+	tables := supportTruth(p, nodes, support)
+	function := tables[nodes[len(nodes)-1].NodeID()]
+	care := make([]bool, len(function))
+	for _, e := range orGate {
+		values := tables[e.NodeID()]
+		if values == nil {
+			panic("aig: care gate outside support")
+		}
+		for mask, v := range values {
+			care[mask] = care[mask] || (v != e.Complemented())
+		}
+	}
+	cofactors := []Edge{}
+	for i, e := range support {
+		bit := 1 << i
+		for _, value := range []bool{false, true} {
+			legal := true
+			for mask := range function {
+				cofactor := mask &^ bit
+				if value {
+					cofactor = mask | bit
+				}
+				if care[mask] && function[mask] != function[cofactor] {
+					legal = false
+					break
+				}
+			}
+			if !legal {
+				continue
+			}
+			next := make([]bool, len(function))
+			for mask := range next {
+				cofactor := mask &^ bit
+				if value {
+					cofactor = mask | bit
+				}
+				next[mask] = function[cofactor]
+			}
+			function = next
+			if !value {
+				e = e.Not()
+			}
+			cofactors = append(cofactors, e)
+			break
+		}
+	}
+	return cofactors
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFindConeOverlap(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) int32 {
-    var pTemp *Aig_Obj_t;
-    var i int32;
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    assert(!Aig_ObjIsConst1(pNode), "!Aig_ObjIsConst1(pNode)");
-    Aig_ManIncrementTravId( p );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )
-        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );
-    Aig_ManIncrementTravId( p );
-    return Aig_ManFindConeOverlap_rec( p, pNode );
+func Aig_SuppMinReconstruct(p *Graph, cofactors, nodes, support []Edge) Edge {
+	if len(nodes) == 0 {
+		return InvalidEdge
+	}
+	copies := map[int]Edge{0: p.Const1()}
+	for _, e := range support {
+		if e.Complemented() {
+			panic("aig: complemented support boundary")
+		}
+		copies[e.NodeID()] = e
+	}
+	for _, e := range cofactors {
+		value := p.Const1()
+		if e.Complemented() {
+			value = value.Not()
+		}
+		copies[e.NodeID()] = value
+	}
+	child := func(e Edge) Edge {
+		copy, ok := copies[e.NodeID()]
+		if !ok {
+			panic("aig: reconstruction misses a cut boundary")
+		}
+		if e.Complemented() {
+			copy = copy.Not()
+		}
+		return copy
+	}
+	var result Edge
+	for _, e := range nodes {
+		n := *p.node(e)
+		fanins := nodeFanins(n)
+		a := child(fanins[0])
+		b := InvalidEdge
+		if len(fanins) > 1 {
+			b = child(fanins[1])
+		}
+		result = aigFactRebuild(p, n, a, b)
+		copies[e.NodeID()] = result
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDeriveNewCone_rec(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {
-    if Aig_ObjIsTravIdCurrent( p, pNode ) {
-        return (Aig_Obj_t *)pNode.pData; }
-    Aig_ObjSetTravIdCurrent( p, pNode );
-    if Aig_ObjIsCi(pNode) {
-        return (Aig_Obj_t *)(pNode.pData = pNode); }
-    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin0(pNode) );
-    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin1(pNode) );
-    return (Aig_Obj_t *)(pNode.pData = Aig_And( p, Aig_ObjChild0Copy(pNode), Aig_ObjChild1Copy(pNode) ));
+func Aig_SuppMinGateIsInSupport(p *Graph, orGate, support []Edge) bool {
+	Aig_ManIncrementTravId(p)
+	for _, e := range support {
+		p.node(e).TravID = p.travID
+	}
+	for _, e := range orGate {
+		if p.node(e).TravID != p.travID {
+			return false
+		}
+	}
+	return true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDeriveNewCone(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) *Aig_Obj_t {
-    var pTemp *Aig_Obj_t;
-    var i int32;
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    assert(!Aig_ObjIsConst1(pNode), "!Aig_ObjIsConst1(pNode)");
-    Aig_ManIncrementTravId( p );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )
-    {
-        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );
-        Aig_Regular(pTemp).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pTemp) );
-    }
-    return Aig_ManDeriveNewCone_rec( p, pNode );
+func Aig_SuppMinCollectSupport(p *Graph, nodes []Edge) []Edge {
+	inside := map[int]bool{}
+	for _, e := range nodes {
+		inside[e.NodeID()] = true
+	}
+	support := []Edge{}
+	for _, e := range nodes {
+		for _, f := range nodeFanins(*p.node(e)) {
+			if f.NodeID() == 0 || inside[f.NodeID()] {
+				continue
+			}
+			f = Aig_Regular(f)
+			inside[f.NodeID()] = true
+			p.node(f).TravID = p.travID
+			support = append(support, f)
+		}
+	}
+	return support
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns algebraic factoring of B in terms of A.]
-
-  Description [Returns internal node C (an AND gate) that is equal to B 
-  under assignment A = 'Value', or NULL if there is no such node C. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFactorAlgebraic_int(p *Aig_Man_t, pPoA *Aig_Obj_t, pPoB *Aig_Obj_t, Value int32) *Aig_Obj_t {
-    var pNodeA, pNodeC *Aig_Obj_t;
-    var vImplics *Vec_Ptr_t;
-    var RetValue int32;
-    if Aig_ObjIsConst1(Aig_ObjFanin0(pPoA)) || Aig_ObjIsConst1(Aig_ObjFanin0(pPoB)) {
-        return nil; }
-    if Aig_ObjIsCi(Aig_ObjFanin0(pPoB)) {
-        return nil; }
-    // get the internal node representing function of A under assignment A = 'Value'
-    pNodeA = Aig_ObjChild0( pPoA );
-    pNodeA = Aig_NotCond( pNodeA, Value==0 );
-    // find implications of this signal (nodes whose value is fixed under assignment A = 'Value')
-    vImplics = Aig_ManFindImplications( p, pNodeA );
-    // check if the TFI cone of B overlaps with the implied nodes
-    RetValue = Aig_ManFindConeOverlap( p, vImplics, Aig_ObjFanin0(pPoB) );
-    if RetValue == 0 { // no overlap
-    
-        Vec_PtrFree( vImplics );
-        return nil;
-    }
-    // there is overlap - derive node representing value of B under assignment A = 'Value'
-    pNodeC = Aig_ManDeriveNewCone( p, vImplics, Aig_ObjFanin0(pPoB) );
-    pNodeC = Aig_NotCond( pNodeC, Aig_ObjFaninC0(pPoB) );
-    Vec_PtrFree( vImplics );
-    return pNodeC;
+func Aig_SuppMinCollectCone_rec(p *Graph, root Edge, nodes *[]Edge) {
+	e := Aig_Regular(root)
+	n := p.node(e)
+	if n.TravID != p.travID-1 {
+		return
+	}
+	n.TravID = p.travID
+	if len(nodeFanins(*n)) == 0 {
+		panic("aig: terminal marked as internal cone node")
+	}
+	for _, f := range nodeFanins(*n) {
+		Aig_SuppMinCollectCone_rec(p, f, nodes)
+	}
+	*nodes = append(*nodes, e)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns algebraic factoring of B in terms of A.]
-
-  Description [Returns internal node C (an AND gate) that is equal to B 
-  under assignment A = 'Value', or NULL if there is no such node C. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFactorAlgebraic(p *Aig_Man_t, iPoA int32, iPoB int32, Value int32) *Aig_Obj_t {
-    assert(iPoA >= 0 && iPoA < Aig_ManCoNum(p), "iPoA >= 0 && iPoA < Aig_ManCoNum(p)");
-    assert(iPoB >= 0 && iPoB < Aig_ManCoNum(p), "iPoB >= 0 && iPoB < Aig_ManCoNum(p)");
-    assert(Value == 0 || Value == 1, "Value == 0 || Value == 1");
-    return Aig_ManFactorAlgebraic_int( p, Aig_ManCo(p, iPoA), Aig_ManCo(p, iPoB), Value ); 
+func Aig_SuppMinCollectCone(p *Graph, root Edge) []Edge {
+	Aig_ManIncrementTravId(p)
+	nodes := []Edge{}
+	Aig_SuppMinCollectCone_rec(p, root, &nodes)
+	return nodes
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Testing procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFactorAlgebraicTest(p *Aig_Man_t) {
-    var iPoA int32;
-    var iPoB int32   = 1;
-    var Value int32;
-    var pRes *Aig_Obj_t;
-//    Aig_Obj_t * pObj;
-//    int i;
-    pRes = Aig_ManFactorAlgebraic( p, iPoA, iPoB, Value );
-    Aig_ManShow( p, 0, nil );
-    Aig_ObjPrint( p, pRes );
-    fmt.Printf("\n");
-/*
-    printf( "Results:\n" );
-    Aig_ManForEachObj( p, pObj, i )
-    {
-        printf( "Object = %d.\n", i );
-        Aig_ObjPrint( p, pObj );
-        printf( "\n" );
-        Aig_ObjPrint( p, pObj->pData );
-        printf( "\n" );
-    }
-*/
+func Aig_SuppMinHighlightCone_rec(p *Graph, root Edge) bool {
+	n := p.node(root)
+	if n.TravID == p.travID {
+		return true
+	}
+	if n.TravID == p.travID-1 {
+		return false
+	}
+	n.TravID = p.travID - 1
+	overlaps := false
+	for _, f := range nodeFanins(*n) {
+		overlaps = Aig_SuppMinHighlightCone_rec(p, f) || overlaps
+	}
+	if overlaps {
+		n.TravID = p.travID
+	}
+	return overlaps
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Determines what support variables can be cofactored.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinPerform(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Vec_Ptr_t {
-    var pObj *Aig_Obj_t;
-    var vTrSupp, vTrNode, vCofs *Vec_Ptr_t;
-    var uFunc *uint32 = nil;
-    var uCare *uint32;
-    var uFunc0 *uint32;
-    var uFunc1 *uint32;
-    var uCof0, uCof1, uCare0, uCare1 *uint32;
-    var i int32;
-    var nWords int32 = Abc_TruthWordNum( Vec_PtrSize(vSupp) );
-    // assign support nodes
-    vTrSupp = Vec_PtrAllocTruthTables( Vec_PtrSize(vSupp) );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )
-        pObj.pData = Vec_PtrEntry( vTrSupp, i );
-    // compute internal nodes
-    vTrNode = Vec_PtrAllocSimInfo( Vec_PtrSize(vNodes) + 5, nWords );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )
-    {
-        pObj.pData = uFunc = (unsigned *)Vec_PtrEntry( vTrNode, i );
-        uFunc0 = (unsigned *)Aig_ObjFanin0(pObj).pData;
-        uFunc1 = (unsigned *)Aig_ObjFanin1(pObj).pData;
-        Kit_TruthAndPhase( uFunc, uFunc0, uFunc1, Vec_PtrSize(vSupp), Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );
-    }
-    // uFunc contains the result of computation
-    // compute care set
-    uCare = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes) );
-    Kit_TruthClear( uCare, Vec_PtrSize(vSupp) );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )
-        Kit_TruthOrPhase( uCare, uCare, (unsigned *)Aig_Regular(pObj).pData, Vec_PtrSize(vSupp), 0, Aig_IsComplement(pObj) );
-    // try cofactoring each variable in both polarities
-    vCofs = Vec_PtrAlloc( 10 );
-    uCof0  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+1 );
-    uCof1  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+2 );
-    uCare0 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+3 );
-    uCare1 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+4 );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )
-    {
-        Kit_TruthCofactor0New( uCof0, uFunc, Vec_PtrSize(vSupp), i );
-        Kit_TruthCofactor1New( uCof1, uFunc, Vec_PtrSize(vSupp), i );
-        Kit_TruthCofactor0New( uCare0, uCare, Vec_PtrSize(vSupp), i );
-        Kit_TruthCofactor1New( uCare1, uCare, Vec_PtrSize(vSupp), i );
-        if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare1, Vec_PtrSize(vSupp) ) {
-            Vec_PtrPush( vCofs, Aig_Not(pObj) );
-        } else if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare0, Vec_PtrSize(vSupp) ) {
-            Vec_PtrPush( vCofs, pObj ); }
-    }
-    Vec_PtrFree( vTrNode );
-    Vec_PtrFree( vTrSupp );
-    return vCofs;
+func Aig_SuppMinHighlightCone(p *Graph, root Edge, orGate []Edge) bool {
+	Aig_ManIncrementTravId(p)
+	Aig_ManIncrementTravId(p)
+	for _, e := range orGate {
+		p.node(e).TravID = p.travID
+	}
+	overlaps := Aig_SuppMinHighlightCone_rec(p, root)
+	for _, e := range orGate {
+		p.node(e).TravID = p.travID - 1
+	}
+	return overlaps
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the new node after cofactoring.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinReconstruct(p *Aig_Man_t, vCofs *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Aig_Obj_t {
-    var pObj *Aig_Obj_t  = nil;
-    var i int32;
-    // set the value of the support variables
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )
-        assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )
-        pObj.pData = pObj;
-    // set the value of the cofactoring variables
-    Vec_PtrForEachEntry( Aig_Obj_t *, vCofs, pObj, i )
-        Aig_Regular(pObj).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pObj) );
-    // reconstruct the node
-    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )
-        pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    return (Aig_Obj_t *)pObj.pData;
+func Aig_SuppMinCollectSuper_rec(p *Graph, root Edge, super *[]Edge) {
+	implications := Aig_ManFindImplications(p, root)
+	known := map[Edge]bool{}
+	for _, e := range *super {
+		known[e] = true
+	}
+	for _, e := range implications {
+		e = e.Not()
+		if !known[e] {
+			known[e] = true
+			*super = append(*super, e)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if all nodes of vOrGate are in vSupp.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinGateIsInSupport(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vSupp *Vec_Ptr_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManIncrementTravId( p );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )
-        if ( !Aig_ObjIsTravIdCurrent( p, Aig_Regular(pObj) ) )
-            return 0;
-    return 1;
+func Aig_SuppMinCollectSuper(p *Graph, root Edge) []Edge {
+	super := []Edge{}
+	for _, e := range nodeFanins(*p.node(root)) {
+		Aig_SuppMinCollectSuper_rec(p, e, &super)
+	}
+	return super
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects fanins of the marked nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinCollectSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {
-    var vSupp *Vec_Ptr_t;
-    var pObj, pFanin *Aig_Obj_t;
-    var i int32;
-    vSupp = Vec_PtrAlloc( 4 );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )
-    {
-        assert(Aig_ObjIsTravIdCurrent(p, pObj), "Aig_ObjIsTravIdCurrent(p, pObj)");
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        pFanin = Aig_ObjFanin0( pObj );
-        if !Aig_ObjIsTravIdCurrent(p, pFanin) {
-            Aig_ObjSetTravIdCurrent( p, pFanin );
-            Vec_PtrPush( vSupp, pFanin );
-        }
-        pFanin = Aig_ObjFanin1( pObj );
-        if !Aig_ObjIsTravIdCurrent(p, pFanin) {
-            Aig_ObjSetTravIdCurrent( p, pFanin );
-            Vec_PtrPush( vSupp, pFanin );
-        }
-    }
-    return vSupp;
+func Aig_ManSupportMinimization(p *Graph, condition, function Edge) (Edge, int32) {
+	if !condition.Complemented() || p.node(condition).Kind != And {
+		return InvalidEdge, SupportMinNotOrCondition
+	}
+	kind := p.node(function).Kind
+	if kind != And && kind != ExclusiveOr {
+		return InvalidEdge, SupportMinInapplicable
+	}
+	orGate := Aig_SuppMinCollectSuper(p, Aig_Regular(condition))
+	if len(orGate) > aigSupportLimit {
+		return InvalidEdge, SupportMinInapplicable
+	}
+	if !Aig_SuppMinHighlightCone(p, Aig_Regular(function), orGate) {
+		return InvalidEdge, SupportMinInapplicable
+	}
+	nodes := Aig_SuppMinCollectCone(p, Aig_Regular(function))
+	if len(nodes) == 0 {
+		return InvalidEdge, SupportMinNoReduction
+	}
+	support := Aig_SuppMinCollectSupport(p, nodes)
+	if len(support) > aigSupportLimit {
+		return InvalidEdge, SupportMinInapplicable
+	}
+	if !Aig_SuppMinGateIsInSupport(p, orGate, support) {
+		return InvalidEdge, SupportMinNoReduction
+	}
+	cofactors := Aig_SuppMinPerform(p, orGate, nodes, support)
+	if len(cofactors) == 0 {
+		return InvalidEdge, SupportMinNoReduction
+	}
+	result := Aig_SuppMinReconstruct(p, cofactors, nodes, support)
+	if function.Complemented() {
+		result = result.Not()
+	}
+	return result, SupportMinSuccess
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the nodes in the cone with current trav ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinCollectCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited
-        return; }
-    if !Aig_ObjIsTravIdPrevious( p, pObj ) { // not visited, but outside
-        return; }
-    assert(Aig_ObjIsTravIdPrevious(p, pObj), "Aig_ObjIsTravIdPrevious(p, pObj)"); // not visited, inside
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_ObjSetTravIdCurrent( p, pObj );
-    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin1(pObj), vNodes );
-    Vec_PtrPush( vNodes, pObj );
+func Aig_ManSupportMinimizationTest() (*Graph, Edge, int32) {
+	p := NewGraph()
+	for i := int32(0); i < 5; i++ {
+		Aig_IthVar(p, i)
+	}
+	function := p.Mux(Aig_IthVar(p, 3), Aig_IthVar(p, 1), Aig_IthVar(p, 0))
+	function = p.Mux(Aig_IthVar(p, 4), Aig_IthVar(p, 2), function)
+	condition := p.OR(Aig_IthVar(p, 3), Aig_IthVar(p, 4))
+	result, status := Aig_ManSupportMinimization(p, condition, function)
+	return p, result, status
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects nodes with the current trav ID rooted in the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinCollectCone(p *Aig_Man_t, pRoot *Aig_Obj_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    assert(!Aig_IsComplement(pRoot), "!Aig_IsComplement(pRoot)"); 
-//    assert( Aig_ObjIsTravIdCurrent( p, pRoot ) );
-    vNodes = Vec_PtrAlloc( 4 );
-    Aig_ManIncrementTravId( p );
-    Aig_SuppMinCollectCone_rec( p, Aig_Regular(pRoot), vNodes );
-    return vNodes;
+func Aig_ManSupportMinimizationTest2() (*Graph, Edge, int32) {
+	p := NewGraph()
+	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
+	n9 := p.AND(a, b.Not())
+	n10 := p.AND(n9.Not(), c.Not())
+	function := p.AND(n10, b)
+	condition := p.OR(p.OR(b, c), a)
+	result, status := Aig_ManSupportMinimization(p, condition, function)
+	return p, result, status
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the nodes in the cone with current trav ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinHighlightCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {
-    var RetValue int32;
-    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited, marks there
-        return 1; }
-    if Aig_ObjIsTravIdPrevious( p, pObj ) { // visited, no marks there
-        return 0; }
-    Aig_ObjSetTravIdPrevious( p, pObj );
-    if Aig_ObjIsCi(pObj) {
-        return 0; }
-    RetValue = Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin0(pObj) ) |
-               Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin1(pObj) );
-//    printf( "%d %d\n", Aig_ObjId(pObj), RetValue );
-    if RetValue != 0 {
-        Aig_ObjSetTravIdCurrent( p, pObj ); }
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the nodes in the cone with current trav ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinHighlightCone(p *Aig_Man_t, pRoot *Aig_Obj_t, vOrGate *Vec_Ptr_t) int32 {
-    var pLeaf *Aig_Obj_t;
-    var i, RetValue int32;
-    assert(!Aig_IsComplement(pRoot), "!Aig_IsComplement(pRoot)");
-    Aig_ManIncrementTravId( p );
-    Aig_ManIncrementTravId( p );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )
-        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pLeaf) );
-    RetValue = Aig_SuppMinHighlightCone_rec( p, pRoot );
-    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )
-        Aig_ObjSetTravIdPrevious( p, Aig_Regular(pLeaf) );
-    return RetValue;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the supergate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinCollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) {
-    // if the new node is complemented or a PI, another gate begins
-    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) { // || (Aig_ObjRefs(pObj) > 1) )
-    
-        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );
-        return;
-    }
-    // go through the branches
-    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );
-    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the supergate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_SuppMinCollectSuper(pObj *Aig_Obj_t) *Vec_Ptr_t {
-    var vSuper *Vec_Ptr_t;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(!Aig_ObjIsCi(pObj), "!Aig_ObjIsCi(pObj)");
-    vSuper = Vec_PtrAlloc( 4 );
-    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );
-    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );
-    return vSuper;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the result of support minimization.]
-
-  Description [Returns internal AIG node that is equal to pFunc under 
-  assignment pCond == 1, or NULL if there is no such node. status is 
-  -1 if condition is not OR; 
-  -2 if cone is too large or no cone; 
-  -3 if no support reduction is possible.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSupportMinimization(p *Aig_Man_t, pCond *Aig_Obj_t, pFunc *Aig_Obj_t, pStatus *int32) *Aig_Obj_t {
-    var nSuppMax int32  = 16;
-    var vOrGate, vNodes, vSupp, vCofs *Vec_Ptr_t;
-    var pResult *Aig_Obj_t;
-    var RetValue int32;
-    *pStatus = 0;
-    // if pCond is not OR
-    if !Aig_IsComplement(pCond) || Aig_ObjIsCi(Aig_Regular(pCond)) || Aig_ObjIsConst1(Aig_Regular(pCond)) {
-        *pStatus = -1;
-        return nil;
-    }
-    // if pFunc is not a node
-    if !Aig_ObjIsNode(Aig_Regular(pFunc)) {
-        *pStatus = -2;
-        return nil;
-    }
-    // collect the multi-input OR gate rooted in the condition
-    vOrGate = Aig_SuppMinCollectSuper( Aig_Regular(pCond) );
-    if Vec_PtrSize(vOrGate) > nSuppMax {
-        Vec_PtrFree( vOrGate );
-        *pStatus = -2;
-        return nil;
-    }
-    // highlight the cone limited by these gates
-    RetValue = Aig_SuppMinHighlightCone( p, Aig_Regular(pFunc), vOrGate );
-    if RetValue == 0 { // no overlap
-    
-        Vec_PtrFree( vOrGate );
-        *pStatus = -2;
-        return nil;
-    }
-    // collect the cone rooted in pFunc limited by vOrGate
-    vNodes = Aig_SuppMinCollectCone( p, Aig_Regular(pFunc) );
-    // collect the support nodes reachable from the cone
-    vSupp = Aig_SuppMinCollectSupport( p, vNodes );
-    if Vec_PtrSize(vSupp) > nSuppMax {
-        Vec_PtrFree( vOrGate );
-        Vec_PtrFree( vNodes );
-        Vec_PtrFree( vSupp );
-        *pStatus = -2;
-        return nil;
-    }
-    // check if all nodes belonging to OR gate are included in the support
-    // (if this is not the case, don't-care minimization is not possible)
-    if !(Aig_SuppMinGateIsInSupport( p, vOrGate, vSupp ) != 0) {
-        Vec_PtrFree( vOrGate );
-        Vec_PtrFree( vNodes );
-        Vec_PtrFree( vSupp );
-        *pStatus = -3;
-        return nil;
-    }
-    // create truth tables of all nodes and find the maximal number
-    // of support varialbles that can be replaced by constants
-    vCofs = Aig_SuppMinPerform( p, vOrGate, vNodes, vSupp );
-    if Vec_PtrSize(vCofs) == 0 {
-        Vec_PtrFree( vCofs );
-        Vec_PtrFree( vOrGate );
-        Vec_PtrFree( vNodes );
-        Vec_PtrFree( vSupp );
-        *pStatus = -3;
-        return nil;
-    }
-    // reconstruct the cone
-    pResult = Aig_SuppMinReconstruct( p, vCofs, vNodes, vSupp );
-    pResult = Aig_NotCond( pResult, Aig_IsComplement(pFunc) );
-    Vec_PtrFree( vCofs );
-    Vec_PtrFree( vOrGate );
-    Vec_PtrFree( vNodes );
-    Vec_PtrFree( vSupp );
-    return pResult;
-}
-/**Function*************************************************************
-
-  Synopsis    [Testing procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSupportMinimizationTest() {
-    var p *Aig_Man_t;
-    var pFunc, pCond, pRes *Aig_Obj_t;
-    var i, Status int32;
-    p = Aig_ManStart( 100 );
-    for  i = 0; i < 5; i++  {
-        Aig_IthVar(p,i);
-    }
-    pFunc = Aig_Mux( p, Aig_IthVar(p,3), Aig_IthVar(p,1), Aig_IthVar(p,0) );
-    pFunc = Aig_Mux( p, Aig_IthVar(p,4), Aig_IthVar(p,2), pFunc );
-    pCond = Aig_Or( p, Aig_IthVar(p,3), Aig_IthVar(p,4) );
-    pRes  = Aig_ManSupportMinimization( p, pCond, pFunc, &Status );
-    assert(Status == 0, "Status == 0");
-
-    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf("\n");
-    Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf("\n");
-    Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf("\n");
-
-    Aig_ManStop( p );
-}
-func Aig_ManSupportMinimizationTest2() {
-    var p *Aig_Man_t;
-    var node09, node10, node11, node12, node13, pRes *Aig_Obj_t;
-    var i, Status int32;
-    p = Aig_ManStart( 100 );
-    for  i = 0; i < 3; i++  {
-        Aig_IthVar(p,i);
-    }
-
-    node09 = Aig_And( p, Aig_IthVar(p,0), Aig_Not(Aig_IthVar(p,1)) );
-    node10 = Aig_And( p, Aig_Not(node09), Aig_Not(Aig_IthVar(p,2)) );
-    node11 = Aig_And( p, node10, Aig_IthVar(p,1) );
-
-    node12 = Aig_Or( p, Aig_IthVar(p,1), Aig_IthVar(p,2) );
-    node13 = Aig_Or( p, node12, Aig_IthVar(p,0) );
-
-    pRes  = Aig_ManSupportMinimization( p, node13, node11, &Status );
-    assert(Status == 0, "Status == 0");
-
-    fmt.Printf("Compl = %d  ", Aig_IsComplement(pRes));
-    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf("\n");
-    if Aig_ObjIsNode(Aig_Regular(pRes)) {
-        Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf("\n");
-        Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf("\n");
-    }
-
-    Aig_ManStop( p );
-}
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-//ABC_NAMESPACE_IMPL_END
-

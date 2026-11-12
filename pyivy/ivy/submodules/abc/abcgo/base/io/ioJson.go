@@ -333,8 +333,7 @@ func Json_Read(pFileName string, ppStrs **Abc_Nam_t) *Vec_Wec_t {
 
     pContents = Json_ReadPreprocess( pCur = pContents, nFileSize );
     nFileSize = len(pContents);
-    // inlining of macro ABC_FREE
-    ((pCur) ? (free((char *) (pCur)), (pCur) = 0) : 0);
+    pCur = nil;
     pCur = pContents;
 
     // start data-structures
@@ -380,8 +379,7 @@ func Json_Read(pFileName string, ppStrs **Abc_Nam_t) *Vec_Wec_t {
         pCur = pNext;
     }
     Vec_IntFree( vStack );
-    // inlining of macro ABC_FREE
-    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);
+    pContents = nil;
     *ppStrs = pStrs;
     return vObjs;
 }

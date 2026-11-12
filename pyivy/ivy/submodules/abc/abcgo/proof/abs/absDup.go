@@ -438,10 +438,8 @@ func Gia_ManPrintObjClasses(p *Gia_Man_t) {
     }
     assert(iStop == Vec_IntSize(vAbs), "iStop == Vec_IntSize(vAbs)");
     Vec_IntFree( vSeens );
-    // inlining of macro ABC_FREE
-    ((pCountAll) ? (free((char *) (pCountAll)), (pCountAll) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pCountUni) ? (free((char *) (pCountUni)), (pCountUni) = 0) : 0);
+    pCountAll = nil;
+    pCountUni = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

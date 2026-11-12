@@ -485,7 +485,7 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, fVerbose int32) float32 {
         }
     }
     // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
+    pCounters = nil;
     Gia_ManTimeStop( p );
     return tArrival;
 }
@@ -804,7 +804,7 @@ func Gia_ManSpeedup(p *Gia_Man_t, Percentage int32, Degree int32, fVerbose int32
     Vec_IntFree( vTimeCries );
     Vec_IntFree( vTimeFanins );
     // inlining of macro ABC_FREE
-    ((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);
+    puTCEdges = nil;
     if fVerbose != 0 {
         fmt.Printf("Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\n", Gia_ManLutNum(p), Counter, CounterRes, Counter? 1.0*CounterRes/Counter : 0.0); } 
     if pTempTim {

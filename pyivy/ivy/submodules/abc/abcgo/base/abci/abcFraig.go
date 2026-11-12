@@ -204,8 +204,7 @@ func Abc_NtkToFraigExdc(pMan *Fraig_Man_t, pNtkMain *Abc_Ntk_t, pNtkExdc *Abc_Nt
         }
         assert(pObj.pCopy != nil, "pObj.pCopy != nil");
     }
-    // inlining of macro ABC_FREE
-    ((ppNames) ? (free((char *) (ppNames)), (ppNames) = 0) : 0);
+    ppNames = nil;
     // build FRAIG for each node
     // inlining of macro Abc_AigForEachAnd
     for  i = 0; (i < Vec_PtrSize((pNtkStrash).vObjs)) && (((pObj) = Abc_NtkObj(pNtkStrash, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {

@@ -128,10 +128,8 @@ func ABC_ReleaseManager(mng ABC_Manager) {
     if mng.pTarget {    Abc_NtkDelete( mng.pTarget ); }
     if mng.vNodes {     Vec_PtrFree( mng.vNodes ); }
     if mng.vValues {    Vec_IntFree( mng.vValues ); }
-    // inlining of macro ABC_FREE
-    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((mng) ? (free((char *) (mng)), (mng) = 0) : 0);
+    mng.pDumpFileName = nil;
+    mng = nil;
     Abc_Stop();
 }
 
@@ -490,8 +488,7 @@ func ABC_GetTotalInspectsMade(mng ABC_Manager) ABC_UINT64_T {
 
 ***********************************************************************/
 func ABC_EnableDump(mng ABC_Manager, dump_file string) {
-    // inlining of macro ABC_FREE
-    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);
+    mng.pDumpFileName = nil;
     mng.pDumpFileName = Extra_UtilStrsav( dump_file );
 }
 
@@ -606,8 +603,7 @@ func ABC_AnalyzeTargets(mng ABC_Manager) {
             mng.pResult.names[i]  = Extra_UtilStrsav( ABC_GetNodeName(mng, Abc_NtkCi(mng.pNtk, i)) ); 
             mng.pResult.values[i] = mng.pTarget.pModel[i];
         }
-        // inlining of macro ABC_FREE
-        ((mng.pTarget.pModel) ? (free((char *) (mng.pTarget.pModel)), (mng.pTarget.pModel) = 0) : 0);
+        mng.pTarget.pModel = nil;
     
     } else { assert(false, "0"); }
 
@@ -707,16 +703,12 @@ func ABC_TargetResFree(p *CSAT_Target_ResultT) {
     if p.names {
         var i int32;
         for  i = 0; i < p.no_sig; i++  {
-            // inlining of macro ABC_FREE
-            ((p.names[i]) ? (free((char *) (p.names[i])), (p.names[i]) = 0) : 0);
+            p.names[i] = nil;
         }
     }
-    // inlining of macro ABC_FREE
-    ((p.names) ? (free((char *) (p.names)), (p.names) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.values) ? (free((char *) (p.values)), (p.values) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.names = nil;
+    p.values = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

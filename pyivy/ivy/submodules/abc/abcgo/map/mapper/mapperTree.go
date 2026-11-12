@@ -369,10 +369,8 @@ func Map_LibraryCompareLibNames(pName1 string, pName2 string) int32 {
             p2[i] = '/'; }
     }
     RetValue = int32(strings.Compare(p1, p2));
-    // inlining of macro ABC_FREE
-    ((p1) ? (free((char *) (p1)), (p1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p2) ? (free((char *) (p2)), (p2) = 0) : 0);
+    p1 = nil;
+    p2 = nil;
     return RetValue; 
 }
 

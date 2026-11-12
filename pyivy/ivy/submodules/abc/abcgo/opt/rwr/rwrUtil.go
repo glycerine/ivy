@@ -550,8 +550,7 @@ func Rwr_ManWriteToFile(p *Rwr_Man_t, pFileName string) {
     pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
     fwrite( &nEntries, sizeof(int), 1, pFile );
     fwrite( pBuffer, sizeof(unsigned), nEntries * 2, pFile );
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     _ = (pFile).Close();
     // inlining of macro ABC_PRT
     fmt.Printf("The number of nodes saved = %d.   ", nEntries);  Abc_Print(1, "%s =", ("Saving"));
@@ -607,8 +606,7 @@ func Rwr_ManLoadFromFile(p *Rwr_Man_t, pFileName string) {
 //        Rwr_ManTryNode( p, p0, p1, Level, Volume );
         Rwr_ManAddNode( p, p0, p1, fExor, Level, Volume + fExor );
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     fmt.Printf("The number of classes = %d. Canonical nodes = %d.\n", p.nClasses, p.nAdded);
     // inlining of macro ABC_PRT
     fmt.Printf("The number of nodes loaded = %d.   ", nEntries);  Abc_Print(1, "%s =", ("Loading"));

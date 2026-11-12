@@ -2,283 +2,94 @@ package aig
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [aigTable.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Structural hashing table.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigTable.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// hashing the node
-func Aig_Hash(pObj *Aig_Obj_t, TableSize int32) unsigned long {
-    unsigned long Key = Aig_ObjIsExor(pObj) * 1699;
-    Key ^= Aig_ObjFanin0(pObj).Id * 7937;
-    Key ^= Aig_ObjFanin1(pObj).Id * 2971;
-    Key ^= Aig_ObjFaninC0(pObj) * 911;
-    Key ^= Aig_ObjFaninC1(pObj) * 353;
-    return Key % TableSize;
+func Aig_Hash(node *Node, size int32) uint64 {
+	if size <= 0 {
+		panic("aig: invalid hash table size")
+	}
+	var key uint64
+	if node.Kind == ExclusiveOr {
+		key = 1699
+	}
+	a, b := node.Fanins[0], node.Fanins[1]
+	key ^= uint64(a.NodeID()) * 7937
+	key ^= uint64(b.NodeID()) * 2971
+	key ^= uint64(a&1) * 911
+	key ^= uint64(b&1) * 353
+	return key % uint64(size)
+}
+func tableKey(node *Node) edgePair {
+	a, b := node.Fanins[0], node.Fanins[1]
+	if a > b {
+		a, b = b, a
+	}
+	return edgePair{a, b}
+}
+func (p *Graph) nodeTable(kind NodeKind) map[edgePair]Edge {
+	if kind == And {
+		if p.hash == nil {
+			p.hash = make(map[edgePair]Edge)
+		}
+		return p.hash
+	}
+	if kind == ExclusiveOr {
+		if p.xorHash == nil {
+			p.xorHash = make(map[edgePair]Edge)
+		}
+		return p.xorHash
+	}
+	panic("aig: only AND/XOR nodes are hashable")
 }
 
-// returns the place where this node is stored (or should be stored)
-func Aig_TableFind(p *Aig_Man_t, pObj *Aig_Obj_t) **Aig_Obj_t {
-    var ppEntry **Aig_Obj_t;
-    assert(Aig_ObjChild0(pObj) && Aig_ObjChild1(pObj), "Aig_ObjChild0(pObj) && Aig_ObjChild1(pObj)");
-    assert(Aig_ObjFanin0(pObj).Id < Aig_ObjFanin1(pObj).Id, "Aig_ObjFanin0(pObj).Id < Aig_ObjFanin1(pObj).Id");
-    for  ppEntry = p.pTable + Aig_Hash(pObj, p.nTableSize); *ppEntry; ppEntry = &(*ppEntry).pNext  {
-        if *ppEntry == pObj {
-            return ppEntry; }
-    }
-    assert(*ppEntry == nil, "*ppEntry == nil");
-    return ppEntry;
+// Aig_TableFind returns the existing entry and presence. Map storage replaces
+// C's mutable pointer into a bucket chain; insert/delete are explicit operations.
+func Aig_TableFind(p *Graph, node *Node) (Edge, bool) {
+	e, ok := p.nodeTable(node.Kind)[tableKey(node)]
+	return e, ok
 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    [Resizes the table.]
-
-  Description [Typically this procedure should not be called.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableResize(p *Aig_Man_t) {
-    var pEntry, pNext *Aig_Obj_t;
-    var pTableOld, ppPlace **Aig_Obj_t;
-    var nTableSizeOld, Counter, i int32;
-    var clk abctime;
-    assert(p.pTable != nil, "p.pTable != nil");
-clk = Abc_Clock();
-    // save the old table
-    pTableOld = p.pTable;
-    nTableSizeOld = p.nTableSize;
-    // get the new table
-    p.nTableSize = Abc_PrimeCudd( 2 * Aig_ManNodeNum(p) ); 
-    // inlining of macro ABC_ALLOC
-    p.pTable = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nTableSize)));
-    memset( p.pTable, 0, sizeof(Aig_Obj_t *) * p.nTableSize );
-    // rehash the entries from the old table
-    Counter = 0;
-    for  i = 0; i < nTableSizeOld; i++  {
-    for  pEntry = pTableOld[i], pNext = pEntry? pEntry.pNext : nil; 
-          (pEntry != nil); pEntry = pNext, pNext = pEntry? pEntry.pNext : nil  {
-        // get the place where this entry goes in the table 
-        ppPlace = Aig_TableFind( p, pEntry );
-        assert(*ppPlace == nil, "*ppPlace == nil"); // should not be there
-        // add the entry to the list
-        *ppPlace = pEntry;
-        pEntry.pNext = nil;
-        Counter++;
-    }
-    }
-    assert(Counter == Aig_ManNodeNum(p), "Counter == Aig_ManNodeNum(p)");
-//    printf( "Increasing the structural table size from %6d to %6d. ", nTableSizeOld, p->nTableSize );
-//    ABC_PRT( "Time", Abc_Clock() - clk );
-    // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);
+func Aig_TableResize(p *Graph) {
+	old := p.hash
+	p.hash = make(map[edgePair]Edge, len(old))
+	for key, e := range old {
+		p.hash[key] = e
+	}
+	old = p.xorHash
+	p.xorHash = make(map[edgePair]Edge, len(old))
+	for key, e := range old {
+		p.xorHash[key] = e
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if node with the given attributes is in the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableLookup(p *Aig_Man_t, pGhost *Aig_Obj_t) *Aig_Obj_t {
-    var pEntry *Aig_Obj_t;
-    assert(!Aig_IsComplement(pGhost), "!Aig_IsComplement(pGhost)");
-    assert(Aig_ObjIsNode(pGhost), "Aig_ObjIsNode(pGhost)");
-    assert(Aig_ObjChild0(pGhost) && Aig_ObjChild1(pGhost), "Aig_ObjChild0(pGhost) && Aig_ObjChild1(pGhost)");
-    assert(Aig_ObjFanin0(pGhost).Id < Aig_ObjFanin1(pGhost).Id, "Aig_ObjFanin0(pGhost).Id < Aig_ObjFanin1(pGhost).Id");
-    if p.pTable == nil || !Aig_ObjRefs(Aig_ObjFanin0(pGhost)) || !Aig_ObjRefs(Aig_ObjFanin1(pGhost)) {
-        return nil; }
-    for  pEntry = p.pTable[Aig_Hash(pGhost, p.nTableSize)]; (pEntry != nil); pEntry = pEntry.pNext  {
-        if Aig_ObjChild0(pEntry) == Aig_ObjChild0(pGhost) && 
-             Aig_ObjChild1(pEntry) == Aig_ObjChild1(pGhost) && 
-             Aig_ObjType(pEntry) == Aig_ObjType(pGhost) {
-            return pEntry; }
-    }
-    return nil;
+func Aig_TableLookup(p *Graph, ghost *Node) Edge {
+	if e, ok := Aig_TableFind(p, ghost); ok {
+		return e
+	}
+	return InvalidEdge
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if node with the given attributes is in the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableLookupTwo(p *Aig_Man_t, pFanin0 *Aig_Obj_t, pFanin1 *Aig_Obj_t) *Aig_Obj_t {
-    var pGhost *Aig_Obj_t;
-    // consider simple cases
-    if pFanin0 == pFanin1 {
-        return pFanin0; }
-    if pFanin0 == Aig_Not(pFanin1) {
-        return Aig_ManConst0(p); }
-    if Aig_Regular(pFanin0) == Aig_ManConst1(p) {
-        if pFanin0 == Aig_ManConst1(p) {
-            return pFanin1;
-        } else {
-            return Aig_ManConst0(p);
-        } }
-    if Aig_Regular(pFanin1) == Aig_ManConst1(p) {
-        if pFanin1 == Aig_ManConst1(p) {
-            return pFanin0;
-        } else {
-            return Aig_ManConst0(p);
-        } }
-    pGhost = Aig_ObjCreateGhost( p, pFanin0, pFanin1, AIG_OBJ_AND );
-    return Aig_TableLookup( p, pGhost );
+func Aig_TableLookupTwo(p *Graph, a, b Edge) Edge {
+	if e, ok := Aig_TableLookupInt(p, a, b); ok {
+		return e
+	}
+	return InvalidEdge
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds the new node to the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableInsert(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    var ppPlace **Aig_Obj_t;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(Aig_TableLookup(p, pObj) == nil, "Aig_TableLookup(p, pObj) == nil");
-    if (pObj.Id & 0xFF) == 0 && 2 * p.nTableSize < Aig_ManNodeNum(p) {
-        Aig_TableResize( p ); }
-    ppPlace = Aig_TableFind( p, pObj );
-    assert(*ppPlace == nil, "*ppPlace == nil");
-    *ppPlace = pObj;
+func Aig_TableInsert(p *Graph, e Edge) {
+	n := p.node(e)
+	table := p.nodeTable(n.Kind)
+	key := tableKey(n)
+	if old, exists := table[key]; exists && old != e {
+		panic("aig: duplicate hash entry")
+	}
+	table[key] = Aig_Regular(e)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes the node from the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableDelete(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    var ppPlace **Aig_Obj_t;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    ppPlace = Aig_TableFind( p, pObj );
-    assert(*ppPlace == pObj, "*ppPlace == pObj"); // node should be in the table
-    // remove the node
-    *ppPlace = pObj.pNext;
-    pObj.pNext = nil;
+func Aig_TableDelete(p *Graph, e Edge) {
+	n := p.node(e)
+	table := p.nodeTable(n.Kind)
+	key := tableKey(n)
+	if old, exists := table[key]; !exists || old != Aig_Regular(e) {
+		panic("aig: missing hash entry")
+	}
+	delete(table, key)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count the number of nodes in the table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableCountEntries(p *Aig_Man_t) int32 {
-    var pEntry *Aig_Obj_t;
-    var i, Counter int32;
-    for  i = 0; i < p.nTableSize; i++  {
-        for  pEntry = p.pTable[i]; (pEntry != nil); pEntry = pEntry.pNext  {
-            Counter++;
-        }
-    }
-    return Counter;
+func Aig_TableCountEntries(p *Graph) int32 { return int32(len(p.hash) + len(p.xorHash)) }
+func Aig_TableProfile(p *Graph) {
+	fmt.Printf("AIG hash: %d AND entries, %d XOR entries\n", len(p.hash), len(p.xorHash))
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Profiles the hash table.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Aig_TableProfile(p *Aig_Man_t) {
-    var pEntry *Aig_Obj_t;
-    var i, Counter int32;
-    fmt.Printf("Table size = %d. Entries = %d.\n", p.nTableSize, Aig_ManNodeNum(p));
-    for  i = 0; i < p.nTableSize; i++  {
-        Counter = 0;
-        for  pEntry = p.pTable[i]; (pEntry != nil); pEntry = pEntry.pNext  {
-            Counter++;
-        }
-        if Counter != 0 { 
-            fmt.Printf("%d ", Counter); }
-    }
-}
-
-/**Function********************************************************************
-
-  Synopsis    [Profiles the hash table.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Aig_TableClear(p *Aig_Man_t) {
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    p.nTableSize = 0;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Aig_TableClear(p *Graph) { clear(p.hash); clear(p.xorHash) }

@@ -147,7 +147,7 @@ func Spl_ManAlloc(pGia *Gia_Man_t, Limit int32, fReverse int32) *Spl_Man_t {
     }
     // mapping
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     Gia_ManCreateRefs( pGia );
     Gia_ManSetLutRefs( pGia );
     assert(Gia_ManHasMapping(pGia), "Gia_ManHasMapping(pGia)");
@@ -180,7 +180,7 @@ func Spl_ManStop(p *Spl_Man_t) {
     Vec_IntFree( p.vCands );
     Vec_IntFree( p.vInputs );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

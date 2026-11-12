@@ -132,8 +132,7 @@ func Res_SimFree(p *Res_Sim_t) {
     Vec_PtrFree( p.vPats1 );
     Vec_PtrFree( p.vOuts );
     Vec_VecFree( p.vCands );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

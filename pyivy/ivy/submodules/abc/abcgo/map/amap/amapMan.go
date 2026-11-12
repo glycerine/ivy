@@ -92,14 +92,10 @@ func Amap_ManStop(p *Amap_Man_t) {
     Aig_MmFlexStop( p.pMemCuts, 0 );
     Aig_MmFlexStop( p.pMemCutBest, 0 );
     Aig_MmFlexStop( p.pMemTemp, 0 );
-    // inlining of macro ABC_FREE
-    ((p.pMatsTemp) ? (free((char *) (p.pMatsTemp)), (p.pMatsTemp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.ppCutsTemp) ? (free((char *) (p.ppCutsTemp)), (p.ppCutsTemp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCutsPi) ? (free((char *) (p.pCutsPi)), (p.pCutsPi) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMatsTemp = nil;
+    p.ppCutsTemp = nil;
+    p.pCutsPi = nil;
+    p = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -1,10 +1,5 @@
 # AGENTS.md instructions for /Users/jaten/go/src/github.com/glycerine/ivy/goivy
 
-## Universal behavior
-
-- The parent repository instructions still apply here. In particular, do not use
-  git commands; the user owns git activity for this repository.
-
 ## Ivy language-version parser invariants
 
 - Treat the full-file Ivy parsers as thin syntax adapters. A parser for Ivy

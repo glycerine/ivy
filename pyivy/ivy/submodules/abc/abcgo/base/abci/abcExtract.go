@@ -83,8 +83,7 @@ func Abc_ShaManStop(p *Abc_ShaMan_t) {
     }
     Vec_PtrFreeP( &p.vBuckets );
     Vec_IntFreeP( &p.vObj2Lit );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -415,10 +414,8 @@ func Abc_NtkSharePrint(p *Abc_ShaMan_t) {
     fmt.Printf("Total = %d.  ", nTotal);
     fmt.Printf("Gates = %d.\n", Vec_IntSize(p.vObj2Lit) - p.nStartCols + nTotal);
 
-    // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pCounters = nil;
+    pBuffer = nil;
 
     fmt.Printf("Bucket contents: ");
     // inlining of macro Vec_PtrForEachEntry

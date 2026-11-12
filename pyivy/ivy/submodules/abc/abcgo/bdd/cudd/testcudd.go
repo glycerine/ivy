@@ -183,7 +183,7 @@ func main() {
     nslots = CUDD_UNIQUE_SLOTS;
     clearcache = 0;
     groupcheck = CUDD_GROUP_CHECK7;
-    dfile = nil;
+    dfile = "";
     blifOrDot = 0; /* dot format */
 
     /* Parse command line. */
@@ -288,7 +288,7 @@ default:
     fp = open_file(file, "r");
 
     /* Open dump file if requested */
-    if dfile != nil {
+    if dfile != "" {
     dfp = open_file(dfile, "w");
     }
 
@@ -581,7 +581,7 @@ default:
     }
 
     /* Dump DDs of C and M if so requested. */
-    if dfile != nil {
+    if dfile != "" {
         dfunc[0] = C;
         dfunc[1] = M;
         if blifOrDot == 1 {
@@ -619,7 +619,7 @@ if !((multiple != 0) && !feof(fp)) { break }
 } 
 
     _ = (fp).Close();
-    if dfile != nil {
+    if dfile != "" {
     _ = (dfp).Close();
     }
 

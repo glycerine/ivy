@@ -180,8 +180,7 @@ func Saig_ManRetimeUnsatCore(p *Aig_Man_t, fVerbose int32) int32 {
     }
     if fVerbose != 0 {
         fmt.Printf("UNSAT core: %d clauses, %d variables, %d POs.  ", Vec_IntSize(vCore), nVars, nPos); }
-    // inlining of macro ABC_FREE
-    ((pVars) ? (free((char *) (pVars)), (pVars) = 0) : 0);
+    pVars = nil;
     Vec_IntFree( vCore );
     Cnf_DataFree( pCnf );
     return iBadPo;

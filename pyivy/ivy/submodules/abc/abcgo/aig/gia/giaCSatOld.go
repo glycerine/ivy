@@ -169,11 +169,11 @@ func Cbs0_ManAlloc() *Cbs0_Man_t {
 func Cbs0_ManStop(p *Cbs0_Man_t) {
     Vec_IntFree( p.vModel );
     // inlining of macro ABC_FREE
-    ((p.pProp.pData) ? (free((char *) (p.pProp.pData)), (p.pProp.pData) = 0) : 0);
+    p.pProp.pData = nil;
     // inlining of macro ABC_FREE
-    ((p.pJust.pData) ? (free((char *) (p.pJust.pData)), (p.pJust.pData) = 0) : 0);
+    p.pJust.pData = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -414,7 +414,7 @@ func Cbs0_ManDecideMaxFF(p *Cbs0_Man_t) *Gia_Obj_t {
     var pObj *Gia_Obj_t;
     var pObjMax *Gia_Obj_t = nil;
     var i, iMaxFF, iCurFF int32;
-    assert(p.pAig.pRefs != nil, "p.pAig.pRefs != nil");
+    assert(p.pAig.Refs != nil, "p.pAig.Refs != nil");
     // inlining of macro Cbs0_QueForEachEntry
     for  i = (p.pJust).iHead; (i < (p.pJust).iTail) && ((pObj) = (p.pJust).pData[i]); i++  {
         iCurFF = Cbs0_VarFaninFanoutMax( p, pObj );

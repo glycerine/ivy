@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"time"
 )
 
 // DdNode is an edge handle. Complemented edges have their own canonical Go
@@ -46,6 +47,12 @@ type DdManager struct {
 	closed                            bool
 	allocationLimited                 bool
 	allocationCeiling                 int
+	reorderMethod                     Cudd_ReorderingType
+	reorderings                       uint
+	maxGrowth                         float64
+	siftMaxVar, siftMaxSwap           int
+	symmetryGroups                    [][]int
+	reorderingTime                    time.Duration
 }
 
 const bddConstantIndex uint32 = CUDD_CONST_INDEX
@@ -54,7 +61,7 @@ func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2}
+	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, siftMaxVar: 1000, siftMaxSwap: 2000000}
 	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
 	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
 	dd.One.inverse = dd.LogicZero

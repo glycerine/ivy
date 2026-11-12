@@ -184,12 +184,9 @@ func Map_SuperLibFree(p *Map_SuperLib_t) {
     Extra_MmFixedStop( p.mmSupers );
     Extra_MmFixedStop( p.mmEntries );
     Extra_MmFlexStop( p.mmForms );
-    // inlining of macro ABC_FREE
-    ((p.ppSupers) ? (free((char *) (p.ppSupers)), (p.ppSupers) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.ppSupers = nil;
+    p.pName = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

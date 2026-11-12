@@ -212,8 +212,7 @@ func Abc_NtkMapCopyCiArrival(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {
         p[i].Rise = ppTimes[i].Rise;
         p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );
     }
-    // inlining of macro ABC_FREE
-    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);
+    ppTimes = nil;
     return p;
 }
 func Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {
@@ -226,8 +225,7 @@ func Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t 
         p[i].Rise = ppTimes[i].Rise;
         p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );
     }
-    // inlining of macro ABC_FREE
-    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);
+    ppTimes = nil;
     return p;
 }
 
@@ -964,8 +962,7 @@ func Abc_NtkOutputMiniMapping(pAbc *Abc_Frame_t) *int32 {
     // derive mini-mapping
     vMapping = Abc_NtkWriteMiniMapping( pNtk );
     pArray = Vec_IntArray( vMapping );
-    // inlining of macro ABC_FREE
-    ((vMapping) ? (free((char *) (vMapping)), (vMapping) = 0) : 0);
+    vMapping = nil;
     // print mini-mapping (optional)
 //    Abc_NtkPrintMiniMapping( pArray );
     // return the array representation of mini-mapping

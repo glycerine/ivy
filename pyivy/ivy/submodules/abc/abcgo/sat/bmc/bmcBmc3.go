@@ -307,8 +307,7 @@ func Saig_ManBmcCountNonternary(p *Aig_Man_t, vInfos *Vec_Ptr_t, iFrame int32) {
         Abc_Print( 1, "%d=%d ", i, pCounters[i] );
     }
     Abc_Print( 1, "\n" );
-    // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
+    pCounters = nil;
 }
 
 
@@ -869,19 +868,14 @@ func Saig_Bmc3ManStop(p *Gia_ManBmc_t) {
     if p.pSat {  sat_solver_delete( p.pSat ); }
     if p.pSat2 { satoko_destroy( p.pSat2 ); }
     if p.pSat3 { bmcg_sat_solver_stop( p.pSat3 ); }
-    // inlining of macro ABC_FREE
-    ((p.pTime4Outs) ? (free((char *) (p.pTime4Outs)), (p.pTime4Outs) = 0) : 0);
+    p.pTime4Outs = nil;
     Vec_IntFree( p.vData );
     Hsh_IntManStop( p.vHash );
     Vec_IntFree( p.vId2Lit );
-    // inlining of macro ABC_FREE
-    ((p.pSopSizes) ? (free((char *) (p.pSopSizes)), (p.pSopSizes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSops[1]) ? (free((char *) (p.pSops[1])), (p.pSops[1]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSops) ? (free((char *) (p.pSops)), (p.pSops) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pSopSizes = nil;
+    p.pSops[1] = nil;
+    p.pSops = nil;
+    p = nil;
 }
 
 
@@ -1773,8 +1767,7 @@ nTimeSat += clkSatRun;
                         Abc_Print( 1, "\n" );
                         fflush( os.Stdout );
                     }
-                    // inlining of macro ABC_FREE
-                    ((pAig.pSeqModel) ? (free((char *) (pAig.pSeqModel)), (pAig.pSeqModel) = 0) : 0);
+                    pAig.pSeqModel = nil;
                     pAig.pSeqModel = Saig_ManGenerateCex( p, f, i );
                     goto finish;
                 }

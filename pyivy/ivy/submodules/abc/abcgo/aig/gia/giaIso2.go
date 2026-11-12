@@ -257,7 +257,7 @@ func Gia_Iso2ManStop(p *Gia_Iso2Man_t) {
     Vec_IntFree( p.vVec0 );
     Vec_IntFree( p.vVec1 );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Gia_Iso2ManPrint(p *Gia_Iso2Man_t, Time abctime, fVerbose int32) {
     if !(fVerbose != 0) {

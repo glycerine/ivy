@@ -102,13 +102,11 @@ func Supp_ManStop(p *Supp_Man_t) {
     var i int32;
     // inlining of macro Vec_PtrForEachEntry
     for  i = 0; (i < Vec_PtrSize(p.vMemory)) && (((pMemory) = (void *)Vec_PtrEntry(p.vMemory, i)), 1); i++  {
-        // inlining of macro ABC_FREE
-        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);
+        pMemory = nil;
     }
     Vec_PtrFree( p.vMemory );
     Vec_PtrFree( p.vFree );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -790,8 +788,7 @@ timeFind += Abc_Clock() - clk2;
     // stop char-based support representation
     // inlining of macro Vec_PtrForEachEntry
     for  i = 0; (i < Vec_PtrSize(vPartSuppsChar)) && (((vTemp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsChar, i)), 1); i++  {
-        // inlining of macro ABC_FREE
-        ((vTemp) ? (free((char *) (vTemp)), (vTemp) = 0) : 0);
+        vTemp = nil;
     }
     Vec_PtrFree( vPartSuppsChar );
 

@@ -78,12 +78,9 @@ func If_BoxDup(p *If_Box_t) *If_Box_t {
     return pNew;
 }
 func If_BoxFree(p *If_Box_t) {
-    // inlining of macro ABC_FREE
-    ((p.pDelays) ? (free((char *) (p.pDelays)), (p.pDelays) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pDelays = nil;
+    p.pName = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -119,8 +116,7 @@ func If_LibBoxFree(p *If_LibBox_t) {
         If_BoxFree( pBox ); }
     }
     Vec_PtrFree( p.vBoxes );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -242,8 +238,7 @@ func If_LibBoxRead2(pFileName string) *If_LibBox_t {
         }
         pBox = nil;
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     _ = (pFile).Close();
     return p;
 }

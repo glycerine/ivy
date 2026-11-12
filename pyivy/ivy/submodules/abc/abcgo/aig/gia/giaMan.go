@@ -61,18 +61,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManStart(nObjsMax int32) *Gia_Man_t {
-    var p *Gia_Man_t;
-    assert(nObjsMax > 0, "nObjsMax > 0");
-    p = new(Gia_Man_t);
-    p.nObjsAlloc = nObjsMax;
-    p.pObjs = ABC_CALLOC( Gia_Obj_t, nObjsMax );
-    p.pObjs.iDiff0 = p.pObjs.iDiff1 = GIA_NONE;
-    p.nObjs = 1;
-    p.vCis  = Vec_IntAlloc( nObjsMax / 20 );
-    p.vCos  = Vec_IntAlloc( nObjsMax / 20 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -85,101 +74,7 @@ func Gia_ManStart(nObjsMax int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManStop(p *Gia_Man_t) {
-    extern void Gia_DatFree( Gia_Dat_t * p );
-    Gia_DatFree( p.pUData );
-    if p.vSeqModelVec {
-        Vec_PtrFreeFree( p.vSeqModelVec ); }
-    Gia_ManStaticFanoutStop( p );
-    Tim_ManStopP( (Tim_Man_t **)&p.pManTime );
-    assert(p.pManTime == nil, "p.pManTime == nil");
-    Vec_PtrFreeFree( p.vNamesIn );
-    Vec_PtrFreeFree( p.vNamesOut );
-    Vec_IntFreeP( &p.vSwitching );
-    Vec_IntFreeP( &p.vSuper );
-    Vec_IntFreeP( &p.vStore );
-    Vec_IntFreeP( &p.vClassNew );
-    Vec_IntFreeP( &p.vClassOld );
-    Vec_WrdFreeP( &p.vSims );
-    Vec_WrdFreeP( &p.vSimsT );
-    Vec_WrdFreeP( &p.vSimsPi );
-    Vec_WrdFreeP( &p.vSimsPo );
-    Vec_IntFreeP( &p.vTimeStamps );
-    Vec_FltFreeP( &p.vTiming );
-    Vec_VecFreeP( &p.vClockDoms );
-    Vec_IntFreeP( &p.vCofVars );
-    Vec_IntFreeP( &p.vIdsOrig );
-    Vec_IntFreeP( &p.vIdsEquiv );
-    Vec_IntFreeP( &p.vLutConfigs );
-    Vec_IntFreeP( &p.vEdgeDelay );
-    Vec_IntFreeP( &p.vEdgeDelayR );
-    Vec_IntFreeP( &p.vEdge1 );
-    Vec_IntFreeP( &p.vEdge2 );
-    Vec_IntFreeP( &p.vUserPiIds );
-    Vec_IntFreeP( &p.vUserPoIds );
-    Vec_IntFreeP( &p.vUserFfIds );
-    Vec_IntFreeP( &p.vFlopClasses );
-    Vec_IntFreeP( &p.vGateClasses );
-    Vec_IntFreeP( &p.vObjClasses );
-    Vec_IntFreeP( &p.vInitClasses );
-    Vec_IntFreeP( &p.vRegClasses );
-    Vec_IntFreeP( &p.vRegInits );
-    Vec_IntFreeP( &p.vDoms );
-    Vec_IntFreeP( &p.vBarBufs );
-    Vec_IntFreeP( &p.vXors );
-    Vec_IntFreeP( &p.vLevels );
-    Vec_IntFreeP( &p.vTruths );
-    Vec_IntErase( &p.vCopies );
-    Vec_IntErase( &p.vCopies2 );
-    Vec_IntFreeP( &p.vVar2Obj );
-    Vec_IntErase( &p.vCopiesTwo );
-    Vec_IntErase( &p.vSuppVars );
-    Vec_IntErase( &p.vVarMap );
-    Vec_WrdFreeP( &p.vSuppWords );
-    Vec_IntFreeP( &p.vTtNums );
-    Vec_IntFreeP( &p.vTtNodes );
-    Vec_WrdFreeP( &p.vTtMemory );
-    Vec_PtrFreeP( &p.vTtInputs );
-    Vec_IntFreeP( &p.vMapping );
-    Vec_WecFreeP( &p.vMapping2 );
-    Vec_WecFreeP( &p.vFanouts2 );
-    Vec_IntFreeP( &p.vCellMapping );
-    Vec_IntFreeP( &p.vPacking );
-    Vec_IntFreeP( &p.vConfigs );
-    ABC_FREE( p.pCellStr );
-    Vec_FltFreeP( &p.vInArrs );
-    Vec_FltFreeP( &p.vOutReqs );
-    Vec_IntFreeP( &p.vCiArrs );
-    Vec_IntFreeP( &p.vCoReqs );
-    Vec_IntFreeP( &p.vCoArrs );
-    Vec_IntFreeP( &p.vCoAttrs );
-    Gia_ManStopP( &p.pAigExtra );
-    Vec_IntFree( p.vCis );
-    Vec_IntFree( p.vCos );
-    Vec_IntErase( &p.vHash );
-    Vec_IntErase( &p.vHTable );
-    Vec_IntErase( &p.vRefs );
-    ABC_FREE( p.pData2 );
-    ABC_FREE( p.pTravIds );
-    ABC_FREE( p.pPlacement );
-    ABC_FREE( p.pSwitching );
-    ABC_FREE( p.pCexSeq );
-    ABC_FREE( p.pCexComb );
-    ABC_FREE( p.pIso );
-//    ABC_FREE( p->pMapping );
-    ABC_FREE( p.pFanData );
-    ABC_FREE( p.pReprsOld );
-    ABC_FREE( p.pReprs );
-    ABC_FREE( p.pNexts );
-    ABC_FREE( p.pSibls );
-    ABC_FREE( p.pRefs );
-    ABC_FREE( p.pLutRefs );
-    ABC_FREE( p.pMuxes );
-    ABC_FREE( p.pObjs );
-    ABC_FREE( p.pSpec );
-    ABC_FREE( p.pName );
-    ABC_FREE( p );
-}
+
 
 /**Function*************************************************************
 
@@ -198,7 +93,7 @@ func Gia_ManMemory(p *Gia_Man_t) float64 {
     Memory += sizeof(int) * Gia_ManCiNum(p);
     Memory += sizeof(int) * Gia_ManCoNum(p);
     Memory += sizeof(int) * Vec_IntSize(&p.vHTable);
-    Memory += sizeof(int) * Gia_ManObjNum(p) * (p.pRefs != nil);
+    Memory += sizeof(int) * Gia_ManObjNum(p) * (p.Refs != nil);
     Memory += Vec_IntMemory( p.vLevels );
     Memory += Vec_IntMemory( p.vCellMapping );
     Memory += Vec_IntMemory( &p.vCopies );
@@ -220,12 +115,7 @@ func Gia_ManMemory(p *Gia_Man_t) float64 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManStopP(p **Gia_Man_t) {
-    if *p == nil {
-        return; }
-    Gia_ManStop( *p );
-    *p = nil;
-}
+
 
 /**Function*************************************************************
 
@@ -742,10 +632,7 @@ func Gia_ManPrintStatsMiter(p *Gia_Man_t, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSetRegNum(p *Gia_Man_t, nRegs int32) {
-    assert(p.nRegs == 0, "p.nRegs == 0");
-    p.nRegs = nRegs;
-}
+
 
 
 /**Function*************************************************************
@@ -834,7 +721,7 @@ func Gia_ManPrintNpnClasses(p *Gia_Man_t) {
         OtherClasses, 100.0 * OtherClasses / (nTotal+1) );
     // count the number of LUTs that have MUX function and two fanins with MUX functions
     OtherClasses = OtherClasses2 = 0;
-    ABC_FREE( p.pRefs );
+    p.Refs = nil;
     Gia_ManSetRefsMapped( p );
     Gia_ManForEachLut( p, i )
     {
@@ -853,11 +740,11 @@ func Gia_ManPrintNpnClasses(p *Gia_Man_t) {
 //                Abc_Print( 1, "%d ", pLutClass[iFan] );
 //            Abc_Print( 1, "\n" );
     }
-    ABC_FREE( p.pRefs );
+    p.Refs = nil;
     Abc_Print( 1, "Approximate number of 4:1 MUX structures: All = %6d  (%7.2f %%)  MFFC = %6d  (%7.2f %%)\n", 
         OtherClasses,  100.0 * OtherClasses  / (nTotal+1),
         OtherClasses2, 100.0 * OtherClasses2 / (nTotal+1) );
-    ABC_FREE( pLutClass );
+    pLutClass = nil;
 }
 
 

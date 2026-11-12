@@ -1238,8 +1238,7 @@ func Abc_NtkTryNewMiter(pFileName0 string, pFileName1 string) *Vec_Ptr_t {
     }
     Gia_ManStop( pGia );
     sat_solver_delete( pSat );
-    // inlining of macro ABC_FREE
-    ((pVars) ? (free((char *) (pVars)), (pVars) = 0) : 0);
+    pVars = nil;
     return vCexes;
 }
 

@@ -251,7 +251,7 @@ func Gia_ManCountMinterms(p *Gia_ManAre_t) int32 {
         Counter += Gia_WordCountOnes( pMemory[i] );
     }
     // inlining of macro ABC_FREE
-    ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);
+    pMemory = nil;
     return Counter;
 }
 
@@ -534,19 +534,19 @@ func Gia_ManAreFree(p *Gia_ManAre_t) {
     Vec_VecFree( p.vCiLits );
     for  i = 0; i < p.nObjPages; i++  {
         // inlining of macro ABC_FREE
-        ((p.ppObjs[i]) ? (free((char *) (p.ppObjs[i])), (p.ppObjs[i]) = 0) : 0);
+        p.ppObjs[i] = nil;
     }
     // inlining of macro ABC_FREE
-    ((p.ppObjs) ? (free((char *) (p.ppObjs)), (p.ppObjs) = 0) : 0);
+    p.ppObjs = nil;
     for  i = 0; i < p.nStaPages; i++  {
         // inlining of macro ABC_FREE
-        ((p.ppStas[i]) ? (free((char *) (p.ppStas[i])), (p.ppStas[i]) = 0) : 0);
+        p.ppStas[i] = nil;
     }
     // inlining of macro ABC_FREE
-    ((p.ppStas) ? (free((char *) (p.ppStas)), (p.ppStas) = 0) : 0);
+    p.ppStas = nil;
 //    ABC_FREE( p->pfUseless );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1686,7 +1686,7 @@ func Gia_ManArePerform(pAig *Gia_Man_t, nStatesMax int32, fMiter int32, fVerbose
         return -1;
     }
     // inlining of macro ABC_FREE
-    ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+    pAig.pCexSeq = nil;
 //    p = Gia_ManAreCreate( Gia_ManCompress2(pAig, 0, 0) );
     p = Gia_ManAreCreate( Gia_ManDup(pAig) );
     p.fMiter = fMiter;
@@ -1894,8 +1894,8 @@ func Gia_ManAreDeriveCex(p *Gia_ManAre_t, pLast *Gia_StaAre_t) *Abc_Cex_t {
     assert(Vec_PtrSize(vStates) >= 1, "Vec_PtrSize(vStates) >= 1");
     // start the counter-example
     pCex = Abc_CexAlloc( Gia_ManRegNum(p.pAig), Gia_ManPiNum(p.pAig), Vec_PtrSize(vStates) );
-    pCex.iFrame = Vec_PtrSize(vStates)-1;
-    pCex.iPo = p.iOutFail;
+    pCex.IFrame = Vec_PtrSize(vStates)-1;
+    pCex.IPo = p.iOutFail;
     // compute states
     pPrev = nil;
     // inlining of macro Vec_PtrForEachEntry
@@ -1906,7 +1906,7 @@ func Gia_ManAreDeriveCex(p *Gia_ManAre_t, pLast *Gia_StaAre_t) *Abc_Cex_t {
         // inlining of macro Vec_IntForEachEntry
         for  v = 0; (v < Vec_IntSize(p.vCofVars)) && (((Var) = Vec_IntEntry(p.vCofVars, v)), 1); v++  {
             assert(Var < Gia_ManPiNum(p.pAig), "Var < Gia_ManPiNum(p.pAig)");
-            Abc_InfoSetBit( pCex.pData, Gia_ManRegNum(p.pAig) + (Vec_PtrSize(vStates)-1-i) * Gia_ManPiNum(p.pAig) + Var );
+            Abc_InfoSetBit( pCex.PData, Gia_ManRegNum(p.pAig) + (Vec_PtrSize(vStates)-1-i) * Gia_ManPiNum(p.pAig) + Var );
         }
     }
     // free temporary things

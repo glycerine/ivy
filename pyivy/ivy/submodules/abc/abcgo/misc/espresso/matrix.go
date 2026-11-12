@@ -1,598 +1,363 @@
+// Sparse binary matrices, ported from Espresso matrix.c.
 package espresso
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+)
 
-import "os"
-
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-//#include "port.h"
-//#include "sparse_int.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/*
- *  free-lists are only used if 'FAST_AND_LOOSE' is set; this is because
- *  we lose the debugging capability of libmm_t which trashes objects when
- *  they are free'd.  However, FAST_AND_LOOSE is much faster if matrices
- *  are created and freed frequently.
- */
-
-#ifdef FAST_AND_LOOSE
-sm_element *sm_element_freelist;
-sm_row *sm_row_freelist;
-sm_col *sm_col_freelist;
-#endif
-
-
-func sm_alloc() *sm_matrix {
-    register sm_matrix *A;
-
-    A = ALLOC(sm_matrix, 1);
-    A.rows = NIL(sm_row *);
-    A.cols = NIL(sm_col *);
-    A.nrows = A.ncols = 0;
-    A.rows_size = A.cols_size = 0;
-    A.first_row = A.last_row = NIL(sm_row);
-    A.first_col = A.last_col = NIL(sm_col);
-    A.user_word = NIL(char);        /* for our user ... */
-    return A;
+func sm_alloc() *sm_matrix { return &sm_matrix{} }
+func sm_alloc_size(row, col int) *sm_matrix {
+	matrix := sm_alloc()
+	sm_resize(matrix, row, col)
+	return matrix
+}
+func sm_free(matrix *sm_matrix) {
+	if matrix == nil {
+		return
+	}
+	for row := matrix.first_row; row != nil; {
+		next := row.next_row
+		for element := row.first_col; element != nil; {
+			following := element.next_col
+			*element = sm_element{}
+			element = following
+		}
+		*row = sm_row{}
+		row = next
+	}
+	for column := matrix.first_col; column != nil; {
+		next := column.next_col
+		*column = sm_col{}
+		column = next
+	}
+	*matrix = sm_matrix{}
+}
+func sm_dup(matrix *sm_matrix) *sm_matrix {
+	result := sm_alloc()
+	if matrix.last_row != nil {
+		sm_resize(result, matrix.last_row.row_num, matrix.last_col.col_num)
+	}
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		sm_copy_row(result, row.row_num, row)
+	}
+	return result
+}
+func sm_resize(matrix *sm_matrix, row, col int) {
+	grow := func(size, index int) int {
+		if index < size {
+			return size
+		}
+		maxInt := int(^uint(0) >> 1)
+		if index == maxInt {
+			panic("espresso: sparse index overflows allocation size")
+		}
+		wanted := index + 1
+		if size <= maxInt/2 && 2*size > wanted {
+			wanted = 2 * size
+		}
+		return wanted
+	}
+	if size := grow(len(matrix.rows), row); size > len(matrix.rows) {
+		matrix.rows = append(matrix.rows, make([]*sm_row, size-len(matrix.rows))...)
+	}
+	if size := grow(len(matrix.cols), col); size > len(matrix.cols) {
+		matrix.cols = append(matrix.cols, make([]*sm_col, size-len(matrix.cols))...)
+	}
+}
+func sm_add_row_header(matrix *sm_matrix, row *sm_row) {
+	next := matrix.first_row
+	if matrix.last_row != nil && matrix.last_row.row_num < row.row_num {
+		next = nil
+	} else {
+		for next != nil && next.row_num < row.row_num {
+			next = next.next_row
+		}
+	}
+	previous := matrix.last_row
+	if next != nil {
+		previous = next.prev_row
+	}
+	row.prev_row, row.next_row = previous, next
+	if previous == nil {
+		matrix.first_row = row
+	} else {
+		previous.next_row = row
+	}
+	if next == nil {
+		matrix.last_row = row
+	} else {
+		next.prev_row = row
+	}
+	matrix.nrows++
+}
+func sm_add_col_header(matrix *sm_matrix, column *sm_col) {
+	next := matrix.first_col
+	if matrix.last_col != nil && matrix.last_col.col_num < column.col_num {
+		next = nil
+	} else {
+		for next != nil && next.col_num < column.col_num {
+			next = next.next_col
+		}
+	}
+	previous := matrix.last_col
+	if next != nil {
+		previous = next.prev_col
+	}
+	column.prev_col, column.next_col = previous, next
+	if previous == nil {
+		matrix.first_col = column
+	} else {
+		previous.next_col = column
+	}
+	if next == nil {
+		matrix.last_col = column
+	} else {
+		next.prev_col = column
+	}
+	matrix.ncols++
+}
+func sm_drop_row_header(matrix *sm_matrix, row *sm_row) {
+	if row.prev_row == nil {
+		matrix.first_row = row.next_row
+	} else {
+		row.prev_row.next_row = row.next_row
+	}
+	if row.next_row == nil {
+		matrix.last_row = row.prev_row
+	} else {
+		row.next_row.prev_row = row.prev_row
+	}
+	matrix.rows[row.row_num] = nil
+	matrix.nrows--
+	*row = sm_row{}
+}
+func sm_drop_col_header(matrix *sm_matrix, column *sm_col) {
+	if column.prev_col == nil {
+		matrix.first_col = column.next_col
+	} else {
+		column.prev_col.next_col = column.next_col
+	}
+	if column.next_col == nil {
+		matrix.last_col = column.prev_col
+	} else {
+		column.next_col.prev_col = column.prev_col
+	}
+	matrix.cols[column.col_num] = nil
+	matrix.ncols--
+	*column = sm_col{}
+}
+func sm_insert(matrix *sm_matrix, rowIndex, colIndex int) *sm_element {
+	if rowIndex < 0 || colIndex < 0 {
+		panic("espresso: negative matrix index")
+	}
+	if existing := sm_find(matrix, rowIndex, colIndex); existing != nil {
+		return existing
+	}
+	sm_resize(matrix, rowIndex, colIndex)
+	row := matrix.rows[rowIndex]
+	if row == nil {
+		row = sm_row_alloc()
+		row.row_num = rowIndex
+		matrix.rows[rowIndex] = row
+		sm_add_row_header(matrix, row)
+	}
+	column := matrix.cols[colIndex]
+	if column == nil {
+		column = sm_col_alloc()
+		column.col_num = colIndex
+		matrix.cols[colIndex] = column
+		sm_add_col_header(matrix, column)
+	}
+	element := &sm_element{row_num: rowIndex, col_num: colIndex, matrix: matrix}
+	sm_link_row_element(row, element)
+	sm_link_col_element(column, element)
+	return element
+}
+func sm_find(matrix *sm_matrix, rowIndex, colIndex int) *sm_element {
+	row, column := sm_get_row(matrix, rowIndex), sm_get_col(matrix, colIndex)
+	if row == nil || column == nil {
+		return nil
+	}
+	if row.length < column.length {
+		return sm_row_find(row, colIndex)
+	}
+	return sm_col_find(column, rowIndex)
+}
+func sm_remove(matrix *sm_matrix, row, col int) { sm_remove_element(matrix, sm_find(matrix, row, col)) }
+func sm_remove_element(matrix *sm_matrix, element *sm_element) {
+	// Matrix identity makes detached/foreign removal safe without an extra lookup.
+	if element == nil || element.matrix != matrix {
+		return
+	}
+	row, column := matrix.rows[element.row_num], matrix.cols[element.col_num]
+	sm_unlink_row_element(row, element)
+	sm_unlink_col_element(column, element)
+	if row.length == 0 {
+		sm_drop_row_header(matrix, row)
+	}
+	if column.length == 0 {
+		sm_drop_col_header(matrix, column)
+	}
+	*element = sm_element{}
+}
+func sm_delrow(matrix *sm_matrix, index int) {
+	row := sm_get_row(matrix, index)
+	if row == nil {
+		return
+	}
+	for row.length > 0 {
+		sm_remove_element(matrix, row.first_col)
+		if matrix.rows[index] == nil {
+			return
+		}
+	}
+}
+func sm_delcol(matrix *sm_matrix, index int) {
+	column := sm_get_col(matrix, index)
+	if column == nil {
+		return
+	}
+	for column.length > 0 {
+		sm_remove_element(matrix, column.first_row)
+		if matrix.cols[index] == nil {
+			return
+		}
+	}
+}
+func sm_copy_row(destination *sm_matrix, index int, row *sm_row) {
+	for element := row.first_col; element != nil; element = element.next_col {
+		sm_insert(destination, index, element.col_num)
+	}
+}
+func sm_copy_col(destination *sm_matrix, index int, column *sm_col) {
+	for element := column.first_row; element != nil; element = element.next_row {
+		sm_insert(destination, element.row_num, index)
+	}
+}
+func sm_longest_row(matrix *sm_matrix) *sm_row {
+	var best *sm_row
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		if best == nil || row.length > best.length {
+			best = row
+		}
+	}
+	return best
+}
+func sm_longest_col(matrix *sm_matrix) *sm_col {
+	var best *sm_col
+	for column := matrix.first_col; column != nil; column = column.next_col {
+		if best == nil || column.length > best.length {
+			best = column
+		}
+	}
+	return best
+}
+func sm_num_elements(matrix *sm_matrix) int {
+	count := 0
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		count += row.length
+	}
+	return count
 }
 
-
-sm_matrix *
-sm_alloc_size(row, col)
-var row, col int32;
-{
-    register sm_matrix *A;
-
-    A = sm_alloc();
-    sm_resize(A, row, col);
-    return A;
+// Read retains the source output-pointer/boolean result contract. Successful
+// prefixes remain available on malformed input, matching fscanf-based reading.
+func sm_read(reader io.Reader, result **sm_matrix) bool {
+	matrix := sm_alloc()
+	*result = matrix
+	input := bufio.NewReader(reader)
+	for {
+		var row, col int
+		n, err := fmt.Fscan(input, &row, &col)
+		if err == io.EOF && n == 0 {
+			return true
+		}
+		if err != nil || n != 2 || row < 0 || col < 0 {
+			return false
+		}
+		sm_insert(matrix, row, col)
+	}
 }
-
-
-void
-sm_free(A)
-var A *sm_matrix;
-{
-#ifdef FAST_AND_LOOSE
-    register sm_row *prow;
-
-    if (A->first_row != 0) {
-    for(prow = A->first_row; prow != 0; prow = prow->next_row) {
-        /* add the elements to the free list of elements */
-        prow->last_col->next_col = sm_element_freelist;
-        sm_element_freelist = prow->first_col;
-    }
-
-    /* Add the linked list of rows to the row-free-list */
-    A->last_row->next_row = sm_row_freelist;
-    sm_row_freelist = A->first_row;
-
-    /* Add the linked list of cols to the col-free-list */
-    A->last_col->next_col = sm_col_freelist;
-    sm_col_freelist = A->first_col;
-    }
-#else
-    register sm_row *prow, *pnext_row;
-    register sm_col *pcol, *pnext_col;
-
-    for(prow = A->first_row; prow != 0; prow = pnext_row) {
-    pnext_row = prow->next_row;
-    sm_row_free(prow);
-    }
-    for(pcol = A->first_col; pcol != 0; pcol = pnext_col) {
-    pnext_col = pcol->next_col;
-    pcol->first_row = pcol->last_row = NIL(sm_element);
-    sm_col_free(pcol);
-    }
-#endif
-
-    /* Free the arrays to map row/col numbers into pointers */
-    FREE(A.rows);
-    FREE(A.cols);
-    FREE(A);
+func sm_read_compressed(reader io.Reader, result **sm_matrix) bool {
+	matrix := sm_alloc()
+	*result = matrix
+	input := bufio.NewReader(reader)
+	var rows, cols int
+	if _, err := fmt.Fscan(input, &rows, &cols); err != nil || rows < 0 || cols < 0 {
+		return false
+	}
+	sm_resize(matrix, rows, cols)
+	readHex := func() (uint64, bool) {
+		var token string
+		if _, err := fmt.Fscan(input, &token); err != nil {
+			return 0, false
+		}
+		value, err := strconv.ParseUint(token, 16, 64)
+		return value, err == nil
+	}
+	for row := 0; row < rows; row++ {
+		if _, ok := readHex(); !ok {
+			return false
+		} // source row label/count word
+		for col := 0; col < cols; col += 32 {
+			word, ok := readHex()
+			if !ok {
+				return false
+			}
+			for bit := 0; word != 0; word, bit = word>>1, bit+1 {
+				if word&1 != 0 {
+					sm_insert(matrix, row, col+bit)
+				}
+			}
+		}
+	}
+	return true
 }
-
-
-sm_matrix *
-sm_dup(A)
-var A *sm_matrix; 
-{
-    register sm_row *prow;
-    register sm_element *p;
-    register sm_matrix *B;
-
-    B = sm_alloc();
-    if A.last_row != 0 {
-    sm_resize(B, A.last_row.row_num, A.last_col.col_num);
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-        for p = prow.first_col; p != 0; p = p.next_col {
-        (void) sm_insert(B, p.row_num, p.col_num);
-        }
-    }
-    }
-    return B;
+func sm_write(writer io.Writer, matrix *sm_matrix) {
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		for element := row.first_col; element != nil; element = element.next_col {
+			fmt.Fprintf(writer, "%d %d\n", element.row_num, element.col_num)
+		}
+	}
 }
-
-
-void 
-sm_resize(A, row, col)
-register sm_matrix *A;
-var row, col int32;
-{
-    register int i, new_size;
-
-    if row >= A.rows_size {
-    new_size = MAX(A.rows_size*2, row+1);
-    A.rows = REALLOC(sm_row *, A.rows, new_size);
-    for i = A.rows_size; i < new_size; i++ {
-        A.rows[i] = NIL(sm_row);
-    }
-    A.rows_size = new_size;
-    }
-
-    if col >= A.cols_size {
-    new_size = MAX(A.cols_size*2, col+1);
-    A.cols = REALLOC(sm_col *, A.cols, new_size);
-    for i = A.cols_size; i < new_size; i++ {
-        A.cols[i] = NIL(sm_col);
-    }
-    A.cols_size = new_size;
-    }
+func sm_print(writer io.Writer, matrix *sm_matrix) {
+	if matrix.last_col == nil {
+		return
+	}
+	for _, scale := range []int{100, 10, 1} {
+		if scale > 1 && matrix.last_col.col_num < scale {
+			continue
+		}
+		fmt.Fprint(writer, "    ")
+		for column := matrix.first_col; column != nil; column = column.next_col {
+			fmt.Fprint(writer, (column.col_num/scale)%10)
+		}
+		fmt.Fprintln(writer)
+	}
+	fmt.Fprint(writer, "    ")
+	for column := matrix.first_col; column != nil; column = column.next_col {
+		fmt.Fprint(writer, "-")
+	}
+	fmt.Fprintln(writer)
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		fmt.Fprintf(writer, "%3d:", row.row_num)
+		for column := matrix.first_col; column != nil; column = column.next_col {
+			value := '.'
+			if sm_row_find(row, column.col_num) != nil {
+				value = '1'
+			}
+			fmt.Fprintf(writer, "%c", value)
+		}
+		fmt.Fprintln(writer)
+	}
 }
-
-
-/*  
- *  insert -- insert a value into the matrix
- */
-sm_element *
-sm_insert(A, row, col)
-register sm_matrix *A;
-register int row, col;
-{
-    register sm_row *prow;
-    register sm_col *pcol;
-    register sm_element *element;
-    sm_element *save_element;
-
-    if row >= A.rows_size || col >= A.cols_size {
-    sm_resize(A, row, col);
-    }
-
-    prow = A.rows[row];
-    if prow == NIL(sm_row) {
-    prow = A.rows[row] = sm_row_alloc();
-    prow.row_num = row;
-    sorted_insert(sm_row, A.first_row, A.last_row, A.nrows, 
-            next_row, prev_row, row_num, row, prow);
-    }
-
-    pcol = A.cols[col];
-    if pcol == NIL(sm_col) {
-    pcol = A.cols[col] = sm_col_alloc();
-    pcol.col_num = col;
-    sorted_insert(sm_col, A.first_col, A.last_col, A.ncols, 
-            next_col, prev_col, col_num, col, pcol);
-    }
-
-    /* get a new item, save its address */
-    sm_element_alloc(element);
-    save_element = element;
-
-    /* insert it into the row list */
-    sorted_insert(sm_element, prow.first_col, prow.last_col, 
-        prow.length, next_col, prev_col, col_num, col, element);
-
-    /* if it was used, also insert it into the column list */
-    if element == save_element {
-    sorted_insert(sm_element, pcol.first_row, pcol.last_row, 
-        pcol.length, next_row, prev_row, row_num, row, element);
-    } else {
-    /* otherwise, it was already in matrix -- free element we allocated */
-    sm_element_free(save_element);
-    }
-    return element;
+func sm_dump(matrix *sm_matrix, label string, maximum int) {
+	fmt.Fprintf(os.Stdout, "%s %d rows by %d cols\n", label, matrix.nrows, matrix.ncols)
+	if matrix.nrows < maximum {
+		sm_print(os.Stdout, matrix)
+	}
 }
-
-
-sm_element *
-sm_find(A, rownum, colnum)
-var A *sm_matrix;
-var rownum, colnum int32;
-{
-    sm_row *prow;
-    sm_col *pcol;
-
-    // inlining of macro sm_get_row
-    prow = (((rownum) >= 0 && (rownum) < (A).rows_size) ?     (A).rows[rownum] : (sm_row *) 0);
-    if prow == NIL(sm_row) {
-    return NIL(sm_element);
-    } else {
-    // inlining of macro sm_get_col
-    pcol = (((colnum) >= 0 && (colnum) < (A).cols_size) ?     (A).cols[colnum] : (sm_col *) 0);
-    if pcol == NIL(sm_col) {
-        return NIL(sm_element);
-    }
-    if prow.length < pcol.length {
-        return sm_row_find(prow, colnum);
-    } else {
-        return sm_col_find(pcol, rownum);
-    }
-    }
-}
-
-
-void
-sm_remove(A, rownum, colnum)
-var A *sm_matrix;
-var rownum, colnum int32;
-{
-    sm_remove_element(A, sm_find(A, rownum, colnum));
-}
-
-
-
-void
-sm_remove_element(A, p)
-register sm_matrix *A; 
-register sm_element *p;
-{
-    register sm_row *prow;
-    register sm_col *pcol;
-
-    if (p == 0) return;
-
-    /* Unlink the element from its row */
-    // inlining of macro sm_get_row
-    prow = (((p.row_num) >= 0 && (p.row_num) < (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);
-    // inlining of macro dll_unlink
-    {     if p.prev_col == 0 {     prow.first_col = p.next_col;     } else {     p.prev_col.next_col = p.next_col;     }
-     if p.next_col == 0 {     prow.last_col = p.prev_col;     } else {     p.next_col.prev_col = p.prev_col;     }
-     prow.length--; };
-
-    /* if no more elements in the row, discard the row header */
-    if prow.first_col == NIL(sm_element) {
-    sm_delrow(A, p.row_num);
-    }
-
-    /* Unlink the element from its column */
-    // inlining of macro sm_get_col
-    pcol = (((p.col_num) >= 0 && (p.col_num) < (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);
-    // inlining of macro dll_unlink
-    {     if p.prev_row == 0 {     pcol.first_row = p.next_row;     } else {     p.prev_row.next_row = p.next_row;     }
-     if p.next_row == 0 {     pcol.last_row = p.prev_row;     } else {     p.next_row.prev_row = p.prev_row;     }
-     pcol.length--; };
-
-    /* if no more elements in the column, discard the column header */
-    if pcol.first_row == NIL(sm_element) {
-    sm_delcol(A, p.col_num);
-    }
-
-    sm_element_free(p);
-}
-
-void 
-sm_delrow(A, i)
-var A *sm_matrix;
-var i int32;
-{
-    register sm_element *p, *pnext;
-    sm_col *pcol;
-    sm_row *prow;
-
-    // inlining of macro sm_get_row
-    prow = (((i) >= 0 && (i) < (A).rows_size) ?     (A).rows[i] : (sm_row *) 0);
-    if prow != NIL(sm_row) {
-    /* walk across the row */
-    for p = prow.first_col; p != 0; p = pnext {
-        pnext = p.next_col;
-
-        /* unlink the item from the column (and delete it) */
-        // inlining of macro sm_get_col
-        pcol = (((p.col_num) >= 0 && (p.col_num) < (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);
-        sm_col_remove_element(pcol, p);
-
-        /* discard the column if it is now empty */
-        if pcol.first_row == NIL(sm_element) {
-        sm_delcol(A, pcol.col_num);
-        }
-    }
-
-    /* discard the row -- we already threw away the elements */ 
-    A.rows[i] = NIL(sm_row);
-    // inlining of macro dll_unlink
-    {     if prow.prev_row == 0 {     A.first_row = prow.next_row;     } else {     prow.prev_row.next_row = prow.next_row;     }
-     if prow.next_row == 0 {     A.last_row = prow.prev_row;     } else {     prow.next_row.prev_row = prow.prev_row;     }
-     A.nrows--; };
-    prow.first_col = prow.last_col = NIL(sm_element);
-    sm_row_free(prow);
-    }
-}
-
-void 
-sm_delcol(A, i)
-var A *sm_matrix;
-var i int32;
-{
-    register sm_element *p, *pnext;
-    sm_row *prow;
-    sm_col *pcol;
-
-    // inlining of macro sm_get_col
-    pcol = (((i) >= 0 && (i) < (A).cols_size) ?     (A).cols[i] : (sm_col *) 0);
-    if pcol != NIL(sm_col) {
-    /* walk down the column */
-    for p = pcol.first_row; p != 0; p = pnext {
-        pnext = p.next_row;
-
-        /* unlink the element from the row (and delete it) */
-        // inlining of macro sm_get_row
-        prow = (((p.row_num) >= 0 && (p.row_num) < (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);
-        sm_row_remove_element(prow, p);
-
-        /* discard the row if it is now empty */
-        if prow.first_col == NIL(sm_element) {
-        sm_delrow(A, prow.row_num);
-        }
-    }
-
-    /* discard the column -- we already threw away the elements */ 
-    A.cols[i] = NIL(sm_col);
-    // inlining of macro dll_unlink
-    {     if pcol.prev_col == 0 {     A.first_col = pcol.next_col;     } else {     pcol.prev_col.next_col = pcol.next_col;     }
-     if pcol.next_col == 0 {     A.last_col = pcol.prev_col;     } else {     pcol.next_col.prev_col = pcol.prev_col;     }
-     A.ncols--; };
-    pcol.first_row = pcol.last_row = NIL(sm_element);
-    sm_col_free(pcol);
-    }
-}
-
-void
-sm_copy_row(dest, dest_row, prow)
-register sm_matrix *dest;
-var dest_row int32;
-var prow *sm_row;
-{
-    register sm_element *p;
-
-    for p = prow.first_col; p != 0; p = p.next_col {
-    (void) sm_insert(dest, dest_row, p.col_num);
-    }
-}
-
-
-void
-sm_copy_col(dest, dest_col, pcol)
-register sm_matrix *dest;
-var dest_col int32;
-var pcol *sm_col;
-{
-    register sm_element *p;
-
-    for p = pcol.first_row; p != 0; p = p.next_row {
-    (void) sm_insert(dest, dest_col, p.row_num);
-    }
-}
-
-
-sm_row *
-sm_longest_row(A)
-var A *sm_matrix;
-{
-    register sm_row *large_row, *prow;
-    register int max_length;
-
-    max_length = 0;
-    large_row = NIL(sm_row);
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-    if prow.length > max_length {
-        max_length = prow.length;
-        large_row = prow;
-    }
-    }
-    return large_row;
-}
-
-
-sm_col *
-sm_longest_col(A)
-var A *sm_matrix;
-{
-    register sm_col *large_col, *pcol;
-    register int max_length;
-
-    max_length = 0;
-    large_col = NIL(sm_col);
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-    if pcol.length > max_length {
-        max_length = pcol.length;
-        large_col = pcol;
-    }
-    }
-    return large_col;
-}
-
-int
-sm_num_elements(A)
-var A *sm_matrix;
-{
-    register sm_row *prow;
-    register int num;
-
-    num = 0;
-    // inlining of macro sm_foreach_row
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-    num += prow.length;
-    }
-    return num;
-}
-
-int 
-sm_read(fp, A)
-var fp *os.File;
-var A **sm_matrix;
-{
-    int i, j, err;
-
-    *A = sm_alloc();
-    while (! feof(fp)) {
-    err = fscanf(fp, "%d %d", &i, &j);
-    if err == -1 {
-        return 1;
-    } else if err != 2 {
-        return 0;
-    }
-    (void) sm_insert(*A, i, j);
-    }
-    return 1;
-}
-
-
-int 
-sm_read_compressed(fp, A)
-var fp *os.File;
-var A **sm_matrix;
-{
-    int i, j, k, nrows, ncols;
-    unsigned long x;
-
-    *A = sm_alloc();
-    if fscanf(fp, "%d %d", &nrows, &ncols) != 2 {
-    return 0;
-    }
-    sm_resize(*A, nrows, ncols);
-
-    for i = 0; i < nrows; i++ {
-    if fscanf(fp, "%lx", &x) != 1 {
-        return 0;
-    }
-    for j = 0; j < ncols; j += 32 {
-        if fscanf(fp, "%lx", &x) != 1 {
-        return 0;
-        }
-        for k = j; x != 0; x >>= 1, k++ {
-        if x & 1 {
-            (void) sm_insert(*A, i, k);
-        }
-        }
-    }
-    }
-    return 1;
-}
-
-
-void 
-sm_write(fp, A)
-var fp *os.File;
-var A *sm_matrix;
-{
-    register sm_row *prow;
-    register sm_element *p;
-
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-    for p = prow.first_col; p != 0; p = p.next_col {
-        (void) fmt.Fprintf(fp, "%d %d\n", p.row_num, p.col_num);
-    }
-    }
-}
-
-void 
-sm_print(fp, A)
-var fp *os.File;
-var A *sm_matrix;
-{
-    register sm_row *prow;
-    register sm_col *pcol;
-    int c;
-
-    if A.last_col.col_num >= 100 {
-    (void) fmt.Fprintf(fp, "    ");
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-        (void) fmt.Fprintf(fp, "%d", (pcol.col_num / 100)%10);
-    }
-    putc('\n', fp);
-    }
-
-    if A.last_col.col_num >= 10 {
-    (void) fmt.Fprintf(fp, "    ");
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-        (void) fmt.Fprintf(fp, "%d", (pcol.col_num / 10)%10);
-    }
-    putc('\n', fp);
-    }
-
-    (void) fmt.Fprintf(fp, "    ");
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-    (void) fmt.Fprintf(fp, "%d", pcol.col_num % 10);
-    }
-    putc('\n', fp);
-
-    (void) fmt.Fprintf(fp, "    ");
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-    (void) fmt.Fprintf(fp, "-");
-    }
-    putc('\n', fp);
-
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-    (void) fmt.Fprintf(fp, "%3d:", prow.row_num);
-
-    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {
-        c = sm_row_find(prow, pcol.col_num) ? '1' : '.';
-        putc(c, fp);
-    }
-    putc('\n', fp);
-    }
-}
-
-
-void 
-sm_dump(A, s, max)
-var A *sm_matrix;
-var s string;
-var max int32;
-{
-    FILE *fp = os.Stdout;
-
-    (void) fmt.Fprintf(fp, "%s %d rows by %d cols\n", s, A.nrows, A.ncols);
-    if A.nrows < max {
-    sm_print(fp, A);
-    }
-}
-
-func sm_cleanup() {
-#ifdef FAST_AND_LOOSE
-    register sm_element *p, *pnext;
-    register sm_row *prow, *pnextrow;
-    register sm_col *pcol, *pnextcol;
-
-    for(p = sm_element_freelist; p != 0; p = pnext) {
-    pnext = p->next_col;
-    FREE(p);
-    }
-    sm_element_freelist = 0;
-
-    for(prow = sm_row_freelist; prow != 0; prow = pnextrow) {
-    pnextrow = prow->next_row;
-    FREE(prow);
-    }
-    sm_row_freelist = 0;
-
-    for(pcol = sm_col_freelist; pcol != 0; pcol = pnextcol) {
-    pnextcol = pcol->next_col;
-    FREE(pcol);
-    }
-    sm_col_freelist = 0;
-#endif
-}
-//ABC_NAMESPACE_IMPL_END
-

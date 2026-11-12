@@ -231,8 +231,7 @@ func Abc_NtkReadLogFile(pFileName string, ppCex **Abc_Cex_t, pnFrames *int32) in
         if ppCex {
             *ppCex = pCex;
         } else {
-            // inlining of macro ABC_FREE
-            ((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0); }
+            pCex = nil; }
     
     } else {                                                         
         // corner case of seq circuit with no PIs             

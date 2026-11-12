@@ -277,10 +277,8 @@ Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((timeTotal)))/(float64(int64
     Vec_IntFreeP( &p.vRefClasses );
     Vec_IntFreeP( &p.vRefNodes );
     Vec_IntFreeP( &p.vRefBins );
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTable = nil;
+    p = nil;
 }
 func Cec4_ManStartNew(pAig *Gia_Man_t) *Gia_Man_t {
     var pObj *Gia_Obj_t; var i int32;
@@ -460,8 +458,7 @@ func Cec4_AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSa
     }
     RetValue = sat_solver_addclause( pSat, pLits, nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************
@@ -742,10 +739,8 @@ func Cec4_RefineClasses(p *Gia_Man_t, pMan *Cec4_Man_t, vClasses *Vec_Int_t) {
 }
 func Cec4_RefineInit(p *Gia_Man_t, pMan *Cec4_Man_t) {
     var pObj *Gia_Obj_t; var i int32;
-    // inlining of macro ABC_FREE
-    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+    p.pReprs = nil;
+    p.pNexts = nil;
     // inlining of macro ABC_CALLOC
     p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));
     // inlining of macro ABC_FALLOC

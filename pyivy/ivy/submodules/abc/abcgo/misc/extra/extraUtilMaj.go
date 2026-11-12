@@ -110,12 +110,9 @@ func Gem_ManAlloc(nVars int32, fVerbose int32) *Gem_Man_t {
 func Gem_ManFree(p *Gem_Man_t) int32 {
     Vec_MemHashFree( p.vTtMem );
     Vec_MemFree( p.vTtMem );
-    // inlining of macro ABC_FREE
-    ((p.pTtElems) ? (free((char *) (p.pTtElems)), (p.pTtElems) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTtElems = nil;
+    p.pObjs = nil;
+    p = nil;
     return 1;
 }
 func Gem_ManRealloc(p *Gem_Man_t) {

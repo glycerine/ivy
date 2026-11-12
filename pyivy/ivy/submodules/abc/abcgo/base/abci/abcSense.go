@@ -190,8 +190,7 @@ func Abc_NtkSensitivity(pNtk *Abc_Ntk_t, nConfLim int32, fVerbose int32) *Vec_In
                 fmt.Printf("ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\n"); }
 //            else
 //                printf( "Networks are NOT EQUIVALENT.\n" );
-            // inlining of macro ABC_FREE
-            ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);
+            pSimInfo = nil;
             Vec_IntPush( vResult, i );
         }
         Abc_NtkDelete( pMiter );

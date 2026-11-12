@@ -488,8 +488,7 @@ func Amap_LibReadFile(pFileName string, fVerbose int32) *Amap_Lib_t {
     pLib = Amap_LibReadBuffer( pBuffer, fVerbose );
     if pLib != nil {
         pLib.pName = Abc_UtilStrsav( pFileName ); }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return pLib;
 }
 

@@ -535,8 +535,7 @@ func Dch_DeriveChoiceAig(pAig *Aig_Man_t, fSkipRedSupps int32) *Aig_Man_t {
         Aig_ManCheckReprs( pAig ); } 
     // compute choices
     pChoices = Dch_DeriveChoiceAigInt( pAig, fSkipRedSupps );
-    // inlining of macro ABC_FREE
-    ((pChoices.pReprs) ? (free((char *) (pChoices.pReprs)), (pChoices.pReprs) = 0) : 0);
+    pChoices.pReprs = nil;
     // verify
     if fCheck != 0 {
         Dch_CheckChoices( pChoices, fSkipRedSupps ); } 

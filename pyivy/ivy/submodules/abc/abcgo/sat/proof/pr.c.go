@@ -291,22 +291,14 @@ Abc_Print(1, "%s =", ("TOTAL   "));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;
 
     Pr_ManMemoryStop( p );
-    // inlining of macro ABC_FREE
-    ((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pVarTypes) ? (free((char *) (p.pVarTypes)), (p.pVarTypes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTrail = nil;
+    p.pAssigns = nil;
+    p.pSeens = nil;
+    p.pVarTypes = nil;
+    p.pReasons = nil;
+    p.pWatches = nil;
+    p.pResLits = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -452,11 +444,9 @@ func Pr_ManMemoryStop(p *Pr_Man_t) {
     if p.pChunkLast == nil {
         return; }
     for  pMem = p.pChunkLast; pNext = *(char **)pMem; pMem = pNext  {
-        // inlining of macro ABC_FREE
-        ((pMem) ? (free((char *) (pMem)), (pMem) = 0) : 0);
+        pMem = nil;
     }
-    // inlining of macro ABC_FREE
-    ((pMem) ? (free((char *) (pMem)), (pMem) = 0) : 0);
+    pMem = nil;
 }
 
 /**Function*************************************************************
@@ -1227,10 +1217,8 @@ func Pr_ManProofRead(pFileName string) *Pr_Man_t {
         fmt.Printf("Expected %d clauses but read %d.\n", nClauses, Counter); }
 
     // finish
-    // inlining of macro ABC_FREE
-    if pArray != nil { ((pArray) ? (free((char *) (pArray)), (pArray) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if pBuffer { ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0); }
+    if pArray != nil { pArray = nil; }
+    if pBuffer { pBuffer = nil; }
     _ = (pFile).Close();
     return p;
 }

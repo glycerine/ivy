@@ -265,8 +265,7 @@ func Acb_VerilogSimpleLex(pFileName string, pNames *Abc_Nam_t) *Vec_Int_t {
         }
         pToken = strtok( nil, "  \n\r\t(),;=" );
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return vBuffer;
 }
 func Acb_WireIsTarget(Token int32, pNames *Abc_Nam_t) int32 {
@@ -397,8 +396,7 @@ func Acb_ReadWeightMap(pFileName string, pNames *Abc_Nam_t) *Vec_Int_t {
         pToken = strtok( nil, "  \n\r(),;" );
         pNum = strtok( nil, "  \n\r(),;" );
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return vWeights;
 }
 
@@ -2426,8 +2424,7 @@ func Acb_GenerateFileOut(vPatchLine *Vec_Str_t, pFileNameF string, pFileNameOut 
         if vPatch != nil {
             fmt.Fprintf(pFileOut, "\n%s\n", Vec_StrArray(vPatch)); }
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     _ = (pFileOut).Close();
 }
 
@@ -2735,8 +2732,7 @@ func Acb_TransformPatchFunctions(vSops *Vec_Ptr_t, vSupps *Vec_Wec_t, pvUsed **V
             }
             pToken = strtok( nil, "\n" );
         }
-        // inlining of macro ABC_FREE
-        ((pStrCopy) ? (free((char *) (pStrCopy)), (pStrCopy) = 0) : 0);
+        pStrCopy = nil;
     }
     // create common order
     // inlining of macro Vec_WecForEachLevel
@@ -2909,8 +2905,7 @@ func Acb_NtkEcoPerform(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t, pFileName []string, n
             }
             if (nTimeout != 0) && (Abc_Clock() - clkStart)/int64(time.Second) >= nTimeout {
                 Vec_IntFreeP( &vSupp );
-                // inlining of macro ABC_FREE
-                ((pSop) ? (free((char *) (pSop)), (pSop) = 0) : 0);
+                pSop = nil;
                 fmt.Printf("The target computation timed out after %d seconds.\n", nTimeout);
                 RetValue = 0;
                 goto cleanup;

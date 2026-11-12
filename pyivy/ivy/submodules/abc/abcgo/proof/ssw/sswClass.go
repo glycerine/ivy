@@ -197,14 +197,10 @@ func Ssw_ClassesStop(p *Ssw_Cla_t) {
     if p.vClassNew {    Vec_PtrFree( p.vClassNew ); }
     if p.vClassOld {    Vec_PtrFree( p.vClassOld ); }
     Vec_PtrFree( p.vRefined );
-    // inlining of macro ABC_FREE
-    ((p.pId2Class) ? (free((char *) (p.pId2Class)), (p.pId2Class) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pClassSizes) ? (free((char *) (p.pClassSizes)), (p.pClassSizes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemClasses) ? (free((char *) (p.pMemClasses)), (p.pMemClasses) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pId2Class = nil;
+    p.pClassSizes = nil;
+    p.pMemClasses = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -582,10 +578,8 @@ func Ssw_ClassesPrepareRehash(p *Ssw_Cla_t, vCands *Vec_Ptr_t, fConstCorr int32)
     }
     p.pMemClassesFree += nEntries2;
     assert(nEntries == nEntries2, "nEntries == nEntries2");
-    // inlining of macro ABC_FREE
-    ((ppTable) ? (free((char *) (ppTable)), (ppTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppNexts) ? (free((char *) (ppNexts)), (ppNexts) = 0) : 0);
+    ppTable = nil;
+    ppNexts = nil;
     // now it is time to refine the classes
     return Ssw_ClassesRefine( p, 1 );
 }
@@ -839,8 +833,7 @@ func Ssw_ClassesPrepareFromReprs(pAig *Aig_Man_t) *Ssw_Cla_t {
     p.pMemClassesFree = p.pMemClasses + nEntries;
     p.nLits = nEntries - p.nClasses;
     assert(memcmp(pClassSizes, p.pClassSizes, sizeof(int)*Aig_ManObjNumMax(pAig)) == 0, "memcmp(pClassSizes, p.pClassSizes, sizeof(int)*Aig_ManObjNumMax(pAig)) == 0");
-    // inlining of macro ABC_FREE
-    ((pClassSizes) ? (free((char *) (pClassSizes)), (pClassSizes) = 0) : 0);
+    pClassSizes = nil;
 //    Abc_Print( 1, "After converting:\n" );
 //    Ssw_ClassesPrint( p, 0 );
     return p;

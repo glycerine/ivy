@@ -214,20 +214,20 @@ func Gia_ManCounterExampleValueStart(pGia *Gia_Man_t, pCex *Abc_Cex_t) {
     assert(pGia.pData2 == nil, "pGia.pData2 == nil");    // if this fail, there may be a memory leak
     // allocate memory to store simulation bits for internal nodes
     // inlining of macro ABC_CALLOC
-    pGia.pData2 = ((unsigned *) calloc((size_t)(Abc_BitWordNum( (pCex.iFrame + 1) * Gia_ManObjNum(pGia) )), sizeof(unsigned)));
+    pGia.pData2 = ((unsigned *) calloc((size_t)(Abc_BitWordNum( (pCex.IFrame + 1) * Gia_ManObjNum(pGia) )), sizeof(unsigned)));
     // the register values in the counter-example should be zero
     // inlining of macro Gia_ManForEachRo
     for  k = 0; (k < Gia_ManRegNum(pGia)) && ((pObj) = Gia_ManCi(pGia, Gia_ManPiNum(pGia)+k)); k++  {
-        assert(Abc_InfoHasBit(pCex.pData, iBit++) == 0, "Abc_InfoHasBit(pCex.pData, iBit++) == 0");
+        assert(Abc_InfoHasBit(pCex.PData, iBit++) == 0, "Abc_InfoHasBit(pCex.PData, iBit++) == 0");
     }
     // iterate through the timeframes
     nObjs = Gia_ManObjNum(pGia);
-    for  i = 0; i <= pCex.iFrame; i++  {
+    for  i = 0; i <= pCex.IFrame; i++  {
         // no need to set constant-0 node
         // set primary inputs according to the counter-example
         // inlining of macro Gia_ManForEachPi
         for  k = 0; (k < Gia_ManPiNum(pGia)) && ((pObj) = Gia_ManCi(pGia, k)); k++  {
-            if Abc_InfoHasBit(pCex.pData, iBit++) {
+            if Abc_InfoHasBit(pCex.PData, iBit++) {
                 Abc_InfoSetBit( (unsigned *)pGia.pData2, nObjs * i + Gia_ObjId(pGia, pObj) ); }
         }
         // compute values for each node
@@ -246,7 +246,7 @@ func Gia_ManCounterExampleValueStart(pGia *Gia_Man_t, pCex *Abc_Cex_t) {
             if Val0 ^ Gia_ObjFaninC0(pObj) {
                 Abc_InfoSetBit( (unsigned *)pGia.pData2, nObjs * i + Gia_ObjId(pGia, pObj) ); }
         }
-        if i == pCex.iFrame {
+        if i == pCex.IFrame {
             continue; }
         // transfer values to the register output of the next frame
         // inlining of macro Gia_ManForEachRiRo
@@ -255,9 +255,9 @@ func Gia_ManCounterExampleValueStart(pGia *Gia_Man_t, pCex *Abc_Cex_t) {
                 Abc_InfoSetBit( (unsigned *)pGia.pData2, nObjs * (i+1) + Gia_ObjId(pGia, pObjRo) ); }
         }
     }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
+    assert(iBit == pCex.NBits, "iBit == pCex.NBits");
     // check that the counter-example is correct, that is, the corresponding output is asserted
-    assert(Abc_InfoHasBit( (unsigned *)pGia.pData2, nObjs * pCex.iFrame + Gia_ObjId(pGia, Gia_ManCo(pGia, pCex.iPo)) ), "Abc_InfoHasBit( (unsigned *)pGia.pData2, nObjs * pCex.iFrame + Gia_ObjId(pGia, Gia_ManCo(pGia, pCex.iPo)) )");
+    assert(Abc_InfoHasBit( (unsigned *)pGia.pData2, nObjs * pCex.IFrame + Gia_ObjId(pGia, Gia_ManCo(pGia, pCex.IPo)) ), "Abc_InfoHasBit( (unsigned *)pGia.pData2, nObjs * pCex.IFrame + Gia_ObjId(pGia, Gia_ManCo(pGia, pCex.IPo)) )");
 }
 
 /**Function*************************************************************
@@ -274,7 +274,7 @@ func Gia_ManCounterExampleValueStart(pGia *Gia_Man_t, pCex *Abc_Cex_t) {
 func Gia_ManCounterExampleValueStop(pGia *Gia_Man_t) {
     assert(pGia.pData2 != nil, "pGia.pData2 != nil");    // if this fail, we try to call this procedure more than once
     // inlining of macro ABC_FREE
-    ((pGia.pData2) ? (free((char *) (pGia.pData2)), (pGia.pData2) = 0) : 0);
+    pGia.pData2 = nil;
     pGia.pData2 = nil;
 }
 
@@ -309,8 +309,8 @@ func Gia_ManCounterExampleValueLookup(pGia *Gia_Man_t, Id int32, iFrame int32) i
 ***********************************************************************/
 func Gia_ManCounterExampleValueTest(pGia *Gia_Man_t, pCex *Abc_Cex_t) {
     var pObj *Gia_Obj_t  = Gia_ManObj( pGia, Gia_ManObjNum(pGia)/2 );
-    var iFrame int32  = Abc_MaxInt( 0, pCex.iFrame - 1 );
-    fmt.Printf("\nUsing counter-example, which asserts output %d in frame %d.\n", pCex.iPo, pCex.iFrame);
+    var iFrame int32  = Abc_MaxInt( 0, pCex.IFrame - 1 );
+    fmt.Printf("\nUsing counter-example, which asserts output %d in frame %d.\n", pCex.IPo, pCex.IFrame);
     Gia_ManCounterExampleValueStart( pGia, pCex );
     fmt.Printf("Value of object %d in frame %d is %d.\n", Gia_ObjId(pGia, pObj), iFrame, Gia_ManCounterExampleValueLookup(pGia, Gia_ObjId(pGia, pObj), iFrame));
     Gia_ManCounterExampleValueStop( pGia );
@@ -332,23 +332,23 @@ func Gia_ManCexExtendToIncludeCurrentStates(p *Gia_Man_t, pCex *Abc_Cex_t) *Abc_
     var pNew *Abc_Cex_t;
     var pObj, pObjRo, pObjRi *Gia_Obj_t;
     var i, k, iBit int32;
-    assert(pCex.nRegs > 0, "pCex.nRegs > 0");
+    assert(pCex.NRegs > 0, "pCex.NRegs > 0");
     // start the counter-example
-    pNew = Abc_CexAlloc( 0, Gia_ManCiNum(p), pCex.iFrame + 1 );
-    pNew.iFrame = pCex.iFrame;
-    pNew.iPo    = pCex.iPo;
+    pNew = Abc_CexAlloc( 0, Gia_ManCiNum(p), pCex.IFrame + 1 );
+    pNew.iFrame = pCex.IFrame;
+    pNew.iPo    = pCex.IPo;
     // set const0
     Gia_ManConst0(p).fMark0 = 0;
     // set init state
     // inlining of macro Gia_ManForEachRi
     for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
-        pObjRi.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++);
+        pObjRi.fMark0 = Abc_InfoHasBit(pCex.PData, iBit++);
     }
-    assert(iBit == pCex.nRegs, "iBit == pCex.nRegs");
-    for  i = 0; i <= pCex.iFrame; i++  {
+    assert(iBit == pCex.NRegs, "iBit == pCex.NRegs");
+    for  i = 0; i <= pCex.IFrame; i++  {
         // inlining of macro Gia_ManForEachPi
         for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
-            pObj.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++);
+            pObj.fMark0 = Abc_InfoHasBit(pCex.PData, iBit++);
         }
         // inlining of macro Gia_ManForEachRiRo
         for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
@@ -368,8 +368,8 @@ func Gia_ManCexExtendToIncludeCurrentStates(p *Gia_Man_t, pCex *Abc_Cex_t) *Abc_
             pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
         }
     }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    assert(Gia_ManPo(p, pCex.iPo).fMark0 == 1, "Gia_ManPo(p, pCex.iPo).fMark0 == 1");
+    assert(iBit == pCex.NBits, "iBit == pCex.NBits");
+    assert(Gia_ManPo(p, pCex.IPo).fMark0 == 1, "Gia_ManPo(p, pCex.IPo).fMark0 == 1");
     Gia_ManCleanMark0(p);
     return pNew;
 }
@@ -389,23 +389,23 @@ func Gia_ManCexExtendToIncludeAllObjects(p *Gia_Man_t, pCex *Abc_Cex_t) *Abc_Cex
     var pNew *Abc_Cex_t;
     var pObj, pObjRo, pObjRi *Gia_Obj_t;
     var i, k, iBit int32;
-    assert(pCex.nRegs > 0, "pCex.nRegs > 0");
+    assert(pCex.NRegs > 0, "pCex.NRegs > 0");
     // start the counter-example
-    pNew = Abc_CexAlloc( 0, Gia_ManObjNum(p), pCex.iFrame + 1 );
-    pNew.iFrame = pCex.iFrame;
-    pNew.iPo    = pCex.iPo;
+    pNew = Abc_CexAlloc( 0, Gia_ManObjNum(p), pCex.IFrame + 1 );
+    pNew.iFrame = pCex.IFrame;
+    pNew.iPo    = pCex.IPo;
     // set const0
     Gia_ManConst0(p).fMark0 = 0;
     // set init state
     // inlining of macro Gia_ManForEachRi
     for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {
-        pObjRi.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++);
+        pObjRi.fMark0 = Abc_InfoHasBit(pCex.PData, iBit++);
     }
-    assert(iBit == pCex.nRegs, "iBit == pCex.nRegs");
-    for  i = 0; i <= pCex.iFrame; i++  {
+    assert(iBit == pCex.NRegs, "iBit == pCex.NRegs");
+    for  i = 0; i <= pCex.IFrame; i++  {
         // inlining of macro Gia_ManForEachPi
         for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
-            pObj.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++);
+            pObj.fMark0 = Abc_InfoHasBit(pCex.PData, iBit++);
         }
         // inlining of macro Gia_ManForEachRiRo
         for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
@@ -425,8 +425,8 @@ func Gia_ManCexExtendToIncludeAllObjects(p *Gia_Man_t, pCex *Abc_Cex_t) *Abc_Cex
             pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
         }
     }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    assert(Gia_ManPo(p, pCex.iPo).fMark0 == 1, "Gia_ManPo(p, pCex.iPo).fMark0 == 1");
+    assert(iBit == pCex.NBits, "iBit == pCex.NBits");
+    assert(Gia_ManPo(p, pCex.IPo).fMark0 == 1, "Gia_ManPo(p, pCex.IPo).fMark0 == 1");
     Gia_ManCleanMark0(p);
     return pNew;
 }
@@ -510,8 +510,8 @@ func Gia_ManMinCex(p *Gia_Man_t, pCex *Abc_Cex_t) {
     // CEX minimization
     clk = Abc_Clock();
     pCexCare = Bmc_CexCareMinimizeAig( p, Gia_ManPiNum(p), pCex, 1, 1, 1 );
-    for  i = pCexCare.nRegs; i < pCexCare.nBits; i++  {
-        Counter += Abc_InfoHasBit(pCexCare.pData, i);
+    for  i = pCexCare.NRegs; i < pCexCare.NBits; i++  {
+        Counter += Abc_InfoHasBit(pCexCare.PData, i);
     }
     Abc_CexFree( pCexCare );
     fmt.Printf("Care bits = %d. ", Counter);
@@ -519,17 +519,17 @@ func Gia_ManMinCex(p *Gia_Man_t, pCex *Abc_Cex_t) {
 
     // SAT instance
     clk = Abc_Clock();
-    pFrames = Gia_ManFramesForCexMin( p, pCex.iFrame + 1 );
+    pFrames = Gia_ManFramesForCexMin( p, pCex.IFrame + 1 );
     pCnf = (Cnf_Dat_t*)Mf_ManGenerateCnf( pFrames, 8, 0, 0, 0, 0 );
-    iFirstVar = pCnf.nVars - (pCex.iFrame+1) * pCex.nPis;
+    iFirstVar = pCnf.nVars - (pCex.IFrame+1) * pCex.NPis;
     pSat = (sat_solver*)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
     iLit = Abc_Var2Lit( 1, 1 );
     status = sat_solver_addclause( pSat, &iLit, &iLit + 1 );
     assert((status != 0), "status");
     // create literals
     vLits = Vec_IntAlloc( 100 );
-    for  i = pCex.nRegs; i < pCex.nBits; i++  {
-        Vec_IntPush( vLits, Abc_Var2Lit(iFirstVar + i - pCex.nRegs, !Abc_InfoHasBit(pCex.pData, i)) );
+    for  i = pCex.NRegs; i < pCex.NBits; i++  {
+        Vec_IntPush( vLits, Abc_Var2Lit(iFirstVar + i - pCex.NRegs, !Abc_InfoHasBit(pCex.PData, i)) );
     }
     Abc_PrintTime( 1, "SAT solver", Abc_Clock() - clk );
 
@@ -560,13 +560,13 @@ func Gia_ManMinCex(p *Gia_Man_t, pCex *Abc_Cex_t) {
 
 func Bmc_CexCareDeriveCex(pCex *Abc_Cex_t, iFirstVar int32, pLits *int32, nLits int32) *Abc_Cex_t {
     var pCexMin *Abc_Cex_t; var i int32;
-    pCexMin = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 );
-    pCexMin.iPo    = pCex.iPo;
-    pCexMin.iFrame = pCex.iFrame;
+    pCexMin = Abc_CexAlloc( pCex.NRegs, pCex.NPis, pCex.IFrame + 1 );
+    pCexMin.IPo    = pCex.IPo;
+    pCexMin.IFrame = pCex.IFrame;
     for  i = 0; i < nLits; i++  {
         var PiNum int32  = Abc_Lit2Var(pLits[i]) - iFirstVar;
-        assert(PiNum >= 0 && PiNum < pCex.nBits - pCex.nRegs, "PiNum >= 0 && PiNum < pCex.nBits - pCex.nRegs");
-        Abc_InfoSetBit( pCexMin.pData, pCexMin.nRegs + PiNum );
+        assert(PiNum >= 0 && PiNum < pCex.NBits - pCex.NRegs, "PiNum >= 0 && PiNum < pCex.NBits - pCex.NRegs");
+        Abc_InfoSetBit( pCexMin.PData, pCexMin.NRegs + PiNum );
     }
     return pCexMin;
 }
@@ -586,8 +586,8 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, pCex *Abc_Cex_t, fHighEffort i
     // CEX minimization
     clk = Abc_Clock();
     pCexBest = Bmc_CexCareMinimizeAig( p, Gia_ManPiNum(p), pCex, 1, 1, fVerbose );
-    for  i = pCexBest.nRegs; i < pCexBest.nBits; i++  {
-        CountBest += Abc_InfoHasBit(pCexBest.pData, i);
+    for  i = pCexBest.NRegs; i < pCexBest.NBits; i++  {
+        CountBest += Abc_InfoHasBit(pCexBest.PData, i);
     }
     if fVerbose != 0 {
         fmt.Printf("Care bits = %d. ", CountBest);
@@ -596,17 +596,17 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, pCex *Abc_Cex_t, fHighEffort i
 
     // SAT instance
     clk = Abc_Clock();
-    pFrames = Gia_ManFramesForCexMin( p, pCex.iFrame + 1 );
+    pFrames = Gia_ManFramesForCexMin( p, pCex.IFrame + 1 );
     pCnf = (Cnf_Dat_t*)Mf_ManGenerateCnf( pFrames, 8, 0, 0, 0, 0 );
-    iFirstVar = pCnf.nVars - (pCex.iFrame+1) * pCex.nPis;
+    iFirstVar = pCnf.nVars - (pCex.IFrame+1) * pCex.NPis;
     pSat = (sat_solver*)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
     iLit = Abc_Var2Lit( 1, 1 );
     status = sat_solver_addclause( pSat, &iLit, &iLit + 1 );
     assert((status != 0), "status");
     // create literals
     vTemp = Vec_IntAlloc( 100 );
-    for  i = pCex.nRegs; i < pCex.nBits; i++  {
-        Vec_IntPush( vTemp, Abc_Var2Lit(iFirstVar + i - pCex.nRegs, !Abc_InfoHasBit(pCex.pData, i)) );
+    for  i = pCex.NRegs; i < pCex.NBits; i++  {
+        Vec_IntPush( vTemp, Abc_Var2Lit(iFirstVar + i - pCex.NRegs, !Abc_InfoHasBit(pCex.PData, i)) );
     }
     if fVerbose != 0 {
     Abc_PrintTime( 1, "Constructing SAT solver", Abc_Clock() - clk ); }
@@ -628,7 +628,7 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, pCex *Abc_Cex_t, fHighEffort i
         if CountBest > nFinal {
             CountBest = nFinal;
             // inlining of macro ABC_FREE
-            ((pCexBest) ? (free((char *) (pCexBest)), (pCexBest) = 0) : 0);
+            pCexBest = nil;
             pCexBest = Bmc_CexCareDeriveCex( pCex, iFirstVar, pFinal, nFinal );
         }
         if !(fHighEffort != 0) {
@@ -644,13 +644,13 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, pCex *Abc_Cex_t, fHighEffort i
         if CountBest > nFinal {
             CountBest = nFinal;
             // inlining of macro ABC_FREE
-            ((pCexBest) ? (free((char *) (pCexBest)), (pCexBest) = 0) : 0);
+            pCexBest = nil;
             pCexBest = Bmc_CexCareDeriveCex( pCex, iFirstVar, Vec_IntArray(vLits), nFinal );
         }
     }
     if fVerbose != 0 {
         fmt.Printf("Final    :    ");
-        Bmc_CexPrint( pCexBest, pCexBest.nPis, 0 );
+        Bmc_CexPrint( pCexBest, pCexBest.NPis, 0 );
     }
     // cleanup
     Vec_IntFreeP( &vLits );

@@ -525,7 +525,7 @@ func Sle_ManStop(p *Sle_Man_t) {
     Vec_IntFree( p.vPolars );
     Vec_IntFree( p.vLits );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

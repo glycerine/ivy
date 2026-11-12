@@ -268,8 +268,7 @@ func Abs_ManFreeAray(p *Vec_Ptr_t) {
     var i int32;
     // inlining of macro Vec_PtrForEachEntry
     for  i = 0; (i < Vec_PtrSize(p)) && (((pTemp) = (void *)Vec_PtrEntry(p, i)), 1); i++  {
-        // inlining of macro ABC_FREE
-        ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+        pTemp = nil;
     }
     Vec_PtrFree( p );
 }
@@ -361,8 +360,7 @@ func Saig_BmcManStop(p *Saig_Bmc_t) {
     if p.pSat2 { satoko_destroy( p.pSat2 ); }
     Vec_PtrFree( p.vTargets );
     Vec_IntFree( p.vVisited );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

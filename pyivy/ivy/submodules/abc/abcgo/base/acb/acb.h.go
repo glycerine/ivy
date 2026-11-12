@@ -731,8 +731,7 @@ func Acb_NtkFree(p *Acb_Ntk_t) {
     Vec_IntErase( &p.vArray0 );    
     Vec_IntErase( &p.vArray1 );    
     Vec_IntErase( &p.vArray2 );    
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 static inline int Acb_NtkNewStrId( Acb_Ntk_t * pNtk, char * format, ...  )
 {
@@ -980,8 +979,7 @@ func Acb_ManFree(p *Acb_Man_t) {
     for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  { 
         Acb_NtkFree( pNtk );
     }
-    // inlining of macro ABC_FREE
-    ((p.vNtks.pArray) ? (free((char *) (p.vNtks.pArray)), (p.vNtks.pArray) = 0) : 0);
+    p.vNtks.pArray = nil;
     Abc_NamDeref( p.pStrs );
     Abc_NamDeref( p.pFuns );
     Abc_NamDeref( p.pMods );
@@ -992,12 +990,9 @@ func Acb_ManFree(p *Acb_Man_t) {
     Vec_IntErase( &p.vUsed2 );
     Vec_StrErase( &p.vOut );
     Vec_StrErase( &p.vOut2 );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p.pSpec = nil;
+    p = nil;
 }
 func Acb_ManGetMap(p *Acb_Man_t, i int32) int32 {
     return Vec_IntGetEntry(&p.vNameMap, i);
@@ -1109,10 +1104,8 @@ func Acb_ManBoxNumRec(p *Acb_Man_t, pnPrims *int32, pnUsers *int32) {
     Acb_ManBoxNumRec_rec( pNtk, pCountP, pCountU );
     *pnPrims = pCountP[Acb_NtkId(pNtk)];
     *pnUsers = pCountU[Acb_NtkId(pNtk)];
-    // inlining of macro ABC_FREE
-    ((pCountP) ? (free((char *) (pCountP)), (pCountP) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pCountU) ? (free((char *) (pCountU)), (pCountU) = 0) : 0);
+    pCountP = nil;
+    pCountU = nil;
 }
 func Acb_ManPrintStats(p *Acb_Man_t, nModules int32, fVerbose int32) {
     var pNtk *Acb_Ntk_t; var i, nPrims, nUsers int32;

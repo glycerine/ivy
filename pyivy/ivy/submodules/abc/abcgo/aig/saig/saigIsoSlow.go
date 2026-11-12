@@ -472,12 +472,9 @@ Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int
     Vec_PtrFree( p.vTemp2 );
     Vec_PtrFree( p.vClasses );
     Vec_PtrFree( p.vSingles );
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p.pObjs = nil;
+    p = nil;
 }
 
 

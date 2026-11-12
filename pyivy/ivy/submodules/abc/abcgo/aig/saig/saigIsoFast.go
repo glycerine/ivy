@@ -94,12 +94,9 @@ func Iso_StoStop(p *Iso_Sto_t) {
     Vec_IntFree( p.vPlaces );
     Vec_IntFree( p.vVisited );
     Vec_PtrFree( p.vRoots );
-    // inlining of macro ABC_FREE
-    ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pCounters = nil;
+    p.pData = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -231,8 +228,7 @@ func Iso_StoCollectInfo(p *Iso_Sto_t, pPo *Aig_Obj_t) *Vec_Int_t {
         Entry = (Entry << AIG_ISO_NUM) | Vec_IntEntry( p.vPlaces, pPerm[i] );
         Vec_IntPush( vInfo, Entry );
     }
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
 
     // show the final result
     if fVerboseShow != 0 {

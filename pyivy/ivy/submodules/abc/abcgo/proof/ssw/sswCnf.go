@@ -88,8 +88,7 @@ func Ssw_SatStop(p *Ssw_Sat_t) {
     Vec_IntFree( p.vSatVars );
     Vec_PtrFree( p.vFanins );
     Vec_PtrFree( p.vUsedPis );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -260,8 +259,7 @@ func Ssw_AddClausesSuper(p *Ssw_Sat_t, pNode *Aig_Obj_t, vSuper *Vec_Ptr_t) {
     }
     RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************

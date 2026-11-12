@@ -184,8 +184,7 @@ func Io_WriteBook(pNtk *Abc_Ntk_t, FileName string) {
     pFilePl  = os.OpenFile(strcat(FileExt,".pl"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
     FileExt = FileName;
     pFileWts   = os.OpenFile(strcat(FileExt,".wts"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    // inlining of macro ABC_FREE
-    ((FileExt) ? (free((char *) (FileExt)), (FileExt) = 0) : 0);
+    FileExt = nil;
 
     Io_NtkBuildLayout( pFileScl, pFilePl, pNtk, 1.0, 10, coreCellArea );
     _ = (pFileScl).Close();

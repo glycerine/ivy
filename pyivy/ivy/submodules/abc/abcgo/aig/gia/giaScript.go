@@ -480,9 +480,9 @@ func Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio 
     }
     // copy names
     // inlining of macro ABC_FREE
-    ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);
+    pNew.pName = "";
     // inlining of macro ABC_FREE
-    ((pNew.pSpec) ? (free((char *) (pNew.pSpec)), (pNew.pSpec) = 0) : 0);
+    pNew.pSpec = "";
     pNew.pName = Abc_UtilStrsav(pInit.pName);
     pNew.pSpec = Abc_UtilStrsav(pInit.pSpec);
     Gia_ManTransferTiming( pNew, pInit );

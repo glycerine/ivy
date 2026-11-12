@@ -230,23 +230,15 @@ ABC_PRT( "TOTAL   ", p->timeTotal );
 //    Vec_IntFree( p->vBreaks );
     Vec_VecFree( (Vec_Vec_t *)p.vAntClas );
 //    ABC_FREE( p->pInters );
-    // inlining of macro ABC_FREE
-    ((p.pProofNums) ? (free((char *) (p.pProofNums)), (p.pProofNums) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);
+    p.pProofNums = nil;
+    p.pTrail = nil;
+    p.pAssigns = nil;
+    p.pSeens = nil;
 //    ABC_FREE( p->pVarTypes );
-    // inlining of macro ABC_FREE
-    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pReasons = nil;
+    p.pWatches = nil;
+    p.pResLits = nil;
+    p = nil;
 }
 
 

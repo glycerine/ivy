@@ -96,7 +96,7 @@ func Eso_ManStop(p *Eso_Man_t) {
     Vec_IntFree( p.vCube2 );
     Vec_IntFree( p.vCube );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
     
 

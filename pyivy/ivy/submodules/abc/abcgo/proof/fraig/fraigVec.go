@@ -71,10 +71,8 @@ func Fraig_NodeVecAlloc(nCap int32) *Fraig_NodeVec_t {
 
 ***********************************************************************/
 func Fraig_NodeVecFree(p *Fraig_NodeVec_t) {
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pArray = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

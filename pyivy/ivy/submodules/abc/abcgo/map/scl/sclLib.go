@@ -391,29 +391,23 @@ func Abc_SclLibAlloc() *SC_Lib {
 func Abc_SclWireLoadFree(p *SC_WireLoad) {
     Vec_IntErase( &p.vFanout );
     Vec_FltErase( &p.vLen );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclWireLoadSelFree(p *SC_WireLoadSel) {
     Vec_FltErase( &p.vAreaFrom );
     Vec_FltErase( &p.vAreaTo );
     Vec_PtrFreeData( &p.vWireLoadModel );
     Vec_PtrErase( &p.vWireLoadModel );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclTableTemplFree(p *SC_TableTempl) {
     Vec_PtrFreeData( &p.vVars );
     Vec_PtrErase( &p.vVars );
     Vec_VecErase( (Vec_Vec_t *)&p.vIndex );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclSurfaceFree(p *SC_Surface) {
     Vec_FltErase( &p.vIndex0 );
@@ -422,8 +416,7 @@ func Abc_SclSurfaceFree(p *SC_Surface) {
     Vec_IntErase( &p.vIndex1I );
     Vec_VecErase( (Vec_Vec_t *)&p.vData );
     Vec_VecErase( (Vec_Vec_t *)&p.vDataI );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
+    p.pName = nil;
 //    ABC_FREE( p );
 }
 func Abc_SclTimingFree(p *SC_Timing) {
@@ -431,12 +424,9 @@ func Abc_SclTimingFree(p *SC_Timing) {
     Abc_SclSurfaceFree( &p.pCellFall );
     Abc_SclSurfaceFree( &p.pRiseTrans );
     Abc_SclSurfaceFree( &p.pFallTrans );
-    // inlining of macro ABC_FREE
-    ((p.related_pin) ? (free((char *) (p.related_pin)), (p.related_pin) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.when_text) ? (free((char *) (p.when_text)), (p.when_text) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.related_pin = nil;
+    p.when_text = nil;
+    p = nil;
 }
 func Abc_SclTimingsFree(p *SC_Timings) {
     var pTemp *SC_Timing;
@@ -446,10 +436,8 @@ func Abc_SclTimingsFree(p *SC_Timings) {
         Abc_SclTimingFree( pTemp );
     }
     Vec_PtrErase( &p.vTimings );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclPinFree(p *SC_Pin) {
     var pTemp *SC_Timings;
@@ -461,12 +449,9 @@ func Abc_SclPinFree(p *SC_Pin) {
     }
     Vec_PtrErase( &p.vRTimings );
     Vec_WrdErase( &p.vFunc );
-    // inlining of macro ABC_FREE
-    ((p.func_text) ? (free((char *) (p.func_text)), (p.func_text) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.func_text = nil;
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclCellFree(p *SC_Cell) {
     var pTemp *SC_Pin;
@@ -477,10 +462,8 @@ func Abc_SclCellFree(p *SC_Cell) {
         Abc_SclPinFree( pTemp );
     }
     Vec_PtrErase( &p.vPins );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p = nil;
 }
 func Abc_SclLibFree(p *SC_Lib) {
     var pWL *SC_WireLoad;
@@ -513,18 +496,12 @@ func Abc_SclLibFree(p *SC_Lib) {
     }
     Vec_PtrErase( &p.vCells );
     Vec_PtrErase( &p.vCellClasses );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.default_wire_load) ? (free((char *) (p.default_wire_load)), (p.default_wire_load) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.default_wire_load_sel) ? (free((char *) (p.default_wire_load_sel)), (p.default_wire_load_sel) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p.pFileName = nil;
+    p.default_wire_load = nil;
+    p.default_wire_load_sel = nil;
+    p.pBins = nil;
+    p = nil;
 }
 
 

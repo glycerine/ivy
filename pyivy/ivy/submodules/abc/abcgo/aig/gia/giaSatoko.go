@@ -131,7 +131,7 @@ pTemp++; }
                     satoko_destroy(pSat);
                     Vec_IntFree( vLits );
                     // inlining of macro ABC_FREE
-                    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+                    pBuffer = "";
                     return nil;
                 }
                 Vec_IntClear( vLits );
@@ -147,7 +147,7 @@ pTemp++; }
         }
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = "";
     Vec_IntFree( vLits );
     return pSat;
 }

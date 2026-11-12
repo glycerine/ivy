@@ -91,8 +91,7 @@ Count++; }
         }
     
     } else {
-        // inlining of macro ABC_FREE
-        ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+        p.pRefs = nil;
         Gia_ManCreateRefs( p );
         // inlining of macro Gia_ManForEachAnd
         for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
@@ -128,8 +127,7 @@ Count++; }
             Counts[Count]++;
         }
         }
-        // inlining of macro ABC_FREE
-        ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+        p.pRefs = nil;
     }
     Gia_ManHashStop( p );
     if fVerbose != 0 {
@@ -1052,8 +1050,7 @@ func Gia_ManDupWithArtificalFaddBoxes(p *Gia_Man_t, fUseFanout int32, fXorTrick 
     }
     Gia_ManCleanPhase( p );
     Vec_IntFreeP( &vCarries );
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pRefs = nil;
     assert(!Gia_ManHasDangling(pNew), "!Gia_ManHasDangling(pNew)");
     // other information
 //    nBoxes += (Gia_ManCiNum(pNew) - Gia_ManCiNum(p)) / 2;

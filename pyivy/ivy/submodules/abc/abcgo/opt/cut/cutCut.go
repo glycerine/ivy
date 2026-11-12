@@ -2,338 +2,143 @@ package cut
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [cutNode.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [K-feasible cut computation package.]
-
-  Synopsis    [Procedures to compute cuts for a node.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cutNode.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cutInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
-    var pCut *Cut_Cut_t;
-    // cut allocation
-    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );
-    memset( pCut, 0, sizeof(Cut_Cut_t) );
-    pCut.nVarsMax   = p.pParams.nVarsMax;
-    pCut.fSimul     = p.fSimul;
-    // statistics
-    p.nCutsAlloc++;
-    p.nCutsCur++;
-    if p.nCutsPeak < p.nCutsAlloc - p.nCutsDealloc {
-        p.nCutsPeak = p.nCutsAlloc - p.nCutsDealloc; }
-    return pCut;
+	p.check()
+	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p, live: true}
+	if p.params.FTruth != 0 {
+		c.truth = make([]uint32, Cut_TruthWords(c.NVarsMax))
+	}
+	p.owned[c] = struct{}{}
+	p.stats.Allocated++
+	p.stats.Current++
+	p.stats.Peak = max(p.stats.Peak, p.stats.Current)
+	return c
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recybles the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutRecycle(p *Cut_Man_t, pCut *Cut_Cut_t) {
-    p.nCutsDealloc++;
-    p.nCutsCur--;
-    if pCut.nLeaves == 1 {
-        p.nCutsTriv--; }
-    Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );
+func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {
+	if c == nil || !c.live || c.owner != p {
+		panic("cut: foreign or recycled cut")
+	}
+	delete(p.owned, c)
+	c.live = false
+	c.owner = nil
+	p.stats.Recycled++
+	p.stats.Current--
+	if len(c.leaves) == 1 {
+		p.stats.Trivial--
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Compares two cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutCompare(pCut1 *Cut_Cut_t, pCut2 *Cut_Cut_t) int32 {
-    var i int32;
-    if pCut1.nLeaves < pCut2.nLeaves {
-        return -1; }
-    if pCut1.nLeaves > pCut2.nLeaves {
-        return 1; }
-    for  i = 0; i < int32(pCut1.nLeaves); i++  {
-        if pCut1.pLeaves[i] < pCut2.pLeaves[i] {
-            return -1; }
-        if pCut1.pLeaves[i] > pCut2.pLeaves[i] {
-            return 1; }
-    }
-    return 0;
+func Cut_CutCompare(a, b *Cut_Cut_t) int32 {
+	if len(a.leaves) < len(b.leaves) {
+		return -1
+	}
+	if len(a.leaves) > len(b.leaves) {
+		return 1
+	}
+	for i, x := range a.leaves {
+		if x < b.leaves[i] {
+			return -1
+		}
+		if x > b.leaves[i] {
+			return 1
+		}
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutDupList(p *Cut_Man_t, pList *Cut_Cut_t) *Cut_Cut_t {
-    var pHead *Cut_Cut_t = nil;
-    var ppTail **Cut_Cut_t = &pHead;
-    var pTemp, pCopy *Cut_Cut_t;
-    if pList == nil {
-        return nil; }
-    // inlining of macro Cut_ListForEachCut
-    for  pTemp = pList;                                             pTemp;                                                     pTemp = pTemp.pNext  {
-        pCopy = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );
-        memcpy( pCopy, pTemp, (size_t)p.EntrySize );
-        *ppTail = pCopy;
-        ppTail = &pCopy.pNext;
-    }
-    *ppTail = nil;
-    return pHead;
+func Cut_CutDupList(p *Cut_Man_t, list *Cut_Cut_t) *Cut_Cut_t {
+	var head *Cut_Cut_t
+	tail := &head
+	for c := list; c != nil; c = c.Next {
+		copy := Cut_CutAlloc(p)
+		copy.Num0, copy.Num1 = c.Num0, c.Num1
+		copy.proof = c.proof
+		copy.FSimul, copy.FCompl = c.FSimul, c.FCompl
+		copy.USign, copy.UCanon0, copy.UCanon1 = c.USign, c.UCanon0, c.UCanon1
+		copy.leaves = append([]int32(nil), c.leaves...)
+		copy.truth = append(copy.truth[:0], c.truth...)
+		if len(copy.leaves) == 1 {
+			p.stats.Trivial++
+		}
+		*tail = copy
+		tail = &copy.Next
+	}
+	return head
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recycles the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutRecycleList(p *Cut_Man_t, pList *Cut_Cut_t) {
-    var pCut, pCut2 *Cut_Cut_t;
-    // inlining of macro Cut_ListForEachCutSafe
-    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {
-        Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );
-    }
+func Cut_CutRecycleList(p *Cut_Man_t, list *Cut_Cut_t) {
+	for list != nil {
+		next := list.Next
+		Cut_CutRecycle(p, list)
+		list = next
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of cuts in the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutCountList(pList *Cut_Cut_t) int32 {
-    var Counter int32;
-    // inlining of macro Cut_ListForEachCut
-    for  pList = pList;                                             (pList != nil);                                                     pList = pList.pNext  {
-        Counter++;
-    }
-    return Counter;
+func Cut_CutMergeLists(a, b *Cut_Cut_t) *Cut_Cut_t {
+	var head *Cut_Cut_t
+	tail := &head
+	for a != nil && b != nil {
+		var c *Cut_Cut_t
+		if Cut_CutCompare(a, b) < 0 {
+			c, a = a, a.Next
+		} else {
+			c, b = b, b.Next
+		}
+		*tail = c
+		tail = &c.Next
+	}
+	if a != nil {
+		*tail = a
+	} else {
+		*tail = b
+	}
+	return head
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Merges two NULL-terminated linked lists.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutMergeLists(pList1 *Cut_Cut_t, pList2 *Cut_Cut_t) *Cut_Cut_t {
-    var pList *Cut_Cut_t = nil;
-    var ppTail **Cut_Cut_t = &pList;
-    var pCut *Cut_Cut_t;
-    for  (pList1 != nil) && (pList2 != nil)  {
-        if Cut_CutCompare(pList1, pList2) < 0 {
-            pCut = pList1;
-            pList1 = pList1.pNext;
-        
-        } else {
-            pCut = pList2;
-            pList2 = pList2.pNext;
-        }
-        *ppTail = pCut;
-        ppTail = &pCut.pNext;
-    }
-    *ppTail = pList1? pList1: pList2;
-    return pList;
+func Cut_CutNumberList(list *Cut_Cut_t) {
+	var number uint16
+	for c := list; c != nil; c = c.Next {
+		c.Num0 = number & 2047
+		number++
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the number of the cuts in the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutNumberList(pList *Cut_Cut_t) {
-    var pCut *Cut_Cut_t;
-    var i int32;
-    // inlining of macro Cut_ListForEachCut
-    for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {
-        pCut.Num0 = i++;
-    }
+func Cut_CutCreateTriv(p *Cut_Man_t, node int32) *Cut_Cut_t {
+	if p.params.FSeq != 0 {
+		node <<= CUT_SHIFT
+	}
+	c := Cut_CutAlloc(p)
+	c.leaves = []int32{node}
+	c.USign = Cut_NodeSign(node)
+	for i := range c.truth {
+		c.truth[i] = 0xaaaaaaaa
+	}
+	p.stats.Trivial++
+	return c
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the trivial cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutCreateTriv(p *Cut_Man_t, Node int32) *Cut_Cut_t {
-    var pCut *Cut_Cut_t;
-    if p.pParams.fSeq {
-        Node <<= CUT_SHIFT; }
-    pCut = Cut_CutAlloc( p );
-    pCut.nLeaves    = 1;
-    pCut.pLeaves[0] = Node;
-    pCut.uSign      = Cut_NodeSign( Node );
-    if p.pParams.fTruth {
-/*
-        if ( pCut->nVarsMax == 4 )
-            Cut_CutWriteTruth( pCut, p->uTruthVars[0] );
-        else
-            Extra_BitCopy( pCut->nLeaves, p->uTruths[0], (uint8*)Cut_CutReadTruth(pCut) );
-*/
-        var pTruth *uint32  = Cut_CutReadTruth(pCut);
-        var i int32;
-        for  i = 0; i < p.nTruthWords; i++  {
-            pTruth[i] = 0xAAAAAAAA;
-        }
-    }
-    p.nCutsTriv++;
-    return pCut;
-} 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Print the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutPrint(pCut *Cut_Cut_t, fSeq int32) {
-    var i int32;
-    assert(pCut.nLeaves > 0, "pCut.nLeaves > 0");
-    fmt.Printf("%d : {", pCut.nLeaves);
-    for  i = 0; i < int32(pCut.nLeaves); i++  {
-        if fSeq != 0 {
-            fmt.Printf(" %d", pCut.pLeaves[i] >> CUT_SHIFT);
-            if pCut.pLeaves[i] & CUT_MASK {
-                fmt.Printf("(%d)", pCut.pLeaves[i] & CUT_MASK); }
-        
-        } else {
-            fmt.Printf(" %d", pCut.pLeaves[i]); }
-    }
-    fmt.Printf(" }");
-//    printf( "\nSign = " );
-//    Extra_PrintBinary( stdout, &pCut->uSign, 32 );
+func Cut_CutCountList(list *Cut_Cut_t) int32 {
+	var n int32
+	for ; list != nil; list = list.Next {
+		n++
+	}
+	return n
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Print the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutPrintList(pList *Cut_Cut_t, fSeq int32) {
-    var pCut *Cut_Cut_t;
-    for  pCut = pList; (pCut != nil); pCut = pCut.pNext  {
-        Cut_CutPrint( pCut, fSeq );
-fmt.Printf("\n");
-    }
+func Cut_CutPrint(c *Cut_Cut_t, seq int32) {
+	fmt.Printf("%d : {", len(c.leaves))
+	for _, leaf := range c.leaves {
+		if seq != 0 {
+			fmt.Printf(" %d(%d)", leaf>>CUT_SHIFT, leaf&CUT_MASK)
+		} else {
+			fmt.Printf(" %d", leaf)
+		}
+	}
+	fmt.Print(" }")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Consider dropping cuts if they are useless by now.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cut_CutPrintMerge(pCut *Cut_Cut_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t) {
-    fmt.Printf("\n");
-    fmt.Printf("%d : %5d %5d %5d %5d %5d\n", pCut0.nLeaves, pCut0.nLeaves > 0 ? pCut0.pLeaves[0] : -1, pCut0.nLeaves > 1 ? pCut0.pLeaves[1] : -1, pCut0.nLeaves > 2 ? pCut0.pLeaves[2] : -1, pCut0.nLeaves > 3 ? pCut0.pLeaves[3] : -1, pCut0.nLeaves > 4 ? pCut0.pLeaves[4] : -1);
-    fmt.Printf("%d : %5d %5d %5d %5d %5d\n", pCut1.nLeaves, pCut1.nLeaves > 0 ? pCut1.pLeaves[0] : -1, pCut1.nLeaves > 1 ? pCut1.pLeaves[1] : -1, pCut1.nLeaves > 2 ? pCut1.pLeaves[2] : -1, pCut1.nLeaves > 3 ? pCut1.pLeaves[3] : -1, pCut1.nLeaves > 4 ? pCut1.pLeaves[4] : -1);
-    if pCut == nil {
-        fmt.Printf("Cannot merge\n");
-    } else {
-        fmt.Printf("%d : %5d %5d %5d %5d %5d\n", pCut.nLeaves, pCut.nLeaves > 0 ? pCut.pLeaves[0] : -1, pCut.nLeaves > 1 ? pCut.pLeaves[1] : -1, pCut.nLeaves > 2 ? pCut.pLeaves[2] : -1, pCut.nLeaves > 3 ? pCut.pLeaves[3] : -1, pCut.nLeaves > 4 ? pCut.pLeaves[4] : -1); }
+func Cut_CutPrintList(list *Cut_Cut_t, seq int32) {
+	for c := list; c != nil; c = c.Next {
+		Cut_CutPrint(c, seq)
+		fmt.Println()
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Cut_CutPrintMerge(c, a, b *Cut_Cut_t) {
+	Cut_CutPrint(a, 0)
+	fmt.Print(" + ")
+	Cut_CutPrint(b, 0)
+	fmt.Print(" = ")
+	Cut_CutPrint(c, 0)
+	fmt.Println()
+}

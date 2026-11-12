@@ -144,29 +144,18 @@ func Mpm_ManStop(p *Mpm_Man_t) {
     Vec_WecFreeP( &p.vNpnConfigs );
     Vec_PtrFree( p.vTemp );
     Mmr_StepStop( p.pManCuts );
-    // inlining of macro ABC_FREE
-    ((p.vFreeUnits.pArray) ? (free((char *) (p.vFreeUnits.pArray)), (p.vFreeUnits.pArray) = 0) : 0);
+    p.vFreeUnits.pArray = nil;
     // mapping attributes
-    // inlining of macro ABC_FREE
-    ((p.vCutBests.pArray) ? (free((char *) (p.vCutBests.pArray)), (p.vCutBests.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCutLists.pArray) ? (free((char *) (p.vCutLists.pArray)), (p.vCutLists.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vMigRefs.pArray) ? (free((char *) (p.vMigRefs.pArray)), (p.vMigRefs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vMapRefs.pArray) ? (free((char *) (p.vMapRefs.pArray)), (p.vMapRefs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vEstRefs.pArray) ? (free((char *) (p.vEstRefs.pArray)), (p.vEstRefs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vRequireds.pArray) ? (free((char *) (p.vRequireds.pArray)), (p.vRequireds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vTimes.pArray) ? (free((char *) (p.vTimes.pArray)), (p.vTimes.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vAreas.pArray) ? (free((char *) (p.vAreas.pArray)), (p.vAreas.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vEdges.pArray) ? (free((char *) (p.vEdges.pArray)), (p.vEdges.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.vCutBests.pArray = nil;
+    p.vCutLists.pArray = nil;
+    p.vMigRefs.pArray = nil;
+    p.vMapRefs.pArray = nil;
+    p.vEstRefs.pArray = nil;
+    p.vRequireds.pArray = nil;
+    p.vTimes.pArray = nil;
+    p.vAreas.pArray = nil;
+    p.vEdges.pArray = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

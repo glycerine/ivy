@@ -80,8 +80,7 @@ func Ssc_ManStop(p *Ssc_Man_t) {
     Vec_IntFreeP( &p.vVar2Id );
     if p.pSat { sat_solver_delete( p.pSat ); }
     Gia_ManStopP( &p.pFraig );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Ssc_ManStart(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Ssc_Man_t {
     
@@ -405,10 +404,8 @@ p.timeSimSat += Abc_Clock() - clk;
     pResult = Gia_ManEquivReduce( pAig, 0, 0, 1, 0 );
     if pResult == nil {
         fmt.Printf("There is no equivalences.\n");
-        // inlining of macro ABC_FREE
-        ((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);
+        pAig.pReprs = nil;
+        pAig.pNexts = nil;
         pResult = Gia_ManDup( pAig );
     }
     pResult = Gia_ManCleanup( pTemp = pResult );

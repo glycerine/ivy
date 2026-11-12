@@ -174,8 +174,7 @@ func Acec_ParseSignature(p string) *Vec_Wec_t {
         pCopy[Len+1] = ')';
         pCopy[Len+2] = '\0';
         vRes = Acec_ParseSignatureOne( pCopy, pCopy + Len + 1 );
-        // inlining of macro ABC_FREE
-        ((pCopy) ? (free((char *) (pCopy)), (pCopy) = 0) : 0);
+        pCopy = nil;
         return vRes;
     }
     return nil;

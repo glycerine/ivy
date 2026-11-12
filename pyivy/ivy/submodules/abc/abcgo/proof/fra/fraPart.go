@@ -281,8 +281,7 @@ clk = Abc_Clock();
 Abc_Print(1, "%s =", ("Extension "));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
 
-    // inlining of macro ABC_FREE
-    ((pSupp) ? (free((char *) (pSupp)), (pSupp) = 0) : 0);
+    pSupp = nil;
     Vec_VecFree( vSupps );
     Vec_VecFree( vSuppsIn );
 }

@@ -324,8 +324,7 @@ func Dch_ComputeEquivalences2(pMiter *Aig_Man_t, pPars *Dch_Pars_t) {
     var pGia *Gia_Man_t  = Gia_ManFromAigSimple(pMiter);
     var pNew *Gia_Man_t  = Cec4_ManSimulateTest3( pGia, pPars.nBTLimit, pPars.fVerbose );
     var i, k int32;
-    // inlining of macro ABC_FREE
-    ((pMiter.pReprs) ? (free((char *) (pMiter.pReprs)), (pMiter.pReprs) = 0) : 0);
+    pMiter.pReprs = nil;
     // inlining of macro ABC_CALLOC
     pMiter.pReprs = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(pMiter)), sizeof(Aig_Obj_t *)));
     // inlining of macro Gia_ManForEachClass

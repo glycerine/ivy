@@ -93,18 +93,15 @@ func Fra_ClassesStart(pAig *Aig_Man_t) *Fra_Cla_t {
 
 ***********************************************************************/
 func Fra_ClassesStop(p *Fra_Cla_t) {
-    // inlining of macro ABC_FREE
-    ((p.pMemClasses) ? (free((char *) (p.pMemClasses)), (p.pMemClasses) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemRepr) ? (free((char *) (p.pMemRepr)), (p.pMemRepr) = 0) : 0);
+    p.pMemClasses = nil;
+    p.pMemRepr = nil;
     if p.vClassesTemp { Vec_PtrFree( p.vClassesTemp ); }
     if p.vClassNew {    Vec_PtrFree( p.vClassNew ); }
     if p.vClassOld {    Vec_PtrFree( p.vClassOld ); }
     if p.vClasses1 {    Vec_PtrFree( p.vClasses1 ); }
     if p.vClasses {     Vec_PtrFree( p.vClasses ); }
     if p.vImps {        Vec_IntFree( p.vImps ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -385,10 +382,8 @@ func Fra_ClassesPrepare(p *Fra_Cla_t, fLatchCorr int32, nMaxLevs int32) {
         nEntries += k;
     }
     }
-    // inlining of macro ABC_FREE
-    ((ppTable) ? (free((char *) (ppTable)), (ppTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppNexts) ? (free((char *) (ppNexts)), (ppNexts) = 0) : 0);
+    ppTable = nil;
+    ppNexts = nil;
     // now it is time to refine the classes
     Fra_ClassesRefine( p );
 //    Fra_ClassesPrint( p, 0 );
@@ -708,8 +703,7 @@ func Fra_ClassesPostprocess(p *Fra_Cla_t) {
     }
     Vec_PtrShrink( p.vClasses, k );
     fmt.Printf("After: Const = %6d. Class = %6d. \n", Vec_PtrSize(p.vClasses1), Vec_PtrSize(p.vClasses));
-    // inlining of macro ABC_FREE
-    ((pWeights) ? (free((char *) (pWeights)), (pWeights) = 0) : 0);
+    pWeights = nil;
 }
 
 /**Function*************************************************************
@@ -880,10 +874,8 @@ func Fra_ClassesDeriveAig(p *Fra_Cla_t, nFramesK int32) *Aig_Man_t {
             Fra_ObjSetEqu( ppEquivs, pObj, pLatches[k++] );
         }
     }
-    // inlining of macro ABC_FREE
-    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((ppEquivs) ? (free((char *) (ppEquivs)), (ppEquivs) = 0) : 0);
+    pLatches = nil;
+    ppEquivs = nil;
     // mark the asserts
     assert(Aig_ManCoNum(pManFraig) % nFramesAll == 0, "Aig_ManCoNum(pManFraig) % nFramesAll == 0");
 fmt.Printf("Assert miters = %6d. Output miters = %6d.\n", pManFraig.nAsserts, Aig_ManCoNum(pManFraig) - pManFraig.nAsserts);

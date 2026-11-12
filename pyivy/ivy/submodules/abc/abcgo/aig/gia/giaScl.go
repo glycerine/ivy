@@ -253,13 +253,13 @@ func Gia_ManReduceEquiv(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
 //    if ( fVerbose )
 //        printf( "ReduceEquiv detected %d constant regs and %d equivalent regs.\n", Counter0, Counter );
     // inlining of macro ABC_FREE
-    ((pMaps) ? (free((char *) (pMaps)), (pMaps) = 0) : 0);
+    pMaps = nil;
     if (Counter0 != 0) || (Counter != 0) {
         pNew = Gia_ManDupDfsCiMap( p, (int *)pCi2Lit, nil );
     } else {
         pNew = p; }
     // inlining of macro ABC_FREE
-    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);
+    pCi2Lit = nil;
     return pNew;
 }
 

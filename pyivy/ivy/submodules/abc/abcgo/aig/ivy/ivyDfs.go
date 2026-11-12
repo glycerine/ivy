@@ -323,59 +323,8 @@ func Ivy_ManRequiredLevels(p *Ivy_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManIsAcyclic_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {
-    // skip the node if it is already visited
-    if Ivy_ObjIsTravIdPrevious(p, pObj) {
-        return 1; }
-    // check if the node is part of the combinational loop
-    if Ivy_ObjIsTravIdCurrent(p, pObj) {
-        fmt.Fprintf(os.Stdout, "Manager contains combinational loop!\n");
-        fmt.Fprintf(os.Stdout, "Node \"%d\" is encountered twice on the following path:\n", Ivy_ObjId(pObj));
-        fmt.Fprintf(os.Stdout, " %d", Ivy_ObjId(pObj));
-        return 0;
-    }
-    // mark this node as a node on the current path
-    Ivy_ObjSetTravIdCurrent( p, pObj );
-    // explore equivalent nodes if pObj is the main node
-    if p.pHaig == nil && pObj.pEquiv && Ivy_ObjRefs(pObj) > 0 {
-        var pTemp *Ivy_Obj_t;
-        assert(!Ivy_IsComplement(pObj.pEquiv), "!Ivy_IsComplement(pObj.pEquiv)");
-        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {
-            // traverse the fanin's cone searching for the loop
-            if !(Ivy_ManIsAcyclic_rec(p, pTemp) != 0) {
-                // return as soon as the loop is detected
-                fmt.Fprintf(os.Stdout, " -> (%d", Ivy_ObjId(pObj));
-                for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {
-                    fmt.Fprintf(os.Stdout, " %d", Ivy_ObjId(pTemp));
-                }
-                fmt.Fprintf(os.Stdout, ")");
-                return 0; 
-            }
-        }
-    }
-    // quite if it is a CI node
-    if Ivy_ObjIsCi(pObj) || Ivy_ObjIsConst1(pObj) {
-        // mark this node as a visited node
-        Ivy_ObjSetTravIdPrevious( p, pObj );
-        return 1;
-    }
-    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), "Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)");
-    // traverse the fanin's cone searching for the loop
-    if !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) != 0) {
-        // return as soon as the loop is detected
-        fmt.Fprintf(os.Stdout, " -> %d", Ivy_ObjId(pObj));
-        return 0;
-    }
-    // traverse the fanin's cone searching for the loop
-    if Ivy_ObjIsNode(pObj) && !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin1(pObj)) != 0) {
-        // return as soon as the loop is detected
-        fmt.Fprintf(os.Stdout, " -> %d", Ivy_ObjId(pObj));
-        return 0;
-    }
-    // mark this node as a visited node
-    Ivy_ObjSetTravIdPrevious( p, pObj );
-    return 1;
-}
+// Ivy_ManIsAcyclic_rec is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -395,31 +344,8 @@ func Ivy_ManIsAcyclic_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManIsAcyclic(p *Ivy_Man_t) int32 {
-    var pObj *Ivy_Obj_t;
-    var fAcyclic, i int32;
-    // set the traversal ID for this DFS ordering
-    Ivy_ManIncrementTravId( p );   
-    Ivy_ManIncrementTravId( p );   
-    // pObj->TravId == pNet->nTravIds      means "pObj is on the path"
-    // pObj->TravId == pNet->nTravIds - 1  means "pObj is visited but is not on the path"
-    // pObj->TravId <  pNet->nTravIds - 1  means "pObj is not visited"
-    // traverse the network to detect cycles
-    fAcyclic = 1;
-    // inlining of macro Ivy_ManForEachCo
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {
-        // traverse the output logic cone
-        if fAcyclic = Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) {
-            continue; }
-        // stop as soon as the first loop is detected
-        fmt.Fprintf(os.Stdout, " (cone of %s \"%d\")\n", Ivy_ObjIsLatch(pObj)? "latch" : "PO", Ivy_ObjId(pObj));
-        break;
-    }
-    }
-    return fAcyclic;
-}
+// Ivy_ManIsAcyclic is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

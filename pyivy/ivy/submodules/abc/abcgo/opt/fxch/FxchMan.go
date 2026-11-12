@@ -205,8 +205,7 @@ func Fxch_ManFree(pFxchMan *Fxch_Man_t) {
     Vec_IntFree( pFxchMan.vCubesToRemove );
     Vec_IntFree( pFxchMan.vSCC );
 
-    // inlining of macro ABC_FREE
-    ((pFxchMan) ? (free((char *) (pFxchMan)), (pFxchMan) = 0) : 0);
+    pFxchMan = nil;
 }
 
 func Fxch_ManMapLiteralsIntoCubes(pFxchMan *Fxch_Man_t, nVars int32) {

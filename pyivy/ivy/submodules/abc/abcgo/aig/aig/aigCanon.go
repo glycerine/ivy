@@ -1,693 +1,420 @@
+// Semi-canonical AIG library recording, ported from ABC aigCanon.c.
 package aig
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/bool/bdc"
+	"github.com/glycerine/abcgo/bool/kit"
+	"slices"
+	"sync"
+)
 
-/**CFile****************************************************************
+const RMAN_MAXVARS = 12
+const RMAX_MAXWORD = 1 << (RMAN_MAXVARS - 5)
 
-  FileName    [aigCanon.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Processing the library of semi-canonical AIGs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigCanon.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-//#include "bool/kit/kit.h"
-//#include "bool/bdc/bdc.h"
-//#include "aig/ioa/ioa.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const RMAN_MAXVARS =  12
-#define RMAX_MAXWORD  (RMAN_MAXVARS <= 5 ? 1 : (1 << (RMAN_MAXVARS - 5)))
-
-   
 type Aig_VSig_t struct {
-    nOnes           int32;
-    nCofOnes [RMAN_MAXVARS]int32;
+	nOnes    int32
+	nCofOnes [RMAN_MAXVARS]int32
 }
-
-   
 type Aig_Tru_t struct {
-    pNext    *Aig_Tru_t;
-    Id           int32;    
-    nVisits uint32; /* C bitfield: 27 bits; review packing and truncation */
-    nVars uint32; /* C bitfield: 5 bits; review packing and truncation */
-    pTruth [0]uint32;
+	pNext          *Aig_Tru_t
+	Id             int32
+	nVisits, nVars uint32
+	pTruth         []uint32
 }
-
-   
 type Aig_RMan_t struct {
-    nVars           int32;       // the largest variable number
-    pAig    *Aig_Man_t;        // recorded subgraphs
-    // hash table
-    nBins           int32;
-    pBins   **Aig_Tru_t;
-    nEntries           int32;
-    pMemTrus *Aig_MmFlex_t;
-    // bidecomposion
-    pBidec    *Bdc_Man_t;
-    // temporaries
-    pTruthInit [RMAX_MAXWORD]uint32; // canonical truth table
-    pTruth [RMAX_MAXWORD]uint32;     // current truth table
-    pTruthC [RMAX_MAXWORD]uint32;    // canonical truth table
-    pTruthTemp [RMAX_MAXWORD]uint32; // temporary truth table
-    pMints [2*RMAN_MAXVARS]Aig_VSig_t;   // minterm count
-    pPerm [RMAN_MAXVARS]byte;      // permutation
-    pPermR [RMAN_MAXVARS]byte;     // reverse permutation
-    // statistics
-    nVarFuncs [RMAN_MAXVARS+1]int32;
-    nTotal           int32;
-    nTtDsd           int32;
-    nTtDsdPart           int32;
-    nTtDsdNot           int32;
-    nUniqueVars           int32;
+	nVars                                              int32
+	pAig                                               *Graph
+	nBins, nEntries                                    int32
+	pBins                                              []*Aig_Tru_t
+	pBidec                                             *bdc.Bdc_Man_t
+	pTruthInit, pTruth, pTruthC, pTruthTemp            [RMAX_MAXWORD]uint32
+	pMints                                             [2 * RMAN_MAXVARS]Aig_VSig_t
+	pPerm, pPermR                                      [RMAN_MAXVARS]byte
+	nVarFuncs                                          [RMAN_MAXVARS + 1]int32
+	nTotal, nTtDsd, nTtDsdPart, nTtDsdNot, nUniqueVars int32
 }
 
-var s_pRMan *Aig_RMan_t = nil;
+var s_pRMan *Aig_RMan_t
+var canonRecording sync.Mutex
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
+func Aig_RManSortNums(a []int32, n int32) {
+	for i := int32(0); i < n-1; i++ {
+		best := i
+		for j := i + 1; j < n; j++ {
+			if a[j] > a[best] {
+				best = j
+			}
+		}
+		a[i], a[best] = a[best], a[i]
+	}
+}
+func Aig_RManCompareSigs(a, b *Aig_VSig_t, n int32) int32 {
+	// Original memcmp compares the first int's bytes, not numeric counts.
+	x, y := uint32(a.nOnes), uint32(b.nOnes)
+	for i := uint(0); i < 32; i += 8 {
+		aa, bb := byte(x>>i), byte(y>>i)
+		if aa < bb {
+			return -1
+		}
+		if aa > bb {
+			return 1
+		}
+	}
+	return 0
+}
+func Aig_RManVarsAreUnique(s []Aig_VSig_t, n int32) int32 {
+	for i := int32(0); i < n-1; i++ {
+		if Aig_RManCompareSigs(&s[2*i], &s[2*(i+1)], n) == 0 {
+			return 0
+		}
+	}
+	return 1
+}
+func Aig_RManPrintSigs(s []Aig_VSig_t, n int32) {
+	for v := int32(0); v < n; v++ {
+		fmt.Printf("%2d : ", v)
+		for k := int32(0); k < 2; k++ {
+			fmt.Printf("%5d  (", s[2*v+k].nOnes)
+			for i := int32(0); i < n; i++ {
+				fmt.Printf("%4d ", s[2*v+k].nCofOnes[i])
+			}
+			fmt.Printf(")  ")
+		}
+		fmt.Println()
+	}
+}
+func Aig_RManPrintUniqueVars(s []Aig_VSig_t, n int32) {
+	for i := int32(0); i < n; i++ {
+		if Aig_RManCompareSigs(&s[2*i], &s[2*i+1], n) == 0 {
+			fmt.Print("=")
+		} else {
+			fmt.Print("x")
+		}
+	}
+	fmt.Println()
+	if n > 0 {
+		fmt.Print("0")
+	}
+	for i := int32(1); i < n; i++ {
+		if Aig_RManCompareSigs(&s[2*(i-1)], &s[2*i], n) == 0 {
+			fmt.Print("-")
+		} else if i < 10 {
+			fmt.Printf("%c", '0'+i)
+		} else {
+			fmt.Printf("%c", 'A'+i-10)
+		}
+	}
+	fmt.Println()
+}
+func Aig_RManTableHash(t []uint32, n, bins int32, primes []int32) int32 {
+	if bins <= 0 {
+		panic("invalid canonical hash size")
+	}
+	var hash uint32
+	for i := int32(0); i < canonWords(n); i++ {
+		hash ^= t[i] * uint32(primes[i&15])
+	}
+	return int32(hash % uint32(bins))
+}
+func Aig_RManComputeVSigs(t []uint32, n int32, s []Aig_VSig_t, aux []uint32) {
+	for v := int32(0); v < n; v++ {
+		for phase := int32(0); phase < 2; phase++ {
+			canonCofactor(aux, t, n, v, phase)
+			sig := &s[2*v+phase]
+			*sig = Aig_VSig_t{}
+			for bit := int32(0); bit < 32*canonWords(n); bit++ {
+				if canonGet(aux, bit) == 0 {
+					continue
+				}
+				sig.nOnes++
+				for i := int32(0); i < n; i++ {
+					if bit&(1<<uint(i)) == 0 {
+						sig.nCofOnes[i]++
+					}
+				}
+			}
+			Aig_RManSortNums(sig.nCofOnes[:], n)
+		}
+	}
+}
+func Aig_RManPrintVarProfile(t []uint32, n int32, aux []uint32) {
+	for v := int32(0); v < n; v++ {
+		var counts [2]int32
+		for bit := int32(0); bit < 32*canonWords(n); bit++ {
+			counts[(bit>>uint(v))&1] += int32(canonGet(t, bit))
+		}
+		fmt.Printf("%2d/%2d ", counts[0], counts[1])
+	}
+	fmt.Println()
+}
+func Aig_RManSemiCanonicize(out, in []uint32, n int32, perm []byte, s []Aig_VSig_t, returnIn int32) uint32 {
+	Aig_RManComputeVSigs(in, n, s, out)
+	var phase uint32
+	for i := int32(0); i < n; i++ {
+		if Aig_RManCompareSigs(&s[2*i], &s[2*i+1], n) > 0 {
+			phase |= 1 << uint(i)
+			s[2*i], s[2*i+1] = s[2*i+1], s[2*i]
+			canonPhase(in, n, i)
+		}
+	}
+	originalIn, originalOut := in, out
+	for {
+		changed := false
+		for i := int32(0); i < n-1; i++ {
+			if Aig_RManCompareSigs(&s[2*i], &s[2*(i+1)], n) <= 0 {
+				continue
+			}
+			changed = true
+			perm[i], perm[i+1] = perm[i+1], perm[i]
+			s[2*i], s[2*(i+1)] = s[2*(i+1)], s[2*i]
+			s[2*i+1], s[2*(i+1)+1] = s[2*(i+1)+1], s[2*i+1]
+			canonSwap(out, in, n, i, i+1)
+			in, out = out, in
+		}
+		if !changed {
+			break
+		}
+	}
+	if returnIn != 0 {
+		copy(originalIn[:canonWords(n)], in)
+	} else {
+		copy(originalOut[:canonWords(n)], in)
+	}
+	return phase
+}
+func canonWords(n int32) int32 {
+	if n < 0 || n > RMAN_MAXVARS {
+		panic("canonical variable count out of range")
+	}
+	if n <= 5 {
+		return 1
+	}
+	return 1 << uint(n-5)
+}
+func canonGet(t []uint32, bit int32) uint32 { return t[bit>>5] >> uint(bit&31) & 1 }
+func canonSet(t []uint32, bit int32)        { t[bit>>5] |= 1 << uint(bit&31) }
+func canonCofactor(out, in []uint32, n, v, phase int32) {
+	clear(out[:canonWords(n)])
+	mask := int32(1) << uint(v)
+	for bit := int32(0); bit < 32*canonWords(n); bit++ {
+		src := bit &^ mask
+		if phase != 0 {
+			src |= mask
+		}
+		if canonGet(in, src) != 0 {
+			canonSet(out, bit)
+		}
+	}
+}
+func canonPhase(t []uint32, n, v int32) {
+	mask := int32(1) << uint(v)
+	for bit := int32(0); bit < 32*canonWords(n); bit++ {
+		if bit&mask != 0 {
+			continue
+		}
+		other := bit | mask
+		if canonGet(t, bit) != canonGet(t, other) {
+			t[bit>>5] ^= 1 << uint(bit&31)
+			t[other>>5] ^= 1 << uint(other&31)
+		}
+	}
+}
+func canonSwap(out, in []uint32, n, a, b int32) {
+	clear(out[:canonWords(n)])
+	mask := int32(1)<<uint(a) | int32(1)<<uint(b)
+	for bit := int32(0); bit < 32*canonWords(n); bit++ {
+		dst := bit
+		if (bit >> uint(a) & 1) != (bit >> uint(b) & 1) {
+			dst ^= mask
+		}
+		if canonGet(in, bit) != 0 {
+			canonSet(out, dst)
+		}
+	}
+}
 
-/**Function*************************************************************
-
-  Synopsis    [Allocates recording manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Aig_RManStart_Pars Bdc_Par_t ;
-var spStatic_Aig_RManStart_pPars *Bdc_Par_t = &spStatic_Aig_RManStart_Pars;
 func Aig_RManStart() *Aig_RMan_t {
-    
-    var p *Aig_RMan_t;
-    p = new(Aig_RMan_t);
-    *p = Aig_RMan_t{};
-    p.nVars = RMAN_MAXVARS;
-    p.pAig  = Aig_ManStart( 1000000 );
-    Aig_IthVar( p.pAig, p.nVars-1 );
-    // create hash table
-    p.nBins = Abc_PrimeCudd(5000);
-    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );
-    p.pMemTrus = Aig_MmFlexStart();
-    // bi-decomposition manager
-    spStatic_Aig_RManStart_pPars.nVarsMax = p.nVars;
-    spStatic_Aig_RManStart_pPars.fVerbose = 0;
-    p.pBidec = Bdc_ManAlloc( spStatic_Aig_RManStart_pPars );
-    return p;
+	p := &Aig_RMan_t{nVars: RMAN_MAXVARS, pAig: NewGraph(), nBins: 5003}
+	for i := int32(0); i < p.nVars; i++ {
+		p.pAig.NewInput()
+	}
+	p.pBins = make([]*Aig_Tru_t, p.nBins)
+	p.pBidec = bdc.Bdc_ManAlloc(&bdc.Bdc_Par_t{NVarsMax: RMAN_MAXVARS})
+	return p
 }
 
-/**Function*************************************************************
+var canonHashPrimes = []int32{1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147}
 
-  Synopsis    [Returns the hash key.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManTableHash(pTruth *uint32, nVars int32, nBins int32, pPrimes *int32) int32 {
-    var i int32;
-    var nWords int32 = Kit_TruthWordNum( nVars );
-    var uHash uint32;
-    for  i = 0; i < nWords; i++  {
-        uHash ^= pTruth[i] * pPrimes[i & 0xf];
-    }
-    return int32((uHash % nBins));
+func Aig_RManTableLookup(p *Aig_RMan_t, truth []uint32, n int32) **Aig_Tru_t {
+	slot := &p.pBins[Aig_RManTableHash(truth, n, p.nBins, canonHashPrimes)]
+	for *slot != nil {
+		entry := *slot
+		if entry.nVars == uint32(n) && slices.Equal(entry.pTruth, truth[:canonWords(n)]) {
+			return slot
+		}
+		slot = &entry.pNext
+	}
+	return slot
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the given record.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Aig_RManTableLookup_s_Primes [16]int32 = [16]int32{ 
-        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 
-        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };
-func Aig_RManTableLookup(p *Aig_RMan_t, pTruth *uint32, nVars int32) **Aig_Tru_t {
-    
-    var ppSpot **Aig_Tru_t;
-    var pEntry *Aig_Tru_t;
-    ppSpot = p.pBins + Aig_RManTableHash( pTruth, nVars, p.nBins, spStatic_Aig_RManTableLookup_s_Primes );
-    for  pEntry = *ppSpot; (pEntry != nil); ppSpot = &pEntry.pNext, pEntry = pEntry.pNext  {
-        if Kit_TruthIsEqual( pEntry.pTruth, pTruth, nVars ) {
-            return ppSpot; }
-    }
-    return ppSpot;
+func canonNextPrime(n int32) int32 {
+	for {
+		n++
+		prime := true
+		for d := int32(2); d <= n/d; d++ {
+			if n%d == 0 {
+				prime = false
+				break
+			}
+		}
+		if prime {
+			return n
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find or add new entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_RManTableResize(p *Aig_RMan_t) {
-    var pEntry, pNext *Aig_Tru_t;
-    var pBinsOld, ppPlace **Aig_Tru_t;
-    var nBinsOld, Counter, i int32;
-    var clk abctime;
-    assert(p.pBins != nil, "p.pBins != nil");
-clk = Abc_Clock();
-    // save the old Bins
-    pBinsOld = p.pBins;
-    nBinsOld = p.nBins;
-    // get the new Bins
-    p.nBins = Abc_PrimeCudd( 3 * nBinsOld ); 
-    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );
-    // rehash the entries from the old table
-    Counter = 0;
-    for  i = 0; i < nBinsOld; i++  {
-    for  pEntry = pBinsOld[i], pNext = pEntry? pEntry.pNext : nil; 
-          (pEntry != nil); pEntry = pNext, pNext = pEntry? pEntry.pNext : nil  {
-        // get the place where this entry goes in the Bins 
-        ppPlace = Aig_RManTableLookup( p, pEntry.pTruth, pEntry.nVars );
-        assert(*ppPlace == nil, "*ppPlace == nil"); // should not be there
-        // add the entry to the list
-        *ppPlace = pEntry;
-        pEntry.pNext = nil;
-        Counter++;
-    }
-    }
-    assert(Counter == p.nEntries, "Counter == p.nEntries");
-//    ABC_PRT( "Time", Abc_Clock() - clk );
-    ABC_FREE( pBinsOld );
+	old := p.pBins
+	p.nBins = canonNextPrime(3 * p.nBins)
+	p.pBins = make([]*Aig_Tru_t, p.nBins)
+	var count int32
+	for _, head := range old {
+		for entry := head; entry != nil; {
+			next := entry.pNext
+			entry.pNext = nil
+			slot := Aig_RManTableLookup(p, entry.pTruth, int32(entry.nVars))
+			if *slot != nil {
+				panic("duplicate canonical truth entry")
+			}
+			*slot = entry
+			entry = next
+			count++
+		}
+	}
+	if count != p.nEntries {
+		panic("canonical table entry count mismatch")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find or add new entry.]
-
-  Description [Returns 1 if this is a new entry.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManTableFindOrAdd(p *Aig_RMan_t, pTruth *uint32, nVars int32) int32 {
-    var ppSpot **Aig_Tru_t;
-    var pEntry *Aig_Tru_t;
-    var nBytes int32;
-    ppSpot = Aig_RManTableLookup( p, pTruth, nVars );
-    if *ppSpot {
-        (*ppSpot).nVisits++;
-        return 0;
-    }
-    nBytes = sizeof(Aig_Tru_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars);
-    if p.nEntries == 3*p.nBins {
-        Aig_RManTableResize( p ); }
-    pEntry = (Aig_Tru_t *)Aig_MmFlexEntryFetch( p.pMemTrus, nBytes );
-    pEntry.Id = p.nEntries++;
-    pEntry.nVars = nVars;
-    pEntry.nVisits = 1;
-    pEntry.pNext = nil;
-    memcpy( pEntry.pTruth, pTruth, sizeof(unsigned) * Kit_TruthWordNum(nVars) );
-    *ppSpot = pEntry;
-    return 1;
+func Aig_RManTableFindOrAdd(p *Aig_RMan_t, truth []uint32, n int32) int32 {
+	slot := Aig_RManTableLookup(p, truth, n)
+	if *slot != nil {
+		(*slot).nVisits = ((*slot).nVisits + 1) & ((1 << 27) - 1)
+		return 0
+	}
+	if p.nEntries == 3*p.nBins {
+		Aig_RManTableResize(p)
+		slot = Aig_RManTableLookup(p, truth, n)
+	}
+	*slot = &Aig_Tru_t{Id: p.nEntries, nVars: uint32(n), nVisits: 1, pTruth: append([]uint32(nil), truth[:canonWords(n)]...)}
+	p.nEntries++
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocates recording manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_RManStop(p *Aig_RMan_t) {
-    var i int32;
-    fmt.Printf("Total funcs    = %10d\n", p.nTotal);
-    fmt.Printf("Full DSD funcs = %10d\n", p.nTtDsd);
-    fmt.Printf("Part DSD funcs = %10d\n", p.nTtDsdPart);
-    fmt.Printf("Non- DSD funcs = %10d\n", p.nTtDsdNot);
-    fmt.Printf("Uniq-var funcs = %10d\n", p.nUniqueVars);
-    fmt.Printf("Unique   funcs = %10d\n", p.nEntries);
-    fmt.Printf("Distribution of functions:\n");
-    for  i = 5; i <= p.nVars; i++  {
-        fmt.Printf("%2d = %8d\n", i, p.nVarFuncs[i]);
-    }
-    Aig_MmFlexStop( p.pMemTrus, 0 );
-    Aig_ManStop( p.pAig );
-    Bdc_ManFree( p.pBidec );
-    ABC_FREE( p.pBins );
-    ABC_FREE( p );
+	if p == nil {
+		return
+	}
+	fmt.Printf("Total funcs    = %10d\nFull DSD funcs = %10d\nPart DSD funcs = %10d\nNon- DSD funcs = %10d\nUniq-var funcs = %10d\nUnique   funcs = %10d\nDistribution of functions:\n", p.nTotal, p.nTtDsd, p.nTtDsdPart, p.nTtDsdNot, p.nUniqueVars, p.nEntries)
+	for i := int32(5); i <= p.nVars; i++ {
+		fmt.Printf("%2d = %8d\n", i, p.nVarFuncs[i])
+	}
+	bdc.Bdc_ManFree(p.pBidec)
+	p.pBins = nil
+	p.pBidec = nil
+	p.pAig = nil
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Stops recording.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManQuit() {
-//    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );
-    var Buffer string // was [20]byte in C
-
-    if s_pRMan == nil {
-        return; }
-    // dump the library file
-    Buffer = fmt.Sprintf("aiglib%02d.aig", s_pRMan.nVars);
-    Ioa_WriteAiger( s_pRMan.pAig, Buffer, 0, 1 );
-    // quit the manager
-    Aig_RManStop( s_pRMan );
-    s_pRMan = nil;
+func Aig_RManQuit() error {
+	canonRecording.Lock()
+	defer canonRecording.Unlock()
+	if s_pRMan == nil {
+		return nil
+	}
+	p := s_pRMan
+	if err := ioa.Ioa_WriteAiger(p.pAig, fmt.Sprintf("aiglib%02d.aig", p.nVars), 0, 1); err != nil {
+		return err
+	}
+	Aig_RManStop(p)
+	s_pRMan = nil
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if all variables are unique.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManPrintVarProfile(pTruth *uint32, nVars int32, pTruthAux *uint32) {
-    var pStore2 [32]int32;
-    var i int32;
-    Kit_TruthCountOnesInCofsSlow( pTruth, nVars, pStore2, pTruthAux );
-    for  i = 0; i < nVars; i++  {
-        fmt.Printf("%2d/%2d ", pStore2[2*i], pStore2[2*i+1]);
-    }
-    fmt.Printf("\n");
+func Bdc_FunCopyHop(o *bdc.Bdc_Fun_t) Edge {
+	edge, ok := bdc.Bdc_FuncCopy(bdc.Bdc_Regular(o)).(Edge)
+	if !ok {
+		panic("missing canonical decomposition copy")
+	}
+	if bdc.Bdc_IsComplement(o) != 0 {
+		edge = edge.Not()
+	}
+	return edge
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sorts numbers in the increasing order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManSortNums(pArray *int32, nVars int32) {
-    var i, j, best_i, tmp int32;
-    for  i = 0; i < nVars-1; i++  {
-        best_i = i;
-        for  j = i+1; j < nVars; j++  {
-            if pArray[j] > pArray[best_i] {
-                best_i = j; }
-        }
-        tmp = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = tmp;
-    }
+func Aig_RManSaveOne(p *Aig_RMan_t, truth []uint32, n int32) {
+	if bdc.Bdc_ManDecompose(p.pBidec, truth, nil, n, nil, 1000) < 0 {
+		fmt.Println("Decomposition failed.")
+		return
+	}
+	bdc.Bdc_FuncSetCopy(bdc.Bdc_ManFunc(p.pBidec, 0), p.pAig.Const1())
+	for i := int32(0); i < n; i++ {
+		bdc.Bdc_FuncSetCopy(bdc.Bdc_ManFunc(p.pBidec, i+1), p.pAig.inputs[i])
+	}
+	for i := n + 1; i < bdc.Bdc_ManNodeNum(p.pBidec); i++ {
+		node := bdc.Bdc_ManFunc(p.pBidec, i)
+		bdc.Bdc_FuncSetCopy(node, p.pAig.AND(Bdc_FunCopyHop(bdc.Bdc_FuncFanin0(node)), Bdc_FunCopyHop(bdc.Bdc_FuncFanin1(node))))
+	}
+	p.pAig.AddOutput(Bdc_FunCopyHop(bdc.Bdc_ManRoot(p.pBidec)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints signatures for all variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManPrintSigs(pSigs *Aig_VSig_t, nVars int32) {
-    var v, i, k int32;
-    for  v = 0; v < nVars; v++  {
-        fmt.Printf("%2d : ", v);
-        for  k = 0; k < 2; k++  {
-            fmt.Printf("%5d  ", pSigs[2*v+k].nOnes);
-            fmt.Printf("(");
-            for  i = 0; i < nVars; i++  {
-                fmt.Printf("%4d ", pSigs[2*v+k].nCofOnes[i]);
-            }
-            fmt.Printf(")  ");
-        }
-        fmt.Printf("\n");
-    }
+func Aig_RManRecord(truth []uint32, nInit int32) {
+	if nInit < 0 || nInit > RMAN_MAXVARS {
+		fmt.Println("The number of variables is too large.")
+		return
+	}
+	canonRecording.Lock()
+	defer canonRecording.Unlock()
+	if s_pRMan == nil {
+		s_pRMan = Aig_RManStart()
+	}
+	p := s_pRMan
+	p.nTotal++
+	network := kit.Kit_DsdDecompose(truth, nInit)
+	defer kit.Kit_DsdNtkFree(network)
+	prime := kit.Kit_DsdNonDsdPrimeMax(network)
+	if prime == nil || kit.Kit_DsdObjFanNum(prime) == 3 {
+		p.nTtDsd++
+		return
+	}
+	n := kit.Kit_DsdObjFanNum(prime)
+	p.nVarFuncs[n]++
+	if n < nInit {
+		p.nTtDsdPart++
+	} else {
+		p.nTtDsdNot++
+	}
+	words := canonWords(n)
+	copy(p.pTruthInit[:words], kit.Kit_DsdObjTruth(prime))
+	if p.pTruthInit[0]&1 != 0 {
+		for i := int32(0); i < words; i++ {
+			p.pTruthInit[i] = ^p.pTruthInit[i]
+		}
+	}
+	copy(p.pTruth[:words], p.pTruthInit[:words])
+	for i := int32(0); i < n; i++ {
+		p.pPerm[i] = byte(i)
+	}
+	phase := Aig_RManSemiCanonicize(p.pTruthTemp[:], p.pTruth[:], n, p.pPerm[:], p.pMints[:], 1)
+	unique := Aig_RManVarsAreUnique(p.pMints[:], n)
+	p.nUniqueVars += unique
+	if Aig_RManTableFindOrAdd(p, p.pTruth[:], n) != 0 {
+		Aig_RManSaveOne(p, p.pTruth[:], n)
+	}
+	if unique != 0 {
+		for original := int32(0); original < 1<<uint(n); original++ {
+			shifted := original ^ int32(phase)
+			var canonical int32
+			for i := int32(0); i < n; i++ {
+				canonical |= ((shifted >> p.pPerm[i]) & 1) << uint(i)
+			}
+			if canonGet(p.pTruth[:], canonical) != canonGet(p.pTruthInit[:], original) {
+				fmt.Println("Verification failed.")
+				break
+			}
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes signatures for all variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManComputeVSigs(pTruth *uint32, nVars int32, pSigs *Aig_VSig_t, pAux *uint32) {
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        Kit_TruthCofactor0New( pAux, pTruth, nVars, v );
-        pSigs[2*v+0].nOnes = Kit_TruthCountOnes( pAux, nVars );
-        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+0].nCofOnes );
-        Aig_RManSortNums( pSigs[2*v+0].nCofOnes, nVars );
-
-        Kit_TruthCofactor1New( pAux, pTruth, nVars, v );
-        pSigs[2*v+1].nOnes = Kit_TruthCountOnes( pAux, nVars );
-        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+1].nCofOnes );
-        Aig_RManSortNums( pSigs[2*v+1].nCofOnes, nVars );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computs signatures for all variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManCompareSigs(p0 *Aig_VSig_t, p1 *Aig_VSig_t, nVars int32) int32 {
-//    return memcmp( p0, p1, sizeof(int) + sizeof(int) * nVars );
-    return memcmp( p0, p1, sizeof(int) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if all variables are unique.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManVarsAreUnique(pMints *Aig_VSig_t, nVars int32) int32 {
-    var i int32;
-    for  i = 0; i < nVars - 1; i++  {
-        if Aig_RManCompareSigs( &pMints[2*i], &pMints[2*(i+1)], nVars ) == 0 {
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if all variables are unique.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManPrintUniqueVars(pMints *Aig_VSig_t, nVars int32) {
-    var i int32;
-    for  i = 0; i < nVars; i++  {
-        if Aig_RManCompareSigs( &pMints[2*i], &pMints[2*i+1], nVars ) == 0 {
-            fmt.Printf("=");
-        } else { 
-            fmt.Printf("x"); }
-    }
-    fmt.Printf("\n");
-
-    fmt.Printf("0");
-    for  i = 1; i < nVars; i++  {
-        if Aig_RManCompareSigs( &pMints[2*(i-1)], &pMints[2*i], nVars ) == 0 {
-            fmt.Printf("-");
-        } else if i < 10 {
-            fmt.Printf("%c", '0' + i);
-        } else { 
-            fmt.Printf("%c", 'A' + i-10); }
-    }
-    fmt.Printf("\n");
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Canonicize the truth table.]
-
-  Description [Returns the phase. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManSemiCanonicize(pOut *uint32, pIn *uint32, nVars int32, pCanonPerm string, pSigs *Aig_VSig_t, fReturnIn int32) uint32 {
-    var TempSig Aig_VSig_t;
-    var i, Temp, fChange, Counter int32;
-    var pTemp *uint32;
-    var uCanonPhase uint32;
-    // collect signatures 
-    Aig_RManComputeVSigs( pIn, nVars, pSigs, pOut );
-    // canonicize phase
-    for  i = 0; i < nVars; i++  {
-//        if ( pStore[2*i+0] <= pStore[2*i+1] )
-        if Aig_RManCompareSigs( &pSigs[2*i+0], &pSigs[2*i+1], nVars ) <= 0 {
-            continue; }
-        uCanonPhase |= (1 << i);
-        TempSig = pSigs[2*i+0];
-        pSigs[2*i+0] = pSigs[2*i+1];
-        pSigs[2*i+1] = TempSig;
-        Kit_TruthChangePhase( pIn, nVars, i );
-    }
-    // permute
-    Counter = 0;
-    do {
-        fChange = 0;
-        for  i = 0; i < nVars-1; i++  {
-//            if ( pStore[2*i] <= pStore[2*(i+1)] )
-            if Aig_RManCompareSigs( &pSigs[2*i], &pSigs[2*(i+1)], nVars ) <= 0 {
-                continue; }
-            Counter++;
-            fChange = 1;
-
-            Temp = pCanonPerm[i];
-            pCanonPerm[i] = pCanonPerm[i+1];
-            pCanonPerm[i+1] = Temp;
-
-            TempSig = pSigs[2*i];
-            pSigs[2*i] = pSigs[2*(i+1)];
-            pSigs[2*(i+1)] = TempSig;
-
-            TempSig = pSigs[2*i+1];
-            pSigs[2*i+1] = pSigs[2*(i+1)+1];
-            pSigs[2*(i+1)+1] = TempSig;
-
-            Kit_TruthSwapAdjacentVars( pOut, pIn, nVars, i );
-            pTemp = pIn; pIn = pOut; pOut = pTemp;
-        }
-    } while ( fChange );
-
-    // swap if it was moved an even number of times
-    if fReturnIn ^ !(Counter & 1) {
-        Kit_TruthCopy( pOut, pIn, nVars ); }
-    return uCanonPhase;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Aig_Obj_t { return Aig_NotCond( (Aig_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }
-
-/**Function*************************************************************
-
-  Synopsis    [Records one function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManSaveOne(p *Aig_RMan_t, pTruth *uint32, nVars int32) {
-    var i, nNodes, RetValue int32;
-    var pFunc *Bdc_Fun_t;
-    var pTerm *Aig_Obj_t;
-    // perform decomposition
-    RetValue = Bdc_ManDecompose( p.pBidec, pTruth, nil, nVars, nil, 1000 );
-    if RetValue < 0 {
-        fmt.Printf("Decomposition failed.\n");
-        return;
-    }
-    // convert back into HOP
-    Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, 0 ), Aig_ManConst1(p.pAig) );
-    for  i = 0; i < nVars; i++  {
-        Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, i+1 ), Aig_IthVar(p.pAig, i) );
-    }
-    nNodes = Bdc_ManNodeNum(p.pBidec);
-    for  i = nVars + 1; i < nNodes; i++  {
-        pFunc = Bdc_ManFunc( p.pBidec, i );
-        Bdc_FuncSetCopy( pFunc, Aig_And( p.pAig, 
-            Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), 
-            Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );
-    }
-    pTerm = Bdc_FunCopyHop( Bdc_ManRoot(p.pBidec) );
-    pTerm = Aig_ObjCreateCo( p.pAig, pTerm );
-//    assert( pTerm->fPhase == 0 );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Records one function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_RManRecord(pTruth *uint32, nVarsInit int32) {
-    var fVerify int32  = 1;
-    var pNtk *Kit_DsdNtk_t;
-    var pObj *Kit_DsdObj_t;
-    var uPhaseC uint32;
-    var i, nVars, nWords int32;
-    var fUniqueVars int32;
-
-    if nVarsInit > RMAN_MAXVARS {
-        fmt.Printf("The number of variables in too large.\n");
-        return;
-    }
-
-    if s_pRMan == nil {
-        s_pRMan = Aig_RManStart(); }
-    s_pRMan.nTotal++;
-    // canonicize the function
-    pNtk = Kit_DsdDecompose( pTruth, nVarsInit );
-    pObj = Kit_DsdNonDsdPrimeMax( pNtk );
-    if pObj == nil || pObj.nFans == 3 {
-        s_pRMan.nTtDsd++;
-        Kit_DsdNtkFree( pNtk );
-        return;
-    }
-    nVars = pObj.nFans;
-    s_pRMan.nVarFuncs[nVars]++;
-    if nVars < nVarsInit {
-        s_pRMan.nTtDsdPart++;
-    } else {
-        s_pRMan.nTtDsdNot++; }
-    // compute the number of words
-    nWords = Abc_TruthWordNum( nVars );
-    // copy the function
-    memcpy( s_pRMan.pTruthInit, Kit_DsdObjTruth(pObj), (size_t)(4*nWords) );
-    Kit_DsdNtkFree( pNtk );
-    // canonicize the output
-    if s_pRMan.pTruthInit[0] & 1 {
-        Kit_TruthNot( s_pRMan.pTruthInit, s_pRMan.pTruthInit, nVars ); }
-    memcpy( s_pRMan.pTruth, s_pRMan.pTruthInit, 4*nWords );
-
-    // canonize the function
-    for  i = 0; i < nVars; i++  {
-        s_pRMan.pPerm[i] = i;
-    }
-    uPhaseC = Aig_RManSemiCanonicize( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPerm, s_pRMan.pMints, 1 );
-    // check unique variables
-    fUniqueVars = Aig_RManVarsAreUnique( s_pRMan.pMints, nVars );
-    s_pRMan.nUniqueVars += fUniqueVars;
-
-/*
-    printf( "%4d : ", s_pRMan->nTotal );
-    printf( "%2d %2d  ", nVarsInit, nVars );
-    Extra_PrintBinary( stdout, &uPhaseC, nVars );
-    printf( "  " );
-    for ( i = 0; i < nVars; i++ )
-        printf( "%2d/%2d ", s_pRMan->pMints[2*i], s_pRMan->pMints[2*i+1] );
-    printf( "\n" );
-    Aig_RManPrintUniqueVars( s_pRMan->pMints, nVars );
-Extra_PrintBinary( stdout, s_pRMan->pTruth, 1<<nVars ); printf( "\n\n" );
-*/
-/*
-    printf( "\n" );
-    printf( "%4d : ", s_pRMan->nTotal );
-    printf( "%2d %2d  ", nVarsInit, nVars );
-    printf( "   " );
-    printf( "\n" );
-    Aig_RManPrintUniqueVars( s_pRMan->pMints, nVars );
-//    Aig_RManPrintSigs( s_pRMan->pMints, nVars );
-*/
-
-//Extra_PrintBinary( stdout, s_pRMan->pTruth, 1<<nVars ); printf( "\n\n" );
-
-    if Aig_RManTableFindOrAdd( s_pRMan, s_pRMan.pTruth, nVars ) != 0 {
-        Aig_RManSaveOne( s_pRMan, s_pRMan.pTruth, nVars ); }
-
-    if fVerify != 0 {
-        // derive reverse permutation
-        for  i = 0; i < nVars; i++  {
-            s_pRMan.pPermR[i] = s_pRMan.pPerm[i];
-        }
-        // implement permutation
-        Kit_TruthPermute( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPermR, 1 );
-        // implement polarity
-        for  i = 0; i < nVars; i++  {
-            if uPhaseC & (1 << i) {
-                Kit_TruthChangePhase( s_pRMan.pTruth, nVars, i ); }
-        }
-
-        // perform verification
-        if (fUniqueVars != 0) && !Kit_TruthIsEqual( s_pRMan.pTruth, s_pRMan.pTruthInit, nVars ) {
-            fmt.Printf("Verification failed.\n"); }
-    }
-//Aig_RManPrintVarProfile( s_pRMan->pTruth, nVars, s_pRMan->pTruthTemp );
-//Extra_PrintBinary( stdout, s_pRMan->pTruth, 1<<nVars ); printf( "\n" );
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1021,14 +1021,10 @@ func Bac_ManFree(p *Bac_Man_t) {
     Vec_IntErase( &p.vBuf2RootObj );
     Abc_NamDeref( p.pStrs );
     Abc_NamDeref( p.pMods );
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNtks) ? (free((char *) (p.pNtks)), (p.pNtks) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p.pSpec = nil;
+    p.pNtks = nil;
+    p = nil;
 }
 func Bac_ManMemory(p *Bac_Man_t) int32 {
     var pNtk *Bac_Ntk_t; var i int32;

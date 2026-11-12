@@ -187,14 +187,10 @@ func Fra_ClauCreateMapping(vSatVarsFrom *Vec_Int_t, vSatVarsTo *Vec_Int_t, nVars
 
 ***********************************************************************/
 func Fra_ClauStop(p *Cla_Man_t) {
-    // inlining of macro ABC_FREE
-    ((p.pMapCsMainToCsTest) ? (free((char *) (p.pMapCsMainToCsTest)), (p.pMapCsMainToCsTest) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMapCsTestToCsMain) ? (free((char *) (p.pMapCsTestToCsMain)), (p.pMapCsTestToCsMain) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMapCsTestToNsTest) ? (free((char *) (p.pMapCsTestToNsTest)), (p.pMapCsTestToNsTest) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMapCsTestToNsBmc) ? (free((char *) (p.pMapCsTestToNsBmc)), (p.pMapCsTestToNsBmc) = 0) : 0);
+    p.pMapCsMainToCsTest = nil;
+    p.pMapCsTestToCsMain = nil;
+    p.pMapCsTestToNsTest = nil;
+    p.pMapCsTestToNsBmc = nil;
     Vec_IntFree( p.vSatVarsMainCs );
     Vec_IntFree( p.vSatVarsTestCs );
     Vec_IntFree( p.vSatVarsTestNs );
@@ -208,8 +204,7 @@ func Fra_ClauStop(p *Cla_Man_t) {
     if p.pSatMain { sat_solver_delete( p.pSatMain ); }
     if p.pSatTest { sat_solver_delete( p.pSatTest ); }
     if p.pSatBmc {  sat_solver_delete( p.pSatBmc ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

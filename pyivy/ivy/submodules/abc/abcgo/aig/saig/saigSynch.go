@@ -322,8 +322,7 @@ func Saig_SynchCountX(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, piPat 
                 break; }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
+    pCounters = nil;
     *piPat = iPatBest;
     return iTernMin;
 }

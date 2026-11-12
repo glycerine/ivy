@@ -157,12 +157,9 @@ func Lcr_ManFree(p *Fra_Lcr_t) {
     Vec_PtrFree( p.vFraigs );
     if p.pCla {     Fra_ClassesStop( p.pCla ); }
     if p.vParts {   Vec_VecFree( (Vec_Vec_t *)p.vParts ); }
-    // inlining of macro ABC_FREE
-    ((p.pInToOutPart) ? (free((char *) (p.pInToOutPart)), (p.pInToOutPart) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pInToOutNum) ? (free((char *) (p.pInToOutNum)), (p.pInToOutNum) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pInToOutPart = nil;
+    p.pInToOutNum = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -716,8 +713,7 @@ p.timeTotal = Abc_Clock() - clk;
     p.nNodesEnd = Aig_ManNodeNum(pAigNew);
     p.nRegsEnd  = Aig_ManRegNum(pAigNew);
 finish:
-    // inlining of macro ABC_FREE
-    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+    pTemp = nil;
     Lcr_ManFree( p );
     if pnIter != nil { *pnIter = nIter; }
     return pAigNew;

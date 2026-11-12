@@ -230,8 +230,7 @@ func Mio_ParseFormula(pFormInit string, ppVarNames *string, nVars int32) *Vec_In
                     // perform the given operation
                     if Mio_ParseFormulaOper( pMan, nVars, pStackFn, Oper ) == nil {
                         fmt.Fprintf(os.Stdout, "Mio_ParseFormula(): Unknown operation\n");
-                        // inlining of macro ABC_FREE
-                        ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
+                        pFormula = nil;
                         Vec_PtrFreeP( &pStackFn );
                         Vec_IntFreeP( &pStackOp );
                         return nil;
@@ -322,8 +321,7 @@ func Mio_ParseFormula(pFormInit string, ppVarNames *string, nVars int32) *Vec_In
                 if Oper2 >= Oper1 {  // if Oper2 precedence is higher or equal, execute it
                     if Mio_ParseFormulaOper( pMan, nVars, pStackFn, Oper2 ) == nil {
                         fmt.Fprintf(os.Stdout, "Mio_ParseFormula(): Unknown operation\n");
-                        // inlining of macro ABC_FREE
-                        ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
+                        pFormula = nil;
                         Vec_PtrFreeP( &pStackFn );
                         Vec_IntFreeP( &pStackOp );
                         return nil;
@@ -344,8 +342,7 @@ func Mio_ParseFormula(pFormInit string, ppVarNames *string, nVars int32) *Vec_In
             if Vec_PtrSize(pStackFn) == 0 {
                 if Vec_IntSize( pStackOp ) == 0 {
 //                    Cudd_Deref( gFunc );
-                    // inlining of macro ABC_FREE
-                    ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
+                    pFormula = nil;
                     Vec_PtrFreeP( &pStackFn );
                     Vec_IntFreeP( &pStackOp );
                     return Exp_Reverse(gFunc);
@@ -358,8 +355,7 @@ func Mio_ParseFormula(pFormInit string, ppVarNames *string, nVars int32) *Vec_In
         } else {
             fmt.Fprintf(os.Stdout, "Mio_ParseFormula(): The input string is empty\n"); }
     }
-    // inlining of macro ABC_FREE
-    ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
+    pFormula = nil;
     Vec_PtrFreeP( &pStackFn );
     Vec_IntFreeP( &pStackOp );
     return nil;

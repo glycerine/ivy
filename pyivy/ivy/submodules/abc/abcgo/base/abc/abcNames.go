@@ -277,8 +277,7 @@ func Abc_NodeFreeNames(vNames *Vec_Ptr_t) {
     if vNames == nil {
         return; }
     for  i = 0; i < vNames.nSize; i++  {
-        // inlining of macro ABC_FREE
-        ((vNames.pArray[i]) ? (free((char *) (vNames.pArray[i])), (vNames.pArray[i]) = 0) : 0);
+        vNames.pArray[i] = nil;
     }
     Vec_PtrFree( vNames );
 }

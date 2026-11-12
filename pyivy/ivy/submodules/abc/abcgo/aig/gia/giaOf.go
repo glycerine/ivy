@@ -183,7 +183,7 @@ func Of_ManAreaFlow(p *Of_Man_t) {
     var AreaUnit int32  = 1000;
     var i, Id, Total int32;
     var pObj *Gia_Obj_t;
-    assert(p.pGia.pRefs == nil, "p.pGia.pRefs == nil");
+    assert(p.pGia.Refs == nil, "p.pGia.Refs == nil");
     Gia_ManCreateRefs( p.pGia );
     Of_ObjSetFlow( p, 0, 0 );
     // inlining of macro Gia_ManForEachCiId
@@ -199,7 +199,7 @@ func Of_ManAreaFlow(p *Of_Man_t) {
         Total += Gia_ObjFanin0(pObj).Value;
     }
     // inlining of macro ABC_FREE
-    ((p.pGia.pRefs) ? (free((char *) (p.pGia.pRefs)), (p.pGia.pRefs) = 0) : 0);
+    p.pGia.Refs = nil;
     if true {
         return; }
     fmt.Printf("CI = %5d.  ", Gia_ManCiNum(p.pGia));
@@ -228,16 +228,16 @@ func Of_StoCreate(pGia *Gia_Man_t, pPars *Jf_Par_t) *Of_Man_t {
     assert(pPars.nCutNum > 1  && pPars.nCutNum <= OF_CUT_MAX, "pPars.nCutNum > 1  && pPars.nCutNum <= OF_CUT_MAX");
     assert(pPars.nLutSize > 1 && pPars.nLutSize <= OF_LEAF_MAX, "pPars.nLutSize > 1 && pPars.nLutSize <= OF_LEAF_MAX");
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     Vec_IntFreeP( &pGia.vCellMapping );
     if Gia_ManHasChoices(pGia) {
         Gia_ManSetPhase(pGia); }
     // create references
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     vFlowRefs = Vec_IntAlloc(0);
     Mf_ManSetFlowRefs( pGia, vFlowRefs );
-    pGia.pRefs= Vec_IntReleaseArray(vFlowRefs);
+    pGia.Refs= Vec_IntReleaseArray(vFlowRefs);
     Vec_IntFree(vFlowRefs);
     // create
     // inlining of macro ABC_CALLOC
@@ -257,9 +257,9 @@ func Of_StoCreate(pGia *Gia_Man_t, pPars *Jf_Par_t) *Of_Man_t {
     if pPars.fCutMin {
         p.vTtMem = Vec_MemAllocForTT( 6, 0 ); }          
     // compute area flow
-    pRefs = pGia.pRefs; pGia.pRefs = nil;
+    pRefs = pGia.Refs; pGia.Refs = nil;
     Of_ManAreaFlow( p );
-    pGia.pRefs = pRefs;
+    pGia.Refs = pRefs;
     return p;
 }
 func Of_StoDelete(p *Of_Man_t) {
@@ -270,14 +270,14 @@ func Of_StoDelete(p *Of_Man_t) {
     Vec_IntErase( &p.vCutDelays );
     Vec_IntErase( &p.vCutRefs );
     // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
+    p.pObjs = nil;
     // matching
     if p.pPars.fCutMin {
         Vec_MemHashFree( p.vTtMem ); }
     if p.pPars.fCutMin {
         Vec_MemFree( p.vTtMem ); }
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

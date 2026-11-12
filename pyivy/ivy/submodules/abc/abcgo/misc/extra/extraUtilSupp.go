@@ -150,8 +150,7 @@ func Abc_SuppGenPairs(p *Vec_Wrd_t, nBits int32) *Vec_Wrd_t {
         Vec_WrdPush( vRes, Value );
     }
     }
-    // inlining of macro ABC_FREE
-    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);
+    pMap = nil;
     return vRes;
 }
 func Abc_SuppGenPairs2(nOnes int32, nBits int32) *Vec_Wrd_t {
@@ -357,8 +356,7 @@ func Abc_SuppReadMin(pFileName string, pnVars *int32) *Vec_Wrd_t {
              fmt.Printf("Strange literal representation (%s) of cube %d.\n", pToken, nCubes); Vec_WrdFree(vRes); return nil; }
         iVar++;
     }
-    // inlining of macro ABC_FREE
-    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);
+    pStr = nil;
     if Vec_WrdSize(vRes) != nCubes { fmt.Printf("The number of cubes (%d) does not match declaration (%d).\n", Vec_WrdSize(vRes), nCubes); Vec_WrdFree(vRes); return nil; 
     } else {
         fmt.Printf("Successfully parsed function with %d inputs and %d cubes.\n", nVars, nCubes); }
@@ -505,8 +503,7 @@ var nVarsNew int32 = nVars;
     Vec_WecFree( vSingles );
     Vec_WecFree( vDoubles );
     Vec_WrdFree( pNew );
-    // inlining of macro ABC_FREE
-    ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);
+    pCounts = nil;
     return nVarsNew;
 }
 

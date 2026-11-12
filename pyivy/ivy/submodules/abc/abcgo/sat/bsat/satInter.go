@@ -332,26 +332,16 @@ ABC_PRT( "BCP     ", p->timeBcp   );
 ABC_PRT( "Trace   ", p->timeTrace );
 ABC_PRT( "TOTAL   ", p->timeTotal );
 */
-    // inlining of macro ABC_FREE
-    ((p.pInters) ? (free((char *) (p.pInters)), (p.pInters) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pProofNums) ? (free((char *) (p.pProofNums)), (p.pProofNums) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pVarTypes) ? (free((char *) (p.pVarTypes)), (p.pVarTypes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pInters = nil;
+    p.pProofNums = nil;
+    p.pTrail = nil;
+    p.pAssigns = nil;
+    p.pSeens = nil;
+    p.pVarTypes = nil;
+    p.pReasons = nil;
+    p.pWatches = nil;
+    p.pResLits = nil;
+    p = nil;
 }
 
 

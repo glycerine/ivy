@@ -233,3 +233,28 @@ func TestBDDBenchmarkReturnsNodeCount(t *testing.T) {
 		t.Fatalf("benchmark returned %d, want 4 nodes", nodes)
 	}
 }
+
+func TestClassicalCuddComparisonPreservesOriginalManager(t *testing.T) {
+	dd := cudd.NewBDDManager(4)
+	root := cudd.Cudd_Not(mux(dd))
+	cudd.Cudd_Ref(root)
+	// Exercise the initial-level transfer map with a nonidentity source order.
+	if cudd.Cudd_ShuffleHeap(dd, []int{1, 0, 3, 2}) != 1 {
+		t.Fatal("initial shuffle failed")
+	}
+	order := append([]int(nil), dd.InvPerm...)
+	inverse := make([]int, len(dd.Vars))
+	result := Extra_ReorderCudd(dd, root, inverse)
+	if result == nil {
+		t.Fatal("classical symmetric-sifting comparison failed")
+	}
+	checkMapping(t, dd, root, result, inverse)
+	for i, v := range order {
+		if dd.InvPerm[i] != v {
+			t.Fatal("comparison mutated input manager")
+		}
+	}
+	if cudd.Cudd_Regular(root).Ref != 1 {
+		t.Fatal("comparison leaked input references")
+	}
+}

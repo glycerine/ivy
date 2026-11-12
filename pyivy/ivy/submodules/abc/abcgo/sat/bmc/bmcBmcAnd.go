@@ -434,8 +434,7 @@ func Bmc_MnaFree(p *Bmc_Mna_t) {
     Vec_IntFreeP( &p.vOutputs );
     Vec_IntFreeP( &p.vNodes );
     sat_solver_delete( p.pSat );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -862,8 +861,7 @@ func Gia_ManBmcPerform_old_cnf(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {
             if RetValue == -1 {
                 fmt.Printf("SAT solver reached conflict/runtime limit in frame %d.\n", f);
             } else {
-                // inlining of macro ABC_FREE
-                ((pGia.pCexSeq) ? (free((char *) (pGia.pCexSeq)), (pGia.pCexSeq) = 0) : 0);
+                pGia.pCexSeq = nil;
                 pGia.pCexSeq = Gia_ManBmcCexGen( p, pGia, i );
                 fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.  ", i - f * Gia_ManPoNum(pGia), Gia_ManName(pGia), f);
                 Abc_PrintTime( 1, "Time", Abc_Clock() - p.clkStart );
@@ -1043,8 +1041,7 @@ func Gia_ManBmcPerformInt(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {
             if RetValue == -1 {
                 fmt.Printf("SAT solver reached conflict/runtime limit in frame %d.\n", f);
             } else {
-                // inlining of macro ABC_FREE
-                ((pGia.pCexSeq) ? (free((char *) (pGia.pCexSeq)), (pGia.pCexSeq) = 0) : 0);
+                pGia.pCexSeq = nil;
                 pGia.pCexSeq = Gia_ManBmcCexGen( p, pGia, i );
                 fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.  ", i - f * Gia_ManPoNum(pGia), Gia_ManName(pGia), f);
                 Abc_PrintTime( 1, "Time", Abc_Clock() - p.clkStart );

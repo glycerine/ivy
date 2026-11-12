@@ -110,8 +110,7 @@ p.timeTotal = Abc_Clock() - clkTotal;
     if pPars.fVerbose { 
         Abc_PrintTime( 1, "Old choice computation time", Abc_Clock() - clk2 ); }
     // create choices
-    // inlining of macro ABC_FREE
-    ((pAig.pTable) ? (free((char *) (pAig.pTable)), (pAig.pTable) = 0) : 0);
+    pAig.pTable = nil;
     pResult = Dch_DeriveChoiceAig( pAig, pPars.fSkipRedSupp );
     // count the number of representatives
     if pPars.fVerbose { 

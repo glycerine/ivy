@@ -398,8 +398,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clk)))/(float6
         Abc_Print(1, "%s =", ("Sim time"));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clkTotal)))/(float64(int64(time.Second))));;
     }
-    // inlining of macro ABC_FREE
-    ((pBins) ? (free((char *) (pBins)), (pBins) = 0) : 0);
+    pBins = nil;
     Fsim_ManDelete( p );
     return vStates;
 

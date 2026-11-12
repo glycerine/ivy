@@ -859,10 +859,8 @@ func Mpm_ManPrecomputePerms(p *Mpm_Man_t) {
         }
         assert(uTruth == s_DsdClass6[i].uTruth, "uTruth == s_DsdClass6[i].uTruth");
     }
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+    pPerm = nil;
+    pComp = nil;
     // build hash table
     p.pHash = Mpm_ManBuildHashTable( &p.vConfgRes );
     Abc_PrintTime( 1, "Setting up DSD information", Abc_Clock() - clk );

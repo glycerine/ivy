@@ -268,7 +268,7 @@ func Frc_ManStartSimple(pGia *Gia_Man_t) *Frc_Man_t {
         pObjLog.iFanin = pObjLog.iFanout = 0;
     }
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     return p;
 }
 
@@ -338,7 +338,7 @@ func Frc_ManCreateRefsSpecial(p *Gia_Man_t) {
     var pObj, pFan0, pFan1 *Gia_Obj_t;
     var pObjC, pObjD0, pObjD1 *Gia_Obj_t;
     var i int32;
-    assert(p.pRefs == nil, "p.pRefs == nil");
+    assert(p.Refs == nil, "p.Refs == nil");
     Gia_ManCleanMark0( p );
     Gia_ManCreateRefs( p );
     // inlining of macro Gia_ManForEachAnd
@@ -386,7 +386,7 @@ func Frc_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {
     var vSuper, vVisit *Vec_Int_t;
     var pObj, pFanin *Gia_Obj_t;
     var i, k, Counter int32;
-    assert(p.pRefs != nil, "p.pRefs != nil");
+    assert(p.Refs != nil, "p.Refs != nil");
 
     // mark nodes to be used in the logic network
     Gia_ManCleanMark0( p );
@@ -417,9 +417,9 @@ func Frc_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {
 
     // reset the references
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     // inlining of macro ABC_CALLOC
-    p.pRefs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));
+    p.Refs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));
     // reference from internal nodes
     Counter = 0;
     vSuper = Vec_IntAlloc( 100 );
@@ -577,7 +577,7 @@ func Frc_ManStart(pGia *Gia_Man_t) *Frc_Man_t {
         pObjLog.iFanin = pObjLog.iFanout = 0;
     }
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     return p;
 }
 
@@ -622,9 +622,9 @@ func Frc_ManStop(p *Frc_Man_t) {
     Vec_IntFree( p.vCis );
     Vec_IntFree( p.vCos );
     // inlining of macro ABC_FREE
-    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);
+    p.pObjData = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -804,7 +804,7 @@ func Frc_ManPlaceRandom(p *Frc_Man_t) {
         pThis.pPlace = pPlacement[Counter]; Counter++;
     }
     // inlining of macro ABC_FREE
-    ((pPlacement) ? (free((char *) (pPlacement)), (pPlacement) = 0) : 0);
+    pPlacement = nil;
 }
 
 /**Function*************************************************************
@@ -1010,9 +1010,9 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((clk2Total)))/(float64(int64(time.Secon
         nCutPrev = nCutCur;
     }
     // inlining of macro ABC_FREE
-    ((pHandles) ? (free((char *) (pHandles)), (pHandles) = 0) : 0);
+    pHandles = nil;
     // inlining of macro ABC_FREE
-    ((pVertX) ? (free((char *) (pVertX)), (pVertX) = 0) : 0);
+    pVertX = nil;
     Vec_IntFree( vCoOrder );
 }
 

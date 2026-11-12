@@ -767,10 +767,8 @@ func AddCubesToStartingCover(vEsop *Vec_Wec_t) {
         g_CoverInfo.nLiteralsBefore += Vec_IntSize(vCube);
         g_CoverInfo.QCostBefore += ComputeQCost(vCube);
     }
-    // inlining of macro ABC_FREE
-    ((s_Level2Var) ? (free((char *) (s_Level2Var)), (s_Level2Var) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_LevelValues) ? (free((char *) (s_LevelValues)), (s_LevelValues) = 0) : 0);
+    s_Level2Var = nil;
+    s_LevelValues = nil;
 
     assert(g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc, "g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc");
 }

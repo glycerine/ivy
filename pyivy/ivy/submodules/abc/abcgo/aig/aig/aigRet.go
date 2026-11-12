@@ -401,9 +401,9 @@ func Rtm_ManFree(p *Rtm_Man_t) {
     Vec_PtrFree( p.vPos );
     Aig_MmFlexStop( p.pMem, 0 );
     // inlining of macro ABC_FREE
-    ((p.pExtra) ? (free((char *) (p.pExtra)), (p.pExtra) = 0) : 0);
+    p.pExtra = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -941,7 +941,7 @@ func Rtm_ManToAig(pRtm *Rtm_Man_t) *Aig_Man_t {
     }
     }
     // inlining of macro ABC_FREE
-    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);
+    pLatches = nil;
     Aig_ManSetRegNum( pNew, nLatches );
     // remove useless nodes
     Aig_ManCleanup( pNew );

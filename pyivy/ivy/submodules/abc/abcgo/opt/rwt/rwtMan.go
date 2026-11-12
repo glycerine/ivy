@@ -74,14 +74,10 @@ func Rwt_ManGlobalStart() {
 
 ***********************************************************************/
 func Rwt_ManGlobalStop() { 
-    // inlining of macro ABC_FREE
-    ((s_puCanons) ? (free((char *) (s_puCanons)), (s_puCanons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_pPhases) ? (free((char *) (s_pPhases)), (s_pPhases) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_pPerms) ? (free((char *) (s_pPerms)), (s_pPerms) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_pMap) ? (free((char *) (s_pMap)), (s_pMap) = 0) : 0);
+    s_puCanons = nil;
+    s_pPhases = nil;
+    s_pPerms = nil;
+    s_pMap = nil;
 } 
 
 /**Function*************************************************************
@@ -174,16 +170,11 @@ func Rwt_ManStop(p *Rwt_Man_t) {
     Vec_PtrFree( p.vFanins );
     Vec_PtrFree( p.vFaninsCur );
     Mem_FixedStop( p.pMmNode, 0 );
-    // inlining of macro ABC_FREE
-    ((p.pMapInv) ? (free((char *) (p.pMapInv)), (p.pMapInv) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPractical) ? (free((char *) (p.pPractical)), (p.pPractical) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPerms4) ? (free((char *) (p.pPerms4)), (p.pPerms4) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMapInv = nil;
+    p.pTable = nil;
+    p.pPractical = nil;
+    p.pPerms4 = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

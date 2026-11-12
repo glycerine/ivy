@@ -149,11 +149,11 @@ func Str_NtkCreate(nObjsAlloc int32, nFaninsAlloc int32) *Str_Ntk_t {
 func Str_NtkDelete(p *Str_Ntk_t) {
 //    printf( "Total delay gain = %d.\n", p->DelayGain );
     // inlining of macro ABC_FREE
-    ((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);
+    p.vFanins.pArray = nil;
     // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
+    p.pObjs = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Str_NtkPs(p *Str_Ntk_t, clk abctime) {
     fmt.Printf("Network contains %d ands, %d xors, %d muxes (%d trees in %d groups).  ", p.nObjCount[STR_AND], p.nObjCount[STR_XOR], p.nObjCount[STR_MUX], p.nTrees, p.nGroups);
@@ -240,7 +240,7 @@ func Gia_ManDupMuxesNoHash(p *Gia_Man_t) *Gia_Man_t {
     var i, iLit0, iLit1, fCompl int32;
     assert(p.pMuxes == nil, "p.pMuxes == nil");
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     // discount nodes with one fanout pointed to by MUX type
     // inlining of macro Gia_ManForEachAnd
@@ -378,7 +378,7 @@ func Str_ManDeriveTrees(p *Gia_Man_t) *Vec_Wec_t {
     assert(p.pMuxes != nil, "p.pMuxes != nil");
     // mark MUXes whose only fanout is a MUX
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     // inlining of macro Gia_ManForEachMuxId
     for  i = 0; (i < p.nObjs); i++  {                                     if !Gia_ObjIsMuxId(p, i) {} else {
@@ -1354,7 +1354,7 @@ func Str_NtkBalance(pGia *Gia_Man_t, p *Str_Ntk_t, nLutSize int32, fUseMuxes int
         fmt.Printf("Max delay = %d.  Old objs = %d.  New objs = %d.\n", Delay >> 4, Gia_ManObjNum(pGia), Gia_ManObjNum(pNew)); }
     Vec_IntFree( vDelay );
     // inlining of macro ABC_FREE
-    ((pNew.vCopies.pArray) ? (free((char *) (pNew.vCopies.pArray)), (pNew.vCopies.pArray) = 0) : 0);
+    pNew.vCopies.pArray = nil;
     Gia_ManHashStop( pNew );
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
     pNew = Gia_ManDupNoMuxes( pTemp = pNew, 0 );

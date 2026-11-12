@@ -285,29 +285,7 @@ func Gia_ManCheckTopoOrder(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDeriveNexts(p *Gia_Man_t) *int32 {
-    var pNexts, pTails *uint32;
-    var i int32;
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    assert(p.pNexts == nil, "p.pNexts == nil");
-    // inlining of macro ABC_CALLOC
-    pNexts = ((unsigned *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(unsigned)));
-    // inlining of macro ABC_ALLOC
-    pTails = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Gia_ManObjNum(p))));
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        pTails[i] = i;
-    }
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        //if ( p->pReprs[i].iRepr == GIA_VOID )
-        if !p.pReprs[i].iRepr || p.pReprs[i].iRepr == GIA_VOID {
-            continue; }
-        pNexts[ pTails[p.pReprs[i].iRepr] ] = i;
-        pTails[p.pReprs[i].iRepr] = i;
-    }
-    // inlining of macro ABC_FREE
-    ((pTails) ? (free((char *) (pTails)), (pTails) = 0) : 0);
-    return (int *)pNexts;
-}
+
 
 /**Function*************************************************************
 
@@ -320,26 +298,7 @@ func Gia_ManDeriveNexts(p *Gia_Man_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDeriveReprs(p *Gia_Man_t) {
-    var i, iObj int32;
-    assert(p.pReprs == nil, "p.pReprs == nil");
-    assert(p.pNexts != nil, "p.pNexts != nil");
-    // inlining of macro ABC_CALLOC
-    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        Gia_ObjSetRepr( p, i, GIA_VOID );
-    }
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        if p.pNexts[i] == 0 {
-            continue; }
-        if p.pReprs[i].iRepr != GIA_VOID {
-            continue; }
-        // next is set, repr is not set
-        for  iObj = p.pNexts[i]; (iObj != 0); iObj = p.pNexts[iObj]  {
-            p.pReprs[iObj].iRepr = i;
-        }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -688,10 +647,10 @@ func Gia_ManEquivReduce(p *Gia_Man_t, fUseAll int32, fDualOut int32, fSkipPhase 
         }
         //printf( "Created equivalence classes.\n" );
         // inlining of macro ABC_FREE
-        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+        p.pNexts = nil;
         p.pNexts = Gia_ManDeriveNexts( p );
         // inlining of macro ABC_FREE
-        ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);
+        pMap = nil;
     }
     if !p.pReprs {
         Abc_Print( 1, "Gia_ManEquivReduce(): Equivalence classes are not available.\n" );
@@ -807,10 +766,10 @@ func Gia_ManEquivReduce2(p *Gia_Man_t) *Gia_Man_t {
         }
         //printf( "Created equivalence classes.\n" );
         // inlining of macro ABC_FREE
-        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+        p.pNexts = nil;
         p.pNexts = Gia_ManDeriveNexts( p );
         // inlining of macro ABC_FREE
-        ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);
+        pMap = nil;
     }
     if !p.pReprs {
         Abc_Print( 1, "Gia_ManEquivReduce(): Equivalence classes are not available.\n" );
@@ -1730,7 +1689,7 @@ func Gia_ManEquivFilter(p *Gia_Man_t, vPoIds *Vec_Int_t, fVerbose int32) {
     }
     Vec_IntFree( vMap );
     // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+    p.pNexts = nil;
     p.pNexts = Gia_ManDeriveNexts( p );
 }
 
@@ -1816,7 +1775,7 @@ func Gia_ManEquivImprove(p *Gia_Man_t) {
     }
     Vec_IntFree( vClass );
     // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+    p.pNexts = nil;
 //    p->pNexts = Gia_ManDeriveNexts( p );
 }
 
@@ -2210,7 +2169,7 @@ func Gia_CommandSpecI(pGia *Gia_Man_t, nFramesInit int32, nBTLimitInit int32, fS
                 break;
             }
             if fStart != 0 {
-                nStart = pCex.iFrame; }
+                nStart = pCex.IFrame; }
             // perform simulation
             {
                 var Pars Cec_ParSim_t;
@@ -2219,11 +2178,11 @@ func Gia_CommandSpecI(pGia *Gia_Man_t, nFramesInit int32, nBTLimitInit int32, fS
                 pPars.fCheckMiter = fCheckMiter;
                 if Cec_ManSeqResimulateCounter( pGia, pPars, pCex ) {
                     // inlining of macro ABC_FREE
-                    ((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0);
+                    pCex = nil;
                     break;
                 }
                 // inlining of macro ABC_FREE
-                ((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0);
+                pCex = nil;
             }
         }
         // write equivalence classes
@@ -2753,13 +2712,13 @@ func Gia_ManTransferTest(p *Gia_Man_t) {
     } else {
         fmt.Printf("Verification of nexts succeeded.\n"); }
     // inlining of macro ABC_FREE
-    ((pNew.pReprs) ? (free((char *) (pNew.pReprs)), (pNew.pReprs) = 0) : 0);
+    pNew.pReprs = nil;
     // inlining of macro ABC_FREE
-    ((pNew.pNexts) ? (free((char *) (pNew.pNexts)), (pNew.pNexts) = 0) : 0);
+    pNew.pNexts = nil;
     // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pReprs = nil;
     // inlining of macro ABC_FREE
-    ((pNexts) ? (free((char *) (pNexts)), (pNexts) = 0) : 0);
+    pNexts = nil;
     Gia_ManStop( pNew );
 }
 

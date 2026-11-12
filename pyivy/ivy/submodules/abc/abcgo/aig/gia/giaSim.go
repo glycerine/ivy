@@ -197,13 +197,13 @@ func Gia_ManSimDelete(p *Gia_ManSim_t) {
     Vec_IntFreeP( &p.vCis2Ids );
     Gia_ManStopP( &p.pAig );
     // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
+    p.pDataSim = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);
+    p.pDataSimCis = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);
+    p.pDataSimCos = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -571,7 +571,7 @@ func Gia_ManGenerateCounter(pAig *Gia_Man_t, iFrame int32, iOut int32, nWords in
     }
     }
     // inlining of macro ABC_FREE
-    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);
+    pData = nil;
     return p;
 }
 
@@ -619,7 +619,7 @@ func Gia_ManSimSimulate(pAig *Gia_Man_t, pPars *Gia_ParSim_t) int32 {
     if pAig.pReprs && pAig.pNexts {
         return Gia_ManSimSimulateEquiv( pAig, pPars ); }
     // inlining of macro ABC_FREE
-    ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+    pAig.pCexSeq = nil;
     p = Gia_ManSimCreate( pAig, pPars );
     Gia_ManResetRandom( pPars );
     Gia_ManSimInfoInit( p );
@@ -806,41 +806,8 @@ func Gia_ManBuiltInSimStart(p *Gia_Man_t, nWords int32, nObjs int32) {
         }
     }
 }
-func Gia_ManBuiltInSimPerformInt(p *Gia_Man_t, iObj int32) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj ); var w int32;
-    var pInfo *word   = Gia_ManBuiltInData( p, iObj ); 
-    var pInfo0 *word  = Gia_ManBuiltInData( p, Gia_ObjFaninId0(pObj, iObj) );
-    var pInfo1 *word  = Gia_ManBuiltInData( p, Gia_ObjFaninId1(pObj, iObj) ); 
-    assert(p.fBuiltInSim || p.fIncrSim, "p.fBuiltInSim || p.fIncrSim");
-    if Gia_ObjFaninC0(pObj) {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = 0; w < p.nSimWords; w++  {
-                pInfo[w] = ~(pInfo0[w] | pInfo1[w]);
-            }
-        } else { 
-            for  w = 0; w < p.nSimWords; w++  {
-                pInfo[w] = ~pInfo0[w] & pInfo1[w];
-            } }
-    
-    } else {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = 0; w < p.nSimWords; w++  {
-                pInfo[w] = pInfo0[w] & ~pInfo1[w];
-            }
-        } else { 
-            for  w = 0; w < p.nSimWords; w++  {
-                pInfo[w] = pInfo0[w] & pInfo1[w];
-            } }
-    }
-    assert(Vec_WrdSize(p.vSims) == Gia_ManObjNum(p) * p.nSimWords, "Vec_WrdSize(p.vSims) == Gia_ManObjNum(p) * p.nSimWords");
-}
-func Gia_ManBuiltInSimPerform(p *Gia_Man_t, iObj int32) {
-    var w int32;
-    for  w = 0; w < p.nSimWords; w++  {
-        Vec_WrdPush( p.vSims, 0 );
-    }
-    Gia_ManBuiltInSimPerformInt( p, iObj );
-}
+
+
 
 func Gia_ManBuiltInSimResimulateCone_rec(p *Gia_Man_t, iObj int32) {
     var pObj *Gia_Obj_t;

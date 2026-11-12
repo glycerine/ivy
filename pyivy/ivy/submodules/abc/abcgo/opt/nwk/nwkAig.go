@@ -209,8 +209,7 @@ func Nwk_ManCreateFromGia(p *Gia_Man_t, vPPis *Vec_Int_t, vNodes *Vec_Int_t, vLe
         Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[0] );
     }
     assert(Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1, "Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1");
-    // inlining of macro ABC_FREE
-    ((ppCopies) ? (free((char *) (ppCopies)), (ppCopies) = 0) : 0);
+    ppCopies = nil;
     *pvMapInv = vMaps;
     return pNtk;
 }

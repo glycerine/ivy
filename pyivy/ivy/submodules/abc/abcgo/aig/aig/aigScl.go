@@ -1,748 +1,442 @@
+// Sequential remapping and cleanup, ported from ABC aigScl.c.
 package aig
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-/**CFile****************************************************************
-
-  FileName    [aigScl.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Sequential cleanup.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigScl.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Remaps the manager.]
-
-  Description [Map in the array specifies for each CI node the node that
-  should be used after remapping.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRemap(p *Aig_Man_t, vMap *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjMapped *Aig_Obj_t;
-    var i, nTruePis int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nAsserts = p.nAsserts;
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    assert(p.vFlopNums == nil || Vec_IntSize(p.vFlopNums) == p.nRegs, "p.vFlopNums == nil || Vec_IntSize(p.vFlopNums) == p.nRegs");
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    if p.vFlopReprs {
-        pNew.vFlopReprs = Vec_IntDup( p.vFlopReprs ); }
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-    // implement the mapping
-    nTruePis = Aig_ManCiNum(p)-Aig_ManRegNum(p);
-    if p.vFlopReprs {
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pObj.pNext = (Aig_Obj_t *)int64(Vec_IntEntry( p.vFlopNums, i-nTruePis ));
-        }
-    }
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObjMapped = (Aig_Obj_t *)Vec_PtrEntry( vMap, i );
-        pObj.pData = Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pObjMapped).pData, Aig_IsComplement(pObjMapped) );
-        if pNew.vFlopReprs && i >= nTruePis && pObj != pObjMapped {
-            Vec_IntPush( pNew.vFlopReprs, Aig_ObjCioId(pObj) );
-            if Aig_ObjIsConst1( Aig_Regular(pObjMapped) ) {
-                Vec_IntPush( pNew.vFlopReprs, -1 );
-            } else {
-                assert(!Aig_IsComplement(pObjMapped), "!Aig_IsComplement(pObjMapped)");
-                assert(Aig_ObjIsCi(pObjMapped), "Aig_ObjIsCi(pObjMapped)");
-                assert(Aig_ObjCioId(pObj) != Aig_ObjCioId(pObjMapped), "Aig_ObjCioId(pObj) != Aig_ObjCioId(pObjMapped)");
-                Vec_IntPush( pNew.vFlopReprs, Aig_ObjCioId(pObjMapped) );
-            }
-        }
-    }
-    if p.vFlopReprs {
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pObj.pNext = nil;
-        }
-    }
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if Aig_ObjIsBuf(pObj) {
-            pObj.pData = Aig_ObjChild0Copy(pObj);
-        } else if Aig_ObjIsNode(pObj) {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // add the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    assert(Aig_ManNodeNum(p) >= Aig_ManNodeNum(pNew), "Aig_ManNodeNum(p) >= Aig_ManNodeNum(pNew)");
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManRemap(): The check has failed.\n"); }
-    return pNew;
+func sclLayout(p *Graph) (registers, pis, pos int) {
+	registers = int(p.nRegs)
+	if registers < 0 || registers > len(p.inputs) || registers > len(p.outputs) {
+		panic("aig: invalid sequential terminal counts")
+	}
+	if p.FlopNumbers != nil && len(p.FlopNumbers) != registers {
+		panic("aig: flop-number metadata must match register count")
+	}
+	for _, domain := range p.ClockDomains {
+		for _, reg := range domain {
+			if reg < 0 || int(reg) >= registers {
+				panic("aig: clock-domain register out of bounds")
+			}
+		}
+	}
+	return registers, len(p.inputs) - registers, len(p.outputs) - registers
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of dangling nodes removed.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSeqCleanup_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    // collect latch input corresponding to unmarked PI (latch output)
-    if Aig_ObjIsCi(pObj) {
-        Vec_PtrPush( vNodes, pObj.pNext );
-        return;
-    }
-    if Aig_ObjIsCo(pObj) || Aig_ObjIsBuf(pObj) {
-        Aig_ManSeqCleanup_rec( p, Aig_ObjFanin0(pObj), vNodes );
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_ManSeqCleanup_rec( p, Aig_ObjFanin0(pObj), vNodes );
-    Aig_ManSeqCleanup_rec( p, Aig_ObjFanin1(pObj), vNodes );
+// Aig_ManRemap applies CI replacements simultaneously. Targets are original
+// inputs or constants, not partially rewritten CI mappings. Dangling nodes are
+// retained, as in ABC; sequential cleanup is a separate operation.
+func Aig_ManRemap(p *Graph, mapping []Edge) *Graph {
+	registers, pis, _ := sclLayout(p)
+	if len(mapping) != len(p.inputs) {
+		panic("aig: wrong sequential mapping width")
+	}
+	index := make(map[int]int, len(p.inputs))
+	for i, input := range p.inputs {
+		index[input.NodeID()] = i
+	}
+	if p.FlopReprs != nil && len(p.FlopNumbers) != registers {
+		panic("aig: representative tracking requires flop numbers")
+	}
+	for i, target := range mapping {
+		if !p.valid(target) || (p.node(target).Kind != Input && p.node(target).Kind != Constant) {
+			panic("aig: sequential mapping must target an input or constant")
+		}
+		if p.FlopReprs == nil || i < pis || p.inputs[i] == target {
+			continue
+		}
+		from := p.FlopNumbers[i-pis]
+		if from < 0 {
+			panic("aig: negative original flop number")
+		}
+		if p.node(target).Kind == Constant {
+			if target != p.Const0() {
+				panic("aig: tracked constant register must preserve zero initialization")
+			}
+		} else {
+			targetIndex := index[target.NodeID()]
+			if target.Complemented() || targetIndex < pis {
+				panic("aig: tracked register mapping must target a regular register")
+			}
+			to := p.FlopNumbers[targetIndex-pis]
+			if to < 0 || to == from {
+				panic("aig: invalid original flop representative")
+			}
+		}
+	}
+	q := NewGraph()
+	dupMetadata(q, p)
+	original := map[int]Edge{0: q.Const1()}
+	for _, input := range p.inputs {
+		copy := q.NewInput()
+		q.node(copy).Level = p.node(input).Level
+		original[input.NodeID()] = copy
+	}
+	p.copies = map[int]Edge{0: q.Const1()}
+	for i, input := range p.inputs {
+		target := mapping[i]
+		p.copies[input.NodeID()] = dupPhase(original[target.NodeID()], target.Complemented())
+		if p.FlopReprs == nil || i < pis || input == target {
+			continue
+		}
+		from, to := p.FlopNumbers[i-pis], int32(-1)
+		if p.node(target).Kind != Constant {
+			targetIndex := index[target.NodeID()]
+			to = p.FlopNumbers[targetIndex-pis]
+		}
+		q.FlopReprs = append(q.FlopReprs, from, to)
+	}
+	active := make(map[int]bool)
+	for id, n := range p.nodes {
+		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupVisit(q, p, Edge(id)<<1, false, false, active)
+		}
+	}
+	for _, output := range p.outputs {
+		q.AddOutput(dupVisit(q, p, p.outputDriver(output), false, false, active))
+	}
+	q.nRegs = p.nRegs
+	if err := q.Check(); err != nil {
+		panic(fmt.Sprintf("aig: invalid sequential remap: %v", err))
+	}
+	return q
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of dangling nodes removed.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSeqCleanup(p *Aig_Man_t) int32 {
-    var vNodes, vCis, vCos *Vec_Ptr_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i, nTruePis, nTruePos int32;
-//    assert( Aig_ManBufNum(p) == 0 );
-
-    // mark the PIs
-    Aig_ManIncrementTravId( p );
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    }
-
-    // prepare to collect nodes reachable from POs
-    vNodes = Vec_PtrAlloc( 100 );
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Vec_PtrPush( vNodes, pObj );
-    }
-
-    // remember latch inputs in latch outputs
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.pNext = pObjLi;
-    }
-    // mark the nodes reachable from these nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Aig_ManSeqCleanup_rec( p, pObj, vNodes );
-    }
-    assert(Vec_PtrSize(vNodes) <= Aig_ManCoNum(p), "Vec_PtrSize(vNodes) <= Aig_ManCoNum(p)");
-    // clean latch output pointers
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.pNext = nil;
-    }
-
-    // if some latches are removed, update PIs/POs
-    if Vec_PtrSize(vNodes) < Aig_ManCoNum(p) {
-        if p.vFlopNums {
-            var nTruePos int32  = Aig_ManCoNum(p)-Aig_ManRegNum(p);
-            var iNum, k int32;
-            // inlining of macro Aig_ManForEachCo
-            // inlining of macro Vec_PtrForEachEntry
-            for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-                if i >= nTruePos && Aig_ObjIsTravIdCurrent(p, pObj) {
-                    iNum = Vec_IntEntry( p.vFlopNums, i - nTruePos );
-                    Vec_IntWriteEntry( p.vFlopNums, k++, iNum );
-                }
-            }
-            assert(k == Vec_PtrSize(vNodes) - nTruePos, "k == Vec_PtrSize(vNodes) - nTruePos");
-            Vec_IntShrink( p.vFlopNums, k );
-        }
-        // collect new CIs/COs
-        vCis = Vec_PtrAlloc( Aig_ManCiNum(p) );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            if Aig_ObjIsTravIdCurrent(p, pObj) {
-                Vec_PtrPush( vCis, pObj );
-            } else {
-                Vec_PtrWriteEntry( p.vObjs, pObj.Id, nil );
-//                Aig_ManRecycleMemory( p, pObj );
-            }
-        }
-        vCos = Vec_PtrAlloc( Aig_ManCoNum(p) );
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if Aig_ObjIsTravIdCurrent(p, pObj) {
-                Vec_PtrPush( vCos, pObj );
-            } else {
-                Aig_ObjDisconnect( p, pObj );
-                Vec_PtrWriteEntry( p.vObjs, pObj.Id, nil );
-//                Aig_ManRecycleMemory( p, pObj );
-            }
-        }
-        // remember the number of true PIs/POs
-        nTruePis = Aig_ManCiNum(p) - Aig_ManRegNum(p);
-        nTruePos = Aig_ManCoNum(p) - Aig_ManRegNum(p);
-        // set the new number of registers
-        p.nRegs -= Aig_ManCoNum(p) - Vec_PtrSize(vNodes);
-        // create new PIs/POs
-        assert(Vec_PtrSize(vCis) == nTruePis + p.nRegs, "Vec_PtrSize(vCis) == nTruePis + p.nRegs");
-        assert(Vec_PtrSize(vCos) == nTruePos + p.nRegs, "Vec_PtrSize(vCos) == nTruePos + p.nRegs");
-        Vec_PtrFree( p.vCis );    p.vCis = vCis;
-        Vec_PtrFree( p.vCos );    p.vCos = vCos;
-        p.nObjs[AIG_OBJ_CI] = Vec_PtrSize( p.vCis );
-        p.nObjs[AIG_OBJ_CO] = Vec_PtrSize( p.vCos );
-                
-    }
-    Vec_PtrFree( vNodes );
-    p.nTruePis = Aig_ManCiNum(p) - Aig_ManRegNum(p); 
-    p.nTruePos = Aig_ManCoNum(p) - Aig_ManRegNum(p); 
-    Aig_ManSetCioIds( p );
-    // remove dangling nodes
-    return Aig_ManCleanup( p );
+// Aig_ManSeqCleanup_rec traverses combinational fanins and queues the next-state
+// output whenever a register output is reached. A register boundary is crossed
+// through the worklist, not by recursively following clock-cycle feedback.
+func Aig_ManSeqCleanup_rec(p *Graph, e Edge, pending *[]Edge) {
+	registers, pis, pos := sclLayout(p)
+	regByID := make(map[int]int, registers)
+	for i, input := range p.inputs[pis:] {
+		regByID[input.NodeID()] = i
+	}
+	sclReach(p, e, pending, regByID, pos)
+}
+func sclReach(p *Graph, e Edge, pending *[]Edge, registers map[int]int, pos int) {
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	n.TravID = p.travID
+	if n.Kind == Constant {
+		return
+	}
+	if n.Kind == Input {
+		if reg, ok := registers[e.NodeID()]; ok {
+			*pending = append(*pending, p.outputs[pos+reg])
+		}
+		return
+	}
+	for _, fanin := range nodeFanins(*n) {
+		sclReach(p, fanin, pending, registers, pos)
+	}
+}
+func sclLiveRegisters(p *Graph) []bool {
+	registers, pis, pos := sclLayout(p)
+	Aig_ManIncrementTravId(p)
+	p.nodes[0].TravID = p.travID
+	for _, input := range p.inputs[:pis] {
+		p.node(input).TravID = p.travID
+	}
+	index := make(map[int]int, registers)
+	for i, input := range p.inputs[pis:] {
+		index[input.NodeID()] = i
+	}
+	pending := append([]Edge(nil), p.outputs[:pos]...)
+	for i := 0; i < len(pending); i++ {
+		sclReach(p, pending[i], &pending, index, pos)
+	}
+	live := make([]bool, registers)
+	for i, input := range p.inputs[pis:] {
+		live[i] = p.node(input).TravID == p.travID
+	}
+	return live
+}
+func Aig_ManSeqCleanup(p *Graph) int32 {
+	_, pis, pos := sclLayout(p)
+	live := sclLiveRegisters(p)
+	inputs := append([]Edge(nil), p.inputs[:pis]...)
+	outputs := append([]Edge(nil), p.outputs[:pos]...)
+	oldToNew := make([]int32, len(live))
+	for i := range oldToNew {
+		oldToNew[i] = -1
+	}
+	var numbers []int32
+	if p.FlopNumbers != nil {
+		numbers = make([]int32, 0, len(live))
+	}
+	for i, keep := range live {
+		input, output := p.inputs[pis+i], p.outputs[pos+i]
+		if keep {
+			oldToNew[i] = int32(len(inputs) - pis)
+			inputs = append(inputs, input)
+			outputs = append(outputs, output)
+			if p.FlopNumbers != nil {
+				numbers = append(numbers, p.FlopNumbers[i])
+			}
+			continue
+		}
+		p.deleted[input.NodeID()] = true
+		if p.node(output).Kind == Output {
+			p.deleted[output.NodeID()] = true
+		}
+	}
+	if p.ClockDomains != nil {
+		domains := make([][]int32, len(p.ClockDomains))
+		for i, domain := range p.ClockDomains {
+			for _, reg := range domain {
+				if mapped := oldToNew[reg]; mapped >= 0 {
+					domains[i] = append(domains[i], mapped)
+				}
+			}
+		}
+		p.ClockDomains = domains
+	}
+	p.inputs, p.outputs = inputs, outputs
+	p.nRegs = int32(len(inputs) - pis)
+	p.FlopNumbers = numbers
+	return sclCleanupLogic(p)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of dangling nodes removed.]
-
-  Description [This cleanup procedure is different in that 
-  it removes logic but does not remove the dangling latches.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSeqCleanupBasic(p *Aig_Man_t) int32 {
-    var vNodes *Vec_Ptr_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-//    assert( Aig_ManBufNum(p) == 0 );
-
-    // mark the PIs
-    Aig_ManIncrementTravId( p );
-    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ObjSetTravIdCurrent( p, pObj );
-    }
-
-    // prepare to collect nodes reachable from POs
-    vNodes = Vec_PtrAlloc( 100 );
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Vec_PtrPush( vNodes, pObj );
-    }
-
-    // remember latch inputs in latch outputs
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.pNext = pObjLi;
-    }
-    // mark the nodes reachable from these nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Aig_ManSeqCleanup_rec( p, pObj, vNodes );
-    }
-    assert(Vec_PtrSize(vNodes) <= Aig_ManCoNum(p), "Vec_PtrSize(vNodes) <= Aig_ManCoNum(p)");
-    // clean latch output pointers
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pObjLo.pNext = nil;
-    }
-
-    // if some latches are removed, update PIs/POs
-    if Vec_PtrSize(vNodes) < Aig_ManCoNum(p) {
-        // add constant drivers to the dangling latches
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if !Aig_ObjIsTravIdCurrent(p, pObj) {
-                Aig_ObjPatchFanin0( p, pObj, Aig_ManConst0(p) ); }
-        }
-    }
-    Vec_PtrFree( vNodes );
-    // remove dangling nodes
-    return Aig_ManCleanup( p );
+// The source APIs report removed gates, not terminal/buffer storage reclaimed
+// by the Go manager's more general reachability cleanup.
+func sclCleanupLogic(p *Graph) int32 {
+	before := Aig_ManNodeNum(p)
+	Aig_ManCleanup(p)
+	return before - Aig_ManNodeNum(p)
+}
+func Aig_ManSeqCleanupBasic(p *Graph) int32 {
+	_, _, pos := sclLayout(p)
+	live := sclLiveRegisters(p)
+	for reg, keep := range live {
+		if keep {
+			continue
+		}
+		output := p.outputs[pos+reg]
+		if p.node(output).Kind == Output {
+			p.node(output).Fanins[0] = dupPhase(p.Const0(), output.Complemented())
+		} else {
+			p.outputs[pos+reg] = p.Const0()
+		}
+	}
+	p.recountReferences()
+	p.recomputeLevels()
+	p.refreshFanouts()
+	return sclCleanupLogic(p)
+}
+func Aig_ManCountMergeRegs(p *Graph) int32 {
+	writeMergeRegisterStats(os.Stdout, p)
+	return 0
+}
+func writeMergeRegisterStats(w io.Writer, p *Graph) {
+	_, _, pos := sclLayout(p)
+	drivers := make(map[int]bool)
+	zero, one := 0, 0
+	Aig_ManIncrementTravId(p)
+	for _, output := range p.outputs[pos:] {
+		driver := p.outputDriver(output)
+		drivers[driver.NodeID()] = true
+		p.node(driver).TravID = p.travID
+		if driver == p.Const0() {
+			zero++
+		}
+		if driver == p.Const1() {
+			one++
+		}
+	}
+	fmt.Fprintf(w, "Regs = %d. Fanins = %d. Const0 = %d. Const1 = %d.\n", p.nRegs, len(drivers), zero, one)
+}
+func Aig_ManReduceLachesCount(p *Graph) int32 {
+	registers, _, pos := sclLayout(p)
+	if registers == 0 {
+		panic("aig: register reduction requires registers")
+	}
+	seen := make(map[Edge]bool)
+	var count int32
+	for _, output := range p.outputs[pos:] {
+		driver := p.outputDriver(output)
+		if seen[driver] {
+			count++
+		}
+		seen[driver] = true
+	}
+	return count
+}
+func Aig_ManReduceLachesOnce(p *Graph) []Edge {
+	_, pis, pos := sclLayout(p)
+	mapping := append([]Edge(nil), p.inputs[:pis]...)
+	representative := make(map[Edge]Edge)
+	for i, output := range p.outputs[pos:] {
+		driver := p.outputDriver(output)
+		input := p.inputs[pis+i]
+		if first, ok := representative[driver]; ok {
+			mapping = append(mapping, first)
+		} else {
+			representative[driver] = input
+			mapping = append(mapping, input)
+		}
+	}
+	return mapping
+}
+func Aig_ManReduceLaches(p *Graph, verbose int32) *Graph {
+	if verbose != 0 {
+		fmt.Println("Performing combinational register sweep:")
+	}
+	for p.nRegs > 0 && Aig_ManReduceLachesCount(p) > 0 {
+		next := Aig_ManRemap(p, Aig_ManReduceLachesOnce(p))
+		Aig_ManSeqCleanup(next)
+		if verbose != 0 {
+			Aig_ManReportImprovement(p, next)
+		}
+		if next.nRegs >= p.nRegs {
+			panic("aig: register equality sweep made no progress")
+		}
+		Aig_ManStop(p)
+		p = next
+	}
+	return p
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of dangling nodes removed.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManCountMergeRegs(p *Aig_Man_t) int32 {
-    var pObj, pFanin *Aig_Obj_t;
-    var i, Counter, Const0, Const1 int32;
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        if Aig_ObjIsConst1(pFanin) {
-            if Aig_ObjFaninC0(pObj) {
-                Const0++;
-            } else {
-                Const1++; }
-        }
-        if Aig_ObjIsTravIdCurrent(p, pFanin) {
-            continue; }
-        Aig_ObjSetTravIdCurrent(p, pFanin);
-        Counter++;
-    }
-    fmt.Printf("Regs = %d. Fanins = %d. Const0 = %d. Const1 = %d.\n", Aig_ManRegNum(p), Counter, Const0, Const1);
-    return 0;
+// RegisterComponents matches the source's undirected register-dependency
+// grouping. Despite its historical SCC name, it traverses both forward and
+// reverse edges and therefore computes weakly connected components.
+func RegisterComponents(p *Graph) [][]int32 {
+	registers, pis, pos := sclLayout(p)
+	index := make(map[int]int, registers)
+	for i, input := range p.inputs[pis:] {
+		index[input.NodeID()] = i
+	}
+	neighbors := make([][]int, registers)
+	for output, e := range p.outputs[pos:] {
+		for _, input := range Aig_Support(p, p.outputDriver(e)) {
+			if source, ok := index[input.NodeID()]; ok {
+				neighbors[output] = append(neighbors[output], source)
+				neighbors[source] = append(neighbors[source], output)
+			}
+		}
+	}
+	seen := make([]bool, registers)
+	var result [][]int32
+	for start := 0; start < registers; start++ {
+		if seen[start] {
+			continue
+		}
+		seen[start] = true
+		component := []int32{int32(start)}
+		for i := 0; i < len(component); i++ {
+			for _, next := range neighbors[component[i]] {
+				if !seen[next] {
+					seen[next] = true
+					component = append(component, int32(next))
+				}
+			}
+		}
+		result = append(result, component)
+	}
+	return result
+}
+func Aig_ManComputeSccs(p *Graph) { writeRegisterComponents(os.Stdout, p) }
+func writeRegisterComponents(w io.Writer, p *Graph) {
+	if p.nRegs == 0 {
+		fmt.Fprintln(w, "The network is combinational.")
+		return
+	}
+	components := RegisterComponents(p)
+	for i, component := range components {
+		if len(component) == int(p.nRegs) {
+			fmt.Fprintln(w, "There is only one SCC of registers in this network.")
+			break
+		}
+		fmt.Fprintf(w, "SCC #%d contains %5d registers.\n", i+1, len(component))
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Checks how many latches can be reduced.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManReduceLachesCount(p *Aig_Man_t) int32 {
-    var pObj, pFanin *Aig_Obj_t;
-    var i, Counter, Diffs int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(!pObj.fMarkA && !pObj.fMarkB, "!pObj.fMarkA && !pObj.fMarkB"); }
-    }
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        if Aig_ObjFaninC0(pObj) {
-            if pFanin.fMarkB {
-                Counter++;
-            } else {
-                pFanin.fMarkB = 1; }
-        
-        } else {
-            if pFanin.fMarkA {
-                Counter++;
-            } else {
-                pFanin.fMarkA = 1; }
-        }
-    }
-    // count fanins that have both attributes
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        Diffs += pFanin.fMarkA && pFanin.fMarkB;
-        pFanin.fMarkA = pFanin.fMarkB = 0;
-    }
-//    printf( "Diffs = %d.\n", Diffs );
-    return Counter;
+// Aig_ManSclPart sweeps clock-domain partitions and transfers discovered classes
+// to the original graph before rebuilding it through those representatives.
+func Aig_ManSclPart(p *Graph, latchConst, latchEqual, verbose int32) *Graph {
+	sclLayout(p)
+	var partitions [][]int32
+	if len(p.ClockDomains) > 0 {
+		for _, domain := range p.ClockDomains {
+			partitions = append(partitions, append([]int32(nil), domain...))
+		}
+	} else if p.nRegs > 0 {
+		// The C caller passed a zero partition size, contradicting the partitioner's
+		// positive-size contract. Its intended default is one complete partition.
+		partitions = Aig_ManRegPartitionSimple(p, p.nRegs, 0)
+	}
+	Aig_ManReprStart(p, int32(len(p.nodes)))
+	for i, partition := range partitions {
+		if len(partition) == 0 {
+			continue
+		}
+		var countPis, countRegs int32
+		var mapBack []int32
+		part := Aig_ManRegCreatePart(p, partition, &countPis, &countRegs, &mapBack)
+		if countPis > 0 {
+			reduced := Aig_ManScl(part, latchConst, latchEqual, 0, -1, -1, verbose, 0)
+			classes := Aig_TransferMappedClasses(p, part, mapBack)
+			if verbose != 0 {
+				fmt.Printf("%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d\n", i, len(partition), len(part.inputs)-len(partition), countPis, countRegs, Aig_ManNodeNum(part), 0, classes)
+			}
+			Aig_ManStop(reduced)
+		}
+		Aig_ManStop(part)
+	}
+	result := Aig_ManDupRepr(p, 0)
+	Aig_ManSeqCleanup(result)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reduces the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManReduceLachesOnce(p *Aig_Man_t) *Vec_Ptr_t {
-    var vMap *Vec_Ptr_t;
-    var pObj, pObjLi, pObjLo, pFanin *Aig_Obj_t;
-    var pMapping *int32;
-    var i int32;
-    // start mapping by adding the true PIs
-    vMap = Vec_PtrAlloc( Aig_ManCiNum(p) );
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Vec_PtrPush( vMap, pObj );
-    }
-    // create mapping of fanin nodes into the corresponding latch outputs
-    // inlining of macro ABC_FALLOC
-    pMapping = ((int *) memset(malloc(sizeof(int) * (size_t)(2 * Aig_ManObjNumMax(p))), 0xff, sizeof(int) * (size_t)(2 * Aig_ManObjNumMax(p))));
-    // inlining of macro Aig_ManForEachLiLoSeq
-    for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObjLi);
-        if Aig_ObjFaninC0(pObjLi) {
-            if pFanin.fMarkB {
-                Vec_PtrPush( vMap, Aig_ManLo(p, pMapping[2*pFanin.Id + 1]) );
-            
-            } else {
-                pFanin.fMarkB = 1;
-                pMapping[2*pFanin.Id + 1] = i;
-                Vec_PtrPush( vMap, pObjLo );
-            }
-        
-        } else {
-            if pFanin.fMarkA {
-                Vec_PtrPush( vMap, Aig_ManLo(p, pMapping[2*pFanin.Id]) );
-            
-            } else {
-                pFanin.fMarkA = 1;
-                pMapping[2*pFanin.Id] = i;
-                Vec_PtrPush( vMap, pObjLo );
-            }
-        }
-    }
-    // inlining of macro ABC_FREE
-    ((pMapping) ? (free((char *) (pMapping)), (pMapping) = 0) : 0);
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pFanin = Aig_ObjFanin0(pObj);
-        pFanin.fMarkA = pFanin.fMarkB = 0;
-    }
-    return vMap;
+// Aig_ManScl preserves zero-initialized sequential behavior while removing
+// unreachable registers, proven constants and equal next-state functions. The
+// optional simulator overrides the built-in multivalued engine for callers
+// supplying a more specialized implementation.
+func Aig_ManScl(initial *Graph, latchConst, latchEqual, useMV, framesSymbolic, framesSatur, verbose, veryVerbose int32, engines ...MappingSimulator) *Graph {
+	registers, pis, _ := sclLayout(initial)
+	if len(initial.ClockDomains) > 0 {
+		return Aig_ManSclPart(initial, latchConst, latchEqual, verbose)
+	}
+	if initial.FlopNumbers != nil {
+		panic("aig: sequential sweep requires untracked original flop numbers")
+	}
+	p := Aig_ManDupSimple(initial)
+	p.FlopNumbers = make([]int32, registers)
+	for i := range p.FlopNumbers {
+		p.FlopNumbers[i] = int32(i)
+	}
+	p.FlopReprs = make([]int32, 0)
+	Aig_ManSeqCleanup(p)
+	if latchConst != 0 && p.nRegs > 0 {
+		p = Aig_ManConstReduce(p, useMV, framesSymbolic, framesSatur, verbose, veryVerbose, engines...)
+	}
+	if latchEqual != 0 && p.nRegs > 0 {
+		p = Aig_ManReduceLaches(p, verbose)
+	}
+	Aig_ManReprStart(initial, int32(len(initial.nodes)))
+	if len(p.FlopReprs)%2 != 0 {
+		panic("aig: malformed flop representative pairs")
+	}
+	for i := 0; i < len(p.FlopReprs); i += 2 {
+		from, to := p.FlopReprs[i], p.FlopReprs[i+1]
+		if from < 0 || int(from) >= registers || to < -1 || int(to) >= registers {
+			panic("aig: flop representative outside original register range")
+		}
+		a := initial.inputs[pis+int(from)]
+		b := initial.Const1()
+		if to != -1 {
+			b = initial.inputs[pis+int(to)]
+		}
+		if a == b {
+			panic("aig: self-representing register merge")
+		}
+		Aig_ObjSetRepr_(initial, a, b)
+	}
+	Aig_ManStop(p)
+	result := Aig_ManDupRepr(initial, 0)
+	Aig_ManSeqCleanup(result)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reduces the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManReduceLaches(p *Aig_Man_t, fVerbose int32) *Aig_Man_t {
-    var pTemp *Aig_Man_t;
-    var vMap *Vec_Ptr_t;
-    var nSaved, nCur int32;
-    if fVerbose != 0 {
-        fmt.Printf("Performing combinational register sweep:\n"); }
-    for  nSaved = 0; (nCur = Aig_ManReduceLachesCount(p)); nSaved += nCur  {
-//        printf( "Reducible = %d\n", nCur );
-        vMap = Aig_ManReduceLachesOnce( p );
-        p = Aig_ManRemap( pTemp = p, vMap );
-        Vec_PtrFree( vMap );
-        Aig_ManSeqCleanup( p );
-        if fVerbose != 0 {
-            Aig_ManReportImprovement( pTemp, p ); }
-        Aig_ManStop( pTemp );
-        if p.nRegs == 0 {
-            break; }
-    }
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes strongly connected components of registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManComputeSccs(p *Aig_Man_t) {
-    var vSupports, vMatrix, vMatrix2 *Vec_Ptr_t;
-    var vSupp, vSupp2, vComp *Vec_Int_t;
-    var pVarsTot string;
-    var i, k, m, iOut, iIn, nComps int32;
-    if Aig_ManRegNum(p) == 0 {
-        fmt.Printf("The network is combinational.\n");
-        return;
-    }
-    // get structural supports for each output
-    vSupports = Aig_ManSupports( p );
-    // transforms the supports into the latch dependency matrix
-    vMatrix = Vec_PtrStart( Aig_ManRegNum(p) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSupports)) && (((vSupp) = (Vec_Int_t *)Vec_PtrEntry(vSupports, i)), 1); i++  {
-        // skip true POs
-        iOut = Vec_IntPop( vSupp );
-        iOut -= Aig_ManCoNum(p) - Aig_ManRegNum(p);
-        if iOut < 0 {
-            continue; }
-        // remove PIs
-        m = 0;
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSupp)) && (((iIn) = Vec_IntEntry(vSupp, k)), 1); k++  {
-            iIn -= Aig_ManCiNum(p) - Aig_ManRegNum(p);
-            if iIn < 0 {
-                continue; }
-            assert(iIn < Aig_ManRegNum(p), "iIn < Aig_ManRegNum(p)");
-            Vec_IntWriteEntry( vSupp, m++, iIn );
-        }
-        Vec_IntShrink( vSupp, m );
-        // store support in the matrix
-        assert(iOut < Aig_ManRegNum(p), "iOut < Aig_ManRegNum(p)");
-        Vec_PtrWriteEntry( vMatrix, iOut, vSupp );
-    }
-    // create the reverse matrix
-    vMatrix2 = Vec_PtrAlloc( Aig_ManRegNum(p) );
-    for  i = 0; i < Aig_ManRegNum(p); i++  {
-        Vec_PtrPush( vMatrix2, Vec_IntAlloc(8) );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMatrix)) && (((vSupp) = (Vec_Int_t *)Vec_PtrEntry(vMatrix, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSupp)) && (((iIn) = Vec_IntEntry(vSupp, k)), 1); k++  {
-            vSupp2 = (Vec_Int_t *)Vec_PtrEntry( vMatrix2, iIn );
-            Vec_IntPush( vSupp2, i );
-        }
-    } 
-
-    // detect strongly connected components
-    vComp = Vec_IntAlloc( Aig_ManRegNum(p) );
-    // inlining of macro ABC_ALLOC
-    pVarsTot = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p))));
-    memset( pVarsTot, 0, Aig_ManRegNum(p) * sizeof(char) );
-    for  nComps = 0; ; nComps++  {
-        Vec_IntClear( vComp );
-        // get the first support
-        for  iOut = 0; iOut < Aig_ManRegNum(p); iOut++  {
-            if pVarsTot[iOut] == 0 {
-                break; }
-        }
-        if iOut == Aig_ManRegNum(p) {
-            break; }
-        pVarsTot[iOut] = 1;
-        Vec_IntPush( vComp, iOut );
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vComp)) && (((iOut) = Vec_IntEntry(vComp, i)), 1); i++  {
-            vSupp = (Vec_Int_t *)Vec_PtrEntry( vMatrix, iOut );
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vSupp)) && (((iIn) = Vec_IntEntry(vSupp, k)), 1); k++  {
-                if pVarsTot[iIn] {
-                    continue; }
-                pVarsTot[iIn] = 1;
-                Vec_IntPush( vComp, iIn );
-            }
-            vSupp2 = (Vec_Int_t *)Vec_PtrEntry( vMatrix2, iOut );
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vSupp2)) && (((iIn) = Vec_IntEntry(vSupp2, k)), 1); k++  {
-                if pVarsTot[iIn] {
-                    continue; }
-                pVarsTot[iIn] = 1;
-                Vec_IntPush( vComp, iIn );
-            }
-        }
-        if Vec_IntSize(vComp) == Aig_ManRegNum(p) {
-            fmt.Printf("There is only one SCC of registers in this network.\n");
-            break;
-        }
-        fmt.Printf("SCC #%d contains %5d registers.\n", nComps+1, Vec_IntSize(vComp));
-    }
-    // inlining of macro ABC_FREE
-    ((pVarsTot) ? (free((char *) (pVarsTot)), (pVarsTot) = 0) : 0);
-    Vec_IntFree( vComp );
-    Vec_PtrFree( vMatrix );
-    Vec_VecFree( (Vec_Vec_t *)vMatrix2 );
-    Vec_VecFree( (Vec_Vec_t *)vSupports );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs partitioned register sweep.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManSclPart(pAig *Aig_Man_t, fLatchConst int32, fLatchEqual int32, fVerbose int32) *Aig_Man_t {
-    var vResult *Vec_Ptr_t;
-    var vPart *Vec_Int_t;
-    var i, nCountPis, nCountRegs int32;
-    var pMapBack *int32;
-    var pTemp, pNew *Aig_Man_t;
-    var nClasses int32;
-
-    if pAig.vClockDoms {
-        vResult = Vec_PtrAlloc( 100 );
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize((Vec_Ptr_t *)pAig.vClockDoms)) && (((vPart) = (Vec_Int_t *)Vec_PtrEntry((Vec_Ptr_t *)pAig.vClockDoms, i)), 1); i++  {
-            Vec_PtrPush( vResult, Vec_IntDup(vPart) );
-        }
-     
-    } else {
-        vResult = Aig_ManRegPartitionSimple( pAig, 0, 0 ); }
-
-    Aig_ManReprStart( pAig, Aig_ManObjNumMax(pAig) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vResult)) && (((vPart) = (Vec_Int_t *)Vec_PtrEntry(vResult, i)), 1); i++  {
-        pTemp = Aig_ManRegCreatePart( pAig, vPart, &nCountPis, &nCountRegs, &pMapBack );
-        Aig_ManSetRegNum( pTemp, pTemp.nRegs );
-        if nCountPis>0 {
-            pNew = Aig_ManScl( pTemp, fLatchConst, fLatchEqual, 0, -1, -1, fVerbose, 0 );
-            nClasses = Aig_TransferMappedClasses( pAig, pTemp, pMapBack );
-            if fVerbose != 0 {
-                fmt.Printf("%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d\n", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp), 0, nClasses); }
-            Aig_ManStop( pNew );
-        }
-        Aig_ManStop( pTemp );
-        // inlining of macro ABC_FREE
-        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);
-    }
-    pNew = Aig_ManDupRepr( pAig, 0 );
-    Aig_ManSeqCleanup( pNew );
-    Vec_VecFree( (Vec_Vec_t*)vResult );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Gives the current ABC network to AIG manager for processing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManScl(pAig *Aig_Man_t, fLatchConst int32, fLatchEqual int32, fUseMvSweep int32, nFramesSymb int32, nFramesSatur int32, fVerbose int32, fVeryVerbose int32) *Aig_Man_t {
-    extern void Saig_ManReportUselessRegisters( Aig_Man_t * pAig );
-    extern int Saig_ManReportComplements( Aig_Man_t * p );
-
-    var pAigInit, pAigNew *Aig_Man_t;
-    var pFlop1, pFlop2 *Aig_Obj_t;
-    var i, Entry1, Entry2, nTruePis int32;//, nRegs;
-
-    if pAig.vClockDoms && Vec_VecSize(pAig.vClockDoms) > 0 {
-        return Aig_ManSclPart( pAig, fLatchConst, fLatchEqual, fVerbose); }
-
-    // store the original AIG
-    assert(pAig.vFlopNums == nil, "pAig.vFlopNums == nil");
-    pAigInit = pAig;
-    pAig = Aig_ManDupSimple( pAig );
-    // create storage for latch numbers
-    pAig.vFlopNums = Vec_IntStartNatural( pAig.nRegs );
-    pAig.vFlopReprs = Vec_IntAlloc( 100 );
-    Aig_ManSeqCleanup( pAig );
-    if (fLatchConst != 0) && pAig.nRegs {
-        pAig = Aig_ManConstReduce( pAig, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose ); }
-    if (fLatchEqual != 0) && pAig.nRegs {
-        pAig = Aig_ManReduceLaches( pAig, fVerbose ); }
-    // translate pairs into reprs
-    nTruePis = Aig_ManCiNum(pAigInit)-Aig_ManRegNum(pAigInit);
-    Aig_ManReprStart( pAigInit, Aig_ManObjNumMax(pAigInit) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(pAig.vFlopReprs)) && (((Entry1) = Vec_IntEntry(pAig.vFlopReprs, i)), 1); i++  {
-        Entry2 = Vec_IntEntry( pAig.vFlopReprs, ++i ); 
-        pFlop1 = Aig_ManCi( pAigInit, nTruePis + Entry1 );
-        if Entry2 == -1 {
-            pFlop2 = Aig_ManConst1(pAigInit);
-        } else {
-            pFlop2 = Aig_ManCi( pAigInit, nTruePis + Entry2 );
-        }
-        assert(pFlop1 != pFlop2, "pFlop1 != pFlop2");
-        if pFlop1.Id > pFlop2.Id {
-            pAigInit.pReprs[pFlop1.Id] = pFlop2;
-        } else {
-            pAigInit.pReprs[pFlop2.Id] = pFlop1; }
-    }
-    Aig_ManStop( pAig );
-//    Aig_ManSeqCleanup( pAigInit );
-    pAigNew = Aig_ManDupRepr( pAigInit, 0 );
-    Aig_ManSeqCleanup( pAigNew );
-
-//    Saig_ManReportUselessRegisters( pAigNew );
-    if Aig_ManRegNum(pAigNew) == 0 {
-        return pAigNew; }
-//    nRegs = Saig_ManReportComplements( pAigNew );
-//    if ( nRegs ) 
-//    printf( "The number of complemented registers = %d.\n", nRegs );
-    return pAigNew;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

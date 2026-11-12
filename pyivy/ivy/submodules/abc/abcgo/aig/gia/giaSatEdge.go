@@ -106,7 +106,7 @@ func Seg_ManCountIntEdges(p *Gia_Man_t, vPolars *Vec_Int_t, vToSkip *Vec_Int_t, 
     }
     if nFanouts != 0 {
         // inlining of macro ABC_FREE
-        ((p.pLutRefs) ? (free((char *) (p.pLutRefs)), (p.pLutRefs) = 0) : 0); }
+        p.pLutRefs = nil; }
     return vEdges;
 }
 func Seg_ManCollectObjEdges(vEdges *Vec_Int_t, nObjs int32) *Vec_Wec_t {
@@ -125,7 +125,7 @@ func Seg_ManCountIntLevels(p *Seg_Man_t, iStartVar int32) int32 {
     Vec_IntFill( p.vFirsts, Gia_ManObjNum(p.pGia), -1 );
     Vec_IntFill( p.vNvars,  Gia_ManObjNum(p.pGia), 0 );
     // inlining of macro ABC_FREE
-    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);
+    p.pLevels = nil;
     if p.pGia.pManTime {
         p.DelayMax = Gia_ManLutLevelWithBoxes( p.pGia );
         p.pLevels = Vec_IntReleaseArray( p.pGia.vLevels );
@@ -215,10 +215,10 @@ func Seg_ManStop(p *Seg_Man_t) {
     Vec_IntFree( p.vPolars );
     Vec_IntFree( p.vToSkip );
     // inlining of macro ABC_FREE
-    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);
+    p.pLevels = nil;
     // other
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

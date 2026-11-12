@@ -47,22 +47,8 @@ import "fmt"
 */
 
 // returns the representative node of the given HAIG node
-func Ivy_HaigObjRepr(pObj *Ivy_Obj_t) *Ivy_Obj_t {
-    var pTemp *Ivy_Obj_t;
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    // if the node has no equivalent node or has fanout, it is representative
-    if pObj.pEquiv == nil || Ivy_ObjRefs(pObj) > 0 {
-        return pObj; }
-    // the node belongs to a class and is not a representative
-    // complemented edge (pObj->pEquiv) tells if it is complemented w.r.t. the repr
-    for  pTemp = Ivy_Regular(pObj.pEquiv); pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {
-        if Ivy_ObjRefs(pTemp) > 0 {
-            break; }
-    }
-    // return the representative node
-    assert(Ivy_ObjRefs(pTemp) > 0, "Ivy_ObjRefs(pTemp) > 0");
-    return Ivy_NotCond( pTemp, Ivy_IsComplement(pObj.pEquiv) );
-}
+// Ivy_HaigObjRepr is implemented in the ported core API group.
+
 
 // counts the number of nodes in the equivalence class
 func Ivy_HaigObjCountClass(pObj *Ivy_Obj_t) int32 {
@@ -189,30 +175,8 @@ func Ivy_ManHaigStop(p *Ivy_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManHaigCreateObj(p *Ivy_Man_t, pObj *Ivy_Obj_t) {
-    var pEquiv0, pEquiv1 *Ivy_Obj_t;
-    assert(p.pHaig != nil, "p.pHaig != nil");
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    if Ivy_ObjType(pObj) == IVY_BUF {
-        pObj.pEquiv = Ivy_ObjChild0Equiv(pObj);
-    } else if Ivy_ObjType(pObj) == IVY_LATCH {
-//        pObj->pEquiv = Ivy_Latch( p->pHaig, Ivy_ObjChild0Equiv(pObj), pObj->Init );
-        pEquiv0 = Ivy_ObjChild0Equiv(pObj);
-        pEquiv0 = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pEquiv0)), Ivy_IsComplement(pEquiv0) );
-        pObj.pEquiv = Ivy_Latch( p.pHaig, pEquiv0, (Ivy_Init_t)pObj.Init );
-    
-    } else if Ivy_ObjType(pObj) == IVY_AND {
-//        pObj->pEquiv = Ivy_And( p->pHaig, Ivy_ObjChild0Equiv(pObj), Ivy_ObjChild1Equiv(pObj) );
-        pEquiv0 = Ivy_ObjChild0Equiv(pObj);
-        pEquiv0 = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pEquiv0)), Ivy_IsComplement(pEquiv0) );
-        pEquiv1 = Ivy_ObjChild1Equiv(pObj);
-        pEquiv1 = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pEquiv1)), Ivy_IsComplement(pEquiv1) );
-        pObj.pEquiv = Ivy_And( p.pHaig, pEquiv0, pEquiv1 );
-    
-    } else { assert(false, "0"); }
-    // make sure the node points to the representative
-//    pObj->pEquiv = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pObj->pEquiv)), Ivy_IsComplement(pObj->pEquiv) );
-}
+// Ivy_ManHaigCreateObj is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

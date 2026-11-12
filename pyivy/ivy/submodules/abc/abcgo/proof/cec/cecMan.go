@@ -113,10 +113,8 @@ func Cec_ManSatStop(p *Cec_ManSat_t) {
     Vec_IntFree( p.vVisits );
     Vec_PtrFree( p.vUsedNodes );
     Vec_PtrFree( p.vFanins );
-    // inlining of macro ABC_FREE
-    ((p.pSatVars) ? (free((char *) (p.pSatVars)), (p.pSatVars) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pSatVars = nil;
+    p = nil;
 }
 
 
@@ -183,8 +181,7 @@ func Cec_ManPatStop(p *Cec_ManPat_t) {
     Vec_StrFree( p.vStorage );
     Vec_IntFree( p.vPattern1 );
     Vec_IntFree( p.vPattern2 );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -243,18 +240,12 @@ func Cec_ManSimStop(p *Cec_ManSim_t) {
         Vec_PtrFree( p.vCiSimInfo ); }
     if p.vCoSimInfo { 
         Vec_PtrFree( p.vCoSimInfo ); }
-    // inlining of macro ABC_FREE
-    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCexComb) ? (free((char *) (p.pCexComb)), (p.pCexComb) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCexes) ? (free((char *) (p.pCexes)), (p.pCexes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSimInfo) ? (free((char *) (p.pSimInfo)), (p.pSimInfo) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pScores = nil;
+    p.pCexComb = nil;
+    p.pCexes = nil;
+    p.pMems = nil;
+    p.pSimInfo = nil;
+    p = nil;
 }
 
 
@@ -293,8 +284,7 @@ func Cec_ManFraStart(pAig *Gia_Man_t, pPars *Cec_ParFra_t) *Cec_ManFra_t {
 ***********************************************************************/
 func Cec_ManFraStop(p *Cec_ManFra_t) {
     Vec_IntFree( p.vXorNodes );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

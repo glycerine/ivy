@@ -1,120 +1,48 @@
 package espresso
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-//#include "mincov_int.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-func solution_alloc() *solution_t {
-    var sol *solution_t;
-
-    sol = ALLOC(solution_t, 1);
-    sol.cost = 0;
-    sol.row = sm_row_alloc();
-    return sol;
+func solution_alloc() *solution_t { return &solution_t{row: sm_row_alloc()} }
+func solution_free(solution *solution_t) {
+	if solution != nil {
+		sm_row_free(solution.row)
+		solution.row = nil
+	}
 }
-
-
-void
-solution_free(sol)
-var sol *solution_t;
-{
-    sm_row_free(sol.row);
-    FREE(sol);
+func solution_dup(solution *solution_t) *solution_t {
+	return &solution_t{row: sm_row_dup(solution.row), cost: solution.cost}
 }
-
-
-solution_t *
-solution_dup(sol)
-var sol *solution_t;
-{
-    solution_t *new_sol;
-
-    new_sol = ALLOC(solution_t, 1);
-    new_sol.cost = sol.cost;
-    new_sol.row = sm_row_dup(sol.row);
-    return new_sol;
+func solution_add(solution *solution_t, weight []int32, column int) {
+	if sm_row_find(solution.row, column) != nil {
+		return
+	}
+	sm_row_insert(solution.row, column)
+	solution.cost += mincovWeight(weight, column)
 }
-
-
-void 
-solution_add(sol, weight, col)
-var sol *solution_t;
-var weight *int32;
-var col int32;
-{
-    (void) sm_row_insert(sol.row, col);
-    sol.cost += WEIGHT(weight, col);
+func solution_accept(solution *solution_t, matrix *sm_matrix, weight []int32, column int) {
+	solution_add(solution, weight, column)
+	col := sm_get_col(matrix, column)
+	if col == nil {
+		return
+	}
+	for element := col.first_row; element != nil; {
+		next := element.next_row
+		sm_delrow(matrix, element.row_num)
+		element = next
+	}
 }
-
-
-void 
-solution_accept(sol, A, weight, col)
-var sol *solution_t;
-var A *sm_matrix;
-var weight *int32;
-var col int32;
-{
-    register sm_element *p, *pnext;
-    sm_col *pcol;
-
-    solution_add(sol, weight, col);
-
-    /* delete rows covered by this column */
-    // inlining of macro sm_get_col
-    pcol = (((col) >= 0 && (col) < (A).cols_size) ?     (A).cols[col] : (sm_col *) 0);
-    for p = pcol.first_row; p != 0; p = pnext {
-    pnext = p.next_row;        /* grab it before it disappears */
-    sm_delrow(A, p.row_num);
-    }
+func solution_reject(solution *solution_t, matrix *sm_matrix, weight []int32, column int) {
+	sm_delcol(matrix, column)
 }
-
-
-/* ARGSUSED */
-void 
-solution_reject(sol, A, weight, col)
-var sol *solution_t;
-var A *sm_matrix;
-var weight *int32;
-var col int32;
-{
-    sm_delcol(A, col);
+func solution_choose_best(a, b *solution_t) *solution_t {
+	if a == nil {
+		return b
+	}
+	if b == nil {
+		return a
+	}
+	if a.cost <= b.cost {
+		solution_free(b)
+		return a
+	}
+	solution_free(a)
+	return b
 }
-
-
-solution_t *
-solution_choose_best(best1, best2)
-var best1, best2 *solution_t;
-{
-    if best1 != NIL(solution_t) {
-    if best2 != NIL(solution_t) {
-        if best1.cost <= best2.cost {
-        solution_free(best2);
-        return best1;
-        } else {
-        solution_free(best1);
-        return best2;
-        }
-    } else {
-        return best1;
-    }
-    } else {
-    if best2 != NIL(solution_t) {
-        return best2;
-    } else {
-        return NIL(solution_t);
-    }
-    }
-}
-//ABC_NAMESPACE_IMPL_END
-

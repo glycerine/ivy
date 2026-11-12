@@ -378,8 +378,7 @@ func Fx_ManStop(p *Fx_Man_t) {
     Vec_IntFree( p.vCubeFree );
     Vec_IntFree( p.vDiv );
     Vec_IntFree( p.vSCC );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

@@ -798,13 +798,11 @@ func Io_FileOpen(FileName string, PathVar string, Mode string, fVerbose int32) *
                 if fp = fopen ( ActualFileName, Mode ) {
                     if fVerbose != 0 {
                     fprintf ( os.Stdout, "Using file %s\n", ActualFileName ); }
-                    // inlining of macro ABC_FREE
-                    ((t) ? (free((char *) (t)), (t) = 0) : 0);
+                    t = nil;
                     return fp;
                 }
             }
-            // inlining of macro ABC_FREE
-            ((t) ? (free((char *) (t)), (t) = 0) : 0);
+            t = nil;
             return 0;
         
         } else {
@@ -863,8 +861,7 @@ func Io_TransformSF2PLA(pNameIn string, pNameOut string) {
     fmt.Fprintf(pFileOut, ".e\n");
     _ = (pFileIn).Close();
     _ = (pFileOut).Close();
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

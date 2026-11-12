@@ -231,7 +231,7 @@ func Gia_ManFindLatest(p *Gia_Man_t, LevelMax int32, nTimeWindow int32) *Vec_Int
                 Vec_IntPush( vOuts, i ); }
         }
         // inlining of macro ABC_FREE
-        ((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);
+        pLevels = nil;
     
     } else {
         var i int32;

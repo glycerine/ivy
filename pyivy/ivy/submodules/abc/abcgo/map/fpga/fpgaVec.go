@@ -74,10 +74,8 @@ func Fpga_NodeVecAlloc(nCap int32) *Fpga_NodeVec_t {
 
 ***********************************************************************/
 func Fpga_NodeVecFree(p *Fpga_NodeVec_t) {
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pArray = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

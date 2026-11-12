@@ -1,111 +1,60 @@
+// Sparse covering-matrix dominance, ported from Espresso dominate.c.
 package espresso
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-//#include "mincov_int.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-int 
-sm_row_dominance(A)
-var A *sm_matrix; 
-{
-    register sm_row *prow, *prow1;
-    register sm_col *pcol, *least_col;
-    register sm_element *p, *pnext;
-    int rowcnt;
-
-    rowcnt = A.nrows;
-
-    /* Check each row against all other rows */
-    for prow = A.first_row; prow != 0; prow = prow.next_row {
-
-    /* Among all columns with a 1 in this row, choose smallest */
-    // inlining of macro sm_get_col
-    least_col = (((prow.first_col.col_num) >= 0 && (prow.first_col.col_num) < (A).cols_size) ?     (A).cols[prow.first_col.col_num] : (sm_col *) 0);
-    for p = prow.first_col.next_col; p != 0; p = p.next_col {
-        // inlining of macro sm_get_col
-        pcol = (((p.col_num) >= 0 && (p.col_num) < (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);
-        if pcol.length < least_col.length {
-        least_col = pcol;
-        }
-    }
-
-    /* Only check for containment against rows in this column */
-    for p = least_col.first_row; p != 0; p = pnext {
-        pnext = p.next_row;
-
-        // inlining of macro sm_get_row
-        prow1 = (((p.row_num) >= 0 && (p.row_num) < (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);
-        if (prow1.length > prow.length) ||
-                  (prow1.length == prow.length && 
-                  prow1.row_num > prow.row_num) {
-        if sm_row_contains(prow, prow1) {
-            sm_delrow(A, prow1.row_num);
-        }
-        }
-    }
-    }
-
-    return rowcnt - A.nrows;
+func sm_row_dominance(matrix *sm_matrix) int {
+	before := matrix.nrows
+	for row := matrix.first_row; row != nil; row = row.next_row {
+		least := sm_get_col(matrix, row.first_col.col_num)
+		for element := row.first_col.next_col; element != nil; element = element.next_col {
+			column := sm_get_col(matrix, element.col_num)
+			if column.length < least.length {
+				least = column
+			}
+		}
+		for element := least.first_row; element != nil; {
+			next := element.next_row
+			candidate := sm_get_row(matrix, element.row_num)
+			if candidate.length > row.length || (candidate.length == row.length && candidate.row_num > row.row_num) {
+				if sm_row_contains(row, candidate) {
+					sm_delrow(matrix, candidate.row_num)
+				}
+			}
+			element = next
+		}
+	}
+	return before - matrix.nrows
 }
-
-int 
-sm_col_dominance(A, weight)
-var A *sm_matrix;
-var weight *int32;
-{
-    register sm_row *prow;
-    register sm_col *pcol, *pcol1;
-    register sm_element *p;
-    sm_row *least_row;
-    sm_col *next_col;
-    int colcnt;
-
-    colcnt = A.ncols;
-
-    /* Check each column against all other columns */
-    for pcol = A.first_col; pcol != 0; pcol = next_col {
-    next_col = pcol.next_col;
-
-    /* Check all rows to find the one with fewest elements */
-    // inlining of macro sm_get_row
-    least_row = (((pcol.first_row.row_num) >= 0 && (pcol.first_row.row_num) < (A).rows_size) ?     (A).rows[pcol.first_row.row_num] : (sm_row *) 0);
-    for p = pcol.first_row.next_row; p != 0; p = p.next_row {
-        // inlining of macro sm_get_row
-        prow = (((p.row_num) >= 0 && (p.row_num) < (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);
-        if prow.length < least_row.length {
-        least_row = prow;
-        }
-    }
-
-    /* Only check for containment against columns in this row */
-    for p = least_row.first_col; p != 0; p = p.next_col {
-        // inlining of macro sm_get_col
-        pcol1 = (((p.col_num) >= 0 && (p.col_num) < (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);
-        if (weight != 0 && weight[pcol1.col_num] > weight[pcol.col_num])
-        continue;
-        if (pcol1.length > pcol.length) ||
-           (pcol1.length == pcol.length && 
-                   pcol1.col_num > pcol.col_num) {
-        if sm_col_contains(pcol, pcol1) {
-            sm_delcol(A, pcol.col_num);
-            break;
-        }
-        }
-    }
-    }
-
-    return colcnt - A.ncols;
+func sm_col_dominance(matrix *sm_matrix, weights []int32) int {
+	if weights != nil {
+		for column := matrix.first_col; column != nil; column = column.next_col {
+			if column.col_num >= len(weights) {
+				panic("espresso: sparse column weight missing")
+			}
+		}
+	}
+	before := matrix.ncols
+	for column := matrix.first_col; column != nil; {
+		next := column.next_col
+		least := sm_get_row(matrix, column.first_row.row_num)
+		for element := column.first_row.next_row; element != nil; element = element.next_row {
+			row := sm_get_row(matrix, element.row_num)
+			if row.length < least.length {
+				least = row
+			}
+		}
+		for element := least.first_col; element != nil; element = element.next_col {
+			candidate := sm_get_col(matrix, element.col_num)
+			if weights != nil && weights[candidate.col_num] > weights[column.col_num] {
+				continue
+			}
+			if candidate.length > column.length || (candidate.length == column.length && candidate.col_num > column.col_num) {
+				if sm_col_contains(column, candidate) {
+					sm_delcol(matrix, column.col_num)
+					break
+				}
+			}
+		}
+		column = next
+	}
+	return before - matrix.ncols
 }
-//ABC_NAMESPACE_IMPL_END
-

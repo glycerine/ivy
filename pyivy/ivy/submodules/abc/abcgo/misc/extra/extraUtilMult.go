@@ -185,18 +185,12 @@ func Abc_BddManAlloc(nVars int32, nObjs int32) *Abc_BddMan {
 func Abc_BddManFree(p *Abc_BddMan) {
     fmt.Printf("BDD stats: Var = %d  Obj = %d  Alloc = %d  Hit = %d  Miss = %d  ", p.nVars, p.nObjs, p.nObjsAlloc, p.nCacheLookups-p.nCacheMisses, p.nCacheMisses);
     fmt.Printf("Mem = %.2f MB\n", 4.0*int32((p.nMemory/(1<<20))));
-    // inlining of macro ABC_FREE
-    ((p.pUnique) ? (free((char *) (p.pUnique)), (p.pUnique) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pCache) ? (free((char *) (p.pCache)), (p.pCache) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pVars) ? (free((char *) (p.pVars)), (p.pVars) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pUnique = nil;
+    p.pNexts = nil;
+    p.pCache = nil;
+    p.pObjs = nil;
+    p.pVars = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -327,8 +321,7 @@ func Abc_BddPrint(p *Abc_BddMan, a int32) {
     var pPath *int32  = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));
     fmt.Printf("BDD %d = ", a);
     Abc_BddPrint_rec( p, a, pPath );
-    // inlining of macro ABC_FREE
-    ((pPath) ? (free((char *) (pPath)), (pPath) = 0) : 0);
+    pPath = nil;
     fmt.Printf("\n");
 }
 func Abc_BddPrintTest(p *Abc_BddMan) {

@@ -1,163 +1,88 @@
+// Sparse matrix types, ported from Espresso sparse.h. Each matrix element is
+// shared by its sorted row and column lists; header arrays provide direct lookup.
 package espresso
 
-/*
- * Revision Control Information
- *
- * $Source$
- * $Author$
- * $Revision$
- * $Date$
- *
- */
-
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-/*
- *  sparse.h -- sparse matrix package header file
- */
-
-type sm_element = sm_element_struct;
-type sm_row = sm_row_struct;
-type sm_col = sm_col_struct;
-type sm_matrix = sm_matrix_struct;
-
-
-/*
- *  sparse matrix element
- */
-type sm_element_struct struct {
-    row_num int32;        /* row number of this element */
-    col_num int32;        /* column number of this element */
-    next_row *sm_element;    /* next row in this column */
-    prev_row *sm_element;    /* previous row in this column */
-    next_col *sm_element;    /* next column in this row */
-    prev_col *sm_element;    /* previous column in this row */
-    user_word string;        /* user-defined word */
+type sm_element struct {
+	row_num, col_num   int
+	next_row, prev_row *sm_element // neighbors in its column
+	next_col, prev_col *sm_element // neighbors in its row
+	user_word          any
+	matrix             *sm_matrix
+}
+type sm_row struct {
+	row_num, length, flag int
+	first_col, last_col   *sm_element
+	next_row, prev_row    *sm_row
+	user_word             any
+}
+type sm_col struct {
+	col_num, length, flag int
+	first_row, last_row   *sm_element
+	next_col, prev_col    *sm_col
+	user_word             any
+}
+type sm_matrix struct {
+	rows                []*sm_row
+	cols                []*sm_col
+	first_row, last_row *sm_row
+	first_col, last_col *sm_col
+	nrows, ncols        int
+	user_word           any
 }
 
+// Public aliases expose the matrix family without duplicating its storage.
+type SparseMatrix = sm_matrix
+type SparseRow = sm_row
+type SparseColumn = sm_col
+type SparseElement = sm_element
 
-/*
- *  row header
- */
-type sm_row_struct struct {
-    row_num int32;        /* the row number */
-    length int32;            /* number of elements in this row */
-    flag int32;            /* user-defined word */
-    first_col *sm_element;    /* first element in this row */
-    last_col *sm_element;    /* last element in this row */
-    next_row *sm_row;        /* next row (in sm_matrix linked list) */
-    prev_row *sm_row;        /* previous row (in sm_matrix linked list) */
-    user_word string;        /* user-defined word */
+func sm_get_row(matrix *sm_matrix, index int) *sm_row {
+	if index < 0 || index >= len(matrix.rows) {
+		return nil
+	}
+	return matrix.rows[index]
+}
+func sm_get_col(matrix *sm_matrix, index int) *sm_col {
+	if index < 0 || index >= len(matrix.cols) {
+		return nil
+	}
+	return matrix.cols[index]
 }
 
-
-/*
- *  column header
- */
-type sm_col_struct struct {
-    col_num int32;        /* the column number */
-    length int32;            /* number of elements in this column */
-    flag int32;            /* user-defined word */
-    first_row *sm_element;    /* first element in this column */
-    last_row *sm_element;    /* last element in this column */
-    next_col *sm_col;        /* next column (in sm_matrix linked list) */
-    prev_col *sm_col;        /* prev column (in sm_matrix linked list) */
-    user_word string;        /* user-defined word */
+// NewSparseMatrix constructs an empty matrix for SmMinimumCover and other
+// native Go callers. Row and column numbers are nonnegative integer IDs.
+func NewSparseMatrix() *SparseMatrix { return sm_alloc() }
+func (matrix *sm_matrix) Insert(row, column int) *SparseElement {
+	return sm_insert(matrix, row, column)
 }
+func (matrix *sm_matrix) Find(row, column int) *SparseElement { return sm_find(matrix, row, column) }
+func (matrix *sm_matrix) Remove(row, column int)              { sm_remove(matrix, row, column) }
+func (matrix *sm_matrix) RemoveRow(row int)                   { sm_delrow(matrix, row) }
+func (matrix *sm_matrix) RemoveColumn(column int)             { sm_delcol(matrix, column) }
+func (matrix *sm_matrix) Row(index int) *SparseRow            { return sm_get_row(matrix, index) }
+func (matrix *sm_matrix) Column(index int) *SparseColumn      { return sm_get_col(matrix, index) }
+func (matrix *sm_matrix) RowCount() int                       { return matrix.nrows }
+func (matrix *sm_matrix) ColumnCount() int                    { return matrix.ncols }
+func (matrix *sm_matrix) ElementCount() int                   { return sm_num_elements(matrix) }
 
-
-/*
- *  A sparse matrix
- */
-type sm_matrix_struct struct {
-    rows **sm_row;        /* pointer to row headers (by row #) */
-    rows_size int32;        /* alloc'ed size of above array */
-    cols **sm_col;        /* pointer to column headers (by col #) */
-    cols_size int32;        /* alloc'ed size of above array */
-    first_row *sm_row;        /* first row (linked list of all rows) */
-    last_row *sm_row;        /* last row (linked list of all rows) */
-    nrows int32;            /* number of rows */
-    first_col *sm_col;        /* first column (linked list of columns) */
-    last_col *sm_col;        /* last column (linked list of columns) */
-    ncols int32;            /* number of columns */
-    user_word string;        /* user-defined word */
+// Columns returns a copy, so callers cannot mutate a matrix-owned vector.
+func (row *sm_row) Columns() []int {
+	var result []int
+	if row != nil {
+		for element := row.first_col; element != nil; element = element.next_col {
+			result = append(result, element.col_num)
+		}
+	}
+	return result
 }
-
-
-// Original macro:
-// #define sm_get_col(A, colnum)    \
-//     (((colnum) >= 0 && (colnum) < (A)->cols_size) ? \
-//     (A)->cols[colnum] : (sm_col *) 0)
-
-
-// Original macro:
-// #define sm_get_row(A, rownum)    \
-//     (((rownum) >= 0 && (rownum) < (A)->rows_size) ? \
-//     (A)->rows[rownum] : (sm_row *) 0)
-
-
-// Original macro:
-// #define sm_foreach_row(A, prow)    \
-//     for(prow = A->first_row; prow != 0; prow = prow->next_row)
-
-
-// Original macro:
-// #define sm_foreach_col(A, pcol)    \
-//     for(pcol = A->first_col; pcol != 0; pcol = pcol->next_col)
-
-
-// Original macro:
-// #define sm_foreach_row_element(prow, p)    \
-//     for(p = prow->first_col; p != 0; p = p->next_col)
-
-
-// Original macro:
-// #define sm_foreach_col_element(pcol, p)    \
-//     for(p = pcol->first_row; p != 0; p = p->next_row)
-
-
-// Original macro:
-// #define sm_put(x, val) \
-//     (x->user_word = (char *) val)
-
-
-// Original macro:
-// #define sm_get(type, x) \
-//     ((type) (x->user_word))
-
-
-extern sm_matrix *sm_alloc(), *sm_alloc_size(), *sm_dup();
-extern void sm_free(), sm_delrow(), sm_delcol(), sm_resize();
-extern void sm_write(), sm_print(), sm_dump(), sm_cleanup();
-extern void sm_copy_row(), sm_copy_col();
-extern void sm_remove(), sm_remove_element();
-extern sm_element *sm_insert(), *sm_find();
-// extern sm_row *sm_longest_row();
-
-// extern sm_col *sm_longest_col();
-
-extern int sm_read(), sm_read_compressed();
-
-extern sm_row *sm_row_alloc(), *sm_row_dup(), *sm_row_and();
-extern void sm_row_free(), sm_row_remove(), sm_row_print();
-extern sm_element *sm_row_insert(), *sm_row_find();
-extern int sm_row_contains(), sm_row_intersects();
-extern int sm_row_compare(), sm_row_hash();
-
-extern sm_col *sm_col_alloc(), *sm_col_dup(), *sm_col_and();
-extern void sm_col_free(), sm_col_remove(), sm_col_print();
-extern sm_element *sm_col_insert(), *sm_col_find();
-extern int sm_col_contains(), sm_col_intersects();
-extern int sm_col_compare(), sm_col_hash();
-
-extern int sm_row_dominance(), sm_col_dominance(), sm_block_partition();
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
+func (column *sm_col) Rows() []int {
+	var result []int
+	if column != nil {
+		for element := column.first_row; element != nil; element = element.next_row {
+			result = append(result, element.row_num)
+		}
+	}
+	return result
+}
+func (element *sm_element) Row() int    { return element.row_num }
+func (element *sm_element) Column() int { return element.col_num }

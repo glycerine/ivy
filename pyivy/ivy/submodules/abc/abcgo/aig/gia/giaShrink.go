@@ -149,7 +149,7 @@ func Gia_ManMapShrink4(p *Gia_Man_t, fKeepLevel int32, fVerbose int32) *Gia_Man_
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
     }
     // inlining of macro ABC_FREE
-    ((pLutClass) ? (free((char *) (pLutClass)), (pLutClass) = 0) : 0);
+    pLutClass = nil;
     return pNew;
 }
 

@@ -598,7 +598,7 @@ func Gia_StoFree(p *Gia_Sto_t) {
     if p.fCutMin {
         Vec_MemFree( p.vTtMem ); }
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Gia_StoComputeCutsConst0(p *Gia_Sto_t, iObj int32) {
     Gia_CutAddZero( p, iObj );

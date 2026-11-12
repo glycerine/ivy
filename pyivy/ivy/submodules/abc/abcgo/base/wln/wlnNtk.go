@@ -83,55 +83,34 @@ func Wln_NtkFree(p *Wln_Ntk_t) {
     var i int32;
     for  i = 0; i < Wln_NtkObjNum(p); i++  {
         if Wln_ObjFaninNum(p, i) > 2 { 
-            // inlining of macro ABC_FREE
-            ((p.vFanins[i].pArray[0]) ? (free((char *) (p.vFanins[i].pArray[0])), (p.vFanins[i].pArray[0]) = 0) : 0); }
+            p.vFanins[i].pArray[0] = nil; }
     }
-    // inlining of macro ABC_FREE
-    ((p.vFanins) ? (free((char *) (p.vFanins)), (p.vFanins) = 0) : 0);
+    p.vFanins = nil;
 
     if p.pRanges {  Hash_IntManStop( p.pRanges ); }
     if p.pManName { Abc_NamStop( p.pManName ); }
 
-    // inlining of macro ABC_FREE
-    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFfs.pArray) ? (free((char *) (p.vFfs.pArray)), (p.vFfs.pArray) = 0) : 0);
+    p.vCis.pArray = nil;
+    p.vCos.pArray = nil;
+    p.vFfs.pArray = nil;
 
-    // inlining of macro ABC_FREE
-    ((p.vTypes.pArray) ? (free((char *) (p.vTypes.pArray)), (p.vTypes.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vSigns.pArray) ? (free((char *) (p.vSigns.pArray)), (p.vSigns.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vRanges.pArray) ? (free((char *) (p.vRanges.pArray)), (p.vRanges.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vNameIds.pArray) ? (free((char *) (p.vNameIds.pArray)), (p.vNameIds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vInstIds.pArray) ? (free((char *) (p.vInstIds.pArray)), (p.vInstIds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vBits.pArray) ? (free((char *) (p.vBits.pArray)), (p.vBits.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vRefs.pArray) ? (free((char *) (p.vRefs.pArray)), (p.vRefs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFanout.pArray) ? (free((char *) (p.vFanout.pArray)), (p.vFanout.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFaninAttrs.pArray) ? (free((char *) (p.vFaninAttrs.pArray)), (p.vFaninAttrs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFaninLists.pArray) ? (free((char *) (p.vFaninLists.pArray)), (p.vFaninLists.pArray) = 0) : 0);
+    p.vTypes.pArray = nil;
+    p.vSigns.pArray = nil;
+    p.vRanges.pArray = nil;
+    p.vNameIds.pArray = nil;
+    p.vInstIds.pArray = nil;
+    p.vTravIds.pArray = nil;
+    p.vCopies.pArray = nil;
+    p.vBits.pArray = nil;
+    p.vLevels.pArray = nil;
+    p.vRefs.pArray = nil;
+    p.vFanout.pArray = nil;
+    p.vFaninAttrs.pArray = nil;
+    p.vFaninLists.pArray = nil;
 
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pName = nil;
+    p.pSpec = nil;
+    p = nil;
 }
 func Wln_NtkMemUsage(p *Wln_Ntk_t) int32 {
     var Mem int32  = sizeof(Wln_Ntk_t);

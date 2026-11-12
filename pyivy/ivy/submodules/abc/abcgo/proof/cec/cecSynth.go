@@ -365,15 +365,13 @@ func Cec_SequentialSynthesisPart(p *Gia_Man_t, pPars *Cec_ParSeq_t) int32 {
             }
         }
         Gia_ManStop( pTemp );
-        // inlining of macro ABC_FREE
-        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);
+        pMapBack = nil;
     }
 
     // generate resulting equivalences
     Gia_ManNormalizeEquivalences( p, pReprs );
 //Abc_Print( 1, "Total equivalences = %d.\n", Gia_ManEquivCountLitsAll(p) );
-    // inlining of macro ABC_FREE
-    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);
+    pReprs = nil;
     if pPars.fVerbose {
         Abc_PrintTime( 1, "Total time", Abc_Clock() - clk );
     }

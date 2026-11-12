@@ -525,7 +525,7 @@ func Dam_ManFree(p *Dam_Man_t) {
     Vec_QueFreeP( &p.vQue );
     Hash_IntManStop( p.vHash );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -589,7 +589,7 @@ func Dam_ManCollectSets(p *Dam_Man_t) {
         Dam_ManCollectSets_rec( p, Gia_ObjFaninId0p(p.pGia, pObj) );
     }
     // inlining of macro ABC_FREE
-    ((p.pGia.pRefs) ? (free((char *) (p.pGia.pRefs)), (p.pGia.pRefs) = 0) : 0);
+    p.pGia.Refs = nil;
     // inlining of macro Gia_ManForEachObjVec
     for  i = 0; (i < Vec_IntSize(p.vVisit)) && ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vVisit,i))); i++  {
         pObj.fMark0 = 0;

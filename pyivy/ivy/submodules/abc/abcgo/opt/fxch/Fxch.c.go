@@ -148,8 +148,7 @@ func Fxch_CubesUnGruping(pFxchMan *Fxch_Man_t) {
 
     Vec_IntFree( pFxchMan.vTranslation );
     Vec_IntFree( pFxchMan.vOutputID );
-    // inlining of macro ABC_FREE
-    ((pFxchMan.pTempOutputID) ? (free((char *) (pFxchMan.pTempOutputID)), (pFxchMan.pTempOutputID) = 0) : 0);
+    pFxchMan.pTempOutputID = nil;
     return;
 }
 

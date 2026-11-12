@@ -123,7 +123,7 @@ func Gia_ManLutCollect(p *Gia_Man_t) *Vec_Int_t {
     Vec_IntFree( vDist );
     Vec_IntFree( vLuts );
     // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
     return vOrder;
 }
 

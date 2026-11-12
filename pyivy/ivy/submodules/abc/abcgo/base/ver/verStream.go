@@ -184,10 +184,8 @@ func Ver_StreamReload(p *Ver_Stream_t) {
 func Ver_StreamFree(p *Ver_Stream_t) {
     if p.pFile {
         _ = (p.pFile).Close(); }
-    // inlining of macro ABC_FREE
-    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBuffer = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

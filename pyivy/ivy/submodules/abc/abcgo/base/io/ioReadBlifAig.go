@@ -224,12 +224,9 @@ func Io_BlifAlloc() *Io_BlifMan_t {
 func Io_BlifFree(p *Io_BlifMan_t) {
     if p.pAig {
         Abc_NtkDelete( p.pAig ); }
-    // inlining of macro ABC_FREE
-    if p.pBuffer {  ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if p.pObjects { ((p.pObjects) ? (free((char *) (p.pObjects)), (p.pObjects) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if p.pTable {   ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0); }
+    if p.pBuffer {  p.pBuffer = nil; }
+    if p.pObjects { p.pObjects = nil; }
+    if p.pTable {   p.pTable = nil; }
     Vec_PtrFree( p.vLines );
     Vec_PtrFree( p.vInputs );
     Vec_PtrFree( p.vOutputs );
@@ -240,8 +237,7 @@ func Io_BlifFree(p *Io_BlifMan_t) {
     Vec_PtrFree( p.vPos );
     Vec_PtrFree( p.vLis );
     Vec_PtrFree( p.vLos );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

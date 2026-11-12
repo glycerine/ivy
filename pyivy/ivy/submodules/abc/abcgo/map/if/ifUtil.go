@@ -397,8 +397,7 @@ func If_ManReverseOrder(p *If_Man_t) *Vec_Ptr_t {
             Vec_PtrPush( vOrder, pObj );
         }
     }
-    // inlining of macro ABC_FREE
-    ((ppStore) ? (free((char *) (ppStore)), (ppStore) = 0) : 0);
+    ppStore = nil;
     // print the order
 //    Vec_PtrForEachEntry( If_Obj_t *, vOrder, pObj, i )
 //        Abc_Print( 1, "Obj %2d   Type %d  Level = %d\n", pObj->Id, pObj->Type, pObj->Level );

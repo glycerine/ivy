@@ -153,10 +153,8 @@ int AllocateCover( int nCubes, int nWordsIn, int nWordsOut )
 }
 
 func DelocateCover() {
-    // inlining of macro ABC_FREE
-    ((s_pCoverMemory[0]) ? (free((char *) (s_pCoverMemory[0])), (s_pCoverMemory[0]) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((s_pCoverMemory) ? (free((char *) (s_pCoverMemory)), (s_pCoverMemory) = 0) : 0);
+    s_pCoverMemory[0] = nil;
+    s_pCoverMemory = nil;
 }
 
 ///////////////////////////////////////////////////////////////////

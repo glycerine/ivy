@@ -196,8 +196,7 @@ func Abc_NtkBmcFileName(pName string) string {
     
     var pNameGeneric string  = Extra_FileNameGeneric( pName );
     spStatic_Abc_NtkBmcFileName_Buffer = fmt.Sprintf("%s_bmc%s", pNameGeneric, pName + len(pNameGeneric));
-    // inlining of macro ABC_FREE
-    ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);
+    pNameGeneric = nil;
     return spStatic_Abc_NtkBmcFileName_Buffer;
 }
 

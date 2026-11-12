@@ -146,8 +146,7 @@ func initMatchList(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, oDep **Vec_Int_t, iMatch *
 
         *oLastItem = curr;
 
-        // inlining of macro ABC_FREE
-        ((temp) ? (free((char *) (temp)), (temp) = 0) : 0);
+        temp = nil;
     
     } else {
         // the else part fixes the outputs for P-equivalence checking
@@ -197,8 +196,7 @@ func initMatchList(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, oDep **Vec_Int_t, iMatch *
 
     *iLastItem = curr;
 
-    // inlining of macro ABC_FREE
-    ((temp) ? (free((char *) (temp)), (temp) = 0) : 0);        
+    temp = nil;        
 
     /*printf("\n");
     for(j = 0; j < *iLastItem; j++)
@@ -621,8 +619,7 @@ func refineIOBySimulation(pNtk *Abc_Ntk_t, iMatch **Vec_Int_t, iLastItem *int32,
             Vec_IntPushUniqueOrder(iComputedNumSorted, num);            
 
             pModel[Vec_IntEntry(iMatch[i], j)] = vPiValues[Vec_IntEntry(iMatch[i], j)] - '0';
-            // inlining of macro ABC_FREE
-            ((output2) ? (free((char *) (output2)), (output2) = 0) : 0);
+            output2 = nil;
         }    
 
         for  Vec_IntSize( iComputedNumSorted ) > 1  {
@@ -689,10 +686,8 @@ func refineIOBySimulation(pNtk *Abc_Ntk_t, iMatch **Vec_Int_t, iLastItem *int32,
     if (*oLastItem) > lastItem {
         isRefined = TRUE; }    
 
-    // inlining of macro ABC_FREE
-    ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((output) ? (free((char *) (output)), (output) = 0) : 0);
+    pModel = nil;
+    output = nil;
     Vec_IntFree( oComputedNum );
 
     return isRefined;    
@@ -1014,8 +1009,7 @@ func Abc_NtkBmSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, iMatchPairs *Vec_Ptr_t, oM
         if mismatch != nil {
             pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
             Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel, mismatch );
-            // inlining of macro ABC_FREE
-            ((pMiter.pModel) ? (free((char *) (pMiter.pModel)), (pMiter.pModel) = 0) : 0);
+            pMiter.pModel = nil;
         }        
         Abc_NtkDelete( pMiter );
         return RetValue;
@@ -1046,8 +1040,7 @@ func Abc_NtkBmSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, iMatchPairs *Vec_Ptr_t, oM
     if mismatch != nil && pCnf.pModel {
         Abc_NtkVerifyReportError( pNtk1, pNtk2, pCnf.pModel, mismatch ); }
 
-    // inlining of macro ABC_FREE
-    ((pCnf.pModel) ? (free((char *) (pCnf.pModel)), (pCnf.pModel) = 0) : 0);
+    pCnf.pModel = nil;
     Abc_NtkDelete( pCnf );
 
     return RetValue;
@@ -1285,14 +1278,10 @@ func matchNonSingletonOutputs(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatc
                 }
             }
                 
-            // inlining of macro ABC_FREE
-            ((vPiValues) ? (free((char *) (vPiValues)), (vPiValues) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((output1) ? (free((char *) (output1)), (output1) = 0) : 0);
-            // inlining of macro ABC_FREE
-            ((output2) ? (free((char *) (output2)), (output2) = 0) : 0);
+            vPiValues = nil;
+            pModel = nil;
+            output1 = nil;
+            output2 = nil;
         }
         
         if spStatic_matchNonSingletonOutputs_MATCH_FOUND == FALSE {
@@ -1311,10 +1300,8 @@ func matchNonSingletonOutputs(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatc
         spStatic_matchNonSingletonOutputs_counter = 0;
     }
 
-    // inlining of macro ABC_FREE
-    ((mismatch) ? (free((char *) (mismatch)), (mismatch) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((skipList) ? (free((char *) (skipList)), (skipList) = 0) : 0);
+    mismatch = nil;
+    skipList = nil;
 
     return spStatic_matchNonSingletonOutputs_MATCH_FOUND;
 }
@@ -1512,14 +1499,11 @@ func match1by1(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatch1 **Vec_Int_t,
                 
             Abc_NtkDelete( FpNtk1 );
             Abc_NtkDelete( FpNtk2 );
-            // inlining of macro ABC_FREE
-            ((bitVector1) ? (free((char *) (bitVector1)), (bitVector1) = 0) : 0);    
-             // inlining of macro ABC_FREE
-             ((bitVector2) ? (free((char *) (bitVector2)), (bitVector2) = 0) : 0);    
+            bitVector1 = nil;    
+             bitVector2 = nil;    
             Vec_IntFree( currInputs1 );
             Vec_IntFree( currInputs2 );            
-            // inlining of macro ABC_FREE
-            ((suppNum2) ? (free((char *) (suppNum2)), (suppNum2) = 0) : 0);
+            suppNum2 = nil;
         }
         
         Vec_PtrClear(oMatchPairs);
@@ -1544,8 +1528,7 @@ func match1by1(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatch1 **Vec_Int_t,
     
     Vec_IntFree( oNonSingleton );    
     Vec_PtrFree( oMatchPairs );    
-    // inlining of macro ABC_FREE
-    ((skipList) ? (free((char *) (skipList)), (skipList) = 0) : 0);
+    skipList = nil;
     Abc_NtkDelete( subNtk1 );    
 
     if MATCH_FOUND && counter != 0 {        
@@ -1734,10 +1717,8 @@ func refineBySAT(pNtk1 *Abc_Ntk_t, iMatch1 **Vec_Int_t, iGroup1 *int32, iDep1 **
     }
     
 
-    // inlining of macro ABC_FREE
-    ((nodesInLevel1) ? (free((char *) (nodesInLevel1)), (nodesInLevel1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((nodesInLevel2) ? (free((char *) (nodesInLevel2)), (nodesInLevel2) = 0) : 0);
+    nodesInLevel1 = nil;
+    nodesInLevel2 = nil;
     /*fclose(matchFile);*/
     
     return satTime;
@@ -2023,43 +2004,25 @@ freeAndExit:
         Vec_IntFree( oDep2[i] );
     }
 
-    // inlining of macro ABC_FREE
-    ((iMatch1) ? (free((char *) (iMatch1)), (iMatch1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((iMatch2) ? (free((char *) (iMatch2)), (iMatch2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oMatch1) ? (free((char *) (oMatch1)), (oMatch1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oMatch2) ? (free((char *) (oMatch2)), (oMatch2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((iDep1) ? (free((char *) (iDep1)), (iDep1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((iDep2) ? (free((char *) (iDep2)), (iDep2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oDep1) ? (free((char *) (oDep1)), (oDep1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oDep2) ? (free((char *) (oDep2)), (oDep2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((iGroup1) ? (free((char *) (iGroup1)), (iGroup1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((iGroup2) ? (free((char *) (iGroup2)), (iGroup2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oGroup1) ? (free((char *) (oGroup1)), (oGroup1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((oGroup2) ? (free((char *) (oGroup2)), (oGroup2) = 0) : 0);    
-    // inlining of macro ABC_FREE
-    ((vPiValues1) ? (free((char *) (vPiValues1)), (vPiValues1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((vPiValues2) ? (free((char *) (vPiValues2)), (vPiValues2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((observability1) ? (free((char *) (observability1)), (observability1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((observability2) ? (free((char *) (observability2)), (observability2) = 0) : 0);
+    iMatch1 = nil;
+    iMatch2 = nil;
+    oMatch1 = nil;
+    oMatch2 = nil;
+    iDep1 = nil;
+    iDep2 = nil;
+    oDep1 = nil;
+    oDep2 = nil;
+    iGroup1 = nil;
+    iGroup2 = nil;
+    oGroup1 = nil;
+    oGroup2 = nil;    
+    vPiValues1 = nil;
+    vPiValues2 = nil;
+    observability1 = nil;
+    observability2 = nil;
     if topOrder1 != nil {
-        // inlining of macro ABC_FREE
-        ((topOrder1) ? (free((char *) (topOrder1)), (topOrder1) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((topOrder2) ? (free((char *) (topOrder2)), (topOrder2) = 0) : 0);
+        topOrder1 = nil;
+        topOrder2 = nil;
     }
 }
 //ABC_NAMESPACE_IMPL_END

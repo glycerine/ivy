@@ -544,8 +544,7 @@ func Ree_CollectInsiders(pGia *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {
 func Ree_ManRemoveTrivial(p *Gia_Man_t, vAdds *Vec_Int_t) {
     var pObjX, pObjM *Gia_Obj_t;
     var i, k int32;
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pRefs = nil;
     Gia_ManCreateRefs( p );
     for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
         if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD

@@ -217,10 +217,8 @@ func Cec_ManChoiceComputation_int(pAig *Gia_Man_t, pPars *Cec_ParChc_t) int32 {
     var clkTotal abctime = Abc_Clock();
     var clk2 abctime;
     var clk abctime = Abc_Clock();
-    // inlining of macro ABC_FREE
-    ((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);
+    pAig.pReprs = nil;
+    pAig.pNexts = nil;
     Gia_ManRandom( 1 );
     // prepare simulation manager
     Cec_ManSimSetDefaultParams( pParsSim );

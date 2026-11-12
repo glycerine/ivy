@@ -50,35 +50,8 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManStart() *Ivy_Man_t {
-    var p *Ivy_Man_t;
-    // start the manager
-    // inlining of macro ABC_ALLOC
-    p = ((Ivy_Man_t *) malloc(sizeof(Ivy_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Ivy_Man_t) );
-    // perform initializations
-    p.Ghost.Id   = -1;
-    p.nTravIds   =  1;
-    p.fCatchExor =  1;
-    // allocate arrays for nodes
-    p.vPis = Vec_PtrAlloc( 100 );
-    p.vPos = Vec_PtrAlloc( 100 );
-    p.vBufs = Vec_PtrAlloc( 100 );
-    p.vObjs = Vec_PtrAlloc( 100 );
-    // prepare the internal memory manager
-    Ivy_ManStartMemory( p );
-    // create the constant node
-    p.pConst1 = Ivy_ManFetchMemory( p );
-    p.pConst1.fPhase = 1;
-    Vec_PtrPush( p.vObjs, p.pConst1 );
-    p.nCreated = 1;
-    // start the table
-    p.nTableSize = 10007;
-    // inlining of macro ABC_ALLOC
-    p.pTable = ((int *) malloc(sizeof(int) * (size_t)(p.nTableSize)));
-    memset( p.pTable, 0, sizeof(int) * p.nTableSize );
-    return p;
-}
+// Ivy_ManStart is implemented in ivyLife.go.
+
 
 /**Function*************************************************************
 
@@ -91,21 +64,8 @@ func Ivy_ManStart() *Ivy_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManStartFrom(p *Ivy_Man_t) *Ivy_Man_t {
-    var pNew *Ivy_Man_t;
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    // create the new manager
-    pNew = Ivy_ManStart();
-    // create the PIs
-    Ivy_ManConst1(p).pEquiv = Ivy_ManConst1(pNew);
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {
-        pObj.pEquiv = Ivy_ObjCreatePi(pNew);
-    }
-    return pNew;
-}
+// Ivy_ManStartFrom is implemented in ivyLife.go.
+
 
 /**Function*************************************************************
 
@@ -266,26 +226,8 @@ func Ivy_ManFrames(pMan *Ivy_Man_t, nLatches int32, nFrames int32, fInit int32, 
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManStop(p *Ivy_Man_t) {
-    // inlining of macro ABC_PRT
-    if p.time1 { Abc_Print(1, "%s =", ("Update lev  "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }
-    // inlining of macro ABC_PRT
-    if p.time2 { Abc_Print(1, "%s =", ("Update levR "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }
-//    Ivy_TableProfile( p );
-//    if ( p->vFanouts )  Ivy_ManStopFanout( p );
-    if p.vChunks {   Ivy_ManStopMemory( p ); }
-    if p.vRequired { Vec_IntFree( p.vRequired ); }
-    if p.vPis {      Vec_PtrFree( p.vPis ); }
-    if p.vPos {      Vec_PtrFree( p.vPos ); }
-    if p.vBufs {     Vec_PtrFree( p.vBufs ); }
-    if p.vObjs {     Vec_PtrFree( p.vObjs ); }
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
-}
+// Ivy_ManStop is implemented in ivyLife.go.
+
 
 /**Function*************************************************************
 
@@ -298,20 +240,8 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.time2)))/(float64(int64(time.Second)
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManCleanup(p *Ivy_Man_t) int32 {
-    var pNode *Ivy_Obj_t;
-    var i, nNodesOld int32;
-    nNodesOld = Ivy_ManNodeNum(p);
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else
-        if Ivy_ObjIsNode(pNode) || Ivy_ObjIsLatch(pNode) || Ivy_ObjIsBuf(pNode) {
-            if Ivy_ObjRefs(pNode) == 0 {
-                Ivy_ObjDelete_rec( p, pNode, 1 ); } }
-    }
-//printf( "Cleanup removed %d nodes.\n", nNodesOld - Ivy_ManNodeNum(p) );
-    return nNodesOld - Ivy_ManNodeNum(p);
-}
+// Ivy_ManCleanup is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

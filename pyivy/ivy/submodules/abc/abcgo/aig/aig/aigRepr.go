@@ -1,573 +1,407 @@
 package aig
 
-import "fmt"
-
-/**CFile****************************************************************
-
-  FileName    [aigRepr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Handing node representatives.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigRepr.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the array of representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManReprStart(p *Aig_Man_t, nIdMax int32) {
-    assert(Aig_ManBufNum(p) == 0, "Aig_ManBufNum(p) == 0");
-    assert(p.pReprs == nil, "p.pReprs == nil");
-    p.nReprsAlloc = nIdMax;
-    // inlining of macro ABC_ALLOC
-    p.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nReprsAlloc)));
-    memset( p.pReprs, 0, sizeof(Aig_Obj_t *) * p.nReprsAlloc );
+// Representative maps store regular edges; absence is InvalidEdge, since edge
+// zero is the valid constant-one representative. Canonical links decrease IDs.
+func Aig_ManReprStart(g *Graph, capacity int32) {
+	if capacity < 0 || g.reprs != nil {
+		panic("aig: representative storage already started or invalid capacity")
+	}
+	for id, n := range g.nodes {
+		if !g.deleted[id] && n.Kind == Buffer {
+			panic("aig: representatives require buffer-free graph")
+		}
+	}
+	g.reprs = make(map[int]Edge, int(capacity))
+}
+func Aig_ManReprStop(g *Graph) {
+	if g.reprs == nil {
+		panic("aig: representative storage not started")
+	}
+	g.reprs = nil
+}
+func reprValidate(g *Graph, e Edge) {
+	if g.reprs == nil || e.Complemented() || !g.valid(e) {
+		panic("aig: invalid representative operand")
+	}
+}
+func Aig_ObjCreateRepr(g *Graph, representative, node Edge) {
+	reprValidate(g, representative)
+	reprValidate(g, node)
+	if representative.NodeID() >= node.NodeID() {
+		panic("aig: representative ID must decrease")
+	}
+	g.reprs[node.NodeID()] = representative
+}
+func Aig_ObjSetRepr_(g *Graph, a, b Edge) {
+	reprValidate(g, a)
+	reprValidate(g, b)
+	if a == b {
+		return
+	}
+	if a.NodeID() > b.NodeID() {
+		a, b = b, a
+	}
+	g.reprs[b.NodeID()] = a
+}
+func Aig_ObjFindRepr(g *Graph, node Edge) Edge {
+	reprValidate(g, node)
+	if representative, ok := g.reprs[node.NodeID()]; ok {
+		if representative != InvalidEdge {
+			reprValidate(g, representative)
+		}
+		return representative
+	}
+	return InvalidEdge
+}
+func Aig_ObjClearRepr(g *Graph, node Edge) { reprValidate(g, node); delete(g.reprs, node.NodeID()) }
+func Aig_ObjFindReprTransitive(g *Graph, node Edge) Edge {
+	reprValidate(g, node)
+	representative := Aig_ObjFindRepr(g, node)
+	if representative == InvalidEdge {
+		return InvalidEdge
+	}
+	seen := map[int]bool{node.NodeID(): true}
+	for {
+		if seen[representative.NodeID()] {
+			panic("aig: cyclic representatives")
+		}
+		seen[representative.NodeID()] = true
+		next := Aig_ObjFindRepr(g, representative)
+		if next == InvalidEdge {
+			return representative
+		}
+		representative = next
+	}
+}
+func Aig_ObjGetRepr(g *Graph, node Edge) Edge {
+	regular := Aig_Regular(node)
+	representative := Aig_ObjFindRepr(g, regular)
+	if representative == InvalidEdge {
+		representative = regular
+	}
+	copy, ok := g.copies[representative.NodeID()]
+	if !ok {
+		return InvalidEdge
+	}
+	phase := g.node(regular).Phase != g.node(representative).Phase
+	return dupPhase(copy, phase != node.Complemented())
+}
+func Aig_ObjChild0Repr(g *Graph, node Edge) Edge { return Aig_ObjGetRepr(g, g.node(node).Fanins[0]) }
+func Aig_ObjChild1Repr(g *Graph, node Edge) Edge { return Aig_ObjGetRepr(g, g.node(node).Fanins[1]) }
+func Aig_ManTransferRepr(destination, source *Graph) {
+	if destination.reprs == nil || source.reprs == nil {
+		panic("aig: representative storage not started")
+	}
+	for id := range source.nodes {
+		if source.deleted[id] {
+			continue
+		}
+		representative := Aig_ObjFindRepr(source, Edge(id)<<1)
+		if representative == InvalidEdge {
+			continue
+		}
+		a, aok := source.copies[id]
+		b, bok := source.copies[representative.NodeID()]
+		if !aok || !bok || a == InvalidEdge || b == InvalidEdge {
+			continue
+		}
+		a, b = Aig_Regular(a), Aig_Regular(b)
+		if destination.valid(a) && destination.valid(b) {
+			Aig_ObjSetRepr_(destination, a, b)
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stop the array of representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManReprStop(p *Aig_Man_t) {
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    // inlining of macro ABC_FREE
-    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-    p.nReprsAlloc = 0;    
+// Existing copy bindings take precedence here, matching aigRepr.c: CI copies
+// remain distinct, while representatives are applied at internal fanouts. This
+// differs intentionally from aigDup.c's eager representative duplicator.
+func reprDuplicate(dst, src *Graph, node Edge, active map[int]bool) Edge {
+	id := node.NodeID()
+	if copy, ok := src.copies[id]; ok {
+		return dupPhase(copy, node.Complemented())
+	}
+	if active[id] {
+		panic("aig: cyclic representative cone")
+	}
+	active[id] = true
+	defer delete(active, id)
+	if representative := Aig_ObjFindRepr(src, Aig_Regular(node)); representative != InvalidEdge {
+		copy := reprDuplicate(dst, src, representative, active)
+		copy = dupPhase(copy, src.node(node).Phase != src.node(representative).Phase)
+		src.copies[id] = copy
+		return dupPhase(copy, node.Complemented())
+	}
+	n := src.node(node)
+	var copy Edge
+	switch n.Kind {
+	case Constant:
+		copy = dst.Const1()
+	case Input:
+		panic("aig: missing CI copy")
+	case Output, Buffer:
+		reprDuplicate(dst, src, Aig_Regular(n.Fanins[0]), active)
+		copy = Aig_ObjChild0Repr(src, node)
+	case And, ExclusiveOr:
+		reprDuplicate(dst, src, Aig_Regular(n.Fanins[0]), active)
+		reprDuplicate(dst, src, Aig_Regular(n.Fanins[1]), active)
+		a, b := Aig_ObjChild0Repr(src, node), Aig_ObjChild1Repr(src, node)
+		if n.Kind == And {
+			copy = dst.AND(a, b)
+		} else {
+			copy = dst.NewXor(a, b)
+		}
+	default:
+		panic("aig: invalid representative node")
+	}
+	src.copies[id] = copy
+	return dupPhase(copy, node.Complemented())
+}
+func Aig_ManDupRepr_rec(dst, src *Graph, node Edge) Edge {
+	return reprDuplicate(dst, src, node, map[int]bool{})
+}
+func Aig_ManDupRepr(src *Graph, ordered int32) *Graph {
+	if src.reprs == nil {
+		panic("aig: representative storage not started")
+	}
+	dst := dupStart(src)
+	if ordered != 0 {
+		for id, n := range src.nodes {
+			if src.deleted[id] {
+				continue
+			}
+			if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer {
+				continue
+			}
+			a := Aig_ObjChild0Repr(src, Edge(id)<<1)
+			if a == InvalidEdge {
+				panic("aig: unordered representative graph")
+			}
+			var copy Edge
+			if n.Kind == Buffer {
+				copy = a
+			} else {
+				b := Aig_ObjChild1Repr(src, Edge(id)<<1)
+				if b == InvalidEdge {
+					panic("aig: unordered representative graph")
+				}
+				if n.Kind == And {
+					copy = dst.AND(a, b)
+				} else {
+					copy = dst.NewXor(a, b)
+				}
+			}
+			src.copies[id] = copy
+		}
+	} else {
+		for _, output := range src.outputs {
+			Aig_ManDupRepr_rec(dst, src, src.outputDriver(output))
+		}
+	}
+	for _, output := range src.outputs {
+		driver := Aig_ObjGetRepr(src, src.outputDriver(output))
+		if driver == InvalidEdge {
+			panic("aig: missing representative output")
+		}
+		copy := Aig_ObjCreateCo(dst, driver)
+		if src.node(output).Kind == Output {
+			src.copies[output.NodeID()] = copy
+		}
+	}
+	return dst
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Set the representative.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCreateRepr(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    assert(!Aig_IsComplement(pNode1), "!Aig_IsComplement(pNode1)");
-    assert(!Aig_IsComplement(pNode2), "!Aig_IsComplement(pNode2)");
-    assert(pNode1.Id < p.nReprsAlloc, "pNode1.Id < p.nReprsAlloc");
-    assert(pNode2.Id < p.nReprsAlloc, "pNode2.Id < p.nReprsAlloc");
-    assert(pNode1.Id < pNode2.Id, "pNode1.Id < pNode2.Id");
-    p.pReprs[pNode2.Id] = pNode1;
+// Cleanup retains register terminals, but disconnects latch cones unreachable
+// from primary outputs. Latch dependencies are followed to their next-state COs.
+func reprSequentialCleanup(g *Graph) {
+	regs := int(g.nRegs)
+	if regs < 0 || regs > len(g.inputs) || regs > len(g.outputs) {
+		panic("aig: invalid register count")
+	}
+	latchInputs := map[int]Edge{}
+	for i := 0; i < regs; i++ {
+		latchInputs[g.inputs[len(g.inputs)-regs+i].NodeID()] = g.outputs[len(g.outputs)-regs+i]
+	}
+	live := map[int]bool{}
+	queue := append([]Edge(nil), g.outputs[:len(g.outputs)-regs]...)
+	var visit func(Edge)
+	visit = func(e Edge) {
+		id := e.NodeID()
+		if live[id] {
+			return
+		}
+		live[id] = true
+		n := g.node(e)
+		switch n.Kind {
+		case Input:
+			if next, ok := latchInputs[id]; ok {
+				queue = append(queue, next)
+			}
+		case And, ExclusiveOr:
+			visit(n.Fanins[0])
+			visit(n.Fanins[1])
+		case Buffer, Output:
+			visit(n.Fanins[0])
+		}
+	}
+	for i := 0; i < len(queue); i++ {
+		visit(queue[i])
+	}
+	for i, output := range g.outputs {
+		if live[output.NodeID()] {
+			continue
+		}
+		if g.node(output).Kind == Output {
+			Aig_ObjPatchFanin0(g, output, g.Const0())
+		} else {
+			g.outputs[i] = g.Const0()
+		}
+	}
+	g.recountReferences()
+	Aig_ManCleanup(g)
+	g.refreshFanouts()
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Set the representative.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjSetRepr_(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    assert(!Aig_IsComplement(pNode1), "!Aig_IsComplement(pNode1)");
-    assert(!Aig_IsComplement(pNode2), "!Aig_IsComplement(pNode2)");
-    assert(pNode1.Id < p.nReprsAlloc, "pNode1.Id < p.nReprsAlloc");
-    assert(pNode2.Id < p.nReprsAlloc, "pNode2.Id < p.nReprsAlloc");
-    if pNode1 == pNode2 {
-        return; }
-    if pNode1.Id < pNode2.Id {
-        p.pReprs[pNode2.Id] = pNode1;
-    } else {
-        p.pReprs[pNode1.Id] = pNode2; }
+func Aig_ManDupReprBasic(src *Graph) *Graph {
+	dst := Aig_ManDupRepr(src, 0)
+	reprSequentialCleanup(dst)
+	for id, copy := range src.copies {
+		if copy == InvalidEdge || !dst.valid(copy) {
+			delete(src.copies, id)
+		}
+	}
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find representative.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjFindRepr(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    assert(pNode.Id < p.nReprsAlloc, "pNode.Id < p.nReprsAlloc");
-//    assert( !p->pReprs[pNode->Id] || p->pReprs[pNode->Id]->Id < pNode->Id );
-    return p.pReprs[pNode.Id];
+func Aig_ManRemapRepr(g *Graph) int32 {
+	var fanouts int32
+	for id, n := range g.nodes {
+		if g.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+			continue
+		}
+		node := Edge(id) << 1
+		representative := Aig_ObjFindReprTransitive(g, node)
+		if representative == InvalidEdge {
+			continue
+		}
+		if representative.NodeID() >= id {
+			panic("aig: representative ID must decrease")
+		}
+		Aig_ObjSetRepr_(g, node, representative)
+		if n.Refs > 0 {
+			fanouts++
+		}
+	}
+	return fanouts
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Clears the representative.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjClearRepr(p *Aig_Man_t, pNode *Aig_Obj_t) {
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    assert(pNode.Id < p.nReprsAlloc, "pNode.Id < p.nReprsAlloc");
-    p.pReprs[pNode.Id] = nil;
+func Aig_ManCountReprs(g *Graph) int32 {
+	var count int32
+	for id, representative := range g.reprs {
+		if id >= 0 && id < len(g.nodes) && !g.deleted[id] && representative != InvalidEdge {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find representative transitively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjFindReprTransitive(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {
-    var pNext, pRepr *Aig_Obj_t;
-    if pRepr = Aig_ObjFindRepr(p, pNode) {
-        for  pNext = Aig_ObjFindRepr(p, pRepr)  {
-            pRepr = pNext;
-        } }
-    return pRepr;
+func reprTfi(g *Graph, node, target Edge, visited map[int]bool) bool {
+	if node == InvalidEdge || !g.valid(node) || g.node(node).Kind == Input {
+		return false
+	}
+	node = Aig_Regular(node)
+	if node == target {
+		return true
+	}
+	if visited[node.NodeID()] {
+		return false
+	}
+	visited[node.NodeID()] = true
+	n := g.node(node)
+	if n.Kind == And || n.Kind == ExclusiveOr {
+		if reprTfi(g, n.Fanins[0], target, visited) || reprTfi(g, n.Fanins[1], target, visited) {
+			return true
+		}
+	} else if n.Kind == Buffer || n.Kind == Output {
+		if reprTfi(g, n.Fanins[0], target, visited) {
+			return true
+		}
+	}
+	if equivalent, ok := g.equivs[node.NodeID()]; ok {
+		return reprTfi(g, equivalent, target, visited)
+	}
+	return false
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns representatives of fanin in approapriate polarity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjGetRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pRepr *Aig_Obj_t;
-    if pRepr = Aig_ObjFindRepr(p, pObj) {
-        return Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pObj.fPhase ^ pRepr.fPhase ); }
-    return (Aig_Obj_t *)pObj.pData;
+func Aig_ObjCheckTfi_rec(g *Graph, node, target Edge) int32 {
+	if reprTfi(g, node, Aig_Regular(target), map[int]bool{}) {
+		return 1
+	}
+	return 0
 }
-func Aig_ObjChild0Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) ); }
-func Aig_ObjChild1Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) ); }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG while substituting representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManTransferRepr(pNew *Aig_Man_t, pOld *Aig_Man_t) {
-    var pObj, pRepr *Aig_Obj_t;
-    var k int32;
-    assert(pNew.pReprs != nil, "pNew.pReprs != nil");
-    // extend storage to fix pNew
-    if pNew.nReprsAlloc < Aig_ManObjNumMax(pNew) {
-        var nReprsAllocNew int32  = 2 * Aig_ManObjNumMax(pNew);
-        // inlining of macro ABC_REALLOC
-        
-        if pNew.pReprs {
-            pNew.pReprs = ((Aig_Obj_t * *) realloc((char *)(pNew.pReprs), sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));
-        } else {
-            pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));
-        }
-        memset( pNew.pReprs + pNew.nReprsAlloc, 0, sizeof(Aig_Obj_t *) * (nReprsAllocNew-pNew.nReprsAlloc) );
-        pNew.nReprsAlloc = nReprsAllocNew;
-    }
-    // go through the nodes which have representatives
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(pOld.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vObjs, k)), 1); k++  { if (pObj) == nil {} else
-        if pRepr = Aig_ObjFindRepr(pOld, pObj) {
-            Aig_ObjSetRepr_( pNew, Aig_Regular((Aig_Obj_t *)pRepr.pData), Aig_Regular((Aig_Obj_t *)pObj.pData) ); }
-    } 
+func Aig_ObjCheckTfi(g *Graph, node, target Edge) int32 {
+	if node.Complemented() || target.Complemented() {
+		panic("aig: TFI roots must be regular")
+	}
+	return Aig_ObjCheckTfi_rec(g, node, target)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupRepr_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    var pRepr *Aig_Obj_t;
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    if pRepr = Aig_ObjFindRepr(p, pObj) {
-        Aig_ManDupRepr_rec( pNew, p, pRepr );
-        return (Aig_Obj_t *)(pObj.pData = Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pRepr.fPhase ^ pObj.fPhase ));
-    }
-    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );
-    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin1(pObj) );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ));
+func Aig_ManRehash(g *Graph) *Graph {
+	if g.reprs == nil {
+		panic("aig: representative storage not started")
+	}
+	for Aig_ManRemapRepr(g) != 0 {
+		old := g
+		g = Aig_ManDupRepr(old, 1)
+		Aig_ManReprStart(g, int32(len(g.nodes)))
+		Aig_ManTransferRepr(g, old)
+		Aig_ManStop(old)
+	}
+	return g
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG while substituting representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupRepr(p *Aig_Man_t, fOrdered int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // start the HOP package
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nConstrs = p.nConstrs;
-    pNew.nBarBufs = p.nBarBufs;
-    if p.vFlopNums {
-        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }
-    // map the const and primary inputs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-//    Aig_ManForEachCi( p, pObj, i )
-//        pObj->pData = Aig_ObjGetRepr( p, pObj );
-    // map the internal nodes
-    if fOrdered != 0 {
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ); }
-        }
-    
-    } else {
-//        Aig_ManForEachObj( p, pObj, i )
-//            if ( p->pReprs[i] )
-//                printf( "Substituting %d for %d.\n", p->pReprs[i]->Id, pObj->Id );
-
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );
-        }
-    }
-    // transfer the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Repr(p, pObj) );
-    }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the new manager
-    if !Aig_ManCheck(pNew) {
-        fmt.Printf("Aig_ManDupRepr: Check has failed.\n"); }
-    return pNew;
+func Aig_ManMarkValidChoices(g *Graph) {
+	if g.reprs == nil || g.equivs != nil {
+		panic("aig: invalid choice conversion state")
+	}
+	g.equivs = map[int]Edge{}
+	for id, n := range g.nodes {
+		if g.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+			continue
+		}
+		node := Edge(id) << 1
+		representative := Aig_ObjFindRepr(g, node)
+		if representative == InvalidEdge {
+			continue
+		}
+		kind := g.node(representative).Kind
+		if (kind != And && kind != ExclusiveOr) || Aig_ObjCheckTfi(g, node, representative) != 0 || n.Refs > 0 {
+			Aig_ObjClearRepr(g, node)
+			continue
+		}
+		if next, ok := g.equivs[representative.NodeID()]; ok {
+			g.equivs[id] = next
+		}
+		g.equivs[representative.NodeID()] = node
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates AIG with representatives without removing registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManDupReprBasic(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    // reconstruct AIG with representatives
-    pNew = Aig_ManDupRepr( p, 0 );
-    // perfrom sequential cleanup but do not remove registers
-    Aig_ManSeqCleanupBasic( pNew );
-    // remove pointers to the dead nodes
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else
-        if pObj.pData && Aig_ObjIsNone((Aig_Obj_t *)pObj.pData) {
-            pObj.pData = nil; }
-    }
-    return pNew;
+func Aig_TransferMappedClasses(destination, part *Graph, mapping []int32) int32 {
+	if part.reprs == nil {
+		return 0
+	}
+	if destination.reprs == nil {
+		panic("aig: representative storage not started")
+	}
+	var count int32
+	for id := range part.nodes {
+		if part.deleted[id] {
+			continue
+		}
+		representative := Aig_ObjFindRepr(part, Edge(id)<<1)
+		if representative == InvalidEdge {
+			continue
+		}
+		if id >= len(mapping) || representative.NodeID() >= len(mapping) {
+			panic("aig: incomplete class mapping")
+		}
+		a, b := mapping[id], mapping[representative.NodeID()]
+		if a < 0 || b < 0 || int(a) >= len(destination.nodes) || int(b) >= len(destination.nodes) {
+			panic("aig: mapped class outside destination")
+		}
+		Aig_ObjSetRepr_(destination, Edge(a)<<1, Edge(b)<<1)
+		count++
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Transfer representatives and return the number of critical fanouts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRemapRepr(p *Aig_Man_t) int32 {
-    var pObj, pRepr *Aig_Obj_t;
-    var i, nFanouts int32;
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pRepr = Aig_ObjFindReprTransitive( p, pObj );
-        if pRepr == nil {
-            continue; }
-        assert(pRepr.Id < pObj.Id, "pRepr.Id < pObj.Id");
-        Aig_ObjSetRepr_( p, pObj, pRepr );
-        nFanouts += (pObj.nRefs > 0);
-    }
-    }
-    return nFanouts;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transfer representatives and return the number of critical fanouts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManCountReprs(p *Aig_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, Counter int32;
-    if p.pReprs == nil {
-        return 0; }
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        Counter += (p.pReprs[i] != nil); }
-    }
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCheckTfi_rec(p *Aig_Man_t, pNode *Aig_Obj_t, pOld *Aig_Obj_t) int32 {
-    // check the trivial cases
-    if pNode == nil {
-        return 0; }
-    if Aig_ObjIsCi(pNode) {
-        return 0; }
-//    if ( pNode->Id < pOld->Id ) // cannot use because of choices of pNode
-//        return 0;
-    if pNode == pOld {
-        return 1; }
-    // skip the visited node
-    if Aig_ObjIsTravIdCurrent( p, pNode ) {
-        return 0; }
-    Aig_ObjSetTravIdCurrent( p, pNode );
-    // check the children
-    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin0(pNode), pOld ) != 0 {
-        return 1; }
-    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin1(pNode), pOld ) != 0 {
-        return 1; }
-    // check equivalent nodes
-    return Aig_ObjCheckTfi_rec( p, Aig_ObjEquiv(p, pNode), pOld );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ObjCheckTfi(p *Aig_Man_t, pNew *Aig_Obj_t, pOld *Aig_Obj_t) int32 {
-    assert(!Aig_IsComplement(pNew), "!Aig_IsComplement(pNew)");
-    assert(!Aig_IsComplement(pOld), "!Aig_IsComplement(pOld)");
-    Aig_ManIncrementTravId( p );
-    return Aig_ObjCheckTfi_rec( p, pNew, pOld );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Iteratively rehashes the AIG.]
-
-  Description [The input AIG is assumed to have representatives assigned.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManRehash(p *Aig_Man_t) *Aig_Man_t {
-    var pTemp *Aig_Man_t;
-    var i, nFanouts int32;
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    for  i = 0; (nFanouts = Aig_ManRemapRepr( p )); i++  {
-//        printf( "Iter = %3d. Fanouts = %6d. Nodes = %7d.\n", i+1, nFanouts, Aig_ManNodeNum(p) );
-        p = Aig_ManDupRepr( pTemp = p, 1 );
-        Aig_ManReprStart( p, Aig_ManObjNumMax(p) );
-        Aig_ManTransferRepr( p, pTemp );
-        Aig_ManStop( pTemp );
-    }
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the nodes that are Creates choices.]
-
-  Description [The input AIG is assumed to have representatives assigned.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManMarkValidChoices(p *Aig_Man_t) {
-    var pObj, pRepr *Aig_Obj_t;
-    var i int32;
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    // create equivalent nodes in the manager
-    assert(p.pEquivs == nil, "p.pEquivs == nil");
-    // inlining of macro ABC_ALLOC
-    p.pEquivs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));
-    memset( p.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );
-    // make the choice nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pRepr = Aig_ObjFindRepr( p, pObj );
-        if pRepr == nil {
-            continue; }
-        // skip constant and PI classes
-        if !Aig_ObjIsNode(pRepr) {
-            Aig_ObjClearRepr( p, pObj );
-            continue;
-        }
-        // skip choices with combinatinal loops
-        if Aig_ObjCheckTfi( p, pObj, pRepr ) != 0 {
-            Aig_ObjClearRepr( p, pObj );
-            continue;
-        }
-//printf( "Node %d is represented by node %d.\n", pObj->Id, pRepr->Id );
-        // add choice to the choice node
-        if pObj.nRefs > 0 {
-            Aig_ObjClearRepr( p, pObj );
-            continue;
-        }
-        assert(pObj.nRefs == 0, "pObj.nRefs == 0");
-        p.pEquivs[pObj.Id] = p.pEquivs[pRepr.Id];
-        p.pEquivs[pRepr.Id] = pObj;
-    }
-    }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TransferMappedClasses(pAig *Aig_Man_t, pPart *Aig_Man_t, pMapBack *int32) int32 {
-    var pObj *Aig_Obj_t;
-    var nClasses, k int32;
-    nClasses = 0;
-    if pPart.pReprs {
-      // inlining of macro Aig_ManForEachObj
-      // inlining of macro Vec_PtrForEachEntry
-      for  k = 0; (k < Vec_PtrSize(pPart.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, k)), 1); k++  { if (pObj) == nil {} else {
-          if pPart.pReprs[pObj.Id] == nil {
-              continue; }
-          nClasses++;
-          Aig_ObjSetRepr_( pAig,
-              Aig_ManObj(pAig, pMapBack[pObj.Id]),
-              Aig_ManObj(pAig, pMapBack[pPart.pReprs[pObj.Id].Id]) );
-      }
-      }
-    }
-    return nClasses;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

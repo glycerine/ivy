@@ -217,8 +217,7 @@ func Gia_ManGlaRefine(p *Gia_Man_t, pCex *Abc_Cex_t, fMinCut int32, fVerbose int
     Vec_IntFree( vPPis );
     Gia_ManStop( pAbs );
     if pCexNew != nil {
-        // inlining of macro ABC_FREE
-        ((p.pCexSeq) ? (free((char *) (p.pCexSeq)), (p.pCexSeq) = 0) : 0);
+        p.pCexSeq = nil;
         p.pCexSeq = pCexNew;
         return 0;
     }
@@ -387,8 +386,7 @@ func Gia_ManNewRefine(p *Gia_Man_t, pCex *Abc_Cex_t, iFrameStart int32, iFrameEx
     var vCopy *Vec_Int_t;
 //    abctime clk = Abc_Clock();
     var RetValue int32;
-    // inlining of macro ABC_FREE
-    ((p.pCexSeq) ? (free((char *) (p.pCexSeq)), (p.pCexSeq) = 0) : 0);
+    p.pCexSeq = nil;
     if p.vGateClasses == nil {
         Abc_Print( 1, "Gia_ManNewRefine(): Abstraction gate map is missing.\n" );
         return -1;

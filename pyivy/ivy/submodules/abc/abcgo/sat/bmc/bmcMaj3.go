@@ -463,8 +463,7 @@ func Maj3_ManAlloc(nVars int32, nNodes int32, vLevels *Vec_Int_t) *Maj3_Man_t {
 func Maj3_ManFree(p *Maj3_Man_t) {
     bmcg_sat_solver_stop( p.pSat );
     Vec_WrdFree( p.vInfo );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -850,8 +849,7 @@ func Zyx_ManFree(p *Zyx_Man_t) {
     Vec_IntFree( p.vPairs );
     Vec_IntFree( p.vMidMints );
     Vec_IntFree( p.vVarValues );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1378,8 +1376,7 @@ func Zyx_TestGetTruthTablePars(pFileName string, pTruth *word, nVars *int32, nLu
     } else if nLength == 64 {
         *nVars = 8;
     } else {
-        // inlining of macro ABC_FREE
-        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+        pBuffer = nil;
         fmt.Printf("Invalid truth table size.\n");
         return 0;
     }
@@ -1388,8 +1385,7 @@ func Zyx_TestGetTruthTablePars(pFileName string, pTruth *word, nVars *int32, nLu
     // read LUT size
     for  *pCur && *pCur++ != '-'  {; }
     if *pCur == 0 {
-        // inlining of macro ABC_FREE
-        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+        pBuffer = nil;
         fmt.Printf("Expecting \'-\' after truth table before LUT size.\n");
         return 0;
     }
@@ -1397,14 +1393,12 @@ func Zyx_TestGetTruthTablePars(pFileName string, pTruth *word, nVars *int32, nLu
     *nLutSize = strconv.Atoi(pCur);
     for  *pCur && *pCur++ != '-'  {; }
     if *pCur == 0 {
-        // inlining of macro ABC_FREE
-        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+        pBuffer = nil;
         fmt.Printf("Expecting \'-\' after LUT size before node count.\n");
         return 0;
     }
     *nNodes = strconv.Atoi(pCur);
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return 1;
 }
 

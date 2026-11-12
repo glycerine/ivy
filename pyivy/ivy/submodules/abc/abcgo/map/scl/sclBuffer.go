@@ -783,8 +783,7 @@ func Buf_ManStop(p *Buf_Man_t) {
 //    Vec_QueCheck( p->vQue );
     Vec_QueFree( p.vQue );
     Vec_FltFree( p.vCounts );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -816,8 +815,7 @@ func Abc_BufSortByDelay(p *Buf_Man_t, iPivot int32) *Vec_Int_t {
     for  i = 0; i < Vec_IntSize(p.vDelays); i++  {
         Vec_IntPush( p.vOrder, Abc_ObjId(Abc_ObjFanout(pObj, pOrder[i])) );
     }
-    // inlining of macro ABC_FREE
-    ((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);
+    pOrder = nil;
 //    for ( i = 0; i < Vec_IntSize(p->vDelays); i++ )
 //        printf( "%5d - %5d   ", Vec_IntEntry(p->vOrder, i), Abc_BufEdgeSlack(p, pObj, Abc_NtkObj(p->pNtk, Vec_IntEntry(p->vOrder, i))) );
     return p.vOrder;        

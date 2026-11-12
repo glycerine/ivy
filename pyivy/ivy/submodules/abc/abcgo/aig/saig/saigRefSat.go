@@ -386,8 +386,7 @@ func Saig_RefManStart(pAig *Aig_Man_t, pCex *Abc_Cex_t, nInputs int32, fVerbose 
 func Saig_RefManStop(p *Saig_RefMan_t) {
     Aig_ManStopP( &p.pFrames );
     Vec_IntFreeP( &p.vMapPiF2A );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

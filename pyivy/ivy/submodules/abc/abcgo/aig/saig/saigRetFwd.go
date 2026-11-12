@@ -142,8 +142,7 @@ func Saig_ManMarkAutonomous(p *Aig_Man_t) {
     for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
         Aig_ManMarkAutonomous_rec( p, pObj );
     }
-    // inlining of macro ABC_FREE
-    ((ppFanouts) ? (free((char *) (ppFanouts)), (ppFanouts) = 0) : 0);
+    ppFanouts = nil;
     // disconnect LIs/LOs and label unreachable registers
     // inlining of macro Saig_ManForEachLiLo
     for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {

@@ -77,8 +77,7 @@ func Xyz_ManTryAlloc(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) *Xyz_ManTry_t {
 
 ***********************************************************************/
 func Xyz_ManTryFree(p *Xyz_ManTry_t) {
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

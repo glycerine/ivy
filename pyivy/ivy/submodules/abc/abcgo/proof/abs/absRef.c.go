@@ -328,10 +328,8 @@ Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int
     Vec_StrFree( p.vCounts );
     Vec_IntFree( p.vFanins );
     Vec_IntFree( p.vObjs );
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjs = nil;
+    p = nil;
 }
 func Rnm_ManMemoryUsage(p *Rnm_Man_t) float64 {
     return float64((sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs)));

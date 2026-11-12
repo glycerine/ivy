@@ -156,24 +156,15 @@ func Scl_ManAlloc(pLib *SC_Lib, vCis *Vec_Int_t, vCos *Vec_Int_t, nObjs int32) *
 }
 func Scl_ManFree(p *SC_Time) {
     Vec_IntFreeP( &p.vGates );
-    // inlining of macro ABC_FREE
-    ((p.pLoads) ? (free((char *) (p.pLoads)), (p.pLoads) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pLoads2) ? (free((char *) (p.pLoads2)), (p.pLoads2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDepts) ? (free((char *) (p.pDepts)), (p.pDepts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSlews) ? (free((char *) (p.pSlews)), (p.pSlews) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTimes2) ? (free((char *) (p.pTimes2)), (p.pTimes2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSlews2) ? (free((char *) (p.pSlews2)), (p.pSlews2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSlack) ? (free((char *) (p.pSlack)), (p.pSlack) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pLoads = nil;
+    p.pLoads2 = nil;
+    p.pDepts = nil;
+    p.pTimes = nil;
+    p.pSlews = nil;
+    p.pTimes2 = nil;
+    p.pSlews2 = nil;
+    p.pSlack = nil;
+    p = nil;
 }
 func Scl_ManCleanTime(p *SC_Time) {
     memset( p.pDepts, 0, sizeof(SC_Pair) * p.nObjs );

@@ -179,28 +179,17 @@ func Fsim_ManDelete(p *Fsim_Man_t) {
     Vec_IntFree( p.vCis2Ids );
     Vec_IntFree( p.vLos );
     Vec_IntFree( p.vLis );
-    // inlining of macro ABC_FREE
-    ((p.pDataAig2) ? (free((char *) (p.pDataAig2)), (p.pDataAig2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDataAig) ? (free((char *) (p.pDataAig)), (p.pDataAig) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pData1) ? (free((char *) (p.pData1)), (p.pData1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pData2) ? (free((char *) (p.pData2)), (p.pData2) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pDataAig2 = nil;
+    p.pDataAig = nil;
+    p.pFans0 = nil;
+    p.pFans1 = nil;
+    p.pRefs = nil;
+    p.pDataSim = nil;
+    p.pDataSimCis = nil;
+    p.pDataSimCos = nil;
+    p.pData1 = nil;
+    p.pData2 = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

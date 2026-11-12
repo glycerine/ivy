@@ -104,8 +104,7 @@ func Mio_LibraryRead(FileName string, pBuffer string, ExcludeFile string, fVerbo
         if pLib != nil {
             fmt.Printf("Warning: Read extended genlib format but ignoring extensions\n"); }
     }
-    // inlining of macro ABC_FREE
-    ((pBufferCopy) ? (free((char *) (pBufferCopy)), (pBufferCopy) = 0) : 0);
+    pBufferCopy = nil;
     if tExcludeGate != nil {
         st__free_table( tExcludeGate ); }
 
@@ -217,8 +216,7 @@ func Mio_LibraryReadOne(FileName string, fExtendedFormat int32, tExcludeGate *st
     if pBuffer == nil {
         return nil; }
     pLib = Mio_LibraryReadBuffer( pBuffer, fExtendedFormat, tExcludeGate, fVerbose );
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     if pLib != nil {
         pLib.pName = Abc_UtilStrsav( FileName ); }
     return pLib;

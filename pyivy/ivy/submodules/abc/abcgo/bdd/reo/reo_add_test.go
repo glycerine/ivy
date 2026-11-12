@@ -127,3 +127,18 @@ func TestADDBenchmarkUsesNonzeroPattern(t *testing.T) {
 		t.Fatalf("binary pattern has %d nodes, want 3", nodes)
 	}
 }
+
+func TestClassicalADDComparison(t *testing.T) {
+	dd := cudd.NewBDDManager(3)
+	root := addMux(dd)
+	cudd.Cudd_Ref(root)
+	inverse := make([]int, 3)
+	result := Extra_ReorderCudd(dd, root, inverse)
+	if result == nil {
+		t.Fatal("classical ADD comparison failed")
+	}
+	checkADDMapping(t, dd, root, result, inverse)
+	if root.Ref != 1 {
+		t.Fatal("classical ADD comparison leaked input refs")
+	}
+}

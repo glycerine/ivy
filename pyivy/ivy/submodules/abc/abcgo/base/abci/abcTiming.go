@@ -523,21 +523,16 @@ func Abc_ManTimeStart(pNtk *Abc_Ntk_t) *Abc_ManTime_t {
 ***********************************************************************/
 func Abc_ManTimeStop(p *Abc_ManTime_t) {
     if p.tInDrive {
-        // inlining of macro ABC_FREE
-        ((p.tInDrive) ? (free((char *) (p.tInDrive)), (p.tInDrive) = 0) : 0); }
+        p.tInDrive = nil; }
     if p.tOutLoad {
-        // inlining of macro ABC_FREE
-        ((p.tOutLoad) ? (free((char *) (p.tOutLoad)), (p.tOutLoad) = 0) : 0); }
+        p.tOutLoad = nil; }
     if Vec_PtrSize(p.vArrs) > 0 {
-        // inlining of macro ABC_FREE
-        ((p.vArrs.pArray[0]) ? (free((char *) (p.vArrs.pArray[0])), (p.vArrs.pArray[0]) = 0) : 0); }
+        p.vArrs.pArray[0] = nil; }
     Vec_PtrFree( p.vArrs );
     if Vec_PtrSize(p.vReqs) > 0 {
-        // inlining of macro ABC_FREE
-        ((p.vReqs.pArray[0]) ? (free((char *) (p.vReqs.pArray[0])), (p.vReqs.pArray[0]) = 0) : 0); }
+        p.vReqs.pArray[0] = nil; }
     Vec_PtrFree( p.vReqs );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

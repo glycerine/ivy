@@ -73,8 +73,7 @@ func Ssw_FrmStop(p *Ssw_Frm_t) {
     if p.pFrames {
         Aig_ManStop( p.pFrames ); }
     Vec_PtrFree( p.vAig2Frm );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

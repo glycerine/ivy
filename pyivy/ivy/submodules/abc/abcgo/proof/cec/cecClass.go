@@ -502,8 +502,7 @@ func Cec_ManSimProcessRefined(p *Cec_ManSim_t, vRefined *Vec_Int_t) {
     for  k = 0; (k < Vec_IntSize(vRefined)) && (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {
         Cec_ManSimSimDeref( p, i );
     }
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
 }
 
 
@@ -649,8 +648,7 @@ func Cec_ManSimSimulateRound(p *Cec_ManSim_t, vInfoCis *Vec_Ptr_t, vInfoCos *Vec
         Cec_ManSimMemRelink( p ); }
     p.nMemsMax = 0;
     // allocate score counters
-    // inlining of macro ABC_FREE
-    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);
+    p.pScores = nil;
     if p.pBestState {
         // inlining of macro ABC_CALLOC
         p.pScores = ((int *) calloc((size_t)(32 * p.nWords), sizeof(int))); }

@@ -127,8 +127,7 @@ func Int2_ManStop(p *Int2_Man_t) {
         sat_solver_delete( p.pSatPref ); }
     if p.timeSatSuff {
         sat_solver_delete( p.pSatSuff ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

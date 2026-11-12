@@ -87,14 +87,14 @@ func Opa_ManStop(p *Opa_Man_t) {
     Vec_IntFree( p.vFront );
     for  i = 0; i < Gia_ManPoNum(p.pGia); i++  {
         // inlining of macro ABC_FREE
-        ((p.pvParts[i].pArray) ? (free((char *) (p.pvParts[i].pArray)), (p.pvParts[i].pArray) = 0) : 0);
+        p.pvParts[i].pArray = nil;
     }
     // inlining of macro ABC_FREE
-    ((p.pvParts) ? (free((char *) (p.pvParts)), (p.pvParts) = 0) : 0);
+    p.pvParts = nil;
     // inlining of macro ABC_FREE
-    ((p.pId2Part) ? (free((char *) (p.pId2Part)), (p.pId2Part) = 0) : 0);
+    p.pId2Part = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Opa_ManPrint(p *Opa_Man_t) {
     var i, k int32;
@@ -362,7 +362,7 @@ func Gia_ManFindPivots(p *Gia_Man_t, SelectShift int32, fOnlyCis int32, fVerbose
 */
     // count references
     Gia_ManCreateRefs( p );
-    vCount = Vec_IntAllocArray( p.pRefs, Gia_ManObjNum(p) ); p.pRefs = nil;
+    vCount = Vec_IntAllocArray( p.Refs, Gia_ManObjNum(p) ); p.Refs = nil;
 
     // collect nodes 
     vPivots  = Vec_IntAlloc( 100 );
@@ -412,7 +412,7 @@ func Gia_ManFindPivots(p *Gia_Man_t, SelectShift int32, fOnlyCis int32, fVerbose
     Vec_IntFree( vPivots );
     Vec_IntFree( vWeights );
     // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
 
     return vResult;
 }

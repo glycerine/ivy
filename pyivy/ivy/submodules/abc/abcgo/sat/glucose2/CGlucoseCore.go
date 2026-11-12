@@ -1,611 +1,351 @@
 package glucose2
 
-import "fmt"
-
-// The code in this file was developed by He-Teng Zhang (National Taiwan University)
-
-
-
-
-/*
- * justification for glucose 
- */
-
-//#include "sat/glucose2/Options.h"
-//#include "sat/glucose2/Solver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-namespace Gluco2 {
-inline int  Solver::justUsage() { return jftr; }
-
-inline Lit  Solver::gateJustFanin(Var v) {
-	assert(v < nVars(), "v < nVars()");
-	assert(isJReason(v), "isJReason(v)");
-
-
-	lbool val0, val1;
-	val0 = value(getFaninLit0(v));
-	val1 = value(getFaninLit1(v));
-
-	if isAND(v){
-		// should be handled by conflict analysis before entering here
-		assert(value(v) != l_False || l_True  != val0 || l_True  != val1, "value(v) != l_False || l_True  != val0 || l_True  != val1");
-
-		if(val0 == l_False || val1 == l_False)
-			return lit_Undef;
-
-		// branch 
-		if(val0 == l_True)
-			return ~getFaninLit1(v);
-		if(val1 == l_True)
-			return ~getFaninLit0(v);
-
-		return maxActiveLit( ~getFaninLit0(v), ~getFaninLit1(v) );
-	} else { // xor scope
-		// should be handled by conflict analysis before entering here
-		assert(value(v) == l_Undef || value(v) != l_False || val0 == val1, "value(v) == l_Undef || value(v) != l_False || val0 == val1");
-
-		// both are assigned
-		if( l_Undef != val0 && l_Undef != val1 )
-			return lit_Undef;
-
-		// should be handled by propagation before entering here
-		assert(l_Undef == val0 && l_Undef == val1, "l_Undef == val0 && l_Undef == val1");
-		return maxActiveLit( getFaninPlt0(v), getFaninPlt1(v) );
-	}
-}
-
-
-// a var should at most be enqueued one time
-inline void Solver::pushJustQueue(Var v){
-	assert(v < nVars(), "v < nVars()");
-	assert(isJReason(v), "isJReason(v)");
-
-	if( ! isRoundWatch(v) )\
-		return;
-
-
-	jdata[v].act_fanin = activity[getFaninVar0(v)] > activity[getFaninVar1(v)]? activity[getFaninVar0(v)]: activity[getFaninVar1(v)];
-	jdata[v].now = true;
-
-	jheap.update(v);
-}
-
-inline void Solver::ResetJustData(bool fCleanMemory){
-	jstack.shrink_( jstack.size() );
-	jheap .clear(fCleanMemory);
-}
-
-inline Lit Solver::pickJustLit( Var& j_reason ){
-	Var next = var_Undef;
-	Lit jlit = lit_Undef;
-
-	for  int i = 0; i < jstack.size(); i ++ {
-		Var x = jstack[i];
-		if( l_Undef != value(getFaninLit0(x)) || l_Undef != value(getFaninLit1(x)) )
-			continue;
-		pushJustQueue(x);
-	}
-	jstack.shrink_( jstack.size() );
-	while( ! jheap.empty() && var_Undef != (next = jheap.removeMin()) ){
-		if( ! jdata[next].now )
-			continue; 
-
-		assert(isJReason(next), "isJReason(next)");
-		if( lit_Undef != (jlit = gateJustFanin(next)) )
-			break;
-		gateAddJwatch(next);
-	}
-
-	j_reason = next;
-	return jlit;
-}
-
-
-inline void Solver::gateAddJwatch(Var v){
-	assert(v < nVars(), "v < nVars()");
-	assert(isJReason(v), "isJReason(v)");
-
-	if( var_Undef != jwatch[v].prev ) // already in jwatch
-		return;
-
-	assert(var_Undef == jwatch[v].prev, "var_Undef == jwatch[v].prev");
-
-	lbool val0, val1;
-	Var var0, var1;
-	var0 = getFaninVar0(v);
-	var1 = getFaninVar1(v);
-	val0 = value(getFaninLit0(v));
-	val1 = value(getFaninLit1(v));
-
-	assert(!isAND(v) ||  l_False == val0 || l_False == val1, "!isAND(v) ||  l_False == val0 || l_False == val1");
-	assert(isAND(v) || (l_Undef != val0 && l_Undef != val1), "isAND(v) || (l_Undef != val0 && l_Undef != val1)");
-
-	if (val0 == l_False && val1 == l_False) || !isAND(v){
-		addJwatch(vardata[var0].level < vardata[var1].level? var0: var1, v);
-		return;
-	}
-
-	addJwatch(l_False == val0? var0: var1, v);
-}
-
-inline void Solver::gateClearJwatch( Var v, int backtrack_level ){
-	if( var_Undef == jwatch[v].head )
-		return ;
-
-	Var member, next;
-	member = jwatch[v].head;
-	while( var_Undef != member ){
-		next = jwatch[member].next;
-
-		delJwatch( member );
-
-		if( vardata[member].level <= backtrack_level )
-			pushJustQueue(member);
-
-		member = next;
-	}
-}
-
-inline void Solver::updateJustActivity( Var v ){
-	for Lit lfo = var2Fanout0[ v ]; lfo != toLit(~0); lfo = var2FanoutN[ toInt(lfo) ] {
-		Var x = var(lfo);
-		if jdata[x].now && jheap.inHeap(x){
-			jdata[x].act_fanin = activity[getFaninVar0(x)] > activity[getFaninVar1(x)]? activity[getFaninVar0(x)]: activity[getFaninVar1(x)];
-			jheap.update(x);
-		}
-	}
-}
-
-
-inline void Solver::addJwatch( Var host, Var member ){
-	assert(var_Undef == jwatch[member].next && var_Undef == jwatch[member].prev, "var_Undef == jwatch[member].next && var_Undef == jwatch[member].prev");
-
-	if( var_Undef != jwatch[host].head )
-		jwatch[jwatch[host].head].prev = member;
-
-	jwatch[member].next = jwatch[host].head;
-	jwatch[member].prev = host;
-	jwatch[host].head = member;
-}
-
-inline void Solver::delJwatch( Var member ){
-	Var prev = jwatch[member].prev;
-	Var next = jwatch[member].next;
-
-	assert(var_Undef != prev, "var_Undef != prev"); // must be in a list to be deleted 
-	assert(jwatch[prev].next == member || jwatch[prev].head == member, "jwatch[prev].next == member || jwatch[prev].head == member");
-
-	if( jwatch[prev].next == member )
-		jwatch[prev].next = next;
-	else 
-		jwatch[prev].head = next;
-
-	if( var_Undef != next )
-		jwatch[next].prev = prev;
-
-	jwatch[member].prev = var_Undef;
-	jwatch[member].next = var_Undef;
-}
-
-
-/*
- * circuit propagation 
- */
-
-inline void Solver::justCheck(){
-	Lit lit;
-	int i, nJustFail = 0;
-	for i=0; i<trail.size(); i++{
-		Var      x  = var(trail[i]);
-		if( ! isRoundWatch(x) )
-			continue;
-		if( !isJReason(x) )
-			continue;
-		if lit_Undef != (lit = gateJustFanin(x)){
-			fmt.Printf("\t%8d is not justified (value=%d, level=%3d)\n", x, l_True == value(x)? 1: 0, vardata[x].level);
-nJustFail ++;
-
-			assert(false, "false");
-		}
-	}
-	if( nJustFail )
-		fmt.Printf("%d just-fails\n", nJustFail);
-}
-/**
-inline void Solver::delVarFaninLits( Var v ){
-	if( toLit(~0) != getFaninLit0(v) ){
-		if( toLit(~0) == var2FanoutP[ (v<<1) + 0 ] ){
-			// head of linked-list 
-			Lit root = mkLit(getFaninVar0(v));
-			Lit next = var2FanoutN[ (v<<1) + 0 ];
-			if( toLit(~0) != next ){
-				assert( var2Fanout0[ toInt(root) ] == toLit((v<<1) + 0) );
-				assert( var2FanoutP[ toInt(next) ] == toLit((v<<1) + 0) );
-				var2Fanout0[ getFaninVar0(v) ] = next;
-				var2FanoutP[ toInt(next) ] = toLit(~0);
-			}
-		} else {
-			Lit prev = var2FanoutP[ (v<<1) + 0 ];
-			Lit next = var2FanoutN[ (v<<1) + 0 ];
-			if( toLit(~0) != next ){
-				assert( var2FanoutN[ toInt(prev) ] == toLit((v<<1) + 0) );
-				assert( var2FanoutP[ toInt(next) ] == toLit((v<<1) + 0) );
-				var2FanoutN[ toInt(prev) ] = next;
-				var2FanoutP[ toInt(next) ] = prev;
-			}
-		}
-	}
-
-
-	if( toLit(~0) != getFaninLit1(v) ){
-		if( toLit(~0) == var2FanoutP[ (v<<1) + 1 ] ){
-			// head of linked-list 
-			Lit root = mkLit(getFaninVar1(v));
-			Lit next = var2FanoutN[ (v<<1) + 1 ];
-			if( toLit(~0) != next ){
-				assert( var2Fanout0[ toInt(root) ] == toLit((v<<1) + 1) );
-				assert( var2FanoutP[ toInt(next) ] == toLit((v<<1) + 1) );
-				var2Fanout0[ getFaninVar1(v) ] = next;
-				var2FanoutP[ toInt(next) ] = toLit(~0);
-			}
-		} else {
-			Lit prev = var2FanoutP[ (v<<1) + 1 ];
-			Lit next = var2FanoutN[ (v<<1) + 1 ];
-			if( toLit(~0) != next ){
-				assert( var2FanoutN[ toInt(prev) ] == toLit((v<<1) + 1) );
-				assert( var2FanoutP[ toInt(next) ] == toLit((v<<1) + 1) );
-				var2FanoutN[ toInt(prev) ] = next;
-				var2FanoutP[ toInt(next) ] = prev;
-			}
-		}
-	}
-
-	var2FanoutP  [ (v<<1) + 0 ] = toLit(~0);
-	var2FanoutP  [ (v<<1) + 1 ] = toLit(~0);
-	var2FanoutN  [ (v<<1) + 0 ] = toLit(~0);
-	var2FanoutN  [ (v<<1) + 1 ] = toLit(~0);
-	var2FaninLits[ (v<<1) + 0 ] = toLit(~0);
-	var2FaninLits[ (v<<1) + 1 ] = toLit(~0);
-}
-**/
-inline void Solver::setVarFaninLits( Var v, Lit lit1, Lit lit2 ){
-	assert(var(lit1) != var(lit2), "var(lit1) != var(lit2)");
-	int mincap = var(lit1) < var(lit2)? var(lit2): var(lit1);
-	mincap = (v < mincap? mincap: v) + 1;
-
-	if( var2FaninLits.size() < (mincap<<1) )
-		var2FaninLits.growTo( (mincap<<1), toLit(~0));
-	assert((toLit(~0) == lit1 && toLit(~0) == lit2) || ((v<<1)+1 < var2FaninLits.size()), "(toLit(~0) == lit1 && toLit(~0) == lit2) || ((v<<1)+1 < var2FaninLits.size())");
-	var2FaninLits[ (v<<1) + 0 ] = lit1;
-	var2FaninLits[ (v<<1) + 1 ] = lit2;
-
-
-	assert(toLit(~0) != lit1 && toLit(~0) != lit2, "toLit(~0) != lit1 && toLit(~0) != lit2");
-
-
-	if( var2FanoutN.size() < (mincap<<1) )
-		var2FanoutN.growTo( (mincap<<1), toLit(~0));
-	//if( var2FanoutP.size() < (mincap<<1) )
-	//	var2FanoutP.growTo( (mincap<<1), toLit(~0));
-	if( var2Fanout0.size() < mincap )
-		var2Fanout0.growTo( mincap, toLit(~0));
-
-	var2FanoutN[ (v<<1) + 0 ] = var2Fanout0[ var(lit1) ];
-	var2FanoutN[ (v<<1) + 1 ] = var2Fanout0[ var(lit2) ];
-	var2Fanout0[ var(lit1) ] = toLit( (v<<1) + 0 );
-	var2Fanout0[ var(lit2) ] = toLit( (v<<1) + 1 );
-
-	//if( toLit(~0) != var2FanoutN[ (v<<1) + 0 ] )
-	//	var2FanoutP[ toInt(var2FanoutN[ (v<<1) + 0 ]) ] = toLit((v<<1) + 0);
-
-	//if( toLit(~0) != var2FanoutN[ (v<<1) + 1 ] )
-	//	var2FanoutP[ toInt(var2FanoutN[ (v<<1) + 1 ]) ] = toLit((v<<1) + 1);
-}
-
-
-inline bool Solver::isTwoFanin( Var v ) {
-	assert(v < nVars(), "v < nVars()");
-	if( var2FaninLits.size() <= (v<<1)+1 )
-		return false;
-	Lit lit0 = var2FaninLits[ (v<<1) + 0 ];
-	Lit lit1 = var2FaninLits[ (v<<1) + 1 ];
-	assert(toLit(~0) == lit0 || var(lit0) < nVars(), "toLit(~0) == lit0 || var(lit0) < nVars()");
-	assert(toLit(~0) == lit1 || var(lit1) < nVars(), "toLit(~0) == lit1 || var(lit1) < nVars()");
-    lit0.x = lit1.x = 0; // suppress the warning - alanmi
-	return toLit(~0) != var2FaninLits[ (v<<1) + 0 ] && toLit(~0) != var2FaninLits[ (v<<1) + 1 ];
-}
-
-// this implementation return the last conflict encountered
-// which follows minisat concept
-inline CRef Solver::gatePropagate( Lit p ){
-	CRef confl = CRef_Undef, stats;
-	if( justUsage() < 2 || var2FaninLits.size() <= var(p) )
-		return CRef_Undef;
-
-	if( ! isRoundWatch(var(p)) )
-		return CRef_Undef;
-
-	if( ! isTwoFanin( var(p) ) )
-		goto check_fanout;
-
-
-	// check fanin consistency 
-	if CRef_Undef != (stats = gatePropagateCheckThis( var(p) )){
-		confl = stats;
-		if( l_True == value(var(p)) )
-			return confl;
-	}
-
-	// check fanout consistency
-check_fanout:
-	assert(var(p) < var2Fanout0.size(), "var(p) < var2Fanout0.size()");
-
-	for  Lit lfo = var2Fanout0[ var(p) ]; lfo != toLit(~0); lfo = var2FanoutN[ toInt(lfo) ]  {
-		if( ! isRoundWatch(var(lfo)) ) continue;
-
-		if CRef_Undef != (stats = gatePropagateCheckFanout( var(p), lfo )){
-			confl = stats;
-			if( l_True == value(var(lfo)) )
-				return confl;
-		}
-	}
-
-	return confl;
-}
-
-inline CRef Solver::gatePropagateCheckFanout( Var v, Lit lfo ){
-	Lit faninLit = sign(lfo)? getFaninLit1(var(lfo)): getFaninLit0(var(lfo));
-	assert(var(faninLit) == v, "var(faninLit) == v");
-	if isAND(var(lfo)){
-		if l_False == value(faninLit) {
-			if( l_False == value(var(lfo)) )
-				return CRef_Undef;
-
-			if( l_True == value(var(lfo)) )
-				return Var2CRef(var(lfo));
-			
-			jwatch[var(lfo)].header.dir = sign(lfo);
-			uncheckedEnqueue(~mkLit(var(lfo)), Var2CRef( var(lfo) ) );
-		} else {
-			assert(l_True == value(faninLit), "l_True == value(faninLit)");
-
-			if( l_True == value(var(lfo)) )
-				return CRef_Undef;
-			
-			// check value of the other fanin 
-			Lit faninLitP = sign(lfo)? getFaninLit0(var(lfo)): getFaninLit1(var(lfo));
-			if l_False == value(var(lfo)){
-				
-				if( l_False == value(faninLitP) )
-					return CRef_Undef;
-
-				if( l_True == value(faninLitP) )
-					return Var2CRef(var(lfo));
-
-				uncheckedEnqueue( ~faninLitP, Var2CRef( var(lfo) ) );
-			}
-			else
-			if( l_True == value(faninLitP) )
-				uncheckedEnqueue( mkLit(var(lfo)), Var2CRef( var(lfo) ) );
-		}
-	} else { // xor scope
-		// check value of the other fanin 
-		Lit faninLitP = sign(lfo)? getFaninLit0(var(lfo)): getFaninLit1(var(lfo));
-
-		lbool val0, val1, valo;
-		val0 = value(faninLit );
-		val1 = value(faninLitP);
-		valo = value(var(lfo));
-
-		if( l_Undef == val1 && l_Undef == valo )
-			return CRef_Undef;
-		else
-		if( l_Undef == val1 )
-			uncheckedEnqueue( ~faninLitP ^ ( (l_True == val0) ^ (l_True == valo) ), Var2CRef( var(lfo) ) );
-		else
-		if( l_Undef == valo )
-			uncheckedEnqueue( ~mkLit( var(lfo), (l_True == val0) ^ (l_True == val1) ), Var2CRef( var(lfo) ) );
-		else
-		if( l_False  == (valo ^ (val0 == val1)) )
-			return Var2CRef(var(lfo));
-
-	}
-	
-	return CRef_Undef;
-}
-
-inline CRef Solver::gatePropagateCheckThis( Var v ){
-	CRef confl = CRef_Undef;
-	if isAND(v){
-		if l_False == value(v){
-			if( l_True == value(getFaninLit0(v)) && l_True == value(getFaninLit1(v)) )
-				return Var2CRef(v);
-
-			if( l_False == value(getFaninLit0(v)) || l_False == value(getFaninLit1(v)) )
-				return CRef_Undef;
-
-			if( l_True == value(getFaninLit0(v)) )
-				uncheckedEnqueue(~getFaninLit1( v ), Var2CRef( v ) );
-			if( l_True == value(getFaninLit1(v)) )
-				uncheckedEnqueue(~getFaninLit0( v ), Var2CRef( v ) );
-		} else {
-			assert(l_True == value(v), "l_True == value(v)");
-			if( l_False == value(getFaninLit0(v)) || l_False == value(getFaninLit1(v)) )
-				confl = Var2CRef(v);
-
-			if( l_Undef == value( getFaninLit0( v )) )
-				uncheckedEnqueue( getFaninLit0( v ), Var2CRef( v ) );
-
-			if( l_Undef == value( getFaninLit1( v )) )
-				uncheckedEnqueue( getFaninLit1( v ), Var2CRef( v ) );
-
-		}
-	} else { // xor scope
-		lbool val0, val1, valo;
-		val0 = value(getFaninLit0(v));
-		val1 = value(getFaninLit1(v));
-		valo = value(v);
-		if( l_Undef == val0 && l_Undef == val1 )
-			return CRef_Undef;
-		if( l_Undef == val0 )
-			uncheckedEnqueue(~getFaninLit0( v ) ^ ( (l_True == val1) ^ (l_True == valo) ), Var2CRef( v ) );
-		else
-		if( l_Undef == val1 )
-			uncheckedEnqueue(~getFaninLit1( v ) ^ ( (l_True == val0) ^ (l_True == valo) ), Var2CRef( v ) );
-		else
-		if( l_False == (valo ^ (val0 == val1)) )
-			return Var2CRef(v);
-	}
-
-	return confl;
-}
-
-inline CRef Solver::getConfClause( CRef r ){
-	if( !isGateCRef(r) )
-		return r;
-	Var v = CRef2Var(r);
-	assert(isTwoFanin(v), "isTwoFanin(v)");
-
-	if isAND(v){
-		if l_False == value(v){
-			setItpcSize(3);
-			Clause& c = ca[itpc];
-			c[0] = mkLit(v);
-			c[1] = ~getFaninLit0( v );
-			c[2] = ~getFaninLit1( v );
-		} else {
-			setItpcSize(2);
-			Clause& c = ca[itpc];
-			c[0] = ~mkLit(v);
-
-			lbool val0 = value(getFaninLit0(v));
-			lbool val1 = value(getFaninLit1(v));
-
-			if( l_False == val0 && l_False == val1 )
-				c[1] = level(getFaninVar0(v)) < level(getFaninVar1(v))? getFaninLit0( v ): getFaninLit1( v );
-			else
-			if( l_False == val0 )
-				c[1] = getFaninLit0( v );
-			else
-				c[1] = getFaninLit1( v );
-		}
-	} else { // xor scope
-		setItpcSize(3);
-		Clause& c = ca[itpc];
-		c[0] = mkLit(v, l_True == value(v));
-		c[1] = mkLit(getFaninVar0(v), l_True == value(getFaninVar0(v)));
-		c[2] = mkLit(getFaninVar1(v), l_True == value(getFaninVar1(v)));
-	}
-	
-
-	return itpc;
-}
-
-inline void Solver::setItpcSize( int sz ){
-	assert(3 >= sz, "3 >= sz");
-	assert(CRef_Undef != itpc, "CRef_Undef != itpc");
-	ca[itpc].header.size = sz;
-}
-
-inline CRef Solver::interpret( Var v, Var t )
-{ // get gate-clause on implication graph
-	assert(isTwoFanin(v), "isTwoFanin(v)");
-
-	lbool val0, val1, valo;
-	Var var0, var1;
-	var0 = getFaninVar0( v );
-	var1 = getFaninVar1( v );
-	val0 = value(var0);
-	val1 = value(var1);
-	valo = value( v );
-
-	// phased values
-	if(l_Undef != val0) val0 = val0 ^ getFaninC0( v );
-	if(l_Undef != val1) val1 = val1 ^ getFaninC1( v );
-
-
-	if isAND(v){
-		if v == t{ // tracing output 
-			if l_False == valo{
-				setItpcSize(2);
-				Clause& c = ca[itpc];
-				c[0] = ~mkLit(v);
-
-				if( l_False == val0 && l_False == val1 )
-					c[1] = 0 == jwatch[v].header.dir ? getFaninLit0( v ): getFaninLit1( v );
-				else
-				if( l_False == val0 )
-					c[1] = getFaninLit0( v );
-				else
-					c[1] = getFaninLit1( v );
+// The circuit reasoning algorithms were developed by He-Teng Zhang (NTU).
+// Gate reasons are tagged Go objects, replacing the original high-bit CRef tag.
+func (s *Solver) gateClause(v, target Var, conflict bool) *Clause {
+	f := s.circuit.fanins[v]
+	a, b := f[0], f[1]
+	out := MkLit(v, false)
+	var lits []Lit
+	if s.isAND(v) {
+		if conflict {
+			if s.ValueVar(v) == LFalse {
+				lits = []Lit{out, a.Not(), b.Not()}
 			} else {
-				setItpcSize(3);
-				Clause& c = ca[itpc];
-				c[0] = mkLit(v);
-				c[1] = ~getFaninLit0( v );
-				c[2] = ~getFaninLit1( v );
+				pick := b
+				if s.ValueLit(a) == LFalse {
+					pick = a
+					if s.ValueLit(b) == LFalse && s.levels[b.Var()] <= s.levels[a.Var()] {
+						pick = b
+					}
+				}
+				lits = []Lit{out.Not(), pick}
 			}
-		} else {
-			assert(t == var0 || t == var1, "t == var0 || t == var1");
-			if l_False == valo{
-				setItpcSize(3);
-				Clause& c = ca[itpc];
-				c[0] = ~getFaninLit0( v );
-				c[1] = ~getFaninLit1( v );
-				c[2] = mkLit(v);
-				if( t == var1 )
-	                c[1].x ^= c[0].x, c[0].x ^= c[1].x, c[1].x ^= c[0].x;
+		} else if target == v {
+			if s.ValueVar(v) == LFalse {
+				pick := b
+				if s.ValueLit(a) == LFalse {
+					pick = a
+					if s.ValueLit(b) == LFalse && s.circuit.watches[v].direction {
+						pick = b
+					}
+				}
+				lits = []Lit{out.Not(), pick}
 			} else {
-				setItpcSize(2);
-				Clause& c = ca[itpc];
-				c[0] =  t == var0? getFaninLit0( v ): getFaninLit1( v );
-				c[1] = ~mkLit(v);
+				lits = []Lit{out, a.Not(), b.Not()}
 			}
-		}
-	} else { // xor scope
-		setItpcSize(3);
-		Clause& c = ca[itpc];
-		if v == t{
-			c[0] = mkLit(v, l_False == value(v));
-			c[1] = mkLit(var0, l_True == value(var0));
-			c[2] = mkLit(var1, l_True == value(var1));
+		} else if s.ValueVar(v) == LFalse {
+			lits = []Lit{a.Not(), b.Not(), out}
+			if target == b.Var() {
+				lits[0], lits[1] = lits[1], lits[0]
+			}
 		} else {
-			if( t == var0)
-				c[0] = mkLit(var0, l_False == value(var0)), c[1] = mkLit(var1, l_True  == value(var1));
-			else
-				c[1] = mkLit(var0, l_True  == value(var0)), c[0] = mkLit(var1, l_False == value(var1));
-			c[2] = mkLit(v, l_True == value(v));
+			pick := a
+			if target == b.Var() {
+				pick = b
+			}
+			lits = []Lit{pick, out.Not()}
+		}
+	} else {
+		if conflict {
+			lits = []Lit{MkLit(v, s.ValueVar(v) == LTrue), MkLit(a.Var(), s.ValueVar(a.Var()) == LTrue), MkLit(b.Var(), s.ValueVar(b.Var()) == LTrue)}
+		} else if target == v {
+			lits = []Lit{MkLit(v, s.ValueVar(v) == LFalse), MkLit(a.Var(), s.ValueVar(a.Var()) == LTrue), MkLit(b.Var(), s.ValueVar(b.Var()) == LTrue)}
+		} else {
+			first, second := a.Var(), b.Var()
+			if target == second {
+				first, second = second, first
+			}
+			lits = []Lit{MkLit(first, s.ValueVar(first) == LFalse), MkLit(second, s.ValueVar(second) == LTrue), MkLit(v, s.ValueVar(v) == LTrue)}
 		}
 	}
-
-	return itpc;
+	return &Clause{Lits: lits}
 }
-
-inline CRef Solver::castCRef( Lit p ){
-	CRef cr = reason( var(p) );
-	if( CRef_Undef == cr )
-		return cr;
-	if( ! isGateCRef(cr) )
-		return cr;
-	Var v = CRef2Var(cr);
-	return interpret(v,var(p));
+func (s *Solver) reasonClause(p Lit) *Clause {
+	r := s.reasons[p.Var()]
+	if r != nil && r.gateReason {
+		return s.gateClause(r.gate, p.Var(), false)
+	}
+	return r
 }
-
-inline void Solver::markCone( Var v ){
-	if( var2TravId[v] >= travId )
-		return;
-	var2TravId[v] = travId;
-
-	if( !isTwoFanin(v) )
-		return;
-	markCone( getFaninVar0(v) );
-	markCone( getFaninVar1(v) );
+func (s *Solver) conflictClause(r *Clause) *Clause {
+	if r != nil && r.gateReason {
+		return s.gateClause(r.gate, VarUndef, true)
+	}
+	return r
 }
-
-};
-
-//ABC_NAMESPACE_IMPL_END
-
-
+func (s *Solver) gatePropagateCheckThis(v Var) *Clause {
+	c := s.circuit
+	f := c.fanins[v]
+	a, b := f[0], f[1]
+	va, vb, vo := s.ValueLit(a), s.ValueLit(b), s.ValueVar(v)
+	r := c.refs[v]
+	if s.isAND(v) {
+		if vo == LFalse {
+			if va == LTrue && vb == LTrue {
+				return r
+			}
+			if va == LFalse || vb == LFalse {
+				return nil
+			}
+			if va == LTrue {
+				s.uncheckedEnqueue(b.Not(), r)
+			}
+			if vb == LTrue {
+				s.uncheckedEnqueue(a.Not(), r)
+			}
+		} else {
+			var conflict *Clause
+			if va == LFalse || vb == LFalse {
+				conflict = r
+			}
+			if va.IsUndef() {
+				s.uncheckedEnqueue(a, r)
+			}
+			if vb.IsUndef() {
+				s.uncheckedEnqueue(b, r)
+			}
+			return conflict
+		}
+	} else {
+		if va.IsUndef() && vb.IsUndef() {
+			return nil
+		}
+		if va.IsUndef() {
+			s.uncheckedEnqueue(a.Not().Xor((vb == LTrue) != (vo == LTrue)), r)
+		} else if vb.IsUndef() {
+			s.uncheckedEnqueue(b.Not().Xor((va == LTrue) != (vo == LTrue)), r)
+		} else if vo.Xor(va.Equal(vb)) == LFalse {
+			return r
+		}
+	}
+	return nil
+}
+func (s *Solver) gatePropagateCheckFanout(v Var, edge Lit) *Clause {
+	c := s.circuit
+	gate := edge.Var()
+	f := c.fanins[gate]
+	a, b := f[0], f[1]
+	if edge.Sign() {
+		a, b = b, a
+	}
+	va, vb, vo := s.ValueLit(a), s.ValueLit(b), s.ValueVar(gate)
+	r := c.refs[gate]
+	if s.isAND(gate) {
+		if va == LFalse {
+			if vo == LFalse {
+				return nil
+			}
+			if vo == LTrue {
+				return r
+			}
+			c.watches[gate].direction = edge.Sign()
+			s.uncheckedEnqueue(MkLit(gate, true), r)
+		} else {
+			if vo == LTrue {
+				return nil
+			}
+			if vo == LFalse {
+				if vb == LFalse {
+					return nil
+				}
+				if vb == LTrue {
+					return r
+				}
+				s.uncheckedEnqueue(b.Not(), r)
+			} else if vb == LTrue {
+				s.uncheckedEnqueue(MkLit(gate, false), r)
+			}
+		}
+	} else {
+		if vb.IsUndef() && vo.IsUndef() {
+			return nil
+		}
+		if vb.IsUndef() {
+			s.uncheckedEnqueue(b.Not().Xor((va == LTrue) != (vo == LTrue)), r)
+		} else if vo.IsUndef() {
+			s.uncheckedEnqueue(MkLit(gate, (va == LTrue) != (vb == LTrue)).Not(), r)
+		} else if vo.Xor(va.Equal(vb)) == LFalse {
+			return r
+		}
+	}
+	return nil
+}
+func (s *Solver) gatePropagate(p Lit) *Clause {
+	if s.JustificationMode < 2 || !s.IsRoundWatch(p.Var()) {
+		return nil
+	}
+	var conflict *Clause
+	if s.isTwoFanin(p.Var()) {
+		conflict = s.gatePropagateCheckThis(p.Var())
+		if conflict != nil && s.ValueVar(p.Var()) == LTrue {
+			return conflict
+		}
+	}
+	for _, edge := range s.circuit.fanouts[p.Var()] {
+		if !s.IsRoundWatch(edge.Var()) {
+			continue
+		}
+		if r := s.gatePropagateCheckFanout(p.Var(), edge); r != nil {
+			conflict = r
+			if s.ValueVar(edge.Var()) == LTrue {
+				return conflict
+			}
+		}
+	}
+	return conflict
+}
+func (s *Solver) gateJustFanin(v Var) Lit {
+	f := s.circuit.fanins[v]
+	a, b := f[0], f[1]
+	va, vb := s.ValueLit(a), s.ValueLit(b)
+	if s.isAND(v) {
+		if va == LFalse || vb == LFalse {
+			return LitUndef
+		}
+		if va == LTrue {
+			return b.Not()
+		}
+		if vb == LTrue {
+			return a.Not()
+		}
+		a, b = a.Not(), b.Not()
+	} else {
+		if !va.IsUndef() && !vb.IsUndef() {
+			return LitUndef
+		}
+		a, b = MkLit(a.Var(), s.polarity[a.Var()]), MkLit(b.Var(), s.polarity[b.Var()])
+	}
+	if s.activity[a.Var()] < s.activity[b.Var()] {
+		return b
+	}
+	return a
+}
+func (s *Solver) pushJustQueue(v Var) {
+	if !s.IsRoundWatch(v) {
+		return
+	}
+	c := s.circuit
+	f := c.fanins[v]
+	a, b := s.activity[f[0].Var()], s.activity[f[1].Var()]
+	if b > a {
+		a = b
+	}
+	c.data[v] = JustData{true, a}
+	c.heap.Update(int(v))
+}
+func (s *Solver) addJwatch(host, member Var) {
+	c := s.circuit
+	if c.watches[member].next != VarUndef || c.watches[member].prev != VarUndef {
+		panic("duplicate justification watch")
+	}
+	head := c.watches[host].head
+	if head != VarUndef {
+		c.watches[head].prev = member
+	}
+	c.watches[member].next = head
+	c.watches[member].prev = host
+	c.watches[host].head = member
+}
+func (s *Solver) delJwatch(member Var) {
+	c := s.circuit
+	prev, next := c.watches[member].prev, c.watches[member].next
+	if prev == VarUndef {
+		panic("missing justification watch")
+	}
+	if c.watches[prev].next == member {
+		c.watches[prev].next = next
+	} else {
+		c.watches[prev].head = next
+	}
+	if next != VarUndef {
+		c.watches[next].prev = prev
+	}
+	c.watches[member].prev = VarUndef
+	c.watches[member].next = VarUndef
+}
+func (s *Solver) gateAddJwatch(v Var) {
+	c := s.circuit
+	if c.watches[v].prev != VarUndef {
+		return
+	}
+	f := c.fanins[v]
+	a, b := f[0], f[1]
+	va, vb := s.ValueLit(a), s.ValueLit(b)
+	host := a.Var()
+	if va == LFalse && vb == LFalse || !s.isAND(v) {
+		if s.levels[a.Var()] >= s.levels[b.Var()] {
+			host = b.Var()
+		}
+	} else if va != LFalse {
+		host = b.Var()
+	}
+	s.addJwatch(host, v)
+}
+func (s *Solver) gateClearJwatch(v Var, backtrack int) {
+	c := s.circuit
+	for member := c.watches[v].head; member != VarUndef; {
+		next := c.watches[member].next
+		s.delJwatch(member)
+		if s.levels[member] <= backtrack {
+			s.pushJustQueue(member)
+		}
+		member = next
+	}
+}
+func (s *Solver) pickJustLit() (Lit, Var) {
+	c := s.circuit
+	for _, v := range c.stack {
+		f := c.fanins[v]
+		if s.ValueLit(f[0]).IsUndef() && s.ValueLit(f[1]).IsUndef() {
+			s.pushJustQueue(v)
+		}
+	}
+	c.stack = c.stack[:0]
+	next := VarUndef
+	for !c.heap.Empty() {
+		next = Var(c.heap.RemoveMin())
+		if !c.data[next].Now {
+			continue
+		}
+		if p := s.gateJustFanin(next); p != LitUndef {
+			return p, next
+		}
+		s.gateAddJwatch(next)
+	}
+	return LitUndef, next
+}
+func (s *Solver) updateJustActivity(v Var) {
+	if s.circuit == nil {
+		return
+	}
+	c := s.circuit
+	for _, edge := range c.fanouts[v] {
+		x := edge.Var()
+		if c.data[x].Now && c.heap.InHeap(int(x)) {
+			f := c.fanins[x]
+			a, b := s.activity[f[0].Var()], s.activity[f[1].Var()]
+			if b > a {
+				a = b
+			}
+			c.data[x].ActiveFanin = a
+			c.heap.Update(int(x))
+		}
+	}
+}
+func (s *Solver) ResetJustData() {
+	if s.circuit == nil {
+		return
+	}
+	s.circuit.stack = s.circuit.stack[:0]
+	s.circuit.heap.Clear()
+}
+func (s *Solver) JustCheck() bool {
+	for _, p := range s.trail {
+		v := p.Var()
+		if s.IsRoundWatch(v) && s.isJReason(v) && s.gateJustFanin(v) != LitUndef {
+			return false
+		}
+	}
+	return true
+}

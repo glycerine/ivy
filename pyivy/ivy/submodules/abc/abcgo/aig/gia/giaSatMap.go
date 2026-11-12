@@ -455,7 +455,7 @@ func Sbm_ManStop(p *Sbm_Man_t) {
     Vec_IntFree( p.vDelays );
     Vec_IntFree( p.vReason );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 func Sbm_ManTestSat(pMan any) int32 {

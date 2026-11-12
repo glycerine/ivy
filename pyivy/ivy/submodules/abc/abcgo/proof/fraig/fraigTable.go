@@ -75,10 +75,8 @@ func Fraig_HashTableCreate(nSize int32) *Fraig_HashTable_t {
 
 ***********************************************************************/
 func Fraig_HashTableFree(p *Fraig_HashTable_t) {
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -293,8 +291,7 @@ clk = Abc_Clock();
 //    printf( "Increasing the structural table size from %6d to %6d. ", p->nBins, nBinsNew );
 //    ABC_PRT( "Time", Abc_Clock() - clk );
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+    p.pBins = nil;
     p.pBins = pBinsNew;
     p.nBins = nBinsNew;
 }
@@ -342,8 +339,7 @@ clk = Abc_Clock();
 //    printf( "Increasing the functional table size from %6d to %6d. ", p->nBins, nBinsNew );
 //    ABC_PRT( "Time", Abc_Clock() - clk );
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+    p.pBins = nil;
     p.pBins = pBinsNew;
     p.nBins = nBinsNew;
 }
@@ -687,8 +683,7 @@ func Fraig_TableRehashF0(pMan *Fraig_Man_t, fLinkEquiv int32) int32 {
     }
     assert(Counter == pT.nEntries, "Counter == pT.nEntries");
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((pT.pBins) ? (free((char *) (pT.pBins)), (pT.pBins) = 0) : 0);
+    pT.pBins = nil;
     pT.pBins = pBinsNew;
     return ReturnValue;
 }

@@ -127,7 +127,7 @@ func Gia_ManTerStatesFree(vStates *Vec_Ptr_t) {
     // inlining of macro Vec_PtrForEachEntry
     for  i = 0; (i < Vec_PtrSize(vStates)) && (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {
         // inlining of macro ABC_FREE
-        ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+        pTemp = nil;
     }
     Vec_PtrFree( vStates );
 }
@@ -151,21 +151,21 @@ func Gia_ManTerDelete(p *Gia_ManTer_t) {
     Gia_ManStop( p.pAig );
     Vec_IntFree( p.vRetired );
     // inlining of macro ABC_FREE
-    ((p.pRetired) ? (free((char *) (p.pRetired)), (p.pRetired) = 0) : 0);
+    p.pRetired = "";
     // inlining of macro ABC_FREE
-    ((p.pCount0) ? (free((char *) (p.pCount0)), (p.pCount0) = 0) : 0);
+    p.pCount0 = nil;
     // inlining of macro ABC_FREE
-    ((p.pCountX) ? (free((char *) (p.pCountX)), (p.pCountX) = 0) : 0);
+    p.pCountX = nil;
     // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+    p.pBins = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
+    p.pDataSim = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);
+    p.pDataSimCis = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);
+    p.pDataSimCos = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -771,7 +771,7 @@ func Gia_ManReduceConst(pAig *Gia_Man_t, fVerbose int32) *Gia_Man_t {
     Gia_ManTerDelete( p );
     pNew = Gia_ManDupDfsCiMap( pAig, pCi2Lit, nil );
     // inlining of macro ABC_FREE
-    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);
+    pCi2Lit = nil;
     return pNew;
 }
 

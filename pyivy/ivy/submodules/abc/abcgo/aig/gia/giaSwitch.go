@@ -135,15 +135,15 @@ func Gia_ManSwiCreate(pAig *Gia_Man_t, pPars *Gia_ParSwi_t) *Gia_ManSwi_t {
 func Gia_ManSwiDelete(p *Gia_ManSwi_t) {
     Gia_ManStop( p.pAig );
     // inlining of macro ABC_FREE
-    ((p.pData1) ? (free((char *) (p.pData1)), (p.pData1) = 0) : 0);
+    p.pData1 = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);
+    p.pDataSim = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);
+    p.pDataSimCis = nil;
     // inlining of macro ABC_FREE
-    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);
+    p.pDataSimCos = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -734,7 +734,7 @@ func Gia_ManEvaluateSwitching(p *Gia_Man_t) float32 {
     var i int32;
     assert(p.pSwitching, "p.pSwitching");
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p );
     // inlining of macro Gia_ManForEachObj
     for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {

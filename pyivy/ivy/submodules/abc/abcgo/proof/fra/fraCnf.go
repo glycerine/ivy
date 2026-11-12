@@ -162,8 +162,7 @@ func Fra_AddClausesSuper(p *Fra_Man_t, pNode *Aig_Obj_t, vSuper *Vec_Ptr_t) {
     pLits[nLits-1] = toLitCond(Fra_ObjSatNum(pNode), 0);
     RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************

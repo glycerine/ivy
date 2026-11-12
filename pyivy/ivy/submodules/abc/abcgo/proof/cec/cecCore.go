@@ -528,10 +528,8 @@ finalize:
     Cec_ManSimStop( pSim );
     Cec_ManPatStop( pPat );
     Cec_ManFraStop( p );
-    // inlining of macro ABC_FREE
-    if pTemp != nil { ((pTemp.pReprs) ? (free((char *) (pTemp.pReprs)), (pTemp.pReprs) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if pTemp != nil { ((pTemp.pNexts) ? (free((char *) (pTemp.pNexts)), (pTemp.pNexts) = 0) : 0); }
+    if pTemp != nil { pTemp.pReprs = nil; }
+    if pTemp != nil { pTemp.pNexts = nil; }
     return pTemp;
 }
 

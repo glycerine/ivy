@@ -220,18 +220,12 @@ func Raig_ManDelete(p *Raig_Man_t) {
     Vec_IntFree( p.vCis2Ids );
     Vec_IntFree( p.vLos );
     Vec_IntFree( p.vLis );
-    // inlining of macro ABC_FREE
-    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSims) ? (free((char *) (p.pSims)), (p.pSims) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pFans0 = nil;
+    p.pFans1 = nil;
+    p.pRefs = nil;
+    p.pSims = nil;
+    p.pMems = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -464,8 +458,7 @@ func Raig_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords i
             Abc_InfoSetBit( p.pData, Counter + iPioId ); }
     }
     }
-    // inlining of macro ABC_FREE
-    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);
+    pData = nil;
     return p;
 }
 

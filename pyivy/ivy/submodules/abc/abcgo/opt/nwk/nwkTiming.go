@@ -509,8 +509,7 @@ func Nwk_ManDelayTracePrint(pNtk *Nwk_Man_t) {
         Nodes += pCounters[i];
         fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", pLutLib? 5*(i+1) : i+1, pLutLib? "%":"lev", Nodes, 100.0*Nodes/Nwk_ManNodeNum(pNtk));
     }
-    // inlining of macro ABC_FREE
-    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);
+    pCounters = nil;
 }
 
 

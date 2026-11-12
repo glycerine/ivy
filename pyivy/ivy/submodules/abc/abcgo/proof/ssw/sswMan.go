@@ -210,8 +210,7 @@ func Ssw_ManCleanup(p *Ssw_Man_t) {
 
 ***********************************************************************/
 func Ssw_ManStop(p *Ssw_Man_t) {
-    // inlining of macro ABC_FREE
-    ((p.pVisited) ? (free((char *) (p.pVisited)), (p.pVisited) = 0) : 0);
+    p.pVisited = nil;
     if p.pPars.fVerbose {//&& p->pPars->nStepsMax == -1 )
         Ssw_ManPrintStats( p ); }
     if p.ppClasses {
@@ -227,12 +226,9 @@ func Ssw_ManStop(p *Ssw_Man_t) {
     Vec_PtrFree( p.vNewLos );
     Vec_IntFree( p.vNewPos );
     Vec_PtrFree( p.vCommon );
-    // inlining of macro ABC_FREE
-    ((p.pNodeToFrames) ? (free((char *) (p.pNodeToFrames)), (p.pNodeToFrames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pNodeToFrames = nil;
+    p.pPatWords = nil;
+    p = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

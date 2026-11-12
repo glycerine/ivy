@@ -87,8 +87,7 @@ func Mop_ManStop(p *Mop_Man_t) {
     Vec_WrdFree( p.vWordsOut );
     Vec_IntFree( p.vCubes );
     Vec_IntFree( p.vFree );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -185,8 +184,7 @@ func Mop_ManRead(pFileName string) *Mop_Man_t {
             for  i = 0; i < nVars[o]; i, pToken = i+1, pToken+1  {
                 if !(Mop_ManIsSopSymb(*pToken) != 0) {
                     fmt.Printf("Cannot read cube %d (%s).\n", iCube+1, pTokenCopy);
-                    // inlining of macro ABC_FREE
-                    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+                    pBuffer = nil;
                     Mop_ManStop( p );
                     return nil;
                 }
@@ -207,8 +205,7 @@ func Mop_ManRead(pFileName string) *Mop_Man_t {
     for  ; iCube < 2 * nCubes; iCube++  {
         Vec_IntPush( p.vFree, iCube );
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return p;
 }
 func Mop_ManPrintOne(p *Mop_Man_t, iCube int32) {

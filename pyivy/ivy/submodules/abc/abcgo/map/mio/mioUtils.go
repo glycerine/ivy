@@ -68,8 +68,7 @@ func Mio_LibraryDelete(pLib *Mio_Library_t) {
     // free the bindings of nodes to gates from this library for all networks
     Abc_FrameUnmapAllNetworks( Abc_FrameGetGlobalFrame() );
     // free the library
-    // inlining of macro ABC_FREE
-    ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);
+    pLib.pName = nil;
     // inlining of macro Mio_LibraryForEachGateSafe
     for  pGate = Mio_LibraryReadGates(pLib),                             pGate2 = (pGate? Mio_GateReadNext(pGate): nil);                 (pGate != nil);                                                         pGate = pGate2,                                                 pGate2 = (pGate? Mio_GateReadNext(pGate): nil)  {
         Mio_GateDelete( pGate );
@@ -80,12 +79,9 @@ func Mio_LibraryDelete(pLib *Mio_Library_t) {
         st__free_table( pLib.tName2Gate ); }
 //    if ( pLib->dd )
 //        Cudd_Quit( pLib->dd );
-    // inlining of macro ABC_FREE
-    ((pLib.ppGates0) ? (free((char *) (pLib.ppGates0)), (pLib.ppGates0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pLib.ppGatesName) ? (free((char *) (pLib.ppGatesName)), (pLib.ppGatesName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pLib) ? (free((char *) (pLib)), (pLib) = 0) : 0);
+    pLib.ppGates0 = nil;
+    pLib.ppGatesName = nil;
+    pLib = nil;
 }
 
 /**Function*************************************************************
@@ -102,23 +98,18 @@ func Mio_LibraryDelete(pLib *Mio_Library_t) {
 func Mio_GateDelete(pGate *Mio_Gate_t) {
     var pPin, pPin2 *Mio_Pin_t;
     if pGate.nInputs > 6 {
-        // inlining of macro ABC_FREE
-        ((pGate.pTruth) ? (free((char *) (pGate.pTruth)), (pGate.pTruth) = 0) : 0); }
+        pGate.pTruth = nil; }
     Vec_IntFreeP( &pGate.vExpr );
-    // inlining of macro ABC_FREE
-    ((pGate.pOutName) ? (free((char *) (pGate.pOutName)), (pGate.pOutName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pGate.pName) ? (free((char *) (pGate.pName)), (pGate.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pGate.pForm) ? (free((char *) (pGate.pForm)), (pGate.pForm) = 0) : 0);
+    pGate.pOutName = nil;
+    pGate.pName = nil;
+    pGate.pForm = nil;
 //    if ( pGate->bFunc )
 //        Cudd_RecursiveDeref( pGate->pLib->dd, pGate->bFunc );
     // inlining of macro Mio_GateForEachPinSafe
     for  pPin = Mio_GateReadPins(pGate),                                 pPin2 = (pPin? Mio_PinReadNext(pPin): nil);                     (pPin != nil);                                                          pPin = pPin2,                                                   pPin2 = (pPin? Mio_PinReadNext(pPin): nil)  {
         Mio_PinDelete( pPin );
     }   
-    // inlining of macro ABC_FREE
-    ((pGate) ? (free((char *) (pGate)), (pGate) = 0) : 0);
+    pGate = nil;
 }
 
 /**Function*************************************************************
@@ -133,10 +124,8 @@ func Mio_GateDelete(pGate *Mio_Gate_t) {
 
 ***********************************************************************/
 func Mio_PinDelete(pPin *Mio_Pin_t) {
-    // inlining of macro ABC_FREE
-    ((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pPin) ? (free((char *) (pPin)), (pPin) = 0) : 0);
+    pPin.pName = nil;
+    pPin = nil;
 }
 
 /**Function*************************************************************
@@ -295,8 +284,7 @@ func Mio_WriteLibrary(pFile *os.File, pLib *Mio_Library_t, fPrintSops int32, fSh
         for  i = 0; i < nCells; i++  {
             Vec_PtrPush( vGates, pCells[i].pMioGate );
         }
-        // inlining of macro ABC_FREE
-        ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);
+        pCells = nil;
     
     } else {
         for  i = 0; i < pLib.nGates; i++  {
@@ -393,8 +381,7 @@ func Mio_WriteLibraryVerilog(pFile *os.File, pLib *Mio_Library_t, fPrintSops int
         for  i = 0; i < nCells; i++  {
             Vec_PtrPush( vGates, pCells[i].pMioGate );
         }
-        // inlining of macro ABC_FREE
-        ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);
+        pCells = nil;
     
     } else {
         for  i = 0; i < pLib.nGates; i++  {
@@ -724,8 +711,7 @@ func Mio_CollectRootsNew(pLib *Mio_Library_t, nInputs int32, pnGates *int32, fVe
             } else {
                 fmt.Printf("%-20s   In = %d   N = %3d   A = %12.6f   D = %12.6f\n", pCell.pName, pCell.nFanins, pCounts[i], pCell.Area, Mio_CellDelayAve(pCell)); }
         }
-        // inlining of macro ABC_FREE
-        ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);
+        pCounts = nil;
     }
     if pnGates != nil {
         *pnGates = iCell; }
@@ -834,8 +820,7 @@ func Mio_CollectRootsNew2(pLib *Mio_Library_t, nInputs int32, pnGates *int32, fV
         }
         ppCells[iCell++] = *pCell;
     }
-    // inlining of macro ABC_FREE
-    ((ppCells0) ? (free((char *) (ppCells0)), (ppCells0) = 0) : 0);
+    ppCells0 = nil;
     if ppCells[0].pName == nil { fmt.Printf("Error: Cannot find constant 0 gate in the library.\n"); return nil; }
     if ppCells[1].pName == nil { fmt.Printf("Error: Cannot find constant 1 gate in the library.\n"); return nil; }
     if ppCells[2].pName == nil { fmt.Printf("Error: Cannot find buffer gate in the library.\n");     return nil; }
@@ -881,8 +866,7 @@ func Mio_CollectRootsNew2(pLib *Mio_Library_t, nInputs int32, pnGates *int32, fV
             } else {
                 fmt.Printf("%-20s   In = %d   N = %3d   A = %12.6f   D = %12.6f\n", pCell.pName, pCell.nFanins, pCounts[i], pCell.AreaF, Scl_Int2Flt(pCell.iDelayAve)); }
         }
-        // inlining of macro ABC_FREE
-        ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);
+        pCounts = nil;
     }
     if pnGates != nil {
         *pnGates = iCell; }
@@ -945,8 +929,7 @@ func Mio_CollectRootsNewDefault3(nInputs int32, pvNames **Vec_Ptr_t, pvTruths **
     assert(Vec_WrdEntry(*pvTruths,  4) == ~(word)0, "Vec_WrdEntry(*pvTruths,  4) == ~(word)0");
     assert(Vec_WrdEntry(*pvTruths,  8) ==  s_Truths6[0], "Vec_WrdEntry(*pvTruths,  8) ==  s_Truths6[0]");
     assert(Vec_WrdEntry(*pvTruths, 12) == ~s_Truths6[0], "Vec_WrdEntry(*pvTruths, 12) == ~s_Truths6[0]");
-    // inlining of macro ABC_FREE
-    ((ppGates) ? (free((char *) (ppGates)), (ppGates) = 0) : 0);
+    ppGates = nil;
     return nGates;
 }
 
@@ -1456,20 +1439,15 @@ func Nf_ManPrepareLibrary(pLib *Mio_Library_t) {
 //        printf( "\n" );
     }
     Vec_WrdFree( vResult );
-    // inlining of macro ABC_FREE
-    ((ppGates) ? (free((char *) (ppGates)), (ppGates) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pSizes) ? (free((char *) (pSizes)), (pSizes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pTruths) ? (free((char *) (pTruths)), (pTruths) = 0) : 0);
+    ppGates = nil;
+    pSizes = nil;
+    pTruths = nil;
 
     for  i = 2; i <= 6; i++  {
-        // inlining of macro ABC_FREE
-        ((pComp[i]) ? (free((char *) (pComp[i])), (pComp[i]) = 0) : 0);
+        pComp[i] = nil;
     }
     for  i = 2; i <= 6; i++  {
-        // inlining of macro ABC_FREE
-        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);
+        pPerm[i] = nil;
     }
 
     fmt.Printf("Classes = %d.  ", nClasses);
@@ -1728,36 +1706,31 @@ func Mio_LibraryShortNames(pLib *Mio_Library_t) {
     // itereate through classes
     // inlining of macro Mio_LibraryForEachGate
     for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {
-        // inlining of macro ABC_FREE
-        ((pGate.pName) ? (free((char *) (pGate.pName)), (pGate.pName) = 0) : 0);
+        pGate.pName = nil;
         Buffer = fmt.Sprintf("g%0*d", nDigits, ++c);
         pGate.pName = Abc_UtilStrsav( Buffer );
         // update formula
         Mio_LibraryShortFormula( pGate, pGate.pForm, Buffer );
-        // inlining of macro ABC_FREE
-        ((pGate.pForm) ? (free((char *) (pGate.pForm)), (pGate.pForm) = 0) : 0);
+        pGate.pForm = nil;
         pGate.pForm = Abc_UtilStrsav( Buffer );
         // pin names
         i = 0;
         // inlining of macro Mio_GateForEachPin
         for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {
-            // inlining of macro ABC_FREE
-            ((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);
+            pPin.pName = nil;
             Buffer = fmt.Sprintf("%c", 'a'+i);
             pPin.pName = Abc_UtilStrsav( Buffer );
             i++;
         }
         // output pin
-        // inlining of macro ABC_FREE
-        ((pGate.pOutName) ? (free((char *) (pGate.pOutName)), (pGate.pOutName) = 0) : 0);
+        pGate.pOutName = nil;
         Buffer = fmt.Sprintf("z");
         pGate.pOutName = Abc_UtilStrsav( Buffer );
     }
     Mio_LibraryHashGates( pLib );
     // update library name
     fmt.Printf("Renaming library \"%s\" into \"%s%d\".\n", pLib.pName, "lib", Mio_LibraryReadGateNum(pLib));
-    // inlining of macro ABC_FREE
-    ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);
+    pLib.pName = nil;
     Buffer = fmt.Sprintf("lib%d", Mio_LibraryReadGateNum(pLib));
     pLib.pName = Abc_UtilStrsav( Buffer );
 }
@@ -1779,8 +1752,7 @@ func Mio_LibraryMatchesStop(pLib *Mio_Library_t) {
     Vec_WecFree( pLib.vTt2Match );
     Vec_MemHashFree( pLib.vTtMem );
     Vec_MemFree( pLib.vTtMem );
-    // inlining of macro ABC_FREE
-    ((pLib.pCells) ? (free((char *) (pLib.pCells)), (pLib.pCells) = 0) : 0);
+    pLib.pCells = nil;
 }
 func Mio_LibraryMatchesStart(pLib *Mio_Library_t, fPinFilter int32, fPinPerm int32, fPinQuick int32) {
     extern Mio_Cell2_t * Nf_StoDeriveMatches( Vec_Mem_t * vTtMem, Vec_Wec_t * vTt2Match, int * pnCells, int fPinFilter, int fPinPerm, int fPinQuick );

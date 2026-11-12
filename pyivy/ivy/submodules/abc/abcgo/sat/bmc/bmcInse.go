@@ -36,8 +36,7 @@ import "fmt"
 
 // inlining of macro ABC_ALLOC
 func Gia_ParTestAlloc(p *Gia_Man_t, nWords int32) { assert(!p.pData, "!p.pData"); p.pData = (unsigned *)((word *) malloc(sizeof(word) * (size_t)(2*nWords*Gia_ManObjNum(p)))); p.iData = nWords; }
-// inlining of macro ABC_FREE
-func Gia_ParTestFree(p *Gia_Man_t) { ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0); p.iData = 0;             }
+func Gia_ParTestFree(p *Gia_Man_t) { p.pData = nil; p.iData = 0;             }
 func Gia_ParTestObj(p *Gia_Man_t, Id int32) *word { return (word *)p.pData + Id*(p.iData << 1);   }
 
 ////////////////////////////////////////////////////////////////////////
@@ -195,8 +194,7 @@ func Gia_ManInseHighestScore(p *Gia_Man_t, pCost *int32) int32 {
 iPat = k; }
     }
     *pCost = Gia_ManRegNum(p) - CountBest; // ternary
-    // inlining of macro ABC_FREE
-    ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);
+    pCounts = nil;
     return iPat;
 }
 func Gia_ManInseFindStarting(p *Gia_Man_t, iPat int32, vInit *Vec_Int_t, vInputs *Vec_Int_t) {

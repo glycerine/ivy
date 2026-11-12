@@ -225,12 +225,9 @@ func Fra_BmcStop(p *Fra_Bmc_t) {
     Aig_ManStop( p.pAigFrames );
     if p.pAigFraig {
         Aig_ManStop( p.pAigFraig ); }
-    // inlining of macro ABC_FREE
-    ((p.pObjToFrames) ? (free((char *) (p.pObjToFrames)), (p.pObjToFrames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjToFraig) ? (free((char *) (p.pObjToFraig)), (p.pObjToFraig) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjToFrames = nil;
+    p.pObjToFraig = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -303,8 +300,7 @@ func Fra_BmcFrames(p *Fra_Bmc_t, fKeepPos int32) *Aig_Man_t {
         }
         assert(k == Aig_ManRegNum(p.pAig), "k == Aig_ManRegNum(p.pAig)");
     }
-    // inlining of macro ABC_FREE
-    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);
+    pLatches = nil;
     if fKeepPos != 0 {
         for  f = 0; f < p.nFramesAll; f++  {
             // inlining of macro Aig_ManForEachPoSeq
@@ -448,8 +444,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
         iOutput = Fra_FraigMiterAssertedOutput( pBmc.pAigFraig );
         if pBmc.pAigFraig.pData {
             pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pBmc.pAigFrames, (int *)pBmc.pAigFraig.pData );
-            // inlining of macro ABC_FREE
-            ((pBmc.pAigFraig.pData) ? (free((char *) (pBmc.pAigFraig.pData)), (pBmc.pAigFraig.pData) = 0) : 0);
+            pBmc.pAigFraig.pData = nil;
         
         } else if iOutput >= 0 {
             pAig.pSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput ); }
@@ -461,8 +456,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
     }
     Fra_BmcStop( pBmc );  
-    // inlining of macro ABC_FREE
-    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+    pTemp = nil;
 }
 
 

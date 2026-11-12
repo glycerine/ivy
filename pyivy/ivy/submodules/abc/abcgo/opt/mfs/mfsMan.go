@@ -201,8 +201,7 @@ func Mfs_ManStop(p *Mfs_Man_t) {
     Vec_IntFree( p.vProjVarsSat );
     Vec_IntFree( p.vDivLits );
     Vec_PtrFree( p.vDivCexes );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

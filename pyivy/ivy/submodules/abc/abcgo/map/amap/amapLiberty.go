@@ -976,8 +976,7 @@ func Amap_LibertyStart(pFileName string) *Amap_Tree_t {
     Amap_LibertyFixFileHead( pFileName );
     p.nContents = Amap_LibertyFileSize( pFileName );
     if p.nContents == 0 {
-        // inlining of macro ABC_FREE
-        ((p) ? (free((char *) (p)), (p) = 0) : 0);
+        p = nil;
         return nil;
     }
     pFile = os.Open(pFileName);
@@ -1008,16 +1007,11 @@ func Amap_LibertyStart(pFileName string) *Amap_Tree_t {
 
 ***********************************************************************/
 func Amap_LibertyStop(p *Amap_Tree_t) {
-    // inlining of macro ABC_FREE
-    ((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pContents) ? (free((char *) (p.pContents)), (p.pContents) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pItems) ? (free((char *) (p.pItems)), (p.pItems) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pError) ? (free((char *) (p.pError)), (p.pError) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pFileName = nil;
+    p.pContents = nil;
+    p.pItems = nil;
+    p.pError = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

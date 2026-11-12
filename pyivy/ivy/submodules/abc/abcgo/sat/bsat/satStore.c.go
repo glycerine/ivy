@@ -1,8 +1,16 @@
 package bsat
 
-import "fmt"
-
-import "os"
+import (
+	"bufio"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"reflect"
+	"slices"
+	"strconv"
+	"strings"
+)
 
 /**CFile****************************************************************
 
@@ -15,7 +23,7 @@ import "os"
   Synopsis    [Records the trace of SAT solving in the CNF form.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -24,455 +32,266 @@ import "os"
 
 ***********************************************************************/
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "satStore.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Fetches memory.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManMemoryFetch(p *Sto_Man_t, nBytes int32) string {
-    var pMem string;
-    if p.pChunkLast == nil || nBytes > p.nChunkSize - p.nChunkUsed {
-        // inlining of macro ABC_ALLOC
-        pMem = (char *)((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));
-        *(char **)pMem = p.pChunkLast;
-        p.pChunkLast = pMem;
-        p.nChunkUsed = sizeof(char *);
-    }
-    pMem = p.pChunkLast + p.nChunkUsed;
-    p.nChunkUsed += nBytes;
-    return pMem;
+func Sto_ManAlloc() *Sto_Man_t { return &Sto_Man_t{nChunkSize: 1 << 16} }
+func Sto_ManMemoryFetch(p *Sto_Man_t, n int32) []byte {
+	if n < 0 {
+		panic("negative proof storage request")
+	}
+	if n > p.nChunkSize-p.nChunkUsed || p.pChunkLast == nil {
+		size := max(p.nChunkSize, n)
+		p.pChunkLast = make([]byte, size)
+		p.chunks = append(p.chunks, p.pChunkLast)
+		p.nChunkUsed = 0
+	}
+	start := p.nChunkUsed
+	p.nChunkUsed += n
+	return p.pChunkLast[start:p.nChunkUsed]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Sto_ManMemoryStop(p *Sto_Man_t) {
-    var pMem, pNext string;
-    if p.pChunkLast == nil {
-        return; }
-    for  pMem = p.pChunkLast; (pNext = *(char **)pMem); pMem = pNext  {
-        // inlining of macro ABC_FREE
-        ((pMem) ? (free((char *) (pMem)), (pMem) = 0) : 0);
-    }
-    // inlining of macro ABC_FREE
-    ((pMem) ? (free((char *) (pMem)), (pMem) = 0) : 0);
+	p.chunks = nil
+	p.pChunkLast = nil
+	p.nChunkUsed = 0
+	p.pHead = nil
+	p.pTail = nil
+	p.pEmpty = nil
+	p.nVars = 0
+	p.nClauses = 0
+	p.nRoots = 0
+	p.nClausesA = 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reports memory usage in bytes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManMemoryReport(p *Sto_Man_t) int32 {
-    var Total int32;
-    var pMem, pNext string;
-    if p.pChunkLast == nil {
-        return 0; }
-    Total = p.nChunkUsed; 
-    for  pMem = p.pChunkLast; (pNext = *(char **)pMem); pMem = pNext  {
-        Total += p.nChunkSize;
-    }
-    return Total;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Allocate proof manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManAlloc() *Sto_Man_t {
-    var p *Sto_Man_t;
-    // allocate the manager
-    // inlining of macro ABC_ALLOC
-    p = (Sto_Man_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Sto_Man_t))));
-    memset( p, 0, sizeof(Sto_Man_t) );
-    // memory management
-    p.nChunkSize = (1<<16); // use 64K chunks
-    return p;    
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocate proof manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Sto_ManFree(p *Sto_Man_t) {
-    Sto_ManMemoryStop( p );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p != nil {
+		*p = Sto_Man_t{}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds one clause to the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManAddClause(p *Sto_Man_t, pBeg *lit, pEnd *lit) int32 {
-    var pClause *Sto_Cls_t;
-    var Lit lit;
-    var i *lit;
-    var j *lit;
-    var nSize int32;
-
-    // process the literals
-    if pBeg < pEnd {
-        // insertion sort
-        for  i = pBeg + 1; i < pEnd; i++  {
-            Lit = *i;
-            for  j = i; j > pBeg && *(j-1) > Lit; j--  {
-                *j = *(j-1);
-            }
-            *j = Lit;
-        }
-        // make sure there is no duplicated variables
-        for  i = pBeg + 1; i < pEnd; i++  {
-            if lit_var(*(i-1)) == lit_var(*i) {
-                fmt.Printf("The clause contains two literals of the same variable: %d and %d.\n", *(i-1), *i);
-                return 0;
-            }
-        }
-        // check the largest var size
-        // inlining of macro STO_MAX
-        
-        if (p.nVars) > (lit_var(*(pEnd-1)) + 1) {
-            p.nVars = (p.nVars);
-        } else {
-            p.nVars = (lit_var(*(pEnd-1)) + 1);
-        }
-    }
-
-    // get memory for the clause
-    nSize = sizeof(Sto_Cls_t) + sizeof(lit) * (pEnd - pBeg);
-    nSize = (nSize / sizeof(char*) + ((nSize % sizeof(char*)) > 0)) * sizeof(char*); // added by Saurabh on Sep 3, 2009
-    pClause = (Sto_Cls_t *)Sto_ManMemoryFetch( p, nSize );
-    memset( pClause, 0, sizeof(Sto_Cls_t) );
-
-    // assign the clause
-    pClause.Id = p.nClauses++;
-    pClause.nLits = pEnd - pBeg;
-    memcpy( pClause.pLits, pBeg, sizeof(lit) * (pEnd - pBeg) );
-//    assert( pClause->pLits[0] >= 0 );
-
-    // add the clause to the list
-    if p.pHead == nil {
-        p.pHead = pClause; }
-    if p.pTail == nil {
-        p.pTail = pClause;
-    } else {
-        p.pTail.pNext = pClause;
-        p.pTail = pClause;
-    }
-
-    // add the empty clause
-    if pClause.nLits == 0 {
-        if p.pEmpty {
-            fmt.Printf("More than one empty clause!\n");
-            return 0;
-        }
-        p.pEmpty = pClause;
-    }
-    return 1;
+// MemoryReport estimates owned payload from actual Go type sizes, not C layout.
+func Sto_ManMemoryReport(p *Sto_Man_t) int32 {
+	total := int64(reflect.TypeOf(*p).Size())
+	for _, chunk := range p.chunks {
+		total += int64(cap(chunk))
+	}
+	size := int64(reflect.TypeOf(Sto_Cls_t{}).Size())
+	for c := p.pHead; c != nil; c = c.pNext {
+		total += size + int64(cap(c.pLits))*4
+	}
+	if total > 1<<31-1 {
+		return 1<<31 - 1
+	}
+	return int32(total)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Mark all clauses added so far as root clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Sto_ManAddClause(p *Sto_Man_t, data []lit) int32 {
+	if len(data) > 0xffffff || len(data) == 0 && p.pEmpty != nil {
+		return 0
+	}
+	literals := append([]lit(nil), data...)
+	slices.Sort(literals)
+	for i, l := range literals {
+		if l < 0 || i > 0 && lit_var(literals[i-1]) == lit_var(l) {
+			return 0
+		}
+	}
+	c := &Sto_Cls_t{Id: p.nClauses, nLits: int32(len(literals)), pLits: literals}
+	p.nClauses++
+	if len(literals) > 0 {
+		p.nVars = max(p.nVars, lit_var(literals[len(literals)-1])+1)
+	} else {
+		p.pEmpty = c
+	}
+	if p.pHead == nil {
+		p.pHead = c
+	} else {
+		p.pTail.pNext = c
+	}
+	p.pTail = c
+	return 1
+}
 func Sto_ManMarkRoots(p *Sto_Man_t) {
-    var pClause *Sto_Cls_t;
-    p.nRoots = 0;
-    // inlining of macro Sto_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        pClause.fRoot = 1;
-        p.nRoots++;
-    }
+	p.nRoots = 0
+	for c := p.pHead; c != nil; c = c.pNext {
+		c.fRoot = 1
+		p.nRoots++
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Mark all clauses added so far as clause of A.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Sto_ManMarkClausesA(p *Sto_Man_t) {
-    var pClause *Sto_Cls_t;
-    p.nClausesA = 0;
-    // inlining of macro Sto_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        pClause.fA = 1;
-        p.nClausesA++;
-    }
+	p.nClausesA = 0
+	for c := p.pHead; c != nil; c = c.pNext {
+		c.fA = 1
+		p.nClausesA++
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the literal of the last clause.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Sto_ManChangeLastClause(p *Sto_Man_t) int32 {
-    var pClause, pPrev *Sto_Cls_t;
-    pPrev = nil;
-    // inlining of macro Sto_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        pPrev = pClause;
-    }
-    assert(pPrev != nil, "pPrev != nil");
-    assert(pPrev.fA == 1, "pPrev.fA == 1");
-    assert(pPrev.nLits == 1, "pPrev.nLits == 1");
-    p.nClausesA--;
-    pPrev.fA = 0;
-    return pPrev.pLits[0] >> 1;
+	c := p.pTail
+	if c == nil || c.fA != 1 || c.nLits != 1 {
+		panic("last A-clause must be a unit")
+	}
+	c.fA = 0
+	p.nClausesA--
+	return lit_var(c.pLits[0])
+}
+func WriteClauseStore(w io.Writer, p *Sto_Man_t) error {
+	if _, err := fmt.Fprintf(w, "p %d %d %d %d\n", p.nVars, p.nClauses, p.nRoots, p.nClausesA); err != nil {
+		return err
+	}
+	for c := p.pHead; c != nil; c = c.pNext {
+		for _, l := range c.pLits {
+			if _, err := fmt.Fprintf(w, " %d", lit_print(l)); err != nil {
+				return err
+			}
+		}
+		if _, err := fmt.Fprintln(w, " 0"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func Sto_ManDumpClauses(p *Sto_Man_t, name string) {
+	file, err := os.Create(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = WriteClauseStore(file, p)
+	closeErr := file.Close()
+	if err != nil {
+		fmt.Println(err)
+	} else if closeErr != nil {
+		fmt.Println(closeErr)
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the stored clauses into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManDumpClauses(p *Sto_Man_t, pFileName string) {
-    var pFile *os.File;
-    var pClause *Sto_Cls_t;
-    var i int32;
-    // start the file
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Error: Cannot open output file (%s).\n", pFileName);
-        return;
-    }
-    // write the data
-    fmt.Fprintf(pFile, "p %d %d %d %d\n", p.nVars, p.nClauses, p.nRoots, p.nClausesA);
-    // inlining of macro Sto_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        for  i = 0; i < int32(pClause.nLits); i++  {
-            fmt.Fprintf(pFile, " %d", lit_print(pClause.pLits[i]));
-        }
-        fmt.Fprintf(pFile, " 0\n");
-    }
-//    fprintf( pFile, " 0\n" );
-    _ = (pFile).Close();
+// readStoreNumber consumes delimiters without reading past the token. It also
+// accepts DIMACS comment lines and EOF immediately after a number.
+func readStoreNumber(r io.ByteReader) (int32, error) {
+	var token []byte
+	for {
+		b, err := r.ReadByte()
+		if err != nil {
+			if len(token) > 0 && errors.Is(err, io.EOF) {
+				break
+			}
+			return 0, err
+		}
+		if len(token) == 0 && b == 'c' {
+			for b != '\n' {
+				b, err = r.ReadByte()
+				if err != nil {
+					return 0, err
+				}
+			}
+			continue
+		}
+		if b == ' ' || b == '\t' || b == '\n' || b == '\r' {
+			if len(token) == 0 {
+				continue
+			}
+			break
+		}
+		token = append(token, b)
+		if len(token) > 12 {
+			return 0, errors.New("proof literal exceeds signed integer range")
+		}
+	}
+	n, err := strconv.ParseInt(string(token), 10, 32)
+	return int32(n), err
 }
 
-/**Function*************************************************************
+type storeFileBytes struct{ file *os.File }
 
-  Synopsis    [Reads one literal from file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManLoadNumber(pFile *os.File, pNumber *int32) int32 {
-    var Char, Number, Sign int32;
-    // skip space-like chars
-    for {
-        Char = fgetc( pFile );
-        if Char == -1 {
-            return 0; }
-    
-if !( Char == ' ' || Char == '\t' || Char == '\r' || Char == '\n' ) { break }
-} 
-    // read the literal
-    for {
-        // get the next character
-        Char = fgetc( pFile );
-        if Char == ' ' || Char == '\t' || Char == '\r' || Char == '\n' {
-            break; }
-        // check that the char is a digit
-        if (Char < '0' || Char > '9') && Char != '-' {
-            fmt.Printf("Error: Wrong char (%c) in the input file.\n", Char);
-            return 0;
-        }
-        // check if this is a minus
-        if Char == '-' {
-            Sign = 1;
-        } else {
-            Number = 10 * Number + Char; }
-    }
-    // return the number
-    *pNumber = Sign? -Number : Number;
-    return 1;
+func (r storeFileBytes) ReadByte() (byte, error) {
+	var b [1]byte
+	_, err := io.ReadFull(r.file, b[:])
+	return b[0], err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reads CNF from file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sto_ManLoadClauses(pFileName string) *Sto_Man_t {
-    var pFile *os.File;
-    var p *Sto_Man_t;
-    var pClause *Sto_Cls_t;
-    var pBuffer [1024]byte;
-    var nLits, nLitsAlloc, Counter, Number int32;
-    var pLits *lit;
-
-    // start the file
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Error: Cannot open input file (%s).\n", pFileName);
-        return nil;
-    }
-
-    // create the manager
-    p = Sto_ManAlloc();
-
-    // alloc the array of literals
-    nLitsAlloc = 1024;
-    // inlining of macro ABC_ALLOC
-    pLits = (lit *)((char *) malloc(sizeof(char) * (size_t)(sizeof(lit) * nLitsAlloc)));
-
-    // read file header
-    p.nVars = p.nClauses = p.nRoots = p.nClausesA = 0;
-    for  fgets( pBuffer, 1024, pFile )  {
-        if pBuffer[0] == 'c' {
-            continue; }
-        if pBuffer[0] == 'p' {
-            sscanf( pBuffer + 1, "%d %d %d %d", &p.nVars, &p.nClauses, &p.nRoots, &p.nClausesA );
-            break;
-        }
-        printf( "Warning: Skipping line: \"%s\"\n", pBuffer );
-    }
-
-    // read the clauses
-    nLits = 0;
-    for  Sto_ManLoadNumber(pFile, &Number) != 0  {
-        if Number == 0 {
-            var RetValue int32;
-            RetValue = Sto_ManAddClause( p, pLits, pLits + nLits );
-            assert((RetValue != 0), "RetValue");
-            nLits = 0;
-            continue;
-        }
-        if nLits == nLitsAlloc {
-            nLitsAlloc *= 2;
-            // inlining of macro ABC_REALLOC
-            
-            if pLits != nil {
-                pLits = ((lit *) realloc((char *)(pLits), sizeof(lit) * (size_t)(nLitsAlloc)));
-            } else {
-                pLits = ((lit *) malloc(sizeof(lit) * (size_t)(nLitsAlloc)));
-            }
-        }
-        pLits[ nLits++ ] = lit_read(Number);
-    }
-    if nLits > 0 {
-        fmt.Printf("Error: The last clause was not saved.\n"); }
-
-    // count clauses
-    Counter = 0;
-    // inlining of macro Sto_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        Counter++;
-    }
-
-    // check the number of clauses
-    if p.nClauses != Counter {
-        fmt.Printf("Error: The actual number of clauses (%d) is different than declared (%d).\n", Counter, p.nClauses);
-        Sto_ManFree( p );
-        return nil;
-    }
-
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
-    _ = (pFile).Close();
-    return p;
+func Sto_ManLoadNumber(file *os.File, value *int32) int32 {
+	n, err := readStoreNumber(storeFileBytes{file})
+	if err != nil {
+		return 0
+	}
+	*value = n
+	return 1
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func ReadClauseStore(input io.Reader) (*Sto_Man_t, error) {
+	r := bufio.NewReader(input)
+	var vars, count, roots, aCount int32
+	found := false
+	for {
+		line, err := r.ReadString('\n')
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "p ") || strings.HasPrefix(trimmed, "p\t") {
+			fields := strings.Fields(trimmed)
+			if len(fields) != 5 {
+				return nil, errors.New("invalid clause-store header")
+			}
+			values := []*int32{&vars, &count, &roots, &aCount}
+			for i, dst := range values {
+				n, e := strconv.ParseInt(fields[i+1], 10, 32)
+				if e != nil || n < 0 {
+					return nil, errors.New("invalid clause-store header count")
+				}
+				*dst = int32(n)
+			}
+			found = true
+			break
+		}
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			return nil, err
+		}
+	}
+	if !found || roots > count || aCount > count {
+		return nil, errors.New("missing or inconsistent clause-store header")
+	}
+	p := Sto_ManAlloc()
+	var literals []lit
+	for {
+		n, err := readStoreNumber(r)
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		if n == 0 {
+			if p.nClauses >= count || Sto_ManAddClause(p, literals) == 0 {
+				return nil, errors.New("invalid or excess stored clause")
+			}
+			c := p.pTail
+			if c.Id < roots {
+				c.fRoot = 1
+			}
+			if c.Id < aCount {
+				c.fA = 1
+			}
+			literals = nil
+			continue
+		}
+		if n < -0x40000000 || n > 0x40000000 {
+			return nil, errors.New("literal exceeds SAT encoding")
+		}
+		literals = append(literals, lit_read(n))
+	}
+	if len(literals) != 0 || p.nClauses != count || p.nVars > vars {
+		return nil, errors.New("clause data does not match header")
+	}
+	p.nVars = vars
+	p.nRoots = roots
+	p.nClausesA = aCount
+	return p, nil
+}
+func Sto_ManLoadClauses(name string) *Sto_Man_t {
+	file, err := os.Open(name)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer file.Close()
+	p, err := ReadClauseStore(file)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	return p
+}

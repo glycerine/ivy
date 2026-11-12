@@ -221,12 +221,9 @@ func Fsim_ManVerifyFront(p *Fsim_Man_t) {
         assert(pFans0[i] == p.pFans0[i], "pFans0[i] == p.pFans0[i]");
         assert(pFans1[i] == p.pFans1[i], "pFans1[i] == p.pFans1[i]");
     }
-    // inlining of macro ABC_FREE
-    ((pFrontToId) ? (free((char *) (pFrontToId)), (pFrontToId) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pFans0) ? (free((char *) (pFans0)), (pFans0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pFans1) ? (free((char *) (pFans1)), (pFans1) = 0) : 0);
+    pFrontToId = nil;
+    pFans0 = nil;
+    pFans1 = nil;
 }
 
 /**Function*************************************************************
@@ -345,17 +342,12 @@ func Fsim_ManFront(p *Fsim_Man_t, fCompressAig int32) {
     for  i = 0; i < p.nFront; i++  {
         assert(pFront[i] == 0, "pFront[i] == 0");
     }
-    // inlining of macro ABC_FREE
-    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pIdToFront) ? (free((char *) (pIdToFront)), (pIdToFront) = 0) : 0);
+    pFront = nil;
+    pIdToFront = nil;
 //    Fsim_ManVerifyFront( p );
-    // inlining of macro ABC_FREE
-    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pFans0 = nil;
+    p.pFans1 = nil;
+    p.pRefs = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

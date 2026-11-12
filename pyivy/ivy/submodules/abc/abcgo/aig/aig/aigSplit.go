@@ -1,332 +1,219 @@
 package aig
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"math/rand/v2"
+	"time"
+)
 
-  FileName    [aigSplit.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Splits the property output cone into a set of cofactor properties.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigSplit.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-//#include "aig/saig/saig.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the node to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Aig_Obj_t * Aig_NodeBddToMuxes_rec( DdManager * dd, DdNode * bFunc, Aig_Man_t * pNew, st__table * tBdd2Node )
-{
-    Aig_Obj_t * pNode, * pNode0, * pNode1, * pNodeC;
-    assert( !Cudd_IsComplement(bFunc) );
-    if ( st__lookup( tBdd2Node, (char *)bFunc, (char **)&pNode ) )
-        return pNode;
-    // solve for the children nodes
-    pNode0 = Aig_NodeBddToMuxes_rec( dd, Cudd_Regular(cuddE(bFunc)), pNew, tBdd2Node );
-    pNode0 = Aig_NotCond( pNode0, Cudd_IsComplement(cuddE(bFunc)) );
-    pNode1 = Aig_NodeBddToMuxes_rec( dd, cuddT(bFunc), pNew, tBdd2Node );
-    if ( ! st__lookup( tBdd2Node, (char *)Cudd_bddIthVar(dd, bFunc->index), (char **)&pNodeC ) )
-        assert( 0 );
-    // create the MUX node
-    pNode = Aig_Mux( pNew, pNodeC, pNode1, pNode0 );
-    st__insert( tBdd2Node, (char *)bFunc, (char *)pNode );
-    return pNode;
+// These source-named BDD helpers use an exact Shannon-reduced decision graph
+// represented with Graph muxes, replacing CUDD pointers and reference counting.
+func Aig_NodeBddToMuxes_rec(decisions *Graph, function Edge, destination *Graph, mapping map[int]Edge) Edge {
+	id := function.NodeID()
+	value, ok := mapping[id]
+	if !ok {
+		n := *decisions.node(function)
+		if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer && n.Kind != Output {
+			panic("aig: unmapped decision variable")
+		}
+		a := Aig_NodeBddToMuxes_rec(decisions, n.Fanins[0], destination, mapping)
+		if n.Kind == Buffer || n.Kind == Output {
+			value = a
+		} else {
+			b := Aig_NodeBddToMuxes_rec(decisions, n.Fanins[1], destination, mapping)
+			if n.Kind == And {
+				value = destination.AND(a, b)
+			} else {
+				value = destination.NewXor(a, b)
+			}
+		}
+		mapping[id] = value
+	}
+	if function.Complemented() {
+		value = value.Not()
+	}
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives AIG for the BDDs of the cofactors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Aig_Man_t * Aig_ManConvertBddsToAigs( Aig_Man_t * p, DdManager * dd, Vec_Ptr_t * vCofs )
-{
-    DdNode * bFunc;
-    st__table * tBdd2Node;
-    Aig_Man_t * pNew;
-    Aig_Obj_t * pObj;
-    int i;
-    Aig_ManCleanData( p );
-    // generate AIG for BDD
-    pNew = Aig_ManStart( Aig_ManObjNum(p) );
-    pNew->pName = Abc_UtilStrsav( p->pName );
-    Aig_ManConst1(p)->pData = Aig_ManConst1(pNew);
-    Aig_ManForEachCi( p, pObj, i )
-        pObj->pData = Aig_ObjCreateCi( pNew );
-    // create the table mapping BDD nodes into the ABC nodes
-    tBdd2Node = st__init_table( st__ptrcmp, st__ptrhash );
-    // add the constant and the elementary vars
-    st__insert( tBdd2Node, (char *)Cudd_ReadOne(dd), (char *)Aig_ManConst1(pNew) );
-    Aig_ManForEachCi( p, pObj, i )
-        st__insert( tBdd2Node, (char *)Cudd_bddIthVar(dd, i), (char *)pObj->pData );
-    // build primary outputs for the cofactors
-    Vec_PtrForEachEntry( DdNode *, vCofs, bFunc, i )
-    {
-        if ( bFunc == Cudd_ReadLogicZero(dd) )
-            continue;
-        pObj = Aig_NodeBddToMuxes_rec( dd, Cudd_Regular(bFunc), pNew, tBdd2Node );
-        pObj = Aig_NotCond( pObj, Cudd_IsComplement(bFunc) );
-        Aig_ObjCreateCo( pNew, pObj );
-    }
-    st__free_table( tBdd2Node );
-
-    // duplicate the rest of the AIG
-    // add the POs
-    Aig_ManForEachCo( p, pObj, i )
-    {
-        if ( i == 0 )
-            continue;
-        Aig_ManDupSimpleDfs_rec( pNew, p, Aig_ObjFanin0(pObj) );
-        pObj->pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if ( !Aig_ManCheck(pNew) )
-        printf( "Aig_ManConvertBddsToAigs(): The check has failed.\n" );
-    return pNew;
+func splitCofactor(p *Graph, root Edge, assignment map[int]bool) Edge {
+	memo := map[int]Edge{0: p.Const1()}
+	for id, value := range assignment {
+		memo[id] = p.Const0()
+		if value {
+			memo[id] = p.Const1()
+		}
+	}
+	var visit func(Edge) Edge
+	visit = func(e Edge) Edge {
+		id := e.NodeID()
+		value, ok := memo[id]
+		if !ok {
+			n := p.nodes[id]
+			switch n.Kind {
+			case Input:
+				value = Edge(id) << 1
+			case Output, Buffer:
+				value = visit(n.Fanins[0])
+			case And:
+				value = p.AND(visit(n.Fanins[0]), visit(n.Fanins[1]))
+			case ExclusiveOr:
+				value = p.NewXor(visit(n.Fanins[0]), visit(n.Fanins[1]))
+			default:
+				panic("aig: invalid cofactor node")
+			}
+			memo[id] = value
+		}
+		if e.Complemented() {
+			value = value.Not()
+		}
+		return value
+	}
+	return visit(root)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Aig_ManBuildPoBdd_rec( Aig_Man_t * p, Aig_Obj_t * pObj, DdManager * dd )
-{
-    DdNode * bBdd0, * bBdd1;
-    if ( pObj->pData != NULL )
-        return (DdNode *)pObj->pData;
-    assert( Aig_ObjIsNode(pObj) );
-    bBdd0 = Aig_ManBuildPoBdd_rec( p, Aig_ObjFanin0(pObj), dd ); 
-    bBdd1 = Aig_ManBuildPoBdd_rec( p, Aig_ObjFanin1(pObj), dd ); 
-    bBdd0 = Cudd_NotCond( bBdd0, Aig_ObjFaninC0(pObj) );
-    bBdd1 = Cudd_NotCond( bBdd1, Aig_ObjFaninC1(pObj) );
-    pObj->pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );  Cudd_Ref( (DdNode *)pObj->pData );
-    return (DdNode *)pObj->pData;
+func splitReduce(p *Graph, root Edge, memo map[Edge]Edge) Edge {
+	regular := Aig_Regular(root)
+	if result, ok := memo[regular]; ok {
+		if root.Complemented() {
+			return result.Not()
+		}
+		return result
+	}
+	support := Aig_Support(p, regular)
+	value := p.Const1()
+	if len(support) == 0 {
+		if !Aig_ObjPhaseReal(p, regular) {
+			value = p.Const0()
+		}
+	} else {
+		positions := make(map[int]int, len(p.inputs))
+		for i, e := range p.inputs {
+			positions[e.NodeID()] = i
+		}
+		variable := support[0]
+		for _, e := range support[1:] {
+			if positions[e.NodeID()] < positions[variable.NodeID()] {
+				variable = e
+			}
+		}
+		low := splitReduce(p, splitCofactor(p, regular, map[int]bool{variable.NodeID(): false}), memo)
+		high := splitReduce(p, splitCofactor(p, regular, map[int]bool{variable.NodeID(): true}), memo)
+		if low == high {
+			value = low
+		} else if high.Complemented() {
+			value = p.Mux(variable, high.Not(), low.Not()).Not()
+		} else {
+			value = p.Mux(variable, high, low)
+		}
+	}
+	memo[regular] = value
+	if root.Complemented() {
+		value = value.Not()
+	}
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derive BDDs for the cofactors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Vec_Ptr_t * Aig_ManCofactorBdds( Aig_Man_t * p, Vec_Ptr_t * vSubset, DdManager * dd, DdNode * bFunc )
-{
-    Vec_Ptr_t * vCofs;
-    DdNode * bCube, * bTemp, * bCof, ** pbVars;
-    int i;
-    vCofs = Vec_PtrAlloc( 100 );
-    pbVars = (DdNode **)Vec_PtrArray(vSubset);
-    for ( i = 0; i < (1 << Vec_PtrSize(vSubset)); i++ )
-    {
-        bCube = Extra_bddBitsToCube( dd, i, Vec_PtrSize(vSubset), pbVars, 1 );  Cudd_Ref( bCube );
-        bCof  = Cudd_Cofactor( dd, bFunc, bCube );        Cudd_Ref( bCof );
-        bCof  = Cudd_bddAnd( dd, bTemp = bCof, bCube );   Cudd_Ref( bCof );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bCube );
-        Vec_PtrPush( vCofs, bCof );
-    }
-    return vCofs;
+func Aig_ManBuildPoBdd_rec(p *Graph, e Edge, decisions *Graph) Edge {
+	if p.copies == nil {
+		panic("aig: decision variable mapping not initialized")
+	}
+	return Aig_ManDup_rec(decisions, p, e)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Construct BDDs for the primary output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdManager * Aig_ManBuildPoBdd( Aig_Man_t * p, DdNode ** pbFunc )
-{
-    DdManager * dd;
-    Aig_Obj_t * pObj;
-    int i;
-    assert( Saig_ManPoNum(p) == 1 );
-    Aig_ManCleanData( p );
-    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );
-    pObj = Aig_ManConst1(p);
-    pObj->pData = Cudd_ReadOne(dd);  Cudd_Ref( (DdNode *)pObj->pData );
-    Aig_ManForEachCi( p, pObj, i )
-    {
-        pObj->pData = Cudd_bddIthVar(dd, i);  Cudd_Ref( (DdNode *)pObj->pData );
-    }
-    pObj = Aig_ManCo( p, 0 );
-    *pbFunc = Aig_ManBuildPoBdd_rec( p, Aig_ObjFanin0(pObj), dd );  Cudd_Ref( *pbFunc );
-    *pbFunc = Cudd_NotCond( *pbFunc, Aig_ObjFaninC0(pObj) );
-    Aig_ManForEachObj( p, pObj, i )
-    {
-        if ( pObj->pData )
-            Cudd_RecursiveDeref( dd, (DdNode *)pObj->pData );
-    }
-    Cudd_ReduceHeap( dd,  CUDD_REORDER_SYMM_SIFT, 1 );
-    return dd;
+func Aig_ManBuildPoBdd(p *Graph, function *Edge) *Graph {
+	if len(p.outputs)-int(p.nRegs) != 1 || function == nil {
+		panic("aig: splitting requires one property output")
+	}
+	decisions := Aig_ManStartFrom(p)
+	root := Aig_ManBuildPoBdd_rec(p, p.outputDriver(p.outputs[0]), decisions)
+	*function = splitReduce(decisions, root, make(map[Edge]Edge))
+	return decisions
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Randomly selects a random subset of inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Vec_Ptr_t * Aig_ManVecRandSubset( Vec_Ptr_t * vVec, int nVars )
-{
-    Vec_Ptr_t * vRes;
-    void * pEntry;
-    unsigned Rand; 
-    vRes = Vec_PtrDup(vVec);
-    while ( Vec_PtrSize(vRes) > nVars )
-    {
-        Rand   = Aig_ManRandom( 0 );
-        pEntry = Vec_PtrEntry( vRes, Rand % Vec_PtrSize(vRes) );
-        Vec_PtrRemove( vRes, pEntry );
-    }
-    return vRes;
+func Aig_ManCofactorBdds(p *Graph, subset []Edge, decisions *Graph, function Edge) []Edge {
+	if len(subset) > 16 {
+		panic("aig: at most 16 cofactoring variables")
+	}
+	seen := make(map[int]bool)
+	for _, e := range subset {
+		if e.Complemented() || decisions.node(e).Kind != Input || seen[e.NodeID()] {
+			panic("aig: invalid cofactoring variables")
+		}
+		seen[e.NodeID()] = true
+	}
+	results := make([]Edge, 0, 1<<uint(len(subset)))
+	memo := make(map[Edge]Edge)
+	for code := 0; code < 1<<uint(len(subset)); code++ {
+		assignment := make(map[int]bool, len(subset))
+		cube := decisions.Const1()
+		for i, e := range subset {
+			value := code&(1<<uint(len(subset)-1-i)) != 0
+			assignment[e.NodeID()] = value
+			literal := e
+			if !value {
+				literal = literal.Not()
+			}
+			cube = decisions.AND(cube, literal)
+		}
+		cofactor := splitReduce(decisions, splitCofactor(decisions, function, assignment), memo)
+		results = append(results, decisions.AND(cofactor, cube))
+	}
+	return results
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Aig_Man_t * Aig_ManSplit( Aig_Man_t * p, int nVars, int fVerbose )
-{
-    Aig_Man_t * pRes;
-    Aig_Obj_t * pNode;
-    DdNode * bFunc;
-    DdManager * dd;
-    Vec_Ptr_t * vSupp, * vSubs, * vCofs;
-    int i;
-    abctime clk = Abc_Clock();
-    if ( Saig_ManPoNum(p) != 1 )
-    {
-        printf( "Currently works only for one primary output.\n" );
-        return NULL;
-    }
-    if ( nVars < 1 )
-    {
-        printf( "The number of cofactoring variables should be a positive number.\n" );
-        return NULL;
-    }
-    if ( nVars > 16 )
-    {
-        printf( "The number of cofactoring variables should be less than 17.\n" );
-        return NULL;
-    }
-    vSupp = Aig_Support( p, Aig_ObjFanin0(Aig_ManCo(p,0)) );
-    if ( Vec_PtrSize(vSupp) == 0 )
-    {
-        printf( "Property output function is a constant.\n" );
-        Vec_PtrFree( vSupp );
-        return NULL;
-    }
-    dd    = Aig_ManBuildPoBdd( p, &bFunc ); // bFunc is referenced
-    if ( fVerbose )
-        printf( "Support =%5d.  BDD size =%6d.  ", Vec_PtrSize(vSupp), Cudd_DagSize(bFunc) );
-    vSubs = Aig_ManVecRandSubset( vSupp, nVars );
-    // replace nodes by their BDD variables
-    Vec_PtrForEachEntry( Aig_Obj_t *, vSubs, pNode, i )
-        Vec_PtrWriteEntry( vSubs, i, pNode->pData );
-    // derive cofactors and functions
-    vCofs = Aig_ManCofactorBdds( p, vSubs, dd, bFunc );
-    pRes  = Aig_ManConvertBddsToAigs( p, dd, vCofs );
-    Vec_PtrFree( vSupp );
-    Vec_PtrFree( vSubs );
-    if ( fVerbose )
-        printf( "Created %d cofactors (out of %d).  ", Saig_ManPoNum(pRes), Vec_PtrSize(vCofs) );
-    if ( fVerbose )
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    // dereference
-    Cudd_RecursiveDeref( dd, bFunc );
-    Vec_PtrForEachEntry( DdNode *, vCofs, bFunc, i )
-        Cudd_RecursiveDeref( dd, bFunc );
-    Vec_PtrFree( vCofs );
-    Extra_StopManager( dd );
-    return pRes;
+func Aig_ManConvertBddsToAigs(p, decisions *Graph, cofactors []Edge) *Graph {
+	q := Aig_ManStartFrom(p)
+	mapping := map[int]Edge{0: 0}
+	if len(decisions.inputs) != len(q.inputs) {
+		panic("aig: inconsistent decision variable count")
+	}
+	for i, e := range decisions.inputs {
+		mapping[e.NodeID()] = q.inputs[i]
+	}
+	for _, function := range cofactors {
+		if function == decisions.Const0() {
+			continue
+		}
+		q.AddOutput(Aig_NodeBddToMuxes_rec(decisions, function, q, mapping))
+	}
+	for _, output := range p.outputs[1:] {
+		q.AddOutput(Aig_ManDup_rec(q, p, p.outputDriver(output)))
+	}
+	Aig_ManCleanup(q)
+	Aig_ManSetRegNum(q, p.nRegs)
+	return q
 }
-
-#else
-
-Aig_Man_t * Aig_ManSplit( Aig_Man_t * p, int nVars, int fVerbose )
-{
-    return NULL;
+func Aig_ManVecRandSubset(values []Edge, count int32) []Edge {
+	if count < 0 {
+		panic("aig: negative subset size")
+	}
+	result := append([]Edge(nil), values...)
+	for len(result) > int(count) {
+		i := rand.IntN(len(result))
+		result = append(result[:i], result[i+1:]...)
+	}
+	return result
 }
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
+	start := time.Now()
+	if len(p.outputs)-int(p.nRegs) != 1 {
+		fmt.Println("Currently works only for one primary output.")
+		return nil
+	}
+	if variables < 1 || variables > 16 {
+		fmt.Println("The number of cofactoring variables must be between 1 and 16.")
+		return nil
+	}
+	support := Aig_Support(p, p.outputDriver(p.outputs[0]))
+	if len(support) == 0 {
+		fmt.Println("Property output function is a constant.")
+		return nil
+	}
+	var function Edge
+	decisions := Aig_ManBuildPoBdd(p, &function)
+	subset := Aig_ManVecRandSubset(support, variables)
+	for i, e := range subset {
+		index := Aig_ObjCioId(p, e)
+		subset[i] = decisions.inputs[index]
+	}
+	cofactors := Aig_ManCofactorBdds(p, subset, decisions, function)
+	result := Aig_ManConvertBddsToAigs(p, decisions, cofactors)
+	if verbose != 0 {
+		fmt.Printf("Support =%5d. Created %d cofactors (out of %d). Time=%s\n", len(support), len(result.outputs)-int(result.nRegs), len(cofactors), time.Since(start))
+	}
+	return result
+}

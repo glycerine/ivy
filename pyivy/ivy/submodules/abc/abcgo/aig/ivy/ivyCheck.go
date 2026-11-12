@@ -46,85 +46,8 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManCheck(p *Ivy_Man_t) int32 {
-    var pObj, pObj2 *Ivy_Obj_t;
-    var i int32;
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        // skip deleted nodes
-        if Ivy_ObjId(pObj) != i {
-            fmt.Printf("Ivy_ManCheck: Node with ID %d is listed as number %d in the array of objects.\n", pObj.Id, i);
-            return 0;
-        }
-        // consider the constant node and PIs
-        if i == 0 || Ivy_ObjIsPi(pObj) {
-            if Ivy_ObjFaninId0(pObj) || Ivy_ObjFaninId1(pObj) || Ivy_ObjLevel(pObj) {
-                fmt.Printf("Ivy_ManCheck: The AIG has non-standard constant or PI node with ID \"%d\".\n", pObj.Id);
-                return 0;
-            }
-            continue;
-        }
-        if Ivy_ObjIsPo(pObj) {
-            if Ivy_ObjFaninId1(pObj) {
-                fmt.Printf("Ivy_ManCheck: The AIG has non-standard PO node with ID \"%d\".\n", pObj.Id);
-                return 0;
-            }
-            continue;
-        }
-        if Ivy_ObjIsBuf(pObj) {
-            if Ivy_ObjFanin1(pObj) {
-                fmt.Printf("Ivy_ManCheck: The buffer with ID \"%d\" contains second fanin.\n", pObj.Id);
-                return 0;
-            }
-            continue;
-        }
-        if Ivy_ObjIsLatch(pObj) {
-            if Ivy_ObjFanin1(pObj) {
-                fmt.Printf("Ivy_ManCheck: The latch with ID \"%d\" contains second fanin.\n", pObj.Id);
-                return 0;
-            }
-            if Ivy_ObjInit(pObj) == IVY_INIT_NONE {
-                fmt.Printf("Ivy_ManCheck: The latch with ID \"%d\" does not have initial state.\n", pObj.Id);
-                return 0;
-            }
-            pObj2 = Ivy_TableLookup( p, pObj );
-            if pObj2 != pObj {
-                fmt.Printf("Ivy_ManCheck: Latch with ID \"%d\" is not in the structural hashing table.\n", pObj.Id); }
-            continue;
-        }
-        // consider the AND node
-        if !Ivy_ObjFanin0(pObj) || !Ivy_ObjFanin1(pObj) {
-            fmt.Printf("Ivy_ManCheck: The AIG has internal node \"%d\" with a NULL fanin.\n", pObj.Id);
-            return 0;
-        }
-        if Ivy_ObjFaninId0(pObj) >= Ivy_ObjFaninId1(pObj) {
-            fmt.Printf("Ivy_ManCheck: The AIG has node \"%d\" with a wrong ordering of fanins.\n", pObj.Id);
-            return 0;
-        }
-        if Ivy_ObjLevel(pObj) != Ivy_ObjLevelNew(pObj) {
-            fmt.Printf("Ivy_ManCheck: Node with ID \"%d\" has level %d but should have level %d.\n", pObj.Id, Ivy_ObjLevel(pObj), Ivy_ObjLevelNew(pObj)); }
-        pObj2 = Ivy_TableLookup( p, pObj );
-        if pObj2 != pObj {
-            fmt.Printf("Ivy_ManCheck: Node with ID \"%d\" is not in the structural hashing table.\n", pObj.Id); }
-        if Ivy_ObjRefs(pObj) == 0 {
-            fmt.Printf("Ivy_ManCheck: Node with ID \"%d\" has no fanouts.\n", pObj.Id); }
-        // check fanouts
-        if p.fFanout && Ivy_ObjRefs(pObj) != Ivy_ObjFanoutNum(p, pObj) {
-            fmt.Printf("Ivy_ManCheck: Node with ID \"%d\" has mismatch between the number of fanouts and refs.\n", pObj.Id); }
-    }
-    }
-    // count the number of nodes in the table
-    if Ivy_TableCountEntries(p) != Ivy_ManAndNum(p) + Ivy_ManExorNum(p) + Ivy_ManLatchNum(p) {
-        fmt.Printf("Ivy_ManCheck: The number of nodes in the structural hashing table is wrong.\n");
-        return 0;
-    }
-//    if ( !Ivy_ManCheckFanouts(p) )
-//        return 0;
-    if !Ivy_ManIsAcyclic(p) {
-        return 0; }
-    return 1; 
-}
+// Ivy_ManCheck is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

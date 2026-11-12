@@ -568,7 +568,7 @@ func Io_WriteVerilogObjects(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {
             // inlining of macro Abc_ObjForEachFanin
             for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
                 // inlining of macro ABC_FREE
-                ((Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) ? (free((char *) (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData)), (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) = 0) : 0);
+                Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData = nil;
             }
         }
         }

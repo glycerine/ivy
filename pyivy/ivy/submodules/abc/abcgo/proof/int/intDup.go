@@ -58,8 +58,7 @@ func Inter_ManStartInitState(nRegs int32) *Aig_Man_t {
     }
     pRes = Aig_Multi( p, ppInputs, nRegs, AIG_OBJ_AND );
     Aig_ObjCreateCo( p, pRes );
-    // inlining of macro ABC_FREE
-    ((ppInputs) ? (free((char *) (ppInputs)), (ppInputs) = 0) : 0);
+    ppInputs = nil;
     return p;
 }
 

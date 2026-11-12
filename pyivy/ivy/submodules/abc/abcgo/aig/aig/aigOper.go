@@ -1,599 +1,145 @@
 package aig
 
-import "fmt"
+// Port of aigOper.c. Pointer-tagged Aig_Obj_t values are represented by Edge;
+// callers pass slices in place of C pointer/vector ranges.
 
-/**CFile****************************************************************
+func Aig_IthVar(p *Graph, i int32) Edge {
+	if i < 0 {
+		panic("aig: negative variable")
+	}
+	for p.InputCount() <= int(i) {
+		p.NewInput()
+	}
+	return p.inputs[i]
+}
+func Aig_And(p *Graph, a, b Edge) Edge        { return p.AND(a, b) }
+func Aig_Or(p *Graph, a, b Edge) Edge         { return p.OR(a, b) }
+func Aig_Exor(p *Graph, a, b Edge) Edge       { return p.XOR(a, b) }
+func Aig_Mux2(p *Graph, c, yes, no Edge) Edge { return p.Mux(c, yes, no) }
+func Aig_Mux(p *Graph, c, yes, no Edge) Edge  { return p.Mux(c, yes, no) }
+func Aig_Maj(p *Graph, a, b, c Edge) Edge     { return p.OR(p.OR(p.AND(a, b), p.AND(a, c)), p.AND(b, c)) }
 
-  FileName    [aigOper.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [AIG operations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigOper.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// procedure to detect an EXOR gate
-func Aig_ObjIsExorType(p0 *Aig_Obj_t, p1 *Aig_Obj_t, ppFan0 **Aig_Obj_t, ppFan1 **Aig_Obj_t) int32 {
-    if !Aig_IsComplement(p0) || !Aig_IsComplement(p1) {
-        return 0; }
-    p0 = Aig_Regular(p0);
-    p1 = Aig_Regular(p1);
-    if !Aig_ObjIsAnd(p0) || !Aig_ObjIsAnd(p1) {
-        return 0; }
-    if Aig_ObjFanin0(p0) != Aig_ObjFanin0(p1) || Aig_ObjFanin1(p0) != Aig_ObjFanin1(p1) {
-        return 0; }
-    if Aig_ObjFaninC0(p0) == Aig_ObjFaninC0(p1) || Aig_ObjFaninC1(p0) == Aig_ObjFaninC1(p1) {
-        return 0; }
-    *ppFan0 = Aig_ObjChild0(p0);
-    *ppFan1 = Aig_ObjChild1(p0);
-    return 1;
+// Aig_Oper preserves ABC's numeric AND/EXOR operation codes (5 and 6).
+func Aig_Oper(p *Graph, a, b Edge, kind int32) Edge {
+	switch kind {
+	case 5:
+		return p.AND(a, b)
+	case 6:
+		return p.XOR(a, b)
+	default:
+		panic("aig: unsupported operation")
+	}
+}
+func Aig_Multi_rec(p *Graph, objects []Edge, n int32, kind int32) Edge {
+	if n <= 0 || int(n) > len(objects) {
+		panic("aig: invalid operand range")
+	}
+	if n == 1 {
+		return objects[0]
+	}
+	half := n / 2
+	return Aig_Oper(p, Aig_Multi_rec(p, objects[:half], half, kind), Aig_Multi_rec(p, objects[half:n], n-half, kind), kind)
+}
+func Aig_Multi(p *Graph, objects []Edge, n int32, kind int32) Edge {
+	if kind != 5 && kind != 6 {
+		panic("aig: unsupported operation")
+	}
+	return Aig_Multi_rec(p, objects, n, kind)
+}
+func Aig_Miter(p *Graph, pairs []Edge) Edge {
+	if len(pairs) == 0 || len(pairs)%2 != 0 {
+		panic("aig: invalid miter pairs")
+	}
+	out := p.Const0()
+	for i := 0; i < len(pairs); i += 2 {
+		out = p.OR(out, p.XOR(pairs[i], pairs[i+1]))
+	}
+	return out
+}
+func Aig_MiterTwo(p *Graph, a, b []Edge) Edge {
+	if len(a) == 0 || len(a) != len(b) {
+		panic("aig: invalid miter vectors")
+	}
+	out := p.Const0()
+	for i := range a {
+		out = p.OR(out, p.XOR(a[i], b[i]))
+	}
+	return out
+}
+func Aig_CreateAnd(p *Graph, n int32) Edge {
+	out := p.Const1()
+	for i := int32(0); i < n; i++ {
+		out = p.AND(out, Aig_IthVar(p, i))
+	}
+	return out
+}
+func Aig_CreateOr(p *Graph, n int32) Edge {
+	out := p.Const0()
+	for i := int32(0); i < n; i++ {
+		out = p.OR(out, Aig_IthVar(p, i))
+	}
+	return out
+}
+func Aig_CreateExor(p *Graph, n int32) Edge {
+	out := p.Const0()
+	for i := int32(0); i < n; i++ {
+		out = p.XOR(out, Aig_IthVar(p, i))
+	}
+	return out
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns i-th elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_IthVar(p *Aig_Man_t, i int32) *Aig_Obj_t {
-    var v int32;
-    for  v = Aig_ManCiNum(p); v <= i; v++  {
-        Aig_ObjCreateCi( p );
-    }
-    assert(i < Vec_PtrSize(p.vCis), "i < Vec_PtrSize(p.vCis)");
-    return Aig_ManCi( p, i );
+// Aig_TableLookupInt returns an existing AND without allocating. The boolean
+// replaces the original C NULL sentinel, since edge zero is the constant one.
+func Aig_TableLookupInt(p *Graph, a, b Edge) (Edge, bool) {
+	if !p.valid(a) || !p.valid(b) {
+		panic("aig: invalid lookup edge")
+	}
+	if a == b {
+		return a, true
+	}
+	if a == 1 || b == 1 || a == b.Not() {
+		return 1, true
+	}
+	if a == 0 {
+		return b, true
+	}
+	if b == 0 {
+		return a, true
+	}
+	if a > b {
+		a, b = b, a
+	}
+	e, ok := p.hash[edgePair{a, b}]
+	return e, ok
+}
+func Aig_ObjIsExorType(p *Graph, a, b Edge, fan0, fan1 *Edge) bool {
+	if !p.valid(a) || !p.valid(b) {
+		return false
+	}
+	x, y := p.nodes[a.NodeID()], p.nodes[b.NodeID()]
+	if x.Kind != And || y.Kind != And {
+		return false
+	}
+	if x.Fanins[0].NodeID() != y.Fanins[0].NodeID() || x.Fanins[1].NodeID() != y.Fanins[1].NodeID() {
+		return false
+	}
+	if x.Fanins[0].Complemented() == y.Fanins[0].Complemented() || x.Fanins[1].Complemented() == y.Fanins[1].Complemented() {
+		return false
+	}
+	*fan0, *fan1 = x.Fanins[0], x.Fanins[1]
+	return true
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Perform one operation.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Oper(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {
-    if Type == AIG_OBJ_AND {
-        return Aig_And( p, p0, p1 ); }
-    if Type == AIG_OBJ_EXOR {
-        return Aig_Exor( p, p0, p1 ); }
-    assert(false, "0");
-    return nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs canonicization step.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_And(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {
-    var pGhost, pResult *Aig_Obj_t;
-    var pFan0, pFan1 *Aig_Obj_t;
-    // check trivial cases
-    if p0 == p1 {
-        return p0; }
-    if p0 == Aig_Not(p1) {
-        return Aig_Not(p.pConst1); }
-    if Aig_Regular(p0) == p.pConst1 {
-        if p0 == p.pConst1 {
-            return p1;
-        } else {
-            return Aig_Not(p.pConst1);
-        } }
-    if Aig_Regular(p1) == p.pConst1 {
-        if p1 == p.pConst1 {
-            return p0;
-        } else {
-            return Aig_Not(p.pConst1);
-        } }
-    // check not so trivial cases
-    if p.fAddStrash && (Aig_ObjIsNode(Aig_Regular(p0)) || Aig_ObjIsNode(Aig_Regular(p1))) { // http://fmv.jku.at/papers/BrummayerBiere-MEMICS06.pdf
-        var pFanA, pFanB, pFanC, pFanD *Aig_Obj_t;
-        pFanA = Aig_ObjChild0(Aig_Regular(p0));
-        pFanB = Aig_ObjChild1(Aig_Regular(p0));
-        pFanC = Aig_ObjChild0(Aig_Regular(p1));
-        pFanD = Aig_ObjChild1(Aig_Regular(p1));
-        if Aig_IsComplement(p0) {
-            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {
-                return p1; }
-            if pFanB == p1 {
-                return Aig_And( p, Aig_Not(pFanA), pFanB ); }
-            if pFanA == p1 {
-                return Aig_And( p, Aig_Not(pFanB), pFanA ); }
-        
-        } else {
-            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {
-                return Aig_Not(p.pConst1); }
-            if pFanA == p1 || pFanB == p1 {
-                return p0; }
-        }
-        if Aig_IsComplement(p1) {
-            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {
-                return p0; }
-            if pFanD == p0 {
-                return Aig_And( p, Aig_Not(pFanC), pFanD ); }
-            if pFanC == p0 {
-                return Aig_And( p, Aig_Not(pFanD), pFanC ); }
-        
-        } else {
-            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {
-                return Aig_Not(p.pConst1); }
-            if pFanC == p0 || pFanD == p0 {
-                return p1; }
-        }
-        if !Aig_IsComplement(p0) && !Aig_IsComplement(p1) {
-            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {
-                return Aig_Not(p.pConst1); }
-            if pFanA == pFanC || pFanB == pFanC {
-                return Aig_And( p, p0, pFanD ); }
-            if pFanB == pFanC || pFanB == pFanD {
-                return Aig_And( p, pFanA, p1 ); }
-            if pFanA == pFanD || pFanB == pFanD {
-                return Aig_And( p, p0, pFanC ); }
-            if pFanA == pFanC || pFanA == pFanD {
-                return Aig_And( p, pFanB, p1 ); }
-        
-        } else if Aig_IsComplement(p0) && !Aig_IsComplement(p1) {
-            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {
-                return p1; }
-            if pFanB == pFanC || pFanB == pFanD {
-                return Aig_And( p, Aig_Not(pFanA), p1 ); }
-            if pFanA == pFanC || pFanA == pFanD {
-                return Aig_And( p, Aig_Not(pFanB), p1 ); }
-        
-        } else if !Aig_IsComplement(p0) && Aig_IsComplement(p1) {
-            if pFanC == Aig_Not(pFanA) || pFanC == Aig_Not(pFanB) || pFanD == Aig_Not(pFanA) || pFanD == Aig_Not(pFanB) {
-                return p0; }
-            if pFanD == pFanA || pFanD == pFanB {
-                return Aig_And( p, Aig_Not(pFanC), p0 ); }
-            if pFanC == pFanA || pFanC == pFanB {
-                return Aig_And( p, Aig_Not(pFanD), p0 ); }
-        
-        } else { // if ( Aig_IsComplement(p0) && Aig_IsComplement(p1) )
-        
-            if pFanA == pFanD && pFanB == Aig_Not(pFanC) {
-                return Aig_Not(pFanA); }
-            if pFanB == pFanC && pFanA == Aig_Not(pFanD) {
-                return Aig_Not(pFanB); }
-            if pFanA == pFanC && pFanB == Aig_Not(pFanD) {
-                return Aig_Not(pFanA); }
-            if pFanB == pFanD && pFanA == Aig_Not(pFanC) {
-                return Aig_Not(pFanB); }
-        }
-    }
-    // check if it can be an EXOR gate
-    if p.fCatchExor && (Aig_ObjIsExorType( p0, p1, &pFan0, &pFan1 ) != 0) {
-        return Aig_Exor( p, pFan0, pFan1 ); }
-    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_AND );
-    if pResult = Aig_TableLookup( p, pGhost ) {
-        return pResult; }
-    return Aig_ObjCreate( p, pGhost );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs canonicization step.]
-
-  Description [The argument nodes can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Exor(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {
-    var pGhost, pResult *Aig_Obj_t;
-    var fCompl int32;
-    // check trivial cases
-    if p0 == p1 {
-        return Aig_Not(p.pConst1); }
-    if p0 == Aig_Not(p1) {
-        return p.pConst1; }
-    if Aig_Regular(p0) == p.pConst1 {
-        return Aig_NotCond( p1, p0 == p.pConst1 ); }
-    if Aig_Regular(p1) == p.pConst1 {
-        return Aig_NotCond( p0, p1 == p.pConst1 ); }
-    // when there is no special XOR gates
-    if !p.fCatchExor {
-        return Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) ); }
-    // canonicize
-    fCompl = Aig_IsComplement(p0) ^ Aig_IsComplement(p1);
-    p0 = Aig_Regular(p0);
-    p1 = Aig_Regular(p1);
-    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_EXOR );
-    // check the table
-    if pResult = Aig_TableLookup( p, pGhost ) {
-        return Aig_NotCond( pResult, fCompl ); }
-    pResult = Aig_ObjCreate( p, pGhost );
-    return Aig_NotCond( pResult, fCompl );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements Boolean OR.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Or(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {
-    return Aig_Not( Aig_And( p, Aig_Not(p0), Aig_Not(p1) ) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description [] 
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_TableLookupInt(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {
-    if p0 == p1 {
-        return p0; }
-    if p0 == Aig_ManConst0(p) || p1 == Aig_ManConst0(p) || p0 == Aig_Not(p1) {
-        return Aig_ManConst0(p); }
-    if p0 == Aig_ManConst1(p) {
-        return p1; }
-    if p1 == Aig_ManConst1(p) {
-        return p0; }
-    if Aig_Regular(p0).Id < Aig_Regular(p1).Id {
-        return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p0, p1, AIG_OBJ_AND) ); }
-    return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p1, p0, AIG_OBJ_AND) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Mux2(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {
-    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Mux(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {
-    var fUseMuxCanon int32;
-    var pTempA1, pTempA2, pTempB1, pTempB2, pTemp *Aig_Obj_t;
-    var Count0, Count1 int32;
-    if !(fUseMuxCanon != 0) {
-        return Aig_Mux2( p, pC, p1, p0 ); }
-    if p0 == p1 {
-        return p0; }
-    if p1 == Aig_Not(p0) {
-        return Aig_Exor( p, pC, p0 ); }
-    if pC == Aig_ManConst0(p) {
-        return p0; }
-    if pC == Aig_ManConst1(p) {
-        return p1; }
-    if p0 == Aig_ManConst0(p) {
-        return Aig_And( p, pC, p1 ); }
-    if p0 == Aig_ManConst1(p) {
-        return Aig_Or( p, Aig_Not(pC), p1 ); }
-    if p1 == Aig_ManConst0(p) {
-        return Aig_And( p, Aig_Not(pC), p0 ); }
-    if p1 == Aig_ManConst1(p) {
-        return Aig_Or( p, pC, p0 ); }
-    // implement the first MUX (F = C * x1 + C' * x0)
-    pTempA1 = Aig_TableLookupInt( p, pC,          p1 );
-    pTempA2 = Aig_TableLookupInt( p, Aig_Not(pC), p0 );
-    if pTempA1 && pTempA2 {
-        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempA1), Aig_Not(pTempA2) );
-        if pTemp != nil { return Aig_Not(pTemp); }
-    }
-    Count0 = (pTempA1 != nil) + (pTempA2 != nil);
-    // implement the second MUX (F' = C * x1' + C' * x0')
-    pTempB1 = Aig_TableLookupInt( p, pC,          Aig_Not(p1) );
-    pTempB2 = Aig_TableLookupInt( p, Aig_Not(pC), Aig_Not(p0) );
-    if pTempB1 && pTempB2 {
-        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempB1), Aig_Not(pTempB2) );
-        if pTemp != nil { return pTemp; }
-    }
-    Count1 = (pTempB1 != nil) + (pTempB2 != nil);
-    // compare and decide which one to implement
-    if Count0 >= Count1 {
-        return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) ); }
-    return Aig_Not( Aig_Or( p, Aig_And(p, pC, Aig_Not(p1)), Aig_And(p, Aig_Not(pC), Aig_Not(p0)) ) );
-//    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Maj(p *Aig_Man_t, pA *Aig_Obj_t, pB *Aig_Obj_t, pC *Aig_Obj_t) *Aig_Obj_t {
-    return Aig_Or( p, Aig_Or(p, Aig_And(p, pA, pB), Aig_And(p, pA, pC)), Aig_And(p, pB, pC) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Constructs the well-balanced tree of gates.]
-
-  Description [Disregards levels and possible logic sharing.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Multi_rec(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, Type Aig_Type_t) *Aig_Obj_t {
-    var pObj1, pObj2 *Aig_Obj_t;
-    if nObjs == 1 {
-        return ppObjs[0]; }
-    pObj1 = Aig_Multi_rec( p, ppObjs,           nObjs/2,         Type );
-    pObj2 = Aig_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );
-    return Aig_Oper( p, pObj1, pObj2, Type );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Old code.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Multi(p *Aig_Man_t, pArgs **Aig_Obj_t, nArgs int32, Type Aig_Type_t) *Aig_Obj_t {
-    assert(Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR, "Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR");
-    assert(nArgs > 0, "nArgs > 0");
-    return Aig_Multi_rec( p, pArgs, nArgs, Type );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements the miter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Miter(p *Aig_Man_t, vPairs *Vec_Ptr_t) *Aig_Obj_t {
-    var i int32;
-    assert(vPairs.nSize > 0, "vPairs.nSize > 0");
-    assert(vPairs.nSize % 2 == 0, "vPairs.nSize % 2 == 0");
-    for  i = 0; i < vPairs.nSize; i += 2  {
-        vPairs.pArray[i/2] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vPairs.pArray[i], (Aig_Obj_t *)vPairs.pArray[i+1] ) );
-    }
-    vPairs.nSize = vPairs.nSize/2;
-    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_OBJ_AND ) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements the miter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_MiterTwo(p *Aig_Man_t, vNodes1 *Vec_Ptr_t, vNodes2 *Vec_Ptr_t) *Aig_Obj_t {
-    var i int32;
-    assert(vNodes1.nSize > 0 && vNodes1.nSize > 0, "vNodes1.nSize > 0 && vNodes1.nSize > 0");
-    assert(vNodes1.nSize == vNodes2.nSize, "vNodes1.nSize == vNodes2.nSize");
-    for  i = 0; i < vNodes1.nSize; i++  {
-        vNodes1.pArray[i] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vNodes1.pArray[i], (Aig_Obj_t *)vNodes2.pArray[i] ) );
-    }
-    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vNodes1.pArray, vNodes1.nSize, AIG_OBJ_AND ) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CreateAnd(p *Aig_Man_t, nVars int32) *Aig_Obj_t {
-    var pFunc *Aig_Obj_t;
-    var i int32;
-    pFunc = Aig_ManConst1( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Aig_And( p, pFunc, Aig_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CreateOr(p *Aig_Man_t, nVars int32) *Aig_Obj_t {
-    var pFunc *Aig_Obj_t;
-    var i int32;
-    pFunc = Aig_ManConst0( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Aig_Or( p, pFunc, Aig_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AND function with nVars inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CreateExor(p *Aig_Man_t, nVars int32) *Aig_Obj_t {
-    var pFunc *Aig_Obj_t;
-    var i int32;
-    pFunc = Aig_ManConst0( p );
-    for  i = 0; i < nVars; i++  {
-        pFunc = Aig_Exor( p, pFunc, Aig_IthVar(p, i) );
-    }
-    return pFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Implements ITE operation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Aig_MuxTest checks the two ITE constructions over every three-input assignment.
 func Aig_MuxTest() {
-    var vNodes *Vec_Ptr_t;
-    var p *Aig_Man_t;
-    var pObj, pFanin0, pFanin1, pCtrl *Aig_Obj_t;    
-    var nNodes int32   = 2000;
-    var i int32;
-    var nPIs int32 = 20;
-//    srand( time(NULL) );
-    srand( 321 );
-    vNodes = Vec_PtrAlloc( 100 );
-    // create a bunch of random MUXes
-    p = Aig_ManStart( 10000 );
-    for  i = 0; i < nPIs; i++  {
-        Aig_IthVar(p,i);
-    }
-    for  i = 0; i < nNodes; i++  {
-        if rand() % 10 == 0 {
-            pCtrl = Aig_ManConst0(p);
-        } else if rand() % 10 == 0 {
-            pCtrl = Aig_ManConst1(p);
-        } else if rand() % 3 == 0 || i < nPIs {
-            pCtrl = Aig_IthVar( p, rand() % nPIs );
-        } else {
-            pCtrl = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }
-        if rand() % 2 == 0 {
-            pCtrl = Aig_Not( pCtrl ); }
-
-        if rand() % 10 == 0 {
-            pFanin1 = Aig_ManConst0(p);
-        } else if rand() % 10 == 0 {
-            pFanin1 = Aig_ManConst1(p);
-        } else if rand() % 3 == 0 || i < nPIs {
-            pFanin1 = Aig_IthVar( p, rand() % nPIs );
-        } else {
-            pFanin1 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }
-        if rand() % 2 == 0 {
-            pFanin1 = Aig_Not( pFanin1 ); }
-
-        if rand() % 10 == 0 {
-            pFanin0 = Aig_ManConst0(p);
-        } else if rand() % 10 == 0 {
-            pFanin0 = Aig_ManConst1(p);
-        } else if rand() % 3 == 0 || i < nPIs {
-            pFanin0 = Aig_IthVar( p, rand() % nPIs );
-        } else {
-            pFanin0 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }
-        if rand() % 2 == 0 {
-            pFanin0 = Aig_Not( pFanin0 ); }
-
-        pObj = Aig_Mux( p, pCtrl, pFanin1, pFanin0 );
-        Vec_PtrPush( vNodes, pObj );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Aig_ObjCreateCo( p, pObj );
-    }
-    Vec_PtrFree( vNodes );
-
-    fmt.Printf("Number of nodes = %6d.\n", Aig_ManObjNum(p));
-    Aig_ManCleanup( p );
-    fmt.Printf("Number of nodes = %6d.\n", Aig_ManObjNum(p));
-    Aig_ManDumpBlif( p, "test1.blif", nil, nil );
-    Aig_ManStop( p );
+	p := NewGraph()
+	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
+	p.AddOutput(Aig_Mux(p, a, b, c))
+	p.AddOutput(Aig_Mux2(p, a, b, c))
+	for bits := 0; bits < 8; bits++ {
+		out, err := p.Evaluate([]bool{bits&1 != 0, bits&2 != 0, bits&4 != 0})
+		if err != nil || out[0] != out[1] {
+			panic("aig: ITE consistency failure")
+		}
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

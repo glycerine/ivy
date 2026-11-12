@@ -288,7 +288,7 @@ func Emb_ManStartSimple(pGia *Gia_Man_t) *Emb_Man_t {
         pObjLog.iFanin = pObjLog.iFanout = 0;
     }
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     return p;
 }
 
@@ -358,7 +358,7 @@ func Emb_ManCreateRefsSpecial(p *Gia_Man_t) {
     var pObj, pFan0, pFan1 *Gia_Obj_t;
     var pObjC, pObjD0, pObjD1 *Gia_Obj_t;
     var i int32;
-    assert(p.pRefs == nil, "p.pRefs == nil");
+    assert(p.Refs == nil, "p.Refs == nil");
     Gia_ManCleanMark0( p );
     Gia_ManCreateRefs( p );
     // inlining of macro Gia_ManForEachAnd
@@ -406,7 +406,7 @@ func Emb_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {
     var vSuper, vVisit *Vec_Int_t;
     var pObj, pFanin *Gia_Obj_t;
     var i, k, Counter int32;
-    assert(p.pRefs != nil, "p.pRefs != nil");
+    assert(p.Refs != nil, "p.Refs != nil");
 
     // mark nodes to be used in the logic network
     Gia_ManCleanMark0( p );
@@ -437,9 +437,9 @@ func Emb_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {
 
     // reset the references
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     // inlining of macro ABC_CALLOC
-    p.pRefs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));
+    p.Refs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));
     // reference from internal nodes
     Counter = 0;
     vSuper = Vec_IntAlloc( 100 );
@@ -641,7 +641,7 @@ func Emb_ManStart(pGia *Gia_Man_t) *Emb_Man_t {
         pObjLog.iFanin = pObjLog.iFanout = 0;
     }
     // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.Refs = nil;
     return p;
 }
 
@@ -688,19 +688,19 @@ func Emb_ManStop(p *Emb_Man_t) {
     Vec_IntFree( p.vCis );
     Vec_IntFree( p.vCos );
     // inlining of macro ABC_FREE
-    ((p.pPlacement) ? (free((char *) (p.pPlacement)), (p.pPlacement) = 0) : 0);
+    p.pPlacement = nil;
     // inlining of macro ABC_FREE
-    ((p.pVecs) ? (free((char *) (p.pVecs)), (p.pVecs) = 0) : 0);
+    p.pVecs = nil;
     // inlining of macro ABC_FREE
-    ((p.pSols) ? (free((char *) (p.pSols)), (p.pSols) = 0) : 0);
+    p.pSols = nil;
     // inlining of macro ABC_FREE
-    ((p.pMatr) ? (free((char *) (p.pMatr)), (p.pMatr) = 0) : 0);
+    p.pMatr = nil;
     // inlining of macro ABC_FREE
-    ((p.pEigen) ? (free((char *) (p.pEigen)), (p.pEigen) = 0) : 0);
+    p.pEigen = nil;
     // inlining of macro ABC_FREE
-    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);
+    p.pObjData = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1506,9 +1506,9 @@ func Emb_ManDerivePlacement(p *Emb_Man_t, nSols int32) {
         p.pPlacement[2*pPerm1[k]+1] = (unsigned short)int32((1.0 * k * GIA_PLACE_SIZE / p.nObjs));
     }
     // inlining of macro ABC_FREE
-    ((pPerm0) ? (free((char *) (pPerm0)), (pPerm0) = 0) : 0);
+    pPerm0 = nil;
     // inlining of macro ABC_FREE
-    ((pPerm1) ? (free((char *) (pPerm1)), (pPerm1) = 0) : 0);
+    pPerm1 = nil;
 }
 
 
@@ -1617,9 +1617,9 @@ func Emb_ManPlacementRefine(p *Emb_Man_t, nIters int32, fVerbose int32) {
             p.pPlacement[2*pPermY[k]+1] = (unsigned short)int32((1.0 * k * GIA_PLACE_SIZE / p.nObjs));
         }
         // inlining of macro ABC_FREE
-        ((pPermX) ? (free((char *) (pPermX)), (pPermX) = 0) : 0);
+        pPermX = nil;
         // inlining of macro ABC_FREE
-        ((pPermY) ? (free((char *) (pPermY)), (pPermY) = 0) : 0);
+        pPermY = nil;
         // evaluate cost
         if fVerbose != 0 {
         fmt.Printf("%2d : HPWL = %e  ", Iter+1, CostThis);
@@ -1629,13 +1629,13 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
         }
     }
     // inlining of macro ABC_FREE
-    ((pEdgeX) ? (free((char *) (pEdgeX)), (pEdgeX) = 0) : 0);
+    pEdgeX = nil;
     // inlining of macro ABC_FREE
-    ((pEdgeY) ? (free((char *) (pEdgeY)), (pEdgeY) = 0) : 0);
+    pEdgeY = nil;
     // inlining of macro ABC_FREE
-    ((pVertX) ? (free((char *) (pVertX)), (pVertX) = 0) : 0);
+    pVertX = nil;
     // inlining of macro ABC_FREE
-    ((pVertY) ? (free((char *) (pVertY)), (pVertY) = 0) : 0);
+    pVertY = nil;
 }
 
 
@@ -1719,9 +1719,9 @@ func Emb_ManDumpGnuplotPrepare(p *Emb_Man_t) *Vec_Int_t {
         assert(fStart == 0, "fStart == 0");
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = "";
     // inlining of macro ABC_FREE
-    ((ppRows) ? (free((char *) (ppRows)), (ppRows) = 0) : 0);
+    ppRows = nil;
     return vLines;
 }
 

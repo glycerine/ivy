@@ -223,8 +223,7 @@ func xSAT_SolverParseDimacs(pFile *os.File, p **xSAT_Solver_t) int32 {
     var Value int32;
     pText = xSAT_FileRead( pFile );
     Value = xSAT_ParseDimacs( pText, p );
-    // inlining of macro ABC_FREE
-    ((pText) ? (free((char *) (pText)), (pText) = 0) : 0);
+    pText = nil;
     return Value;
 }
 

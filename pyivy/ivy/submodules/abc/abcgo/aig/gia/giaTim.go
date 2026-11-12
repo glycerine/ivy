@@ -936,7 +936,7 @@ func Gia_ManDupCollapse(p *Gia_Man_t, pBoxes *Gia_Man_t, vBoxPres *Vec_Int_t, fS
         pNew.nConstrs = pTemp.nConstrs; pTemp.nConstrs = 0;
         Gia_ManStop( pTemp );
         // inlining of macro ABC_FREE
-        ((pInit) ? (free((char *) (pInit)), (pInit) = 0) : 0);
+        pInit = "";
     }
     return pNew;
 }
@@ -956,7 +956,7 @@ func Gia_ManVerifyWithBoxes(pGia *Gia_Man_t, nBTLimit int32, nTimeLim int32, fSe
     var Status int32    = -1;
     var pSpec, pGia0, pGia1, pMiter *Gia_Man_t;
     var vBoxPres *Vec_Int_t  = nil;
-    if pFileSpec == nil && pGia.pSpec == nil {
+    if pFileSpec == nil && pGia.pSpec == "" {
         fmt.Printf("Spec file is not given. Use standard flow.\n");
         return Status;
     }
@@ -1013,7 +1013,7 @@ func Gia_ManVerifyWithBoxes(pGia *Gia_Man_t, nBTLimit int32, nTimeLim int32, fSe
         Gia_AigerWrite( pGia0, pFileName0, 0, 0, 0 );
         Gia_AigerWrite( pGia1, pFileName1, 0, 0, 0 );
         // inlining of macro ABC_FREE
-        ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);
+        pNameGeneric = "";
         printf( "Dumped two parts of the miter into files \"%s\" and \"%s\".\n", pFileName0, pFileName1 );
     }
     // compute the miter

@@ -530,8 +530,7 @@ func Dau_DecFindSets(pInit *word, nVars int32) *Vec_Int_t {
     }
     vSets = Dau_DecFindSets_int( pInit, nVars, pSched );
     for  v = 2; v < nVars; v++  {
-        // inlining of macro ABC_FREE
-        ((pSched[v]) ? (free((char *) (pSched[v])), (pSched[v]) = 0) : 0);
+        pSched[v] = nil;
     }
     return vSets;
 }
@@ -824,8 +823,7 @@ pPermD[nVarsD++] = v; }
     memset( pDec, 0, sizeof(word) * Abc_TtWordNum(nVarsD) );
     memset( pComp, 0, sizeof(word) * Abc_TtWordNum(nVarsC) );
     status = Dau_DecCheckSetTop( p, nVars, nVarsF, nVarsU + nVarsS, nVarsS, nVarsS ? Abc_InfoMask(nVarsS) : 0, pSched, pDec, pComp );
-    // inlining of macro ABC_FREE
-    ((pSched) ? (free((char *) (pSched)), (pSched) = 0) : 0);
+    pSched = nil;
     if !status {
         fmt.Printf("  Decomposition does not exist\n");
         return 0;

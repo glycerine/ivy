@@ -88,8 +88,7 @@ func Fpga_LutLibRead(FileName string, fVerbose int32) *Fpga_LutLib_t {
             continue; }
         if i != atoi(pToken) {
             fmt.Printf("Error in the LUT library file \"%s\".\n", FileName);
-            // inlining of macro ABC_FREE
-            ((p) ? (free((char *) (p)), (p) = 0) : 0);
+            p = nil;
             return nil;
         }
 
@@ -182,10 +181,8 @@ func Fpga_LutLibDup(p *Fpga_LutLib_t) *Fpga_LutLib_t {
 func Fpga_LutLibFree(pLutLib *Fpga_LutLib_t) {
     if pLutLib == nil {
         return; }
-    // inlining of macro ABC_FREE
-    ((pLutLib.pName) ? (free((char *) (pLutLib.pName)), (pLutLib.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pLutLib) ? (free((char *) (pLutLib)), (pLutLib) = 0) : 0);
+    pLutLib.pName = nil;
+    pLutLib = nil;
 }
 
 

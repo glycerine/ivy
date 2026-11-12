@@ -1,162 +1,150 @@
 package aig
 
-/**CFile****************************************************************
-
-  FileName    [aigFrames.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Performs timeframe expansion of the AIG.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigFrames.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Aig_ObjFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return pObjMap[nFs*pObj.Id + i];  }
-func Aig_ObjSetFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { pObjMap[nFs*pObj.Id + i] = pNode; }
-
-func Aig_ObjChild0Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin0(pObj) {
-    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));
-} else {
-    return nil;
-}  }
-func Aig_ObjChild1Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin1(pObj) {
-    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));
-} else {
-    return nil;
-}  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs timeframe expansion of the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManFrames(pAig *Aig_Man_t, nFs int32, fInit int32, fOuts int32, fRegs int32, fEnlarge int32, ppObjMap ***Aig_Obj_t) *Aig_Man_t {
-    var pFrames *Aig_Man_t;
-    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;
-    var pObjMap **Aig_Obj_t;
-    var i, f int32;
-
-    // create mapping for the frames nodes
-    // inlining of macro ABC_ALLOC
-    pObjMap  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFs * Aig_ManObjNumMax(pAig))));
-    memset( pObjMap, 0, sizeof(Aig_Obj_t *) * nFs * Aig_ManObjNumMax(pAig) );
-
-    // start the fraig package
-    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFs );
-    pFrames.pName = Abc_UtilStrsav( pAig.pName );
-    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );
-    // map constant nodes
-    for  f = 0; f < nFs; f++  {
-        Aig_ObjSetFrames( pObjMap, nFs, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );
-    }
-    // create PI nodes for the frames
-    for  f = 0; f < nFs; f++  {
-        // inlining of macro Aig_ManForEachPiSeq
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, Aig_ObjCreateCi(pFrames) );
-        }
-    }
-    // set initial state for the latches
-    if fInit != 0 {
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ManConst0(pFrames) );
-        }
-    
-    } else {
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ObjCreateCi(pFrames) );
-        }
-    }
-
-    // add timeframes
-    for  f = 0; f < nFs; f++  {
-//        printf( "Frame = %d.\n", f );
-        // add internal nodes of this frame
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-//            Aig_Obj_t * pFanin0 = Aig_ObjChild0Frames(pObjMap,nFs,pObj,f);
-//            Aig_Obj_t * pFanin1 = Aig_ObjChild1Frames(pObjMap,nFs,pObj,f);
-//            printf( "Node = %3d.  Fanin0 = %3d. Fanin1 = %3d.\n", pObj->Id, Aig_Regular(pFanin0)->Id, Aig_Regular(pFanin1)->Id );
-            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f), Aig_ObjChild1Frames(pObjMap,nFs,pObj,f) );
-            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );
-        }
-        }
-        // set the latch inputs and copy them into the latch outputs of the next frame
-        // inlining of macro Aig_ManForEachLiLoSeq
-        for  i = 0; (i < Aig_ManRegNum(pAig)) && (((pObjLi) = Aig_ManLi(pAig, i)), 1)            && (((pObjLo)=Aig_ManLo(pAig, i)), 1); i++  {
-            pObjNew = Aig_ObjChild0Frames(pObjMap,nFs,pObjLi,f);
-            if f < nFs - 1 {
-                Aig_ObjSetFrames( pObjMap, nFs, pObjLo, f+1, pObjNew ); }
-        }
-    }
-    if fOuts != 0 {
-        for  f = fEnlarge?nFs-1:0; f < nFs; f++  {
-            // inlining of macro Aig_ManForEachPoSeq
-            // inlining of macro Vec_PtrForEachEntryStop
-            for  i = 0; (i < Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-                pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f) );
-                Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );
-            }
-        }
-    }
-    if fRegs != 0 {
-        pFrames.nRegs = pAig.nRegs;
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig); (i < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,fEnlarge?0:nFs-1) );
-            Aig_ObjSetFrames( pObjMap, nFs, pObj, nFs-1, pObjNew );
-        }
-        Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );
-    }
-    Aig_ManCleanup( pFrames );
-    // return the new manager
-    if ppObjMap {
-        *ppObjMap = pObjMap;
-    } else {
-        // inlining of macro ABC_FREE
-        ((pObjMap) ? (free((char *) (pObjMap)), (pObjMap) = 0) : 0); }
-    return pFrames;
+func frameIndex(mapping []Edge, frames int32, e Edge, frame int32) int {
+	if frames <= 0 || frame < 0 || frame >= frames {
+		panic("aig: invalid frame index")
+	}
+	index := int(frames)*e.NodeID() + int(frame)
+	if index < 0 || index >= len(mapping) {
+		panic("aig: frame map outside range")
+	}
+	return index
+}
+func Aig_ObjFrames(mapping []Edge, frames int32, e Edge, frame int32) Edge {
+	return mapping[frameIndex(mapping, frames, e, frame)]
+}
+func Aig_ObjSetFrames(mapping []Edge, frames int32, e Edge, frame int32, node Edge) {
+	mapping[frameIndex(mapping, frames, e, frame)] = node
+}
+func Aig_ObjChild0Frames(p *Graph, mapping []Edge, frames int32, e Edge, frame int32) Edge {
+	return frameChild(p, mapping, frames, e, frame, 0)
+}
+func Aig_ObjChild1Frames(p *Graph, mapping []Edge, frames int32, e Edge, frame int32) Edge {
+	return frameChild(p, mapping, frames, e, frame, 1)
+}
+func frameChild(p *Graph, mapping []Edge, frames int32, e Edge, frame int32, pin int) Edge {
+	fanins := nodeFanins(*p.node(e))
+	if pin >= len(fanins) {
+		return InvalidEdge
+	}
+	child := fanins[pin]
+	value := Aig_ObjFrames(mapping, frames, child, frame)
+	if value == InvalidEdge {
+		return value
+	}
+	if child.Complemented() {
+		value = value.Not()
+	}
+	return value
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Aig_ManFrames unrolls sequential state with ABC's original flag conventions.
+// init fixes frame-zero state to zero; outs exports ordinary outputs; regs
+// appends latch inputs. enlarge selects last-frame POs and first-frame LIs.
+func Aig_ManFrames(p *Graph, frames, init, outs, regs, enlarge int32, returnedMap *[]Edge) *Graph {
+	if frames <= 0 {
+		panic("aig: frame count must be positive")
+	}
+	if p.nRegs < 0 || int(p.nRegs) > len(p.inputs) || int(p.nRegs) > len(p.outputs) {
+		panic("aig: invalid sequential terminal counts")
+	}
+	mapping := make([]Edge, len(p.nodes)*int(frames))
+	for i := range mapping {
+		mapping[i] = InvalidEdge
+	}
+	q := Aig_ManStart(int32(len(p.nodes)) * frames)
+	q.Name, q.Spec = p.Name, p.Spec
+	piCount, poCount := len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs)
+	for f := int32(0); f < frames; f++ {
+		Aig_ObjSetFrames(mapping, frames, p.Const1(), f, q.Const1())
+		for _, e := range p.inputs[:piCount] {
+			Aig_ObjSetFrames(mapping, frames, e, f, q.NewInput())
+		}
+	}
+	for _, e := range p.inputs[piCount:] {
+		value := q.Const0()
+		if init == 0 {
+			value = q.NewInput()
+		}
+		Aig_ObjSetFrames(mapping, frames, e, 0, value)
+	}
+	active := make(map[int]bool)
+	var visit func(Edge, int32) Edge
+	visit = func(e Edge, f int32) Edge {
+		index := frameIndex(mapping, frames, e, f)
+		value := mapping[index]
+		if value == InvalidEdge {
+			if active[index] {
+				panic("aig: cyclic frame expansion")
+			}
+			active[index] = true
+			n := *p.node(e)
+			switch n.Kind {
+			case And, ExclusiveOr:
+				a, b := visit(n.Fanins[0], f), visit(n.Fanins[1], f)
+				if n.Kind == And {
+					value = q.AND(a, b)
+				} else {
+					value = q.NewXor(a, b)
+				}
+			case Output, Buffer:
+				value = visit(n.Fanins[0], f)
+			default:
+				panic("aig: unmapped frame terminal")
+			}
+			delete(active, index)
+			mapping[index] = value
+		}
+		if e.Complemented() {
+			value = value.Not()
+		}
+		return value
+	}
+	for f := int32(0); f < frames; f++ {
+		// Include every internal object as in the source; cleanup later removes
+		// unused cones while keeping frame-map indices stable.
+		for id, n := range p.nodes {
+			if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+				visit(Edge(id)<<1, f)
+			}
+		}
+		if f+1 < frames {
+			for i, e := range p.inputs[piCount:] {
+				next := visit(p.outputDriver(p.outputs[poCount+i]), f)
+				Aig_ObjSetFrames(mapping, frames, e, f+1, next)
+			}
+		}
+	}
+	if outs != 0 {
+		first := int32(0)
+		if enlarge != 0 {
+			first = frames - 1
+		}
+		for f := first; f < frames; f++ {
+			for _, e := range p.outputs[:poCount] {
+				output := q.AddOutput(visit(p.outputDriver(e), f))
+				Aig_ObjSetFrames(mapping, frames, e, f, output)
+			}
+		}
+	}
+	if regs != 0 {
+		sourceFrame := frames - 1
+		if enlarge != 0 {
+			sourceFrame = 0
+		}
+		for _, e := range p.outputs[poCount:] {
+			output := q.AddOutput(visit(p.outputDriver(e), sourceFrame))
+			Aig_ObjSetFrames(mapping, frames, e, frames-1, output)
+		}
+		// Initialized expansions have no state CIs and are combinational BMC
+		// managers; do not label ordinary PIs as register terminals.
+		if init == 0 {
+			q.nRegs = p.nRegs
+		}
+	}
+	Aig_ManCleanup(q)
+	if returnedMap != nil {
+		*returnedMap = mapping
+	}
+	return q
+}

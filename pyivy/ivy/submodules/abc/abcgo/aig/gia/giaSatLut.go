@@ -250,7 +250,7 @@ func Sbl_ManStop(p *Sbl_Man_t) {
     Vec_IntFree( p.vPolar );
     // other
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

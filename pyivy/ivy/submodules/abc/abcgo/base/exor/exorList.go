@@ -1154,14 +1154,10 @@ int AllocateQueques( int nPlaces )
 func DelocateQueques() {
     var i int32;
     for  i = 0; i < 3; i++  {
-        // inlining of macro ABC_FREE
-        ((s_Que[i].pC1) ? (free((char *) (s_Que[i].pC1)), (s_Que[i].pC1) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s_Que[i].pC2) ? (free((char *) (s_Que[i].pC2)), (s_Que[i].pC2) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s_Que[i].ID1) ? (free((char *) (s_Que[i].ID1)), (s_Que[i].ID1) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s_Que[i].ID2) ? (free((char *) (s_Que[i].ID2)), (s_Que[i].ID2) = 0) : 0);
+        s_Que[i].pC1 = nil;
+        s_Que[i].pC2 = nil;
+        s_Que[i].ID1 = nil;
+        s_Que[i].ID2 = nil;
     }
 }
 

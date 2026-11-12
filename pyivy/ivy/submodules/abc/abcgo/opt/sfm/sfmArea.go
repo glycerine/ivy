@@ -130,8 +130,7 @@ func Abc_NtkPrecomputeCellPairs(pCells *Mio_Cell2_t, nCells int32) *Vec_Int_t {
     }
 
     for  i = 1; i <= 6; i++  {
-        // inlining of macro ABC_FREE
-        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);
+        pPerm[i] = nil;
     }
     if Count != 0 {
         fmt.Printf("In this library, %d cell pairs have equal functions (for example, %s and %s).\n", Count/2, pCells[iGate1].pName, pCells[iGate2].pName); }
@@ -184,8 +183,7 @@ func Abc_NtkPrecomputeCellPairsTest() {
     assert(nCells == Vec_IntSize(vFirst), "nCells == Vec_IntSize(vFirst)");
     Vec_IntFree( vFirst );
     Vec_IntFree( vInfo );
-    // inlining of macro ABC_FREE
-    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);
+    pCells = nil;
 }
 
 func Abc_NodeCheckFanoutHasFanin(pNode *Abc_Obj_t, pFanin *Abc_Obj_t) int32 {
@@ -392,8 +390,7 @@ func Abc_NtkChangePerform(pNtk *Abc_Ntk_t, fVerbose int32) {
 
     Vec_IntFree( vFirst );
     Vec_IntFree( vInfo );
-    // inlining of macro ABC_FREE
-    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);
+    pCells = nil;
 
     if fVerbose != 0 {
         fmt.Printf("Total gain in area = %6.2f after %d changes (including %d inverters). ", Scl_Int2Flt(GainAll), Count, CountInv); }

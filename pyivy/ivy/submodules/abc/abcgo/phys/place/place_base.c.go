@@ -1,380 +1,228 @@
+// Placement database and geometry, ported from place_base.c (Aaron P. Hurst).
 package place
 
-/*===================================================================*/
-//  
-//     place_base.c
-//
-//        Aaron P. Hurst, 2003-2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
+var g_place_numCells, g_place_numNets int32
+var g_place_rowHeight float32 = 1
+var g_place_coreBounds, g_place_padBounds Rect
+var g_place_concreteCells []*ConcreteCell
+var g_place_concreteCellsSize int32
+var g_place_concreteNets []*ConcreteNet
+var g_place_concreteNetsSize int32
 
-//#include <stdlib.h>
-//#include <limits.h>
-//#include <assert.h>
-//#include <string.h>
-
-//#include "place_base.h"
-//#include "place_gordian.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// --------------------------------------------------------------------
-// Global variables
-//
-// --------------------------------------------------------------------
-
-var g_place_numCells int32;
-var g_place_numNets int32;
-var g_place_rowHeight float32 = 1.0;
-
-var g_place_coreBounds Rect;
-var g_place_padBounds Rect;
-
-var g_place_concreteCells **ConcreteCell = nil;
-var g_place_concreteCellsSize int32;
-var g_place_concreteNets **ConcreteNet = nil;
-var g_place_concreteNetsSize int32;
-
-
-// --------------------------------------------------------------------
-// getNetBBox()
-//
-/// \brief Returns the bounding box of a net.
-//
-// --------------------------------------------------------------------
 func getNetBBox(net *ConcreteNet) Rect {
-  var t int32;
-  var r Rect;
-
-  assert((net != nil), "net");
-
-  r.x = r.y = INT_MAX;
-  r.w = r.h = -INT_MAX;
-  for t=0; t<net.m_numTerms; t++ {
-    if net.m_terms[t].m_x < r.x {
-        r.x = net.m_terms[t].m_x;
-    } else {
-        r.x = r.x;
-    }
-    if net.m_terms[t].m_y < r.y {
-        r.y = net.m_terms[t].m_y;
-    } else {
-        r.y = r.y;
-    }
-    if net.m_terms[t].m_x > r.w {
-        r.w = net.m_terms[t].m_x;
-    } else {
-        r.w = r.w;
-    }
-    if net.m_terms[t].m_y > r.h {
-        r.h = net.m_terms[t].m_y;
-    } else {
-        r.h = r.h;
-    }
-  }
-  r.w -= r.x; r.h -= r.y;
-  return r;
+	if net == nil {
+		panic("nil net")
+	}
+	if net.m_numTerms == 0 {
+		return Rect{}
+	}
+	terms := net.m_terms[:net.m_numTerms]
+	first := terms[0]
+	if first == nil {
+		panic("nil net terminal")
+	}
+	left, right, bottom, top := first.m_x, first.m_x, first.m_y, first.m_y
+	for _, cell := range terms[1:] {
+		if cell == nil {
+			panic("nil net terminal")
+		}
+		left = min(left, cell.m_x)
+		right = max(right, cell.m_x)
+		bottom = min(bottom, cell.m_y)
+		top = max(top, cell.m_y)
+	}
+	return Rect{x: left, y: bottom, w: right - left, h: top - bottom}
 }
-
-
-// --------------------------------------------------------------------
-// getNetWirelength()
-//
-/// \brief Returns the half-perimeter wirelength of a net.
-//
-// --------------------------------------------------------------------
-func getNetWirelength(net *ConcreteNet) float32 {
-  var r Rect;
-
-  assert((net != nil), "net");
-
-  r = getNetBBox(net);
-  return r.w+r.h;
-}
-
-
-// --------------------------------------------------------------------
-// getTotalWirelength()
-//
-/// \brief Returns the total HPWL of all nets.
-//
-// --------------------------------------------------------------------
+func getNetWirelength(net *ConcreteNet) float32 { r := getNetBBox(net); return r.w + r.h }
 func getTotalWirelength() float32 {
-  var r float32;
-  var n int32;
-  for n=0; n<g_place_numNets; n++ { if g_place_concreteNets[n] {
-    r += getNetWirelength(g_place_concreteNets[n]); }
-  }
-  return r;
+	var total float32
+	for _, net := range g_place_concreteNets[:g_place_numNets] {
+		if net != nil {
+			total += getNetWirelength(net)
+		}
+	}
+	return total
 }
-
-
-// --------------------------------------------------------------------
-// getCellArea()
-//
-// --------------------------------------------------------------------
 func getCellArea(cell *ConcreteCell) float32 {
-  assert((cell != nil), "cell");
-  return cell.m_parent.m_width*cell.m_parent.m_height;
+	if cell == nil || cell.m_parent == nil {
+		panic("cell has no type")
+	}
+	return cell.m_parent.m_width * cell.m_parent.m_height
 }
-
-
-// --------------------------------------------------------------------
-// addConcreteNet()
-//
-/// \brief Adds a net to the placement database.
-///
-/// The net object must already be allocated and the ID must be set
-/// appropriately.
-//
-// --------------------------------------------------------------------
+func growPlacementSlots[T any](slots []*T, id int32) []*T {
+	if id < 0 {
+		panic("negative placement id")
+	}
+	if int(id) < len(slots) {
+		return slots
+	}
+	size := int64(id)*3/2 + 20
+	if size > 1<<31-1 || size > int64(int(^uint(0)>>1)) {
+		panic("placement id too large")
+	}
+	return append(slots, make([]*T, int(size)-len(slots))...)
+}
 func addConcreteNet(net *ConcreteNet) {
-  assert((net != nil), "net");
-  assert(net.m_id >= 0, "net.m_id >= 0");
-  if net.m_id >= g_place_concreteNetsSize {
-    if net.m_id > g_place_concreteNetsSize {
-        g_place_concreteNetsSize = net.m_id;
-    } else {
-        g_place_concreteNetsSize = g_place_concreteNetsSize;
-    }
-    g_place_concreteNetsSize *= 1.5;
-    g_place_concreteNetsSize += 20;
-    g_place_concreteNets = (ConcreteNet**)realloc(g_place_concreteNets, 
-                 sizeof(ConcreteNet*)*g_place_concreteNetsSize);
-    assert(g_place_concreteNets, "g_place_concreteNets");
-  }
-  if net.m_id >= g_place_numNets {
-    memset(&(g_place_concreteNets[g_place_numNets]), 0,
-                sizeof(ConcreteNet*)*(net.m_id+1-g_place_numNets));
-    g_place_numNets = net.m_id+1;
-    assert(g_place_numNets <= g_place_concreteNetsSize, "g_place_numNets <= g_place_concreteNetsSize");
-  }
-  g_place_concreteNets[net.m_id] = net;
+	if net == nil {
+		panic("nil net")
+	}
+	g_place_concreteNets = growPlacementSlots(g_place_concreteNets, net.m_id)
+	g_place_concreteNetsSize = int32(len(g_place_concreteNets))
+	g_place_numNets = max(g_place_numNets, net.m_id+1)
+	g_place_concreteNets[net.m_id] = net
 }
-
-
-// --------------------------------------------------------------------
-// delConcreteNet()
-//
-/// Does not deallocate memory.
-// --------------------------------------------------------------------
 func delConcreteNet(net *ConcreteNet) {
-  assert((net != nil), "net");
-  g_place_concreteNets[net.m_id] = 0;
-  for !g_place_concreteNets[g_place_numNets-1] { g_place_numNets--; }
+	if net == nil || net.m_id < 0 || net.m_id >= g_place_numNets {
+		panic("invalid net deletion")
+	}
+	if g_place_concreteNets[net.m_id] != net {
+		panic("net is not registered")
+	}
+	g_place_concreteNets[net.m_id] = nil
+	for g_place_numNets > 0 && g_place_concreteNets[g_place_numNets-1] == nil {
+		g_place_numNets--
+	}
 }
-
-
-// --------------------------------------------------------------------
-// addConcreteCell()
-//
-/// The cell object must already be allocated and the ID must be set
-/// appropriately.
-//
-// --------------------------------------------------------------------
 func addConcreteCell(cell *ConcreteCell) {
-  assert((cell != nil), "cell");
-  assert(cell.m_id >= 0, "cell.m_id >= 0");
-  if cell.m_id >= g_place_concreteCellsSize {
-    if cell.m_id > g_place_concreteCellsSize {
-        g_place_concreteCellsSize = cell.m_id;
-    } else {
-        g_place_concreteCellsSize = g_place_concreteCellsSize;
-    }
-    g_place_concreteCellsSize *= 1.5;
-    g_place_concreteCellsSize += 20;
-    g_place_concreteCells = (ConcreteCell**)realloc(g_place_concreteCells, 
-              sizeof(ConcreteCell*)*g_place_concreteCellsSize);
-    assert(g_place_concreteCells, "g_place_concreteCells");
-  }
-  if cell.m_id >= g_place_numCells {
-    memset(&(g_place_concreteCells[g_place_numCells]), 0,
-              sizeof(ConcreteCell*)*(cell.m_id+1-g_place_numCells));
-    g_place_numCells = cell.m_id+1;
-  }
-  g_place_concreteCells[cell.m_id] = cell;
+	if cell == nil {
+		panic("nil cell")
+	}
+	g_place_concreteCells = growPlacementSlots(g_place_concreteCells, cell.m_id)
+	g_place_concreteCellsSize = int32(len(g_place_concreteCells))
+	g_place_numCells = max(g_place_numCells, cell.m_id+1)
+	g_place_concreteCells[cell.m_id] = cell
 }
-
-
-// --------------------------------------------------------------------
-// delCellFromPartition()
-//
-// --------------------------------------------------------------------
 func delCellFromPartition(cell *ConcreteCell, p *Partition) {
-  var c int32;
-  var found bool  = false;
-
-  assert((cell != nil), "cell");
-  assert((p != nil), "p");
-
-  for c=0; c<p.m_numMembers; c++ { 
-    if p.m_members[c] == cell {
-      p.m_members[c] = 0;
-      p.m_area -= getCellArea(cell);
-      found = true;
-      break;
-    }
-  }
-     
-  if !found { return; }
-
-  if !p.m_leaf {
-    delCellFromPartition(cell, p.m_sub1);
-    delCellFromPartition(cell, p.m_sub2);
-  }
+	if cell == nil || p == nil {
+		panic("nil partition deletion")
+	}
+	for i, member := range p.m_members[:p.m_numMembers] {
+		if member != cell {
+			continue
+		}
+		p.m_members[i] = nil
+		p.m_area -= getCellArea(cell)
+		if !p.m_leaf {
+			delCellFromPartition(cell, p.m_sub1)
+			delCellFromPartition(cell, p.m_sub2)
+		}
+		return
+	}
 }
-
-
-// --------------------------------------------------------------------
-// delConcreteCell()
-//
-/// \brief Removes a cell from the placement database.
-///
-/// Does not deallocate memory.
-///
-/// Important: does not modify nets that may point to this
-/// cell. If these are connections are not removed, segmentation faults 
-/// and other nasty errors will occur.
-//
-// --------------------------------------------------------------------
 func delConcreteCell(cell *ConcreteCell) {
-  assert((cell != nil), "cell");
-  g_place_concreteCells[cell.m_id] = 0;
-  for !g_place_concreteCells[g_place_numCells-1] { g_place_numCells--; }
-
-  if g_place_rootPartition { delCellFromPartition(cell, g_place_rootPartition); }
+	if cell == nil || cell.m_id < 0 || cell.m_id >= g_place_numCells {
+		panic("invalid cell deletion")
+	}
+	if g_place_concreteCells[cell.m_id] != cell {
+		panic("cell is not registered")
+	}
+	g_place_concreteCells[cell.m_id] = nil
+	for g_place_numCells > 0 && g_place_concreteCells[g_place_numCells-1] == nil {
+		g_place_numCells--
+	}
+	if g_place_rootPartition != nil {
+		delCellFromPartition(cell, g_place_rootPartition)
+	}
+}
+func comparePlacementFloat(a, b float32) int32 {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+func comparePlacementID(a, b int32) int32 {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+func netPositionCompare(a, b *ConcreteNet, axis int32) int32 {
+	if a == nil {
+		if b == nil {
+			return 0
+		}
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+	ra, rb := getNetBBox(a), getNetBBox(b)
+	switch axis {
+	case 0:
+		return comparePlacementFloat(ra.x, rb.x)
+	case 1:
+		return comparePlacementFloat(ra.x+ra.w, rb.x+rb.w)
+	case 2:
+		return comparePlacementFloat(ra.y+ra.h, rb.y+rb.h)
+	default:
+		return comparePlacementFloat(ra.y, rb.y)
+	}
+}
+func netSortByL(a, b *ConcreteNet) int32 { return netPositionCompare(a, b, 0) }
+func netSortByR(a, b *ConcreteNet) int32 { return netPositionCompare(a, b, 1) }
+func netSortByB(a, b *ConcreteNet) int32 { return netPositionCompare(a, b, 2) }
+func netSortByT(a, b *ConcreteNet) int32 { return netPositionCompare(a, b, 3) }
+func netSortByID(a, b *ConcreteNet) int32 {
+	if a == nil {
+		if b == nil {
+			return 0
+		}
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+	return comparePlacementID(a.m_id, b.m_id)
+}
+func cellSortByX(a, b *ConcreteCell) int32 {
+	if a == nil {
+		if b == nil {
+			return 0
+		}
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+	return comparePlacementFloat(a.m_x, b.m_x)
+}
+func cellSortByY(a, b *ConcreteCell) int32 {
+	if a == nil {
+		if b == nil {
+			return 0
+		}
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+	return comparePlacementFloat(a.m_y, b.m_y)
+}
+func cellSortByID(a, b *ConcreteCell) int32 {
+	if a == nil {
+		if b == nil {
+			return 0
+		}
+		return -1
+	}
+	if b == nil {
+		return 1
+	}
+	return comparePlacementID(a.m_id, b.m_id)
 }
 
-
-// --------------------------------------------------------------------
-// netSortByX...
-//
-/// \brief Sorts nets by position of one of its corners.
-//
-/// These are for use with qsort().
-///
-/// Can tolerate pointers to NULL objects.
-///
-// --------------------------------------------------------------------
-func netSortByL(a any, b any) int32 {
-  ConcreteNet *pa = *(ConcreteNet **)a;
-  ConcreteNet *pb = *(ConcreteNet **)b;
-  var ba, bb Rect;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  ba = getNetBBox(pa);
-bb = getNetBBox(pb);
-  if ba.x < bb.x { return -1; }
-  if ba.x > bb.x { return 1; }
-  return 0;
-}
-
-func netSortByR(a any, b any) int32 {
-  ConcreteNet *pa = *(ConcreteNet **)a;
-  ConcreteNet *pb = *(ConcreteNet **)b;
-  var ba, bb Rect;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  ba = getNetBBox(pa);
-bb = getNetBBox(pb);
-  if ba.x + ba.w < bb.x + bb.w { return -1; }
-  if ba.x + ba.w > bb.x + bb.w { return 1; }
-  return 0;
-}
-
-func netSortByB(a any, b any) int32 {
-  ConcreteNet *pa = *(ConcreteNet **)a;
-  ConcreteNet *pb = *(ConcreteNet **)b;
-  var ba, bb Rect;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  ba = getNetBBox(pa);
-bb = getNetBBox(pb);
-  if ba.y + ba.h < bb.y + bb.h { return -1; }
-  if ba.y + ba.h > bb.y + bb.h { return 1; }
-  return 0;
-}
-
-func netSortByT(a any, b any) int32 {
-  ConcreteNet *pa = *(ConcreteNet **)a;
-  ConcreteNet *pb = *(ConcreteNet **)b;
-  var ba, bb Rect;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  ba = getNetBBox(pa);
-bb = getNetBBox(pb);
-  if ba.y < bb.y { return -1; }
-  if ba.y > bb.y { return 1; }
-  return 0;
-}
-
-func netSortByID(a any, b any) int32 {
-  ConcreteNet *pa = *(ConcreteNet **)a;
-  ConcreteNet *pb = *(ConcreteNet **)b;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  if pa.m_id < pb.m_id { return -1; }
-  if pa.m_id > pb.m_id { return 1; }
-  return 0;
-}
-
-
-// --------------------------------------------------------------------
-// cellSortByX...
-//
-/// \brief Sorts cells by either position coordinate.
-//
-/// These are for use with qsort().
-///
-/// Can tolerate pointers to NULL objects.
-//
-// --------------------------------------------------------------------
-func cellSortByX(a any, b any) int32 {
-  ConcreteCell *pa = *(ConcreteCell **)a;
-  ConcreteCell *pb = *(ConcreteCell **)b;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  if pa.m_x < pb.m_x { return -1; }
-  if pa.m_x > pb.m_x { return 1; }
-  return 0;
-}
-
-func cellSortByY(a any, b any) int32 {
-  ConcreteCell *pa = *(ConcreteCell **)a;
-  ConcreteCell *pb = *(ConcreteCell **)b;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  if pa.m_y < pb.m_y { return -1; }
-  if pa.m_y > pb.m_y { return 1; }
-  return 0;
-}
-
-func cellSortByID(a any, b any) int32 {
-  ConcreteCell *pa = *(ConcreteCell **)a;
-  ConcreteCell *pb = *(ConcreteCell **)b;
-
-  if !pa && !pb { return 0;
-  } else if !pa { return -1;
-  } else if !pb { return 1; }
-  if pa.m_id < pb.m_id { return -1; }
-  if pa.m_id > pb.m_id { return 1; }
-  return 0;
-}
-//ABC_NAMESPACE_IMPL_END
-
+// Exported entry points provide typed Go access to the placement database.
+func AddCell(cell *ConcreteCell)             { addConcreteCell(cell) }
+func DeleteCell(cell *ConcreteCell)          { delConcreteCell(cell) }
+func AddNet(net *ConcreteNet)                { addConcreteNet(net) }
+func DeleteNet(net *ConcreteNet)             { delConcreteNet(net) }
+func NetBounds(net *ConcreteNet) Rect        { return getNetBBox(net) }
+func NetWirelength(net *ConcreteNet) float32 { return getNetWirelength(net) }
+func TotalWirelength() float32               { return getTotalWirelength() }
+func CellArea(cell *ConcreteCell) float32    { return getCellArea(cell) }

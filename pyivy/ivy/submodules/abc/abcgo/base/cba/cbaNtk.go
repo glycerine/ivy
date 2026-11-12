@@ -338,8 +338,7 @@ func Cba_NtkPrintDistribOld(p *Cba_Ntk_t) {
     Cba_ManCreatePrimMap( p.pDesign.pTypeNames );
     Cba_NtkCollectDistrib( p, pCounts, pUserCounts );
     Cba_NtkPrintDistribStat( p, pCounts, pUserCounts );
-    // inlining of macro ABC_FREE
-    ((pUserCounts) ? (free((char *) (pUserCounts)), (pUserCounts) = 0) : 0);
+    pUserCounts = nil;
 }
 
 func Cba_ManPrintDistribStat(p *Cba_Man_t, pCounts *int32, pUserCounts *int32) {
@@ -367,8 +366,7 @@ func Cba_ManPrintDistrib(p *Cba_Man_t) {
         Cba_NtkCollectDistrib( pNtk, pCounts, pUserCounts );
     }
     Cba_ManPrintDistribStat( p, pCounts, pUserCounts );
-    // inlining of macro ABC_FREE
-    ((pUserCounts) ? (free((char *) (pUserCounts)), (pUserCounts) = 0) : 0);
+    pUserCounts = nil;
 }
 
 /**Function*************************************************************
@@ -770,12 +768,9 @@ func Cba_ManGetClpStats(p *Cba_Man_t, nObjs *int32, nFins *int32, nFons *int32) 
     *nObjs = Cba_NtkPioNum(pRoot) + pCountN[Cba_NtkId(pRoot)];
     *nFins = Cba_NtkPoNum(pRoot)  + pCountI[Cba_NtkId(pRoot)];
     *nFons = Cba_NtkPiNum(pRoot)  + pCountO[Cba_NtkId(pRoot)];
-    // inlining of macro ABC_FREE
-    ((pCountN) ? (free((char *) (pCountN)), (pCountN) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pCountI) ? (free((char *) (pCountI)), (pCountI) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pCountO) ? (free((char *) (pCountO)), (pCountO) = 0) : 0);
+    pCountN = nil;
+    pCountI = nil;
+    pCountO = nil;
 }
 
 /**Function*************************************************************

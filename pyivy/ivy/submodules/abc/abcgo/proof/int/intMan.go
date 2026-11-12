@@ -175,8 +175,7 @@ Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int
     Inter_ManClean( p );
     Vec_PtrFreeP( &p.vInters );
     Vec_IntFreeP( &p.vVarsAB );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

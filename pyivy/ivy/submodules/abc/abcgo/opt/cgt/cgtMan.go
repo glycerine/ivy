@@ -163,8 +163,7 @@ func Cgt_ManStop(p *Cgt_Man_t) {
         Vec_VecFree( p.vGatesAll ); }
     if p.vSuppsInv {
         Vec_VecFree( p.vSuppsInv ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

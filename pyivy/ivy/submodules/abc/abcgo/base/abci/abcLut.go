@@ -335,14 +335,10 @@ func Abc_ManSclStart(nLutSize int32, nCutSizeMax int32, nNodesMax int32) *Abc_Ma
 ***********************************************************************/
 func Abc_ManSclStop(p *Abc_ManScl_t) {
 //    Vec_IntFree( p->vBound );
-    // inlining of macro ABC_FREE
-    ((p.uVars) ? (free((char *) (p.uVars)), (p.uVars) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.uSims) ? (free((char *) (p.uSims)), (p.uSims) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.uCofs) ? (free((char *) (p.uCofs)), (p.uCofs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.uVars = nil;
+    p.uSims = nil;
+    p.uCofs = nil;
+    p = nil;
 }
 
 

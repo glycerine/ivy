@@ -190,7 +190,7 @@ func Gia_ManLutLevel(p *Gia_Man_t, ppLevels **int32) int32 {
     if ppLevels {
         *ppLevels = pLevels;
     } else {
-        ABC_FREE( pLevels ); }
+        pLevels = nil; }
     return Level;
 }
 
@@ -237,7 +237,7 @@ func Gia_ManLutParams(p *Gia_Man_t, pnCurLuts *int32, pnCurEdges *int32, pnCurLe
         Gia_ManForEachCo( p, pObj, k )
             if ( *pnCurLevels < pLevels[Gia_ObjFaninId0p(p, pObj)] )
                 *pnCurLevels = pLevels[Gia_ObjFaninId0p(p, pObj)];
-        ABC_FREE( pLevels );
+        pLevels = nil;
     }
 }
 
@@ -255,8 +255,8 @@ func Gia_ManLutParams(p *Gia_Man_t, pnCurLuts *int32, pnCurEdges *int32, pnCurLe
 func Gia_ManSetRefsMapped(p *Gia_Man_t) {
     var pObj *Gia_Obj_t;
     var i, k, iFan int32;
-    ABC_FREE( p.pRefs );
-    p.pRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );
+    p.Refs = nil;
+    p.Refs = ABC_CALLOC( int, Gia_ManObjNum(p) );
     Gia_ManForEachCo( p, pObj, i )
         Gia_ObjRefIncId( p, Gia_ObjFaninId0p(p, pObj) );
     Gia_ManForEachLut( p, i )
@@ -278,7 +278,7 @@ func Gia_ManSetRefsMapped(p *Gia_Man_t) {
 func Gia_ManSetLutRefs(p *Gia_Man_t) {
     var pObj *Gia_Obj_t;
     var i, k, iFan int32;
-    ABC_FREE( p.pLutRefs );
+    p.pLutRefs = nil;
     p.pLutRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );
     Gia_ManForEachCo( p, pObj, i )
         Gia_ObjLutRefIncId( p, Gia_ObjFaninId0p(p, pObj) );
@@ -484,7 +484,7 @@ func Gia_ManPrintMappingStats(p *Gia_Man_t, pDumpFile string) {
     }
     Gia_ManForEachCo( p, pObj, i )
         Ave += pLevels[Gia_ObjFaninId0p(p, pObj)];
-    ABC_FREE( pLevels );
+    pLevels = nil;
 
 #ifdef WIN32
     {
@@ -1930,7 +1930,7 @@ func Gia_ManFromIfLogic(pIfMan *If_Man_t) *Gia_Man_t {
     Vec_IntFree( vLeaves );
     Vec_IntFree( vLeaves2 );
     if pNtkCell != nil {
-        ABC_FREE( pNtkCell ); }
+        pNtkCell = nil; }
     if pSat != nil {
         sat_solver_delete(pSat); }
     if pHashed != nil {
@@ -1952,14 +1952,14 @@ func Gia_ManFromIfLogic(pIfMan *If_Man_t) *Gia_Man_t {
     assert(pNew.vMapping == nil, "pNew.vMapping == nil");
     assert(pNew.vPacking == nil, "pNew.vPacking == nil");
     assert(pNew.vConfigs == nil, "pNew.vConfigs == nil");
-    assert(pNew.pCellStr == nil, "pNew.pCellStr == nil");
+    assert(pNew.pCellStr == "", "pNew.pCellStr == nil");
     pNew.vMapping = vMapping;
     pNew.vPacking = vPacking;
     pNew.vConfigs = vConfigs;
     if vConfigs != nil {
         pNew.pCellStr = Abc_UtilStrsav( If_DsdManGetCellStr(pIfMan.pIfDsdMan) );
     } else {
-        pNew.pCellStr = nil;
+        pNew.pCellStr = "";
     }
     assert(!(vConfigs != nil) || Vec_IntSize(vConfigs) == 2 + Vec_IntEntry(vConfigs, 0) * Vec_IntEntry(vConfigs, 1), "!vConfigs || Vec_IntSize(vConfigs) == 2 + Vec_IntEntry(vConfigs, 0) * Vec_IntEntry(vConfigs, 1)");
     // verify that COs have mapping
@@ -1989,7 +1989,7 @@ func Gia_ManFromIfLogic(pIfMan *If_Man_t) *Gia_Man_t {
 
         char * pNameGen = pIfMan.pName? Extra_FileNameGeneric( pIfMan.pName ) : "nameless_";
         Buffer = fmt.Sprintf("%s_configs.txt", pNameGen);
-        ABC_FREE( pNameGen );
+        pNameGen = nil;
         pFile = fopen( Buffer, "wb" );
         if pFile == nil {
             Vec_StrFree( vConfigsStr );
@@ -2167,7 +2167,7 @@ func Gia_ManTransferTiming(p *Gia_Man_t, pGia *Gia_Man_t) {
     }
     if pGia.vConfigs || pGia.pCellStr {
         p.vConfigs     = pGia.vConfigs;     pGia.vConfigs     = nil;
-        p.pCellStr     = pGia.pCellStr;     pGia.pCellStr     = nil;
+        p.pCellStr     = pGia.pCellStr;     pGia.pCellStr     = "";
     }
     if pGia.pManTime == nil || p == pGia {
         return; }
@@ -2276,7 +2276,7 @@ func Gia_ManPerformMappingInt(p *Gia_Man_t, pPars *If_Par_t) *Gia_Man_t {
             pPars->pTimesReq[i] = EntryF;
     }
 */
-    ABC_FREE( p.pCellStr );
+    p.pCellStr = "";
     Vec_IntFreeP( &p.vConfigs );
     // disable cut minimization when GIA strucure is needed
     if !pPars.fDelayOpt && !pPars.fDelayOptLut && !pPars.fDsdBalance && !pPars.fUserRecLib && !pPars.fUserSesLib && !pPars.fDeriveLuts && !pPars.fUseDsd && !pPars.fUseTtPerm && !pPars.pFuncCell2 {
@@ -2331,9 +2331,9 @@ func Gia_ManPerformMappingInt(p *Gia_Man_t, pPars *If_Par_t) *Gia_Man_t {
     }
     If_ManStop( pIfMan );
     // transfer name
-    assert(pNew.pName == nil, "pNew.pName == nil");
+    assert(pNew.pName == "", "pNew.pName == nil");
     pNew.pName = Abc_UtilStrsav( p.pName );
-    ABC_FREE( pNew.pSpec );
+    pNew.pSpec = "";
     pNew.pSpec = Abc_UtilStrsav( p.pSpec );
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
     // print delay trace
@@ -2413,7 +2413,7 @@ func Gia_ManPerformSopBalance(p *Gia_Man_t, nCutNum int32, nRelaxRatio int32, fV
     If_ManStop( pIfMan );
     Gia_ManTransferTiming( pNew, p );
     // transfer name
-    assert(pNew.pName == nil, "pNew.pName == nil");
+    assert(pNew.pName == "", "pNew.pName == nil");
     pNew.pName = Abc_UtilStrsav( p.pName );
     pNew.pSpec = Abc_UtilStrsav( p.pSpec );
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
@@ -2446,7 +2446,7 @@ func Gia_ManPerformDsdBalance(p *Gia_Man_t, nLutSize int32, nCutNum int32, nRela
     If_ManStop( pIfMan );
     Gia_ManTransferTiming( pNew, p );
     // transfer name
-    assert(pNew.pName == nil, "pNew.pName == nil");
+    assert(pNew.pName == "", "pNew.pName == nil");
     pNew.pName = Abc_UtilStrsav( p.pName );
     pNew.pSpec = Abc_UtilStrsav( p.pSpec );
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );

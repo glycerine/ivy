@@ -279,30 +279,19 @@ func Map_ManFree(p *Map_Man_t) {
     Map_NodeVecFree( p.vMapObjs );
     Map_NodeVecFree( p.vMapBufs );
     Map_NodeVecFree( p.vVisited );
-    // inlining of macro ABC_FREE
-    if p.uCanons {   ((p.uCanons) ? (free((char *) (p.uCanons)), (p.uCanons) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if p.uPhases {   ((p.uPhases) ? (free((char *) (p.uPhases)), (p.uPhases) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if p.pCounters { ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0); }
+    if p.uCanons {   p.uCanons = nil; }
+    if p.uPhases {   p.uPhases = nil; }
+    if p.pCounters { p.pCounters = nil; }
     Extra_MmFixedStop( p.mmNodes );
     Extra_MmFixedStop( p.mmCuts );
-    // inlining of macro ABC_FREE
-    ((p.pNodeDelays) ? (free((char *) (p.pNodeDelays)), (p.pNodeDelays) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pOutputRequireds) ? (free((char *) (p.pOutputRequireds)), (p.pOutputRequireds) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pNodeDelays = nil;
+    p.pInputArrivals = nil;
+    p.pOutputRequireds = nil;
+    p.pInputs = nil;
+    p.pOutputs = nil;
+    p.pBins = nil;
+    p.ppOutputNames = nil;
+    p = nil;
 }
 
 
@@ -603,8 +592,7 @@ clk = Abc_Clock();
 //        ABC_PRT( "Time", Abc_Clock() - clk );
     }
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);
+    pMan.pBins = nil;
     pMan.pBins = pBinsNew;
     pMan.nBins = nBinsNew;
 }

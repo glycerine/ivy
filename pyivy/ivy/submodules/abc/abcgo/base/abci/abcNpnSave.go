@@ -109,8 +109,7 @@ func Npn_TruthPermute_rec(pStr string, mid int32, end int32) {
         pTemp[mid] = pTemp[i];
         pTemp[i] = e;
     }
-    // inlining of macro ABC_FREE
-    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+    pTemp = nil;
 }
 
 /**Function*************************************************************
@@ -414,8 +413,7 @@ clk = Abc_Clock();
     }
     }
     assert(Counter == p.nEntries, "Counter == p.nEntries");
-    // inlining of macro ABC_FREE
-    ((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);
+    pBinsOld = nil;
 //ABC_PRT( "Hash table resizing time", Abc_Clock() - clk );
 }
 
@@ -626,12 +624,9 @@ func Npn_ManStart(pFileName string) *Npn_Man_t {
 
 ***********************************************************************/
 func Npn_ManStop(p *Npn_Man_t) {
-    // inlining of macro ABC_FREE
-    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBuffer = nil;
+    p.pBins = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

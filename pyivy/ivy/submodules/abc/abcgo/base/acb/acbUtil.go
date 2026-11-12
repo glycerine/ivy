@@ -1168,8 +1168,7 @@ var fComment int32;
         }
     }
     assert(Vec_IntSize(vPlaces) == 2*Vec_PtrSize(vNames), "Vec_IntSize(vPlaces) == 2*Vec_PtrSize(vNames)");
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     return vPlaces;
 }
 func Acb_NtkInsert(pFileNameIn string, pFileNameOut string, vNames *Vec_Ptr_t, fNumber int32, fSkipMffc int32) {
@@ -1249,8 +1248,7 @@ func Acb_NtkInsert(pFileNameIn string, pFileNameOut string, vNames *Vec_Ptr_t, f
     for  k = Pos2; pBuffer[k]; k++  {
         fputc( pBuffer[k], pFile );
     }
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = nil;
     _ = (pFile).Close();
 }
 

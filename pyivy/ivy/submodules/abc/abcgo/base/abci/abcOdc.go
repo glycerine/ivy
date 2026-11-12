@@ -317,12 +317,9 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeAbort)))/(float64(int64(time.Sec
     Vec_PtrFree( p.vTruths );
     Vec_PtrFree( p.vTruthsElem );
     Vec_IntFree( p.vUsedSpots );
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjs = nil;
+    p.pTable = nil;
+    p = nil;
 }
 
 

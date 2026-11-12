@@ -1256,8 +1256,7 @@ func Ssw_SmlSimDataPointers(p *Ssw_Sml_t) *Vec_Ptr_t {
 
 ***********************************************************************/
 func Ssw_SmlStop(p *Ssw_Sml_t) {
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

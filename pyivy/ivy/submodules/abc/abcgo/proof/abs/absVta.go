@@ -281,8 +281,7 @@ func Vec_IntDoubleWidth(p *Vec_Int_t, nWords int32) int32 {
             pArray[2 * nWords * i + w] = p.pArray[nWords * i + w];
         }
     }
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
+    p.pArray = nil;
     p.pArray = pArray;
     p.nSize *= 2;
     p.nCap = p.nSize;
@@ -337,8 +336,7 @@ func Vga_ManFindOrAdd(p *Vta_Man_t, iObj int32, iFrame int32) *Vta_Obj_t {
         memset( p.pObjs + p.nObjsAlloc, 0, p.nObjsAlloc * sizeof(Vta_Obj_t) );
         p.nObjsAlloc *= 2;
         // rehash entries in the table
-        // inlining of macro ABC_FREE
-        ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+        p.pBins = nil;
         p.nBins = Abc_PrimeCudd( 2 * p.nBins );
         // inlining of macro ABC_CALLOC
         p.pBins = ((int *) calloc((size_t)(p.nBins), sizeof(int)));
@@ -1075,12 +1073,9 @@ func Vga_ManStop(p *Vta_Man_t) {
     Vec_IntFreeP( &p.vOrder );
     Vec_IntFreeP( &p.vAddedNew );
     sat_solver2_delete( p.pSat );
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p.pObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1202,10 +1197,8 @@ func Vta_ManAbsPrintFrame(p *Vta_Man_t, vCore *Vec_Int_t, nFrames int32, nConfls
         }
     }
     if !(fVerbose != 0) {
-        // inlining of macro ABC_FREE
-        ((pCountAll) ? (free((char *) (pCountAll)), (pCountAll) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pCountUni) ? (free((char *) (pCountUni)), (pCountUni) = 0) : 0);
+        pCountAll = nil;
+        pCountUni = nil;
         return fChanges;
     }
 
@@ -1260,10 +1253,8 @@ func Vta_ManAbsPrintFrame(p *Vta_Man_t, vCore *Vec_Int_t, nFrames int32, nConfls
     fflush( os.Stdout );
 
     if vCore != nil {
-        // inlining of macro ABC_FREE
-        ((pCountAll) ? (free((char *) (pCountAll)), (pCountAll) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pCountUni) ? (free((char *) (pCountUni)), (pCountUni) = 0) : 0);
+        pCountAll = nil;
+        pCountUni = nil;
     }
     return fChanges;
 }
@@ -1546,8 +1537,7 @@ func Gia_VtaPerformInt(pAig *Gia_Man_t, pPars *Abs_Par_t) int32 {
             fmt.Printf("Sequential miter is trivially UNSAT.\n");
             return 1;
         } 
-        // inlining of macro ABC_FREE
-        ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+        pAig.pCexSeq = nil;
         pAig.pCexSeq = Abc_CexMakeTriv( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), 1, 0 );
         fmt.Printf("Sequential miter is trivially SAT.\n");
         return 0;
@@ -1728,8 +1718,7 @@ finish:
     } else {
         if p.pPars.fVerbose {
             fmt.Printf("\n"); }
-        // inlining of macro ABC_FREE
-        ((p.pGia.pCexSeq) ? (free((char *) (p.pGia.pCexSeq)), (p.pGia.pCexSeq) = 0) : 0);
+        p.pGia.pCexSeq = nil;
         p.pGia.pCexSeq = pCex;
         if !Gia_ManVerifyCex( p.pGia, pCex, 0 ) {
             Abc_Print( 1, "    Gia_VtaPerform(): CEX verification has failed!\n" ); }

@@ -233,8 +233,7 @@ clk = Abc_Clock();
 p.timeSat += Abc_Clock() - clk;
 
     pSat.pGlobalVars = nil;
-    // inlining of macro ABC_FREE
-    ((pGlobalVars) ? (free((char *) (pGlobalVars)), (pGlobalVars) = 0) : 0);
+    pGlobalVars = nil;
     if status == l_False {
         pSatCnf = sat_solver_store_release( pSat );
         RetValue = 1;

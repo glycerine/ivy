@@ -72,8 +72,7 @@ func Mio_LibraryReadDelayAigNode(pLib *Mio_Library_t) float32 { if pLib.pGateAnd
 func Mio_LibraryReadAreaInv(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.dArea   : 0.0)); }
 func Mio_LibraryReadAreaBuf(pLib *Mio_Library_t) float32 { return float32((pLib.pGateBuf?   pLib.pGateBuf.dArea   : 0.0)); }
 func Mio_LibraryReadAreaNand2(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.dArea : 0.0)); }
-// inlining of macro ABC_FREE
-func Mio_LibrarySetName(pLib *Mio_Library_t, pName string) { ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0); pLib.pName = pName;         }
+func Mio_LibrarySetName(pLib *Mio_Library_t, pName string) { pLib.pName = nil; pLib.pName = pName;         }
 
 /**Function*************************************************************
 

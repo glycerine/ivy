@@ -95,7 +95,7 @@ void Gia_ManSuppStop( Gia_ManMin_t * p )
     Vec_IntFreeP( &p->vSupp );
     printf( "Refs = %d. \n", Cudd_CheckZeroRef( p->dd ) );
     Cudd_Quit( p->dd );
-    ABC_FREE( p );
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -404,7 +404,7 @@ func Gia_Man2SuppStop(p *Gia_Man2Min_t) {
     Vec_PtrFreeP( &p.vFrontier );
     Vec_PtrFreeP( &p.vFanins );
     Vec_IntFreeP( &p.vSatVars );
-    ABC_FREE( p );
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -564,7 +564,7 @@ func Gia_Min2AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, 
     }
     RetValue = satoko_add_clause( pSat, pLits, nLits );
     assert((RetValue != 0), "RetValue");
-    ABC_FREE( pLits );
+    pLits = nil;
 }
 
 /**Function*************************************************************

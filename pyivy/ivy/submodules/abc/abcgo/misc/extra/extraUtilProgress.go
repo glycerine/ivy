@@ -1,8 +1,12 @@
 package extra
 
-import "fmt"
-
-import "os"
+import (
+	"fmt"
+	"io"
+	"os"
+	"strings"
+	"sync/atomic"
+)
 
 /**CFile****************************************************************
 
@@ -15,7 +19,7 @@ import "os"
   Synopsis    [Progress bar.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -24,167 +28,96 @@ import "os"
 
 ***********************************************************************/
 
-//#include <stdio.h>
-//#include "extra.h"
-//#include "base/main/main.h"
+// Progress mode replaces the dependency on ABC's global command frame.
+// Applications can update it when their frame/batch settings change.
+var progressMode atomic.Uint32
 
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
+func Extra_ProgressBarSetMode(enabled, batch bool) {
+	var mode uint32
+	if !enabled {
+		mode |= 1
+	}
+	if batch {
+		mode |= 2
+	}
+	progressMode.Store(mode)
+}
 
 type ProgressBarStruct struct {
-    nItemsNext              int32;   // the number of items for the next update of the progress bar
-    nItemsTotal              int32;  // the total number of items
-    posTotal              int32;     // the total number of positions
-    posCur              int32;       // the current position
-    pFile            *os.File;        // the output stream 
+	nItemsNext, nItemsTotal, posTotal, posCur int32
+	pFile                                     io.Writer
+	stopped                                   bool
 }
+type ProgressBar = ProgressBarStruct
 
-// static void Extra_ProgressBarShow( ProgressBar * p, char * pString );
-
-// static void Extra_ProgressBarClean( ProgressBar * p );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the progress bar.]
-
-  Description [The first parameter is the output stream (pFile), where
-  the progress is printed. The current printing position should be the
-  first one on the given line. The second parameters is the total
-  number of items that correspond to 100% position of the progress bar.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_ProgressBarStart(pFile *os.File, nItemsTotal int32) *ProgressBar {
-    var p *ProgressBar;
-    if !Abc_FrameShowProgress(Abc_FrameGetGlobalFrame()) { return nil; }
-    // inlining of macro ABC_ALLOC
-    p = ((ProgressBar *) malloc(sizeof(ProgressBar) * (size_t)(1)));
-    memset( p, 0, sizeof(ProgressBar) );
-    p.pFile       = pFile;
-    p.nItemsTotal = nItemsTotal;
-    p.posTotal    = 78;
-    p.posCur      = 1;
-    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));
-    Extra_ProgressBarShow( p, nil );
-    return p;
+func Extra_ProgressBarStart(file io.Writer, total int32) *ProgressBar {
+	if progressMode.Load()&1 != 0 {
+		return nil
+	}
+	if total < 0 {
+		panic("negative progress total")
+	}
+	if file == nil {
+		file = os.Stdout
+	}
+	p := &ProgressBar{nItemsTotal: total, posTotal: 78, posCur: 1, pFile: file}
+	p.nItemsNext = int32(8 * int64(total) / 78)
+	Extra_ProgressBarShow(p, "")
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Updates the progress bar.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_ProgressBarUpdate_int(p *ProgressBar, nItemsCur int32, pString string) {
-    if p == nil { return; }
-    if nItemsCur < p.nItemsNext {
-        return; }
-    if nItemsCur >= p.nItemsTotal {
-        p.posCur = 78;
-        p.nItemsNext = 0x7FFFFFFF;
-    
-    } else {
-        p.posCur += 7;
-        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));
-    }
-    Extra_ProgressBarShow( p, pString );
+func Extra_ProgressBarUpdate(p *ProgressBar, current int32, message string) {
+	if p == nil || p.stopped || current < p.nItemsNext {
+		return
+	}
+	Extra_ProgressBarUpdate_int(p, current, message)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the progress bar.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_ProgressBarStop(p *ProgressBar) {
-    if p == nil { return; }
-    Extra_ProgressBarClean( p );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+func Extra_ProgressBarUpdate_int(p *ProgressBar, current int32, message string) {
+	if p == nil || p.stopped || current < p.nItemsNext {
+		return
+	}
+	if current >= p.nItemsTotal {
+		p.posCur = 78
+		p.nItemsNext = 1<<31 - 1
+	} else {
+		p.posCur += 7
+		p.nItemsNext = int32(int64(7+p.posCur) * int64(p.nItemsTotal) / int64(p.posTotal))
+	}
+	Extra_ProgressBarShow(p, message)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the progress bar of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_ProgressBarShow(p *ProgressBar, pString string) {
-    var i int32;
-    if p == nil { 
-        return; }
-    if Abc_FrameIsBatchMode() {
-        return; }
-    if pString {
-        fmt.Fprintf(p.pFile, "%s ", pString); }
-    for  i = (pString? len(pString) + 1 : 0); i < p.posCur; i++  {
-        fmt.Fprintf(p.pFile, "-");
-    }
-    if i == p.posCur {
-        fmt.Fprintf(p.pFile, ">"); }
-    for  i++  ; i <= p.posTotal; i++  {
-        fmt.Fprintf(p.pFile, " ");
-    }
-    fmt.Fprintf(p.pFile, "\r");
-    fflush( os.Stdout );
+func Extra_ProgressBarShow(p *ProgressBar, message string) {
+	if p == nil || p.stopped || progressMode.Load()&2 != 0 {
+		return
+	}
+	var line strings.Builder
+	i := 0
+	if message != "" {
+		line.WriteString(message)
+		line.WriteByte(' ')
+		i = len(message) + 1
+	}
+	if i < int(p.posCur) {
+		line.WriteString(strings.Repeat("-", int(p.posCur)-i))
+		i = int(p.posCur)
+	}
+	if i == int(p.posCur) {
+		line.WriteByte('>')
+	}
+	i++
+	if i <= int(p.posTotal) {
+		line.WriteString(strings.Repeat(" ", int(p.posTotal)-i+1))
+	}
+	line.WriteByte('\r')
+	fmt.Fprint(p.pFile, line.String())
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Cleans the progress bar before quitting.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Extra_ProgressBarClean(p *ProgressBar) {
-    var i int32;
-    if p == nil { 
-        return; }
-    if Abc_FrameIsBatchMode() {
-        return; }
-    for  i = 0; i <= p.posTotal; i++  {
-        fmt.Fprintf(p.pFile, " ");
-    }
-    fmt.Fprintf(p.pFile, "\r");
-    fflush( os.Stdout );
+	if p == nil || p.stopped || progressMode.Load()&2 != 0 {
+		return
+	}
+	fmt.Fprint(p.pFile, strings.Repeat(" ", int(p.posTotal)+1), "\r")
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Extra_ProgressBarStop(p *ProgressBar) {
+	if p != nil && !p.stopped {
+		Extra_ProgressBarClean(p)
+		p.stopped = true
+	}
+}

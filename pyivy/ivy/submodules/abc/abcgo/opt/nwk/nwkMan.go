@@ -78,10 +78,8 @@ func Nwk_ManAlloc() *Nwk_Man_t {
 ***********************************************************************/
 func Nwk_ManFree(p *Nwk_Man_t) {
 //    printf( "The number of realloced nodes = %d.\n", p->nRealloced );
-    // inlining of macro ABC_FREE
-    if p.pName {    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0); }
-    // inlining of macro ABC_FREE
-    if p.pSpec {    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0); }
+    if p.pName {    p.pName = nil; }
+    if p.pSpec {    p.pSpec = nil; }
     if p.vCis {     Vec_PtrFree( p.vCis ); }
     if p.vCos {     Vec_PtrFree( p.vCos ); }
     if p.vObjs {    Vec_PtrFree( p.vObjs ); }
@@ -89,8 +87,7 @@ func Nwk_ManFree(p *Nwk_Man_t) {
     if p.pManTime { Tim_ManStop( p.pManTime ); }
     if p.pMemObjs { Aig_MmFlexStop( p.pMemObjs, 0 ); }
     if p.pManHop {  Hop_ManStop( p.pManHop ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -145,8 +142,7 @@ func Nwk_ManCompareAndSaveBest(pNtk *Nwk_Man_t, pNtl any) int32 {
  ParsNew, ParsBest = { 0 };
     // free storage for the name
     if pNtk == nil {
-        // inlining of macro ABC_FREE
-        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);
+        ParsBest.pName = nil;
         return 0;
     }
     // get the parameters
@@ -161,8 +157,7 @@ func Nwk_ManCompareAndSaveBest(pNtk *Nwk_Man_t, pNtl any) int32 {
           ParsBest.Depth >  ParsNew.Depth ||
          (ParsBest.Depth == ParsNew.Depth && ParsBest.Flops >  ParsNew.Flops) ||
          (ParsBest.Depth == ParsNew.Depth && ParsBest.Flops == ParsNew.Flops && ParsBest.Nodes >  ParsNew.Nodes) {
-        // inlining of macro ABC_FREE
-        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);
+        ParsBest.pName = nil;
         ParsBest.pName = Abc_UtilStrsav( pNtk.pName );
         ParsBest.Depth = ParsNew.Depth; 
         ParsBest.Flops = ParsNew.Flops; 
@@ -256,8 +251,7 @@ func Nwk_ManPrintStats(pNtk *Nwk_Man_t, pLutLib *If_LibLut_t, fSaveBest int32, f
 //        Ntl_ManWriteBlifLogic( pNtk, pNtl, Buffer );
 //        sprintf( Buffer, "%s_dump_map.blif", pNameGen );
 //        Nwk_ManDumpBlif( pNtk, Buffer, NULL, NULL );
-        // inlining of macro ABC_FREE
-        if pNtk.pSpec { ((pNameGen) ? (free((char *) (pNameGen)), (pNameGen) = 0) : 0); }
+        if pNtk.pSpec { pNameGen = nil; }
     }
 
     pNtk.pLutLib = pLutLib;

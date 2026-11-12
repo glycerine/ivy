@@ -683,13 +683,13 @@ func Gia_ManCycle(p *Gia_Man_t, pCex *Abc_Cex_t, nFrames int32) {
     var pObj, pObjRi, pObjRo *Gia_Obj_t;
     var i, k int32;
     Gia_ManRandom( 1 );
-    assert(pCex == nil || nFrames <= pCex.iFrame, "pCex == nil || nFrames <= pCex.iFrame");
+    assert(pCex == nil || nFrames <= pCex.IFrame, "pCex == nil || nFrames <= pCex.IFrame");
     // iterate for the given number of frames
     for  i = 0; i < nFrames; i++  {
         // inlining of macro Gia_ManForEachPi
         for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
             if pCex != nil {
-                pObj.fMark0 = Abc_InfoHasBit(pCex.pData, pCex.nRegs+i*pCex.nPis+k);
+                pObj.fMark0 = Abc_InfoHasBit(pCex.PData, pCex.NRegs+i*pCex.NPis+k);
             } else {
                 pObj.fMark0 = (1 & Gia_ManRandom(0));
             }
@@ -2850,9 +2850,9 @@ func Gia_ManDupTopAnd_iter(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
     if i < Vec_IntSize(vLeaves) {
         fmt.Printf("Problem is trivially UNSAT.\n");
         // inlining of macro ABC_FREE
-        ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);
+        pCi2Lit = nil;
         // inlining of macro ABC_FREE
-        ((pVar2Val) ? (free((char *) (pVar2Val)), (pVar2Val) = 0) : 0);
+        pVar2Val = "";
         Vec_IntFree( vLeaves );
         return Gia_ManDupNormalize( p, 0 );
     }
@@ -2871,9 +2871,9 @@ func Gia_ManDupTopAnd_iter(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
     } else {
         pNew = Gia_ManDupDfsCiMap( p, pCi2Lit, vLeaves ); }
     // inlining of macro ABC_FREE
-    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);
+    pCi2Lit = nil;
     // inlining of macro ABC_FREE
-    ((pVar2Val) ? (free((char *) (pVar2Val)), (pVar2Val) = 0) : 0);
+    pVar2Val = "";
     Vec_IntFree( vLeaves );
     return pNew;
 }
@@ -3451,7 +3451,7 @@ func Gia_ManDupZeroUndc(p *Gia_Man_t, pInit string, nNewPis int32, fGiaSimple in
     }
     Gia_ManCleanMark0( p );
     // inlining of macro ABC_FREE
-    ((pPiLits) ? (free((char *) (pPiLits)), (pPiLits) = 0) : 0);
+    pPiLits = nil;
     // build internal nodes
     // inlining of macro Gia_ManForEachAnd
     for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
@@ -3587,7 +3587,7 @@ func Gia_ManMiter2(pStart *Gia_Man_t, pInit string, fVerbose int32) *Gia_Man_t {
     Vec_IntFree( vCoValues1 );
     Vec_IntFree( vCiValues );
     // inlining of macro ABC_FREE
-    ((pInitNew) ? (free((char *) (pInitNew)), (pInitNew) = 0) : 0);
+    pInitNew = "";
     // cleanup
     Gia_ManHashStop( pNew );
     Gia_ManSetRegNum( pNew, 2*Gia_ManRegNum(pUndc) );
@@ -3998,7 +3998,7 @@ func Gia_ManOneHot(nSkips int32, nVars int32) *Gia_Man_t {
     Gia_ManHashStop( p );
     Gia_ManAppendCo( p, Abc_LitNot(pTemp[0]) );
     // inlining of macro ABC_FREE
-    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);
+    pTemp = nil;
     assert(Gia_ManObjNum(p) <= nSkips + 4 * nVars + 1, "Gia_ManObjNum(p) <= nSkips + 4 * nVars + 1");
     return p;
 }
@@ -4066,9 +4066,9 @@ func Gia_ManDupLevelized(p *Gia_Man_t) *Gia_Man_t {
     }
     Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
     // inlining of macro ABC_FREE
-    ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);
+    pCounts = nil;
     // inlining of macro ABC_FREE
-    ((pNodes) ? (free((char *) (pNodes)), (pNodes) = 0) : 0);
+    pNodes = nil;
     return pNew;
 }
 
@@ -4701,7 +4701,7 @@ func Gia_ManDupDemiterOrderXors2(p *Gia_Man_t, vXors *Vec_Int_t) {
         Vec_IntPush( vSizes, Vec_IntEntry(vXors, pPerm[i]) );
     }
     // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
     Vec_IntClear( vXors );
     Vec_IntAppend( vXors, vSizes );
     Vec_IntFree( vSizes );
@@ -5204,9 +5204,9 @@ func Gia_ManSeqEquivMerge(p *Gia_Man_t, pPart []*Gia_Man_t) {
             p.pReprs[i].iRepr = pClass2Repr[pClasses[i]]; }
     }
     // inlining of macro ABC_FREE
-    ((pClasses) ? (free((char *) (pClasses)), (pClasses) = 0) : 0);
+    pClasses = nil;
     // inlining of macro ABC_FREE
-    ((pClass2Repr) ? (free((char *) (pClass2Repr)), (pClass2Repr) = 0) : 0);
+    pClass2Repr = nil;
     // create next pointers
     p.pNexts = Gia_ManDeriveNexts( p );
 }
@@ -5279,9 +5279,9 @@ func Gia_ManScorrDivideTest(p *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {
     extern Gia_Man_t * Gia_ManCorrReduce( Gia_Man_t * p );
     var pNew, pTemp *Gia_Man_t;
     // inlining of macro ABC_FREE
-    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0); p.pReprs = nil;
+    p.pReprs = nil; p.pReprs = nil;
     // inlining of macro ABC_FREE
-    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0); p.pNexts = nil;
+    p.pNexts = nil; p.pNexts = nil;
     Gia_ManSeqEquivDivide( p, pPars );
     //Gia_ManPrintEquivs( p );
     pNew = Gia_ManCorrReduce( p );

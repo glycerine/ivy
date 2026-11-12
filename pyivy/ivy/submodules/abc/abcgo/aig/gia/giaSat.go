@@ -102,7 +102,7 @@ func Gia_ManSatStart() *Gia_ManSat_t {
 func Gia_ManSatStop(p *Gia_ManSat_t) {
     Aig_MmFlexStop( p.pMem, 0 );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

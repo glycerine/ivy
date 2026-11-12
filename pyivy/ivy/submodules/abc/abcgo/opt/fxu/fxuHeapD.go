@@ -131,10 +131,8 @@ func Fxu_HeapDoubleResize(p *Fxu_HeapDouble) {
 
 ***********************************************************************/
 func Fxu_HeapDoubleStop(p *Fxu_HeapDouble) {
-    // inlining of macro ABC_FREE
-    ((p.pTree) ? (free((char *) (p.pTree)), (p.pTree) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pTree = nil;
+    p = nil;
 }
 
 

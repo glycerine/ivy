@@ -1,123 +1,73 @@
+// Node memory ownership ported from ABC ivyMem.c (Alan Mishchenko).
 package ivy
 
-/**CFile****************************************************************
+const IVY_PAGE_SIZE = 12
+const IVY_PAGE_MASK = (1 << IVY_PAGE_SIZE) - 1
 
-  FileName    [ivyMem.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [And-Inverter Graph package.]
-
-  Synopsis    [Memory management for the AIG nodes.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: ivyMem.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ivy.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// memory management
-const IVY_PAGE_SIZE =      12        // page size containing 2^IVY_PAGE_SIZE nodes
-const IVY_PAGE_MASK =    4095        // page bitmask (2^IVY_PAGE_SIZE)-1
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the internal memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ivy_ManStartMemory(p *Ivy_Man_t) {
-    p.vChunks = Vec_PtrAlloc( 128 );
-    p.vPages = Vec_PtrAlloc( 128 );
+	if p == nil || p.memoryStopped {
+		panic("Ivy memory cannot be restarted")
+	}
+	if len(p.pages) != 0 {
+		panic("Ivy memory already started")
+	}
+	p.pages = nil
+	p.freeNodes = nil
+	p.memoryStopped = false
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the internal memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ivy_ManStopMemory(p *Ivy_Man_t) {
-    var pMemory any;
-    var i int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vChunks)) && (((pMemory) = (void *)Vec_PtrEntry(p.vChunks, i)), 1); i++  {
-        // inlining of macro ABC_FREE
-        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);
-    }
-    Vec_PtrFree( p.vChunks );
-    Vec_PtrFree( p.vPages );
-    p.pListFree = nil;
+	if p == nil || p.memoryStopped {
+		return
+	}
+	for _, page := range p.pages {
+		for i := range page {
+			node := &page[i]
+			neg := node.neg
+			*node = Ivy_Obj_t{Id: -1, Type: IVY_NONE, neg: neg, recycled: true}
+		}
+	}
+	p.pages = nil
+	p.freeNodes = nil
+	p.memoryStopped = true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates additional memory for the nodes.]
-
-  Description [Allocates IVY_PAGE_SIZE nodes. Aligns memory by 32 bytes. 
-  Records the pointer to the AIG manager in the -1 entry.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ivy_ManAddMemory(p *Ivy_Man_t) {
-    var pMemory string;
-    var i, nBytes int32;
-    var EntrySizeMax int32  = 128;
-    assert(sizeof(Ivy_Obj_t) <= EntrySizeMax, "sizeof(Ivy_Obj_t) <= EntrySizeMax");
-    assert(p.pListFree == nil, "p.pListFree == nil");
-//    assert( (Ivy_ManObjNum(p) & IVY_PAGE_MASK) == 0 );
-    // allocate new memory page
-    nBytes = sizeof(Ivy_Obj_t) * (1<<IVY_PAGE_SIZE) + EntrySizeMax;
-    // inlining of macro ABC_ALLOC
-    pMemory = ((char *) malloc(sizeof(char) * (size_t)(nBytes)));
-    Vec_PtrPush( p.vChunks, pMemory );
-    // align memory at the 32-byte boundary
-    pMemory = pMemory + EntrySizeMax - ((int32((ABC_PTRUINT_T))pMemory) & (EntrySizeMax-1));
-    // remember the manager in the first entry
-    Vec_PtrPush( p.vPages, pMemory );
-    // break the memory down into nodes
-    p.pListFree = (Ivy_Obj_t *)pMemory;
-    for  i = 1; i <= IVY_PAGE_MASK; i++  {
-        *((char **)pMemory) = pMemory + sizeof(Ivy_Obj_t);
-        pMemory += sizeof(Ivy_Obj_t);
-    }
-    *((char **)pMemory) = nil;
+	if p == nil || p.memoryStopped {
+		panic("Ivy memory is stopped")
+	}
+	if len(p.freeNodes) != 0 {
+		panic("unused Ivy node slots remain")
+	}
+	page := make([]Ivy_Obj_t, 1<<IVY_PAGE_SIZE)
+	p.pages = append(p.pages, page)
+	for i := len(page) - 1; i >= 0; i-- {
+		page[i].owner = p
+		page[i].recycled = true
+		p.freeNodes = append(p.freeNodes, &page[i])
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Ivy_ManFetchMemory(p *Ivy_Man_t) *Ivy_Obj_t {
+	if p == nil || p.memoryStopped {
+		panic("Ivy memory is stopped")
+	}
+	if len(p.freeNodes) == 0 {
+		Ivy_ManAddMemory(p)
+	}
+	last := len(p.freeNodes) - 1
+	node := p.freeNodes[last]
+	p.freeNodes[last] = nil
+	p.freeNodes = p.freeNodes[:last]
+	neg := node.neg
+	*node = Ivy_Obj_t{owner: p, neg: neg}
+	return node
+}
+func Ivy_ManRecycleMemory(p *Ivy_Man_t, node *Ivy_Obj_t) {
+	if p == nil || node == nil || Ivy_IsComplement(node) != 0 || node.owner != p || node == &p.Ghost || node == p.pConst1 || node.recycled || p.memoryStopped || node.nRefs != 0 {
+		panic("invalid Ivy node recycle")
+	}
+	if node.Id >= 0 && int64(node.Id) < int64(len(p.vObjs)) && p.vObjs[node.Id] == node {
+		panic("cannot recycle a published Ivy object")
+	}
+	neg := node.neg
+	*node = Ivy_Obj_t{Type: IVY_NONE, owner: p, neg: neg, recycled: true}
+	p.freeNodes = append(p.freeNodes, node)
+}

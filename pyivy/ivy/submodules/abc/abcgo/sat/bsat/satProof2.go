@@ -1,5 +1,10 @@
 package bsat
 
+import (
+	"reflect"
+	"slices"
+)
+
 /**CFile****************************************************************
 
   FileName    [satProof2.h]
@@ -11,7 +16,7 @@ package bsat
   Synopsis    [Proof logging.]
 
   Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 1, 2004.]
@@ -19,298 +24,199 @@ package bsat
   Revision    [$Id: satProof2.h,v 1.0 2004/01/01 1:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
 ////////////////////////////////////////////////////////////////////////
 
-//#include "misc/vec/vec.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-   
+// Prf_Man_t records each learned clause's root-clause dependencies as a bitset.
+// vId2Pr is a borrowed problem-ID mapping; a negative entry excludes that root.
 type Prf_Man_t struct {
-    iFirst             int32;    // first learned clause with proof
-    iFirst2             int32;   // first learned clause with proof
-    nWords             int32;    // the number of proof words
-    pInfo           *word;     // pointer to the current proof
-    vInfo      *Vec_Wrd_t;     // proof information
-    vSaved      *Vec_Int_t;    // IDs of saved clauses
-    vId2Pr      *Vec_Int_t;    // mapping proof IDs of problem clauses into bitshifts (user's array)
+	iFirst, iFirst2, nWords int32
+	pInfo                   []word
+	vInfo                   []word
+	vSaved                  []int32
+	vId2Pr                  []int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       GLOBAL VARIABLES                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
-
-func Prf_BitWordNum(nWidth int32) int32 { return (nWidth >> 6) + ((nWidth & 63) > 0);                           }
-func Prf_ManSize(p *Prf_Man_t) int32 { return Vec_WrdSize( p.vInfo ) / p.nWords;                           }
-func Prf_ManClearNewInfo(p *Prf_Man_t) { var w int32; for  w = 0; w < p.nWords; w++  { Vec_WrdPush( p.vInfo, 0 ); }  }
-func Prf_ManClauseInfo(p *Prf_Man_t, Id int32) *word { return Vec_WrdEntryP( p.vInfo, Id * p.nWords );                     }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DECLARATIONS                        ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Prf_BitWordNum(width int32) int32 {
+	if width < 0 {
+		panic("negative proof width")
+	}
+	n := width / 64
+	if width%64 != 0 {
+		n++
+	}
+	return n
+}
+func Prf_ManSize(p *Prf_Man_t) int32 {
+	if p.nWords <= 0 {
+		if len(p.vInfo) == 0 {
+			return 0
+		}
+		panic("proof width not initialized")
+	}
+	return int32(len(p.vInfo)) / p.nWords
+}
+func Prf_ManClearNewInfo(p *Prf_Man_t) {
+	if p.nWords <= 0 {
+		panic("proof width not initialized")
+	}
+	p.vInfo = append(p.vInfo, make([]word, p.nWords)...)
+}
+func Prf_ManClauseInfo(p *Prf_Man_t, id int32) []word {
+	if id < 0 || id >= Prf_ManSize(p) {
+		panic("proof clause index outside manager")
+	}
+	start := id * p.nWords
+	return p.vInfo[start : start+p.nWords]
+}
 func Prf_ManAlloc() *Prf_Man_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Prf_Man_t{};
-    p.iFirst  = -1;
-    p.iFirst2 = -1;
-    p.vInfo   = Vec_WrdAlloc( 1000 );
-    p.vSaved  = Vec_IntAlloc( 1000 );
-    return p;
+	return &Prf_Man_t{iFirst: -1, iFirst2: -1, vInfo: make([]word, 0, 1000), vSaved: make([]int32, 0, 1000)}
 }
 func Prf_ManStop(p *Prf_Man_t) {
-    if p == nil {
-        return; }
-    Vec_IntFree( p.vSaved );
-    Vec_WrdFree( p.vInfo );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p != nil {
+		*p = Prf_Man_t{}
+	}
 }
-func Prf_ManStopP(p **Prf_Man_t) {
-    Prf_ManStop( *p );
-    *p = nil;
-}
+func Prf_ManStopP(p **Prf_Man_t) { Prf_ManStop(*p); *p = nil }
 func Prf_ManMemory(p *Prf_Man_t) float64 {
-    return Vec_WrdMemory(p.vInfo) + Vec_IntMemory(p.vSaved) + sizeof(Prf_Man_t);
+	return float64(reflect.TypeOf(*p).Size()) + float64(cap(p.vInfo))*8 + float64(cap(p.vSaved))*4
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Prf_ManRestart(p *Prf_Man_t, vId2Pr *Vec_Int_t, iFirst int32, nWidth int32) {
-    assert(p.iFirst == -1, "p.iFirst == -1");
-    p.iFirst = iFirst;
-    p.nWords = Prf_BitWordNum( nWidth );
-    p.vId2Pr = vId2Pr;
-    p.pInfo  = nil;
-    Vec_WrdClear( p.vInfo );
+func Prf_ManRestart(p *Prf_Man_t, idToProof []int32, first, width int32) {
+	if p.iFirst != -1 || first < 0 || width <= 0 {
+		panic("invalid proof restart")
+	}
+	p.iFirst = first
+	p.nWords = Prf_BitWordNum(width)
+	p.vId2Pr = idToProof
+	p.pInfo = nil
+	p.vInfo = p.vInfo[:0]
 }
-func Prf_ManGrow(p *Prf_Man_t, nWidth int32) {
-    var vInfoNew *Vec_Wrd_t;
-    var i, w, nSize, nWordsNew int32;
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    assert(p.pInfo == nil, "p.pInfo == nil");
-    if nWidth < 64 * p.nWords {
-        return; }
-    // get word count after resizing
-    nWordsNew = Abc_MaxInt( Prf_BitWordNum(nWidth), 2 * p.nWords );
-    // remap the entries
-    nSize = Prf_ManSize( p );
-    vInfoNew = Vec_WrdAlloc( (nSize + 1000) * nWordsNew );
-    for  i = 0; i < nSize; i++  {
-        p.pInfo = Prf_ManClauseInfo( p, i );
-        for  w = 0; w < p.nWords; w++  {
-            Vec_WrdPush( vInfoNew, p.pInfo[w] );
-        }
-        for  ; w < nWordsNew; w++  {
-            Vec_WrdPush( vInfoNew, 0 );
-        }
-    }
-    Vec_WrdFree( p.vInfo );
-    p.vInfo = vInfoNew;
-    p.nWords = nWordsNew;
-    p.pInfo = nil;
-
+func Prf_ManGrow(p *Prf_Man_t, width int32) {
+	if p.iFirst < 0 || p.pInfo != nil {
+		panic("grow during proof chain")
+	}
+	if int64(width) < 64*int64(p.nWords) {
+		return
+	}
+	words := max(Prf_BitWordNum(width), 2*p.nWords)
+	rows := Prf_ManSize(p)
+	next := make([]word, rows*words)
+	for i := int32(0); i < rows; i++ {
+		copy(next[i*words:i*words+p.nWords], Prf_ManClauseInfo(p, i))
+	}
+	p.vInfo = next
+	p.nWords = words
 }
-func Prf_ManShrink(p *Prf_Man_t, iClause int32) {
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    assert(iClause - p.iFirst >= 0, "iClause - p.iFirst >= 0");
-    assert(iClause - p.iFirst < Prf_ManSize(p), "iClause - p.iFirst < Prf_ManSize(p)"); 
-    Vec_WrdShrink( p.vInfo, (iClause - p.iFirst) * p.nWords );
+func Prf_ManShrink(p *Prf_Man_t, id int32) {
+	row := id - p.iFirst
+	if p.iFirst < 0 || row < 0 || row >= Prf_ManSize(p) || p.pInfo != nil {
+		panic("invalid proof shrink")
+	}
+	p.vInfo = p.vInfo[:row*p.nWords]
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Prf_ManAddSaved(p *Prf_Man_t, i int32, iNew int32) {
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    if i < p.iFirst {
-        return; }
-    if Vec_IntSize(p.vSaved) == 0 {
-        assert(p.iFirst2 == -1, "p.iFirst2 == -1");
-        p.iFirst2 = iNew;
-    }
-    Vec_IntPush( p.vSaved, i );
+func Prf_ManAddSaved(p *Prf_Man_t, id, newID int32) {
+	if p.iFirst < 0 {
+		panic("proof not initialized")
+	}
+	if id < p.iFirst {
+		return
+	}
+	if len(p.vSaved) == 0 {
+		if p.iFirst2 != -1 {
+			panic("stale compacted proof base")
+		}
+		p.iFirst2 = newID
+	}
+	p.vSaved = append(p.vSaved, id)
 }
-func Prf_ManCompact(p *Prf_Man_t, iNew int32) {
-    var i, w, k, Entry, nSize int32;
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    assert(p.pInfo == nil, "p.pInfo == nil");
-    nSize = Prf_ManSize( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vSaved)) && (((Entry) = Vec_IntEntry(p.vSaved, i)), 1); i++  {
-        assert(Entry - p.iFirst >= 0 && Entry - p.iFirst < nSize, "Entry - p.iFirst >= 0 && Entry - p.iFirst < nSize");
-        p.pInfo = Prf_ManClauseInfo( p, Entry - p.iFirst );
-        for  w = 0; w < p.nWords; w++  {
-            Vec_WrdWriteEntry( p.vInfo, k++, p.pInfo[w] );
-        }
-    }
-    Vec_WrdShrink( p.vInfo, k );
-    Vec_IntClear( p.vSaved );
-    p.pInfo = nil;
-    // update first
-    if p.iFirst2 == -1 {
-        p.iFirst = iNew;
-    } else {
-        p.iFirst = p.iFirst2; }
-    p.iFirst2 = -1;
+func Prf_ManCompact(p *Prf_Man_t, newID int32) {
+	if p.iFirst < 0 || p.pInfo != nil {
+		panic("compact during proof chain")
+	}
+	next := make([]word, 0, int32(len(p.vSaved))*p.nWords)
+	for _, id := range p.vSaved {
+		next = append(next, Prf_ManClauseInfo(p, id-p.iFirst)...)
+	}
+	p.vInfo = next
+	p.vSaved = p.vSaved[:0]
+	p.iFirst = newID
+	if p.iFirst2 != -1 {
+		p.iFirst = p.iFirst2
+	}
+	p.iFirst2 = -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Prf_ManChainResolve(p *Prf_Man_t, c *clause) {
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    assert(p.pInfo != nil, "p.pInfo != nil");
-    // add to proof info
-    if c.lrn { // learned clause
-    
-        if clause_id(c) >= p.iFirst {
-            var pProofStart *word;
-            var w int32;
-            assert(clause_id(c) - p.iFirst >= 0, "clause_id(c) - p.iFirst >= 0");
-            assert(clause_id(c) - p.iFirst < Prf_ManSize(p), "clause_id(c) - p.iFirst < Prf_ManSize(p)"); 
-            pProofStart = Prf_ManClauseInfo( p, clause_id(c) - p.iFirst );
-            for  w = 0; w < p.nWords; w++  {
-                p.pInfo[w] |= pProofStart[w];
-            }
-        }
-    
-    } else { // problem clause
-      
-        if clause_id(c) >= 0 { // has proof ID
-        
-            var Entry int32;
-            if p.vId2Pr == nil {
-                Entry = clause_id(c);
-            } else {
-                Entry = Vec_IntEntry( p.vId2Pr, clause_id(c) ); }
-            if Entry >= 0 {
-                assert(Entry < 64 * p.nWords, "Entry < 64 * p.nWords");
-                Abc_InfoSetBit( (unsigned *)p.pInfo, Entry );
-            }
-        }
-    }
+	if p.iFirst < 0 || p.pInfo == nil {
+		panic("resolve outside proof chain")
+	}
+	id := clause_id(c)
+	if c.lrn != 0 {
+		if id >= p.iFirst {
+			source := Prf_ManClauseInfo(p, id-p.iFirst)
+			for i, value := range source {
+				p.pInfo[i] |= value
+			}
+		}
+		return
+	}
+	if id < 0 {
+		return
+	}
+	entry := id
+	if p.vId2Pr != nil {
+		entry = p.vId2Pr[id]
+	}
+	if entry < 0 {
+		return
+	}
+	if int64(entry) >= 64*int64(p.nWords) {
+		panic("problem proof ID outside width")
+	}
+	p.pInfo[entry/64] |= uint64(1) << uint(entry%64)
 }
 func Prf_ManChainStart(p *Prf_Man_t, c *clause) {
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    // prepare info for new clause
-    Prf_ManClearNewInfo( p );
-    // get pointer to the proof
-    assert(p.pInfo == nil, "p.pInfo == nil");
-    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );
-    // add to proof info
-    Prf_ManChainResolve( p, c );
+	if p.iFirst < 0 || p.pInfo != nil {
+		panic("nested proof chain")
+	}
+	Prf_ManClearNewInfo(p)
+	p.pInfo = Prf_ManClauseInfo(p, Prf_ManSize(p)-1)
+	Prf_ManChainResolve(p, c)
 }
 func Prf_ManChainStop(p *Prf_Man_t) int32 {
-    assert(p.pInfo != nil, "p.pInfo != nil");
-    p.pInfo = nil;
-    return 0;
+	if p.pInfo == nil {
+		panic("stop outside proof chain")
+	}
+	p.pInfo = nil
+	return 0
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Prf_ManUnsatCore(p *Prf_Man_t) *Vec_Int_t {
-    var vCore *Vec_Int_t;
-    var i, Entry int32;
-    assert(p.iFirst >= 0, "p.iFirst >= 0");
-    assert(p.pInfo == nil, "p.pInfo == nil");
-    assert(Prf_ManSize(p) > 0, "Prf_ManSize(p) > 0");
-    vCore = Vec_IntAlloc( 64 * p.nWords );
-    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );
-    if p.vId2Pr == nil {
-        for  i = 0; i < 64 * p.nWords; i++  {
-            if Abc_InfoHasBit( (unsigned *)p.pInfo, i ) {
-                Vec_IntPush( vCore, i ); }
-        }
-    
-    } else {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vId2Pr)) && (((Entry) = Vec_IntEntry(p.vId2Pr, i)), 1); i++  {
-            if Entry < 0 {
-                continue; }
-            assert(Entry < 64 * p.nWords, "Entry < 64 * p.nWords");
-            if Abc_InfoHasBit( (unsigned *)p.pInfo, Entry ) {
-                Vec_IntPush( vCore, i ); }
-        }
-    }
-    p.pInfo = nil;
-    Vec_IntSort( vCore, 1 );
-    return vCore;
+func Prf_ManUnsatCore(p *Prf_Man_t) []int32 {
+	if p.iFirst < 0 || p.pInfo != nil || Prf_ManSize(p) == 0 {
+		panic("proof core unavailable")
+	}
+	info := Prf_ManClauseInfo(p, Prf_ManSize(p)-1)
+	var core []int32
+	if p.vId2Pr == nil {
+		for i := int32(0); i < 64*p.nWords; i++ {
+			if info[i/64]&(uint64(1)<<uint(i%64)) != 0 {
+				core = append(core, i)
+			}
+		}
+	} else {
+		for id, entry := range p.vId2Pr {
+			if entry < 0 {
+				continue
+			}
+			if int64(entry) >= 64*int64(p.nWords) {
+				panic("mapped proof ID outside width")
+			}
+			if info[entry/64]&(uint64(1)<<uint(entry%64)) != 0 {
+				core = append(core, int32(id))
+			}
+		}
+	}
+	slices.Sort(core)
+	slices.Reverse(core)
+	return core
 }
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-

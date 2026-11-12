@@ -90,16 +90,11 @@ func Amap_LibFree(p *Amap_Lib_t) {
         Vec_IntFree( p.vRules3 ); }
     Aig_MmFlexStop( p.pMemGates, 0 );
     Aig_MmFlexStop( p.pMemSet, 0 );
-    // inlining of macro ABC_FREE
-    ((p.pRules) ? (free((char *) (p.pRules)), (p.pRules) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRulesX) ? (free((char *) (p.pRulesX)), (p.pRulesX) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pNodes) ? (free((char *) (p.pNodes)), (p.pNodes) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pRules = nil;
+    p.pRulesX = nil;
+    p.pNodes = nil;
+    p.pName = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

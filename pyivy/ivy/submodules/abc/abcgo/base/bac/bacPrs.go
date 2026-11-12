@@ -306,8 +306,7 @@ func Psr_NtkFree(p *Psr_Ntk_t) {
     Vec_IntErase( &p.vConcats );
     Vec_IntErase( &p.vBoxes );
     Vec_IntErase( &p.vObjs );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 func Psr_ManVecFree(vPrs *Vec_Ptr_t) {
@@ -331,10 +330,8 @@ func Psr_ManFree(p *Psr_Man_t) {
     Vec_IntErase( &p.vKnown );
     Vec_IntErase( &p.vFailed );
     Vec_IntErase( &p.vSucceeded );
-    // inlining of macro ABC_FREE
-    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBuffer = nil;
+    p = nil;
 }
 
 func Psr_NtkMemory(p *Psr_Ntk_t) int32 {

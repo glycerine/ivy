@@ -79,7 +79,7 @@ func Gia_ManIffStop(p *Iff_Man_t) {
     Vec_IntFree( p.vMatch[2] );
     Vec_IntFree( p.vMatch[3] );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

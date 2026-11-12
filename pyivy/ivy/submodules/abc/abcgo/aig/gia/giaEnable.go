@@ -201,7 +201,7 @@ func Gia_ManDetectSeqSignals(p *Gia_Man_t, fSetReset int32, fVerbose int32) {
     }
     Vec_IntFree( vSuper );
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p );
     if fVerbose != 0 {
         fmt.Printf("Flops with set/reset = %6d. Flops with enable = %6d.\n", nHaveSetReset, nHaveEnable);
@@ -212,13 +212,13 @@ func Gia_ManDetectSeqSignals(p *Gia_Man_t, fSetReset int32, fVerbose int32) {
         Gia_ManPrintSignals( p, pEnables, "Enable signals" );
     }
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     // inlining of macro ABC_FREE
-    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);
+    pSets = nil;
     // inlining of macro ABC_FREE
-    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);
+    pResets = nil;
     // inlining of macro ABC_FREE
-    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);
+    pEnables = nil;
 }
 
 /**Function*************************************************************
@@ -331,11 +331,11 @@ func Gia_ManDetectSeqSignalsWithFanout(p *Gia_Man_t, nFanMax int32, fVerbose int
         }
     }
     // inlining of macro ABC_FREE
-    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);
+    pSets = nil;
     // inlining of macro ABC_FREE
-    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);
+    pResets = nil;
     // inlining of macro ABC_FREE
-    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);
+    pEnables = nil;
     return vResult;
 }
 

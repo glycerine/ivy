@@ -244,7 +244,7 @@ Gia_Man_t * Gia_ManRebuild( Gia_Man_t * p, Dsd_Manager_t * pManDsd, DdManager * 
         if ( iLit == -1 )
             break;
     }
-    ABC_FREE( ppNodesDsd );
+    ppNodesDsd = nil;
     Vec_IntFree( vFanins );
     Vec_StrFree( vSop );
     Vec_StrFree( vCube );

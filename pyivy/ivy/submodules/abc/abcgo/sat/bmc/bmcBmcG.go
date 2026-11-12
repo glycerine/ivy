@@ -116,8 +116,7 @@ func Bmcg_ManStop(p *Bmcg_Man_t) {
         if p.pSats[i] { 
             bmcg_sat_solver_stop( p.pSats[i] ); }
     }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -267,8 +266,7 @@ func Bmcg_ManAddNewCnf(p *Bmcg_Man_t, f int32, nFramesAdd int32) *Cnf_Dat_t {
     for  i = 0; i < pCnf.nLiterals; i++  {
         pCnf.pClauses[0][i] = Abc_Lit2LitV( pMap, pCnf.pClauses[0][i] );
     }
-    // inlining of macro ABC_FREE
-    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);
+    pMap = nil;
     p.timeCnf += Abc_Clock() - clk;
     return pCnf;
 }

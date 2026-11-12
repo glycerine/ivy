@@ -662,8 +662,7 @@ func Acb_NtkRunTest(pFileNames []string, fFancy int32, fVerbose int32) {
     if fSolve != 0 {
         pModel = Acb_NtkSolve( pGia );
         Acb_OutputFile( pFileNames[2], pNtkF, pModel );
-        // inlining of macro ABC_FREE
-        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
+        pModel = nil;
     }
 
     Gia_ManStop( pGia );

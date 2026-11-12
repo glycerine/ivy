@@ -100,8 +100,7 @@ func Abc_DesFree(p *Abc_Des_t, pNtkSave *Abc_Ntk_t) {
     var pNtk *Abc_Ntk_t;
     var i int32;
     if p.pName {
-        // inlining of macro ABC_FREE
-        ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0); }
+        p.pName = nil; }
     if p.pManFunc {
         Hop_ManStop( (Hop_Man_t *)p.pManFunc ); }
     if p.tModules {
@@ -120,8 +119,7 @@ func Abc_DesFree(p *Abc_Des_t, pNtkSave *Abc_Ntk_t) {
     }
     if p.vTops {
         Vec_PtrFree( p.vTops ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

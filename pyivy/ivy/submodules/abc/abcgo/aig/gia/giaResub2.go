@@ -100,7 +100,7 @@ func Gia_Rsb2ManFree(p *Gia_Rsb2Man_t) {
     Vec_IntErase( &p.vCopies );
     Vec_IntErase( &p.vTried );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Gia_Rsb2ManStart(p *Gia_Rsb2Man_t, pObjs *int32, nObjs int32, nDivsMax int32, nLevelIncrease int32, fUseXor int32, fUseZeroCost int32, fDebug int32, fVerbose int32) {
     var i int32;
@@ -568,9 +568,9 @@ func Gia_ManResub2Test(p *Gia_Man_t) *Gia_Man_t {
     } else { 
         pNew = Gia_ManDup( p ); }
     // inlining of macro ABC_FREE
-    ((pObjs) ? (free((char *) (pObjs)), (pObjs) = 0) : 0);
+    pObjs = nil;
     // inlining of macro ABC_FREE
-    ((pObjsNew) ? (free((char *) (pObjsNew)), (pObjsNew) = 0) : 0);
+    pObjsNew = nil;
     return pNew;
 }
 

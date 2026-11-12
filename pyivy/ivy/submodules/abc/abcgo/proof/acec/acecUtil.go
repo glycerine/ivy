@@ -60,14 +60,12 @@ func Gia_PolynCollectXors_rec(pGia *Gia_Man_t, iObj int32, vXors *Vec_Int_t) {
 func Gia_PolynCollectLastXor(pGia *Gia_Man_t, fVerbose int32) *Vec_Int_t {
     var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );
     var pObj *Gia_Obj_t  = Gia_ManCo( pGia, Gia_ManCoNum(pGia)-1 );
-    // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.pRefs = nil;
     Gia_ManCreateRefs( pGia );
     Gia_ManIncrementTravId( pGia );
     Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0p(pGia, pObj), vXors );
     Vec_IntReverseOrder( vXors );
-    // inlining of macro ABC_FREE
-    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);
+    pGia.pRefs = nil;
     return vXors;
 }
 func Gia_PolynAnalyzeXors(pGia *Gia_Man_t, fVerbose int32) {

@@ -294,31 +294,23 @@ func Fraig_ManFree(p *Fraig_Man_t) {
     if p.vProj {      Msat_IntVecFree( p.vProj ); }
     if p.vCones {     Fraig_NodeVecFree( p.vCones ); }
     if p.vPatsReal {  Msat_IntVecFree( p.vPatsReal ); }
-    // inlining of macro ABC_FREE
-    if p.pModel {     ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0); }
+    if p.pModel {     p.pModel = nil; }
 
     Fraig_MemFixedStop( p.mmNodes, 0 );
     Fraig_MemFixedStop( p.mmSims, 0 );
 
     if p.pSuppS {
-        // inlining of macro ABC_FREE
-        ((p.pSuppS[0]) ? (free((char *) (p.pSuppS[0])), (p.pSuppS[0]) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((p.pSuppS) ? (free((char *) (p.pSuppS)), (p.pSuppS) = 0) : 0);
+        p.pSuppS[0] = nil;
+        p.pSuppS = nil;
     }
     if p.pSuppF {
-        // inlining of macro ABC_FREE
-        ((p.pSuppF[0]) ? (free((char *) (p.pSuppF[0])), (p.pSuppF[0]) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((p.pSuppF) ? (free((char *) (p.pSuppF)), (p.pSuppF) = 0) : 0);
+        p.pSuppF[0] = nil;
+        p.pSuppF = nil;
     }
 
-    // inlining of macro ABC_FREE
-    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.ppInputNames) ? (free((char *) (p.ppInputNames)), (p.ppInputNames) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.ppOutputNames = nil;
+    p.ppInputNames = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

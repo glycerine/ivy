@@ -1,0 +1,39 @@
+// Package-level aliases preserve the CUDD API while the remaining
+// original modules are ported. Graph algorithms live only in core.
+package cudd
+
+import "github.com/glycerine/abcgo/bdd/cudd/core"
+
+var (
+	NewBDDManager       = core.NewBDDManager
+	Cudd_Regular        = core.Cudd_Regular
+	Cudd_IsComplement   = core.Cudd_IsComplement
+	Cudd_Not            = core.Cudd_Not
+	Cudd_NotCond        = core.Cudd_NotCond
+	Cudd_IsConstant     = core.Cudd_IsConstant
+	Cudd_T              = core.Cudd_T
+	Cudd_E              = core.Cudd_E
+	Cudd_NodeReadIndex  = core.Cudd_NodeReadIndex
+	Cudd_ReadOne        = core.Cudd_ReadOne
+	Cudd_ReadLogicZero  = core.Cudd_ReadLogicZero
+	Cudd_ReadSize       = core.Cudd_ReadSize
+	Cudd_ReadPerm       = core.Cudd_ReadPerm
+	Cudd_ReadInvPerm    = core.Cudd_ReadInvPerm
+	Cudd_ReadNodeCount  = core.Cudd_ReadNodeCount
+	Cudd_bddIthVar      = core.Cudd_bddIthVar
+	Cudd_bddNewVar      = core.Cudd_bddNewVar
+	Cudd_Ref            = core.Cudd_Ref
+	Cudd_Deref          = core.Cudd_Deref
+	Cudd_RecursiveDeref = core.Cudd_RecursiveDeref
+	Cudd_Support        = core.Cudd_Support
+	Cudd_SupportSize    = core.Cudd_SupportSize
+	Cudd_bddPermute     = core.Cudd_bddPermute
+	Cudd_bddCompose     = core.Cudd_bddCompose
+	Cudd_Cofactor       = core.Cudd_Cofactor
+	Cudd_bddAndAbstract = core.Cudd_bddAndAbstract
+	Cudd_DagSize        = core.Cudd_DagSize
+	Cudd_CountMinterm   = core.Cudd_CountMinterm
+)
+
+type DdNode = core.DdNode
+type DdManager = core.DdManager

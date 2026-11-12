@@ -331,8 +331,7 @@ func Gia_ManCountFanoutlessFlops(p *Gia_Man_t) {
             Counter++; }
     }
     fmt.Printf("Fanoutless flops = %d.\n", Counter);
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pRefs = nil;
 }
 
 /**Function*************************************************************
@@ -786,8 +785,7 @@ func Abs_RpmPerformMark(p *Gia_Man_t, nCutMax int32, fVerbose int32, fVeryVerbos
     Vec_IntFree( vSupp1 );
     Vec_IntFree( vSupp2 );
 //    Gia_ManCleanMark1( p ); // this will erase markings
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pRefs = nil;
 }
 
 /**Function*************************************************************

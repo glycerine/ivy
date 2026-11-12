@@ -205,8 +205,7 @@ func Io_ReadDsd_rec(pNtk *Abc_Ntk_t, pCur string, pSop string) *Abc_Obj_t {
     pSop = Abc_SopFromTruthHex( pCur );
     *pEnd = '(';
     pObj = Io_ReadDsd_rec( pNtk, pEnd, pSop );
-    // inlining of macro ABC_FREE
-    ((pSop) ? (free((char *) (pSop)), (pSop) = 0) : 0);
+    pSop = nil;
     return pObj;
 }
 
@@ -274,8 +273,7 @@ func Io_ReadDsd(pForm string) *Abc_Ntk_t {
 
     // parse the formula
     pObj = Io_ReadDsd_rec( pNtk, pFormCopy, nil );
-    // inlining of macro ABC_FREE
-    ((pFormCopy) ? (free((char *) (pFormCopy)), (pFormCopy) = 0) : 0);
+    pFormCopy = nil;
     if pObj == nil {
         return nil; }
 

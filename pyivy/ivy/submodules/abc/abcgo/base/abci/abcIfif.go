@@ -82,10 +82,8 @@ func Abc_NtkIfifStart(pNtk *Abc_Ntk_t, pPars *Ifif_Par_t) *Abc_IffMan_t {
 }
 func Abc_NtkIfifStop(p *Abc_IffMan_t) {
     // internal data
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

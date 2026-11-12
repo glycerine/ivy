@@ -384,10 +384,8 @@ func Abc_ManResubStop(p *Abc_ManRes_t) {
     Vec_PtrFree( p.vDivs2UN0 );
     Vec_PtrFree( p.vDivs2UN1 );
     Vec_PtrFree( p.vTemp );
-    // inlining of macro ABC_FREE
-    ((p.pInfo) ? (free((char *) (p.pInfo)), (p.pInfo) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pInfo = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

@@ -81,16 +81,11 @@ func Nwk_ManGraphFree(p *Nwk_Grf_t) {
     if p.vPairs {    Vec_IntFree( p.vPairs ); }
     if p.pMemEdges { Aig_MmFixedStop( p.pMemEdges, 0 ); }
     if p.pMemVerts { Aig_MmFlexStop( p.pMemVerts, 0 ); }
-    // inlining of macro ABC_FREE
-    ((p.pVerts) ? (free((char *) (p.pVerts)), (p.pVerts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMapLut2Id) ? (free((char *) (p.pMapLut2Id)), (p.pMapLut2Id) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMapId2Lut) ? (free((char *) (p.pMapId2Lut)), (p.pMapId2Lut) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pVerts = nil;
+    p.pEdgeHash = nil;
+    p.pMapLut2Id = nil;
+    p.pMapId2Lut = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -348,11 +343,9 @@ func Nwk_ManGraphPrepare(p *Nwk_Grf_t) {
     }
     // clean up
     Aig_MmFixedStop( p.pMemEdges, 0 ); p.pMemEdges = nil;
-    // inlining of macro ABC_FREE
-    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);
+    p.pEdgeHash = nil;
 //    p->nEdgeHash = 0;
-    // inlining of macro ABC_FREE
-    ((pnEdges) ? (free((char *) (pnEdges)), (pnEdges) = 0) : 0);
+    pnEdges = nil;
 }
 
 /**Function*************************************************************
@@ -391,8 +384,7 @@ func Nwk_ManGraphSortPairs(p *Nwk_Grf_t) {
         }
     }
     assert(nSize == Vec_IntSize(p.vPairs), "nSize == Vec_IntSize(p.vPairs)");
-    // inlining of macro ABC_FREE
-    ((pIdToPair) ? (free((char *) (pIdToPair)), (pIdToPair) = 0) : 0);
+    pIdToPair = nil;
 }
 
 

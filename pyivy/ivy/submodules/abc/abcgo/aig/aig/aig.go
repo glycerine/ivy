@@ -11,7 +11,7 @@ package aig
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - April 28, 2007.]
@@ -19,10 +19,6 @@ package aig
   Revision    [$Id: aig.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -40,400 +36,433 @@ package aig
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-
-
 //ABC_NAMESPACE_HEADER_START
- 
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Aig_Man_t =            Aig_Man_t_;
-type Aig_Obj_t =            Aig_Obj_t_;
-type Aig_MmFixed_t =        Aig_MmFixed_t_;    
-type Aig_MmFlex_t =         Aig_MmFlex_t_;     
-type Aig_MmStep_t =         Aig_MmStep_t_;     
+type Aig_Man_t = Graph
+type Aig_Obj_t = Edge
 
 // object types
- type Aig_Type_t int32
-const ( 
-    AIG_OBJ_NONE Aig_Type_t = iota
-                    // 0: non-existent object
-    AIG_OBJ_CONST1
-                  // 1: constant 1 
-    AIG_OBJ_CI
-                      // 2: combinational input
-    AIG_OBJ_CO
-                      // 3: combinational output
-    AIG_OBJ_BUF
-                     // 4: buffer node
-    AIG_OBJ_AND
-                     // 5: AND node
-    AIG_OBJ_EXOR
-                    // 6: EXOR node
-    AIG_OBJ_VOID                     // 7: unused object
+type Aig_Type_t int32
+
+const (
+	AIG_OBJ_NONE Aig_Type_t = iota
+	// 0: non-existent object
+	AIG_OBJ_CONST1
+	// 1: constant 1
+	AIG_OBJ_CI
+	// 2: combinational input
+	AIG_OBJ_CO
+	// 3: combinational output
+	AIG_OBJ_BUF
+	// 4: buffer node
+	AIG_OBJ_AND
+	// 5: AND node
+	AIG_OBJ_EXOR
+	// 6: EXOR node
+	AIG_OBJ_VOID // 7: unused object
 
 )
 
- 
-
-// the AIG node
-type Aig_Obj_t_ struct {  // 8 words
-
-    union {                         
-        Aig_Obj_t *  pNext;          // strashing table
-        int          CioId;          // 0-based number of CI/CO
-    };
-    pFanin0       *Aig_Obj_t;        // fanin
-    pFanin1       *Aig_Obj_t;        // fanin
-    Type uint32; /* C bitfield: 3 bits; review packing and truncation */   // object type
-    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */   // value under 000...0 pattern
-    fMarkA uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask
-    fMarkB uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask
-    nRefs uint32; /* C bitfield: 26 bits; review packing and truncation */   // reference count 
-    Level uint32; /* C bitfield: 24 bits; review packing and truncation */   // the level of this node
-    nCuts uint32; /* C bitfield: 8 bits; review packing and truncation */   // the number of cuts
-    TravId              int32;         // unique ID of last traversal involving the node
-    Id              int32;             // unique ID of the node
-    union {                          // temporary store for user's data
-        void *       pData;
-        int          iData;
-        float        dData;
-    };
-}
-
-// the AIG manager
-type Aig_Man_t_ struct {
-    pName            string;          // the design name
-    pSpec            string;          // the input file name
-    // AIG nodes
-    vCis       *Vec_Ptr_t;           // the array of PIs
-    vCos       *Vec_Ptr_t;           // the array of POs
-    vObjs       *Vec_Ptr_t;          // the array of all nodes (optional)
-    vBufs       *Vec_Ptr_t;          // the array of buffers
-    pConst1       *Aig_Obj_t;        // the constant 1 node
-    Ghost        Aig_Obj_t;          // the ghost node
-    nRegs              int32;          // the number of registers (registers are last POs)
-    nTruePis              int32;       // the number of true primary inputs
-    nTruePos              int32;       // the number of true primary outputs
-    nAsserts              int32;       // the number of asserts among POs (asserts are first POs)
-    nConstrs              int32;       // the number of constraints (model checking only)
-    nBarBufs              int32;       // the number of barrier buffers
-    // AIG node counters
-    nObjs [AIG_OBJ_VOID]int32;// the number of objects by type
-    nDeleted              int32;       // the number of deleted objects
-    // structural hash table
-    pTable      **Aig_Obj_t;         // structural hash table
-    nTableSize              int32;     // structural hash table size
-    // representation of fanouts
-    pFanData             *int32;       // the database to store fanout information
-    nFansAlloc              int32;     // the size of fanout representation
-    vLevels       *Vec_Vec_t;        // used to update timing information
-    nBufReplaces              int32;   // the number of times replacement led to a buffer
-    nBufFixes              int32;      // the number of times buffers were propagated
-    nBufMax              int32;        // the maximum number of buffers during computation
-    // topological order
-    pOrderData        *uint32;
-    nOrderAlloc              int32;
-    iPrev              int32;
-    iNext              int32;
-    nAndTotal              int32;
-    nAndPrev              int32;
-    // representatives
-    pEquivs      **Aig_Obj_t;        // linked list of equivalent nodes (when choices are used)
-    pReprs      **Aig_Obj_t;         // representatives of each node
-    nReprsAlloc              int32;    // the number of allocated representatives
-    // various data members
-    pMemObjs   *Aig_MmFixed_t;       // memory manager for objects
-    vLevelR       *Vec_Int_t;        // the reverse level of the nodes
-    nLevelMax              int32;      // maximum number of levels
-    pData            any;          // the temporary data
-    pData2            any;         // the temporary data
-    nTravIds              int32;       // the current traversal ID
-    fCatchExor              int32;     // enables EXOR nodes
-    fAddStrash              int32;     // performs additional strashing
-    pObjCopies      **Aig_Obj_t;     // mapping of AIG nodes into FRAIG nodes
-    void (*pImpFunc) (void*, void*); // implication checking precedure
-    pImpData            any;       // implication checking data
-    pManTime            any;       // the timing manager
-    pManCuts            any;
-    pFastSim             *int32; 
-    pTerSimData        *uint32;    // ternary simulation data
-    vMapped       *Vec_Ptr_t;
-    vFlopNums       *Vec_Int_t;      
-    vFlopReprs       *Vec_Int_t;      
-    pSeqModel       *Abc_Cex_t;
-    vSeqModelVec       *Vec_Ptr_t;   // vector of counter-examples (for sequential miters)
-    pManExdc       *Aig_Man_t;
-    vOnehots       *Vec_Ptr_t;
-    fCreatePios              int32;
-    vEquPairs       *Vec_Int_t;   
-    vClockDoms       *Vec_Vec_t; 
-    vProbs       *Vec_Int_t;         // probability of node being 1 
-    vCiNumsOrig       *Vec_Int_t;    // original CI names
-    nComplEdges              int32;    // complemented edges
-    Time2Quit          abctime;
-    // timing statistics
-    time1          abctime;
-    time2          abctime;
-  //-- jlong -- begin
-  unfold2_type_I       *Vec_Ptr_t;
-  unfold2_type_II       *Vec_Ptr_t;
-  //-- jlong -- end
-}
+// The Go representation stores regular nodes in Graph and inversion in Edge.
+// Object accessors which inspect node payload receive the owning manager.
 
 // cut computation
-type Aig_ManCut_t =         Aig_ManCut_t_;
-              
+type Aig_ManCut_t = Aig_ManCut_t_
 
 // the cut used to represent node in the AIG
 type Aig_Cut_t struct {
-    pNext      *Aig_Cut_t;           // the next cut in the table 
-    Cost             int32;            // the cost of the cut
-    uSign        uint32;           // cut signature
-    iNode             int32;           // the node, for which it is the cut
-    nCutSize           int16;        // the number of bytes in the cut
-    nLeafMax            byte;        // the maximum number of fanins
-    nFanins            byte;         // the current number of fanins
-    pFanins [0]int32;      // the fanins (followed by the truth table)
+	valid    bool
+	truth    []uint32
+	pNext    *Aig_Cut_t // the next cut in the table
+	Cost     int32      // the cost of the cut
+	uSign    uint32     // cut signature
+	iNode    int32      // the node, for which it is the cut
+	nCutSize int16      // the number of bytes in the cut
+	nLeafMax byte       // the maximum number of fanins
+	nFanins  byte       // the current number of fanins
+	pFanins  []int32    // the fanins (followed by the truth table)
 }
 
 // the CNF computation manager
 type Aig_ManCut_t_ struct {
-    // AIG manager
-    pAig      *Aig_Man_t;            // the input AIG manager
-    pCuts     **Aig_Cut_t;           // the cuts for each node in the output manager
-    // parameters
-    nCutsMax             int32;        // the max number of cuts at the node
-    nLeafMax             int32;        // the max number of leaves of a cut
-    fTruth             int32;          // enables truth table computation
-    fVerbose             int32;        // enables verbose output
-    // internal variables
-    nCutSize             int32;        // the number of bytes needed to store one cut
-    nTruthWords             int32;     // the number of truth table words
-    pMemCuts  *Aig_MmFixed_t;        // memory manager for cuts
-    puTemp [4]*uint32;       // used for the truth table computation
+	// AIG manager
+	pAig  *Aig_Man_t   // the input AIG manager
+	pCuts []*Aig_Cut_t // the cuts for each node in the output manager
+	// parameters
+	nCutsMax int32 // the max number of cuts at the node
+	nLeafMax int32 // the max number of leaves of a cut
+	fTruth   int32 // enables truth table computation
+	fVerbose int32 // enables verbose output
+	// internal variables
+	nCutSize    int32 // the number of bytes needed to store one cut
+	nTruthWords int32 // the number of truth table words
 }
 
-func Aig_ObjCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t) *Aig_Cut_t { return p.pCuts[pObj.Id];  }
-func Aig_ObjSetCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t, pCuts *Aig_Cut_t) { p.pCuts[pObj.Id] = pCuts; }
+func Aig_ObjCuts(p *Aig_ManCut_t, e Edge) *Aig_Cut_t       { return p.pCuts[e.NodeID()] }
+func Aig_ObjSetCuts(p *Aig_ManCut_t, e Edge, c *Aig_Cut_t) { p.pCuts[e.NodeID()] = c }
 
-func Aig_CutLeaveNum(pCut *Aig_Cut_t) int32 { return pCut.nFanins;                                    }
-func Aig_CutLeaves(pCut *Aig_Cut_t) *int32 { return pCut.pFanins;                                    }
-func Aig_CutTruth(pCut *Aig_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nLeafMax);     }
-func Aig_CutNext(pCut *Aig_Cut_t) *Aig_Cut_t { return (Aig_Cut_t *)(((char *)pCut) + pCut.nCutSize);   }
+func Aig_CutLeaveNum(c *Aig_Cut_t) int32  { return int32(len(c.pFanins)) }
+func Aig_CutLeaves(c *Aig_Cut_t) []int32  { return c.pFanins }
+func Aig_CutTruth(c *Aig_Cut_t) []uint32  { return c.truth }
+func Aig_CutNext(c *Aig_Cut_t) *Aig_Cut_t { return c.pNext }
 
 // iterator over cuts of the node
 // Original macro:
 // #define Aig_ObjForEachCut( p, pObj, pCut, i )                           \
-//     for ( i = 0, pCut = Aig_ObjCuts(p, pObj); i < p->nCutsMax; i++, pCut = Aig_CutNext(pCut) ) 
+//     for ( i = 0, pCut = Aig_ObjCuts(p, pObj); i < p->nCutsMax; i++, pCut = Aig_CutNext(pCut) )
 
 // iterator over leaves of the cut
 // Original macro:
 // #define Aig_CutForEachLeaf( p, pCut, pLeaf, i )                         \
 //     for ( i = 0; (i < (int)(pCut)->nFanins) && ((pLeaf) = Aig_ManObj(p, (pCut)->pFanins[i])); i++ )
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////
 
-func Aig_ObjCutSign(ObjId uint32) uint32 { return (1 << (ObjId & 31));                            }
+func Aig_ObjCutSign(ObjId uint32) uint32 { return (1 << (ObjId & 31)) }
 func Aig_WordCountOnes(uWord uint32) int32 {
-    uWord = (uWord & 0x55555555) + ((uWord>>1) & 0x55555555);
-    uWord = (uWord & 0x33333333) + ((uWord>>2) & 0x33333333);
-    uWord = (uWord & 0x0F0F0F0F) + ((uWord>>4) & 0x0F0F0F0F);
-    uWord = (uWord & 0x00FF00FF) + ((uWord>>8) & 0x00FF00FF);
-    return  (uWord & 0x0000FFFF) + (uWord>>16);
+	uWord = (uWord & 0x55555555) + ((uWord >> 1) & 0x55555555)
+	uWord = (uWord & 0x33333333) + ((uWord >> 2) & 0x33333333)
+	uWord = (uWord & 0x0F0F0F0F) + ((uWord >> 4) & 0x0F0F0F0F)
+	uWord = (uWord & 0x00FF00FF) + ((uWord >> 8) & 0x00FF00FF)
+	return int32((uWord & 0x0000FFFF) + (uWord >> 16))
 }
-func Aig_WordFindFirstBit(uWord uint32) int32 {
-    var i int32;
-    for  i = 0; i < 32; i++  {
-        if uWord & (1 << i) {
-            return i; }
-    }
-    return -1;
+func Aig_WordFindFirstBit(word uint32) int32 {
+	for i := int32(0); i < 32; i++ {
+		if word&(1<<uint(i)) != 0 {
+			return i
+		}
+	}
+	return -1
 }
 
-func Aig_Regular(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) & ~01);  }
-func Aig_Not(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }
-func Aig_NotCond(p *Aig_Obj_t, c int32) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }
-func Aig_IsComplement(p *Aig_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) & 01));           }
-
-func Aig_ManCiNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CI];                     }
-func Aig_ManCoNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CO];                     }
-func Aig_ManBufNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_BUF];                    }
-func Aig_ManAndNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND];                    }
-func Aig_ManExorNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_EXOR];                   }
-func Aig_ManNodeNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+p.nObjs[AIG_OBJ_EXOR];   }
-func Aig_ManGetCost(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+3*p.nObjs[AIG_OBJ_EXOR]; }
-func Aig_ManObjNum(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs) - p.nDeleted;      }
-func Aig_ManObjNumMax(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs);                    }
-func Aig_ManRegNum(p *Aig_Man_t) int32 { return p.nRegs;                                 }
-func Aig_ManConstrNum(p *Aig_Man_t) int32 { return p.nConstrs;                              }
-
-func Aig_ManConst0(p *Aig_Man_t) *Aig_Obj_t { return Aig_Not(p.pConst1);                      }
-func Aig_ManConst1(p *Aig_Man_t) *Aig_Obj_t { return p.pConst1;                               }
-func Aig_ManGhost(p *Aig_Man_t) *Aig_Obj_t { return &p.Ghost;                                }
-func Aig_ManCi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i);    }
-func Aig_ManCo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i);    }
-func Aig_ManLo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Aig_ManCiNum(p)-Aig_ManRegNum(p)+i);   }
-func Aig_ManLi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Aig_ManCoNum(p)-Aig_ManRegNum(p)+i);   }
-func Aig_ManObj(p *Aig_Man_t, i int32) *Aig_Obj_t { if p.vObjs {
-    return (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i);
-} else {
-    return nil;
-}  }
-
-func Aig_ObjType(pObj *Aig_Obj_t) Aig_Type_t { return (Aig_Type_t)pObj.Type;       }
-func Aig_ObjIsNone(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_NONE;   }
-func Aig_ObjIsConst1(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); return pObj.Type == AIG_OBJ_CONST1; }
-func Aig_ObjIsCi(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI;     }
-func Aig_ObjIsCo(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CO;     }
-func Aig_ObjIsBuf(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_BUF;    }
-func Aig_ObjIsAnd(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND;    }
-func Aig_ObjIsExor(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_EXOR;   }
-func Aig_ObjIsNode(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;   }
-func Aig_ObjIsTerm(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI  || pObj.Type == AIG_OBJ_CO || pObj.Type == AIG_OBJ_CONST1;   }
-func Aig_ObjIsHash(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;                                 }
-func Aig_ObjIsChoice(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return p.pEquivs && p.pEquivs[pObj.Id] && pObj.nRefs > 0;                    }
-func Aig_ObjIsCand(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI || pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;     }
-func Aig_ObjCioId(pObj *Aig_Obj_t) int32 { assert(!(Aig_ObjIsNode(pObj) != 0), "!Aig_ObjIsNode(pObj)"); return pObj.CioId;                                            }
-func Aig_ObjId(pObj *Aig_Obj_t) int32 { return pObj.Id;                     }
-
-func Aig_ObjIsMarkA(pObj *Aig_Obj_t) int32 { return pObj.fMarkA;  }
-func Aig_ObjSetMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 1;     }
-func Aig_ObjClearMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 0;     }
- 
-func Aig_ObjSetTravId(pObj *Aig_Obj_t, TravId int32) { pObj.TravId = TravId;                         }
-func Aig_ObjSetTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds;                    }
-func Aig_ObjSetTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds - 1;                }
-func Aig_ObjIsTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds));     }
-func Aig_ObjIsTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds - 1)); }
-
-func Aig_ObjPhase(pObj *Aig_Obj_t) int32 { return pObj.fPhase;                           }
-func Aig_ObjPhaseReal(pObj *Aig_Obj_t) int32 { if pObj != nil {
-    return Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj);
-} else {
-    return 1;
-}                              }
-func Aig_ObjRefs(pObj *Aig_Obj_t) int32 { return pObj.nRefs;                            }
-func Aig_ObjRef(pObj *Aig_Obj_t) { pObj.nRefs++;                                 }
-func Aig_ObjDeref(pObj *Aig_Obj_t) { assert(pObj.nRefs > 0, "pObj.nRefs > 0"); pObj.nRefs--;      }
-func Aig_ObjClearRef(pObj *Aig_Obj_t) { pObj.nRefs = 0;                               }
-func Aig_ObjFaninId0(pObj *Aig_Obj_t) int32 { if pObj.pFanin0 {
-    return Aig_Regular(pObj.pFanin0).Id;
-} else {
-    return -1;
-} }
-func Aig_ObjFaninId1(pObj *Aig_Obj_t) int32 { if pObj.pFanin1 {
-    return Aig_Regular(pObj.pFanin1).Id;
-} else {
-    return -1;
-} }
-func Aig_ObjFaninC0(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin0);        }
-func Aig_ObjFaninC1(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin1);        }
-func Aig_ObjFanin0(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin0);             }
-func Aig_ObjFanin1(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin1);             }
-func Aig_ObjChild0(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin0;                          }
-func Aig_ObjChild1(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin1;                          }
-func Aig_ObjChild0Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); if Aig_ObjFanin0(pObj) != nil {
-    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pData, Aig_ObjFaninC0(pObj));
-} else {
-    return nil;
-}  }
-func Aig_ObjChild1Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); if Aig_ObjFanin1(pObj) != nil {
-    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pData, Aig_ObjFaninC1(pObj));
-} else {
-    return nil;
-}  }
-func Aig_ObjChild0Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); if Aig_ObjFanin0(pObj) != nil {
-    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pNext, Aig_ObjFaninC0(pObj));
-} else {
-    return nil;
-}  }
-func Aig_ObjChild1Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); if Aig_ObjFanin1(pObj) != nil {
-    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pNext, Aig_ObjFaninC1(pObj));
-} else {
-    return nil;
-}  }
-func Aig_ObjChild0Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); pObj.pFanin0 = Aig_Not(pObj.pFanin0);        }
-func Aig_ObjChild1Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); pObj.pFanin1 = Aig_Not(pObj.pFanin1);        }
-func Aig_ObjCopy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); return (Aig_Obj_t *)pObj.pData;               } 
-func Aig_ObjSetCopy(pObj *Aig_Obj_t, pCopy *Aig_Obj_t) {  assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); pObj.pData = pCopy;       } 
-func Aig_ObjRealCopy(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj));}
-func Aig_ObjToLit(pObj *Aig_Obj_t) int32 { return Abc_Var2Lit( Aig_ObjId(Aig_Regular(pObj)), Aig_IsComplement(pObj) );       }
-func Aig_ObjFromLit(p *Aig_Man_t, iLit int32) *Aig_Obj_t { return Aig_NotCond( Aig_ManObj(p, Abc_Lit2Var(iLit)), Abc_LitIsCompl(iLit) );     }
-func Aig_ObjLevel(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); return pObj.Level;                            }
-func Aig_ObjLevelNew(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); if Aig_ObjFanin1(pObj) != nil {
-    return 1 + Aig_ObjIsExor(pObj) + Abc_MaxInt(Aig_ObjFanin0(pObj).Level, Aig_ObjFanin1(pObj).Level);
-} else {
-    return Aig_ObjFanin0(pObj).Level;
-} }
-func Aig_ObjSetLevel(pObj *Aig_Obj_t, i int32) int32 { assert(!(Aig_IsComplement(pObj) != 0), "!Aig_IsComplement(pObj)"); return pObj.Level = i;                    }
-func Aig_ObjClean(pObj *Aig_Obj_t) { *pObj = Aig_Obj_t{};                                                             }
-func Aig_ObjFanout0(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(p.pFanData && pObj.Id < p.nFansAlloc, "p.pFanData && pObj.Id < p.nFansAlloc"); return Aig_ManObj(p, p.pFanData[5*pObj.Id] >> 1); } 
-func Aig_ObjEquiv(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pEquivs {
-    return p.pEquivs[pObj.Id];
-} else {
-    return nil;
-}           } 
-func Aig_ObjSetEquiv(p *Aig_Man_t, pObj *Aig_Obj_t, pEqu *Aig_Obj_t) { assert(p.pEquivs, "p.pEquivs"); p.pEquivs[pObj.Id] = pEqu;                  }
-func Aig_ObjRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pReprs {
-    return p.pReprs[pObj.Id];
-} else {
-    return nil;
-}             } 
-func Aig_ObjSetRepr(p *Aig_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) { assert(p.pReprs, "p.pReprs"); p.pReprs[pObj.Id] = pRepr;                                } 
-func Aig_ObjWhatFanin(pObj *Aig_Obj_t, pFanin *Aig_Obj_t) int32 { 
-    if Aig_ObjFanin0(pObj) == pFanin { return 0; } 
-    if Aig_ObjFanin1(pObj) == pFanin { return 1; } 
-    assert(false, "0"); return -1; 
+func Aig_Regular(e Edge) Edge {
+	if e == InvalidEdge {
+		return e
+	}
+	return e &^ 1
 }
-func Aig_ObjFanoutC(pObj *Aig_Obj_t, pFanout *Aig_Obj_t) int32 { 
-    if Aig_ObjFanin0(pFanout) == pObj { return Aig_ObjFaninC0(pObj); } 
-    if Aig_ObjFanin1(pFanout) == pObj { return Aig_ObjFaninC1(pObj); } 
-    assert(false, "0"); return -1; 
+func Aig_Not(e Edge) Edge { return e.Not() }
+func Aig_NotCond(e Edge, c int32) Edge {
+	if c != 0 {
+		return e.Not()
+	}
+	return e
+}
+func Aig_IsComplement(e Edge) int32 { return int32(e & 1) }
+
+func Aig_ManCiNum(p *Graph) int32 { return int32(len(p.inputs)) }
+func Aig_ManCoNum(p *Graph) int32 { return int32(len(p.outputs)) }
+func Aig_ManBufNum(p *Graph) int32 {
+	var n int32
+	for id, node := range p.nodes {
+		if p.deleted[id] {
+			continue
+		}
+		if node.Kind == Buffer {
+			n++
+		}
+	}
+	return n
+}
+func Aig_ManAndNum(p *Graph) int32 {
+	var n int32
+	for id, node := range p.nodes {
+		if p.deleted[id] {
+			continue
+		}
+		if node.Kind == And {
+			n++
+		}
+	}
+	return n
+}
+func Aig_ManExorNum(p *Graph) int32 {
+	var n int32
+	for id, node := range p.nodes {
+		if p.deleted[id] {
+			continue
+		}
+		if node.Kind == ExclusiveOr {
+			n++
+		}
+	}
+	return n
+}
+func Aig_ManNodeNum(p *Graph) int32   { return Aig_ManAndNum(p) + Aig_ManExorNum(p) }
+func Aig_ManGetCost(p *Graph) int32   { return Aig_ManAndNum(p) + 3*Aig_ManExorNum(p) }
+func Aig_ManObjNum(p *Graph) int32    { return int32(p.NodeCount()) }
+func Aig_ManObjNumMax(p *Graph) int32 { return int32(len(p.nodes)) }
+func Aig_ManRegNum(p *Graph) int32    { return p.nRegs }
+func Aig_ManConstrNum(p *Graph) int32 { return p.nConstrs }
+
+func Aig_ManConst0(p *Graph) Edge      { return p.Const0() }
+func Aig_ManConst1(p *Graph) Edge      { return p.Const1() }
+func Aig_ManGhost(p *Graph) *Node      { return &p.ghost }
+func Aig_ManCi(p *Graph, i int32) Edge { return p.inputs[i] }
+func Aig_ManCo(p *Graph, i int32) Edge { return p.outputs[i] }
+func Aig_ManLo(p *Graph, i int32) Edge { return p.inputs[int32(len(p.inputs))-p.nRegs+i] }
+func Aig_ManLi(p *Graph, i int32) Edge { return p.outputs[int32(len(p.outputs))-p.nRegs+i] }
+func Aig_ManObj(p *Graph, i int32) Edge {
+	if i < 0 || int(i) >= len(p.nodes) {
+		panic("aig: invalid object index")
+	}
+	return Edge(i) << 1
+}
+
+func Aig_ObjType(p *Graph, e Edge) Aig_Type_t {
+	switch p.node(e).Kind {
+	case Constant:
+		return AIG_OBJ_CONST1
+	case Input:
+		return AIG_OBJ_CI
+	case And:
+		return AIG_OBJ_AND
+	case Buffer:
+		return AIG_OBJ_BUF
+	case ExclusiveOr:
+		return AIG_OBJ_EXOR
+	case Output:
+		return AIG_OBJ_CO
+	}
+	return AIG_OBJ_NONE
+}
+func Aig_ObjIsNone(p *Graph, e Edge) bool   { return !p.valid(e) }
+func Aig_ObjIsConst1(p *Graph, e Edge) bool { return e == p.Const1() }
+func Aig_ObjIsCi(p *Graph, e Edge) bool     { return p.node(e).Kind == Input }
+func Aig_ObjIsCo(p *Graph, e Edge) bool {
+	for _, o := range p.outputs {
+		if o == e {
+			return true
+		}
+	}
+	return false
+}
+func Aig_ObjIsBuf(p *Graph, e Edge) bool  { return p.node(e).Kind == Buffer }
+func Aig_ObjIsAnd(p *Graph, e Edge) bool  { return p.node(e).Kind == And }
+func Aig_ObjIsExor(p *Graph, e Edge) bool { return p.node(e).Kind == ExclusiveOr }
+func Aig_ObjIsNode(p *Graph, e Edge) bool { k := p.node(e).Kind; return k == And || k == ExclusiveOr }
+func Aig_ObjIsTerm(p *Graph, e Edge) bool {
+	return p.node(e).Kind == Constant || p.node(e).Kind == Input || Aig_ObjIsCo(p, e)
+}
+func Aig_ObjIsHash(p *Graph, e Edge) bool { return Aig_ObjIsNode(p, e) }
+func Aig_ObjIsChoice(p *Graph, e Edge) bool {
+	_, ok := p.equivs[e.NodeID()]
+	return ok && p.node(e).Refs > 0
+}
+func Aig_ObjIsCand(p *Graph, e Edge) bool { return p.node(e).Kind == Input || Aig_ObjIsNode(p, e) }
+func Aig_ObjCioId(p *Graph, e Edge) int32 {
+	for i, x := range p.inputs {
+		if x == e {
+			return int32(i)
+		}
+	}
+	for i, x := range p.outputs {
+		if x == e {
+			return int32(i)
+		}
+	}
+	panic("aig: not a terminal")
+}
+func Aig_ObjId(e Edge) int32 { return int32(e.NodeID()) }
+
+func Aig_ObjIsMarkA(p *Graph, e Edge) bool { return p.node(e).MarkA }
+func Aig_ObjSetMarkA(p *Graph, e Edge)     { p.node(e).MarkA = true }
+func Aig_ObjClearMarkA(p *Graph, e Edge)   { p.node(e).MarkA = false }
+
+func Aig_ObjSetTravId(p *Graph, e Edge, id int32)   { p.node(e).TravID = id }
+func Aig_ObjSetTravIdCurrent(p *Graph, e Edge)      { p.node(e).TravID = p.travID }
+func Aig_ObjSetTravIdPrevious(p *Graph, e Edge)     { p.node(e).TravID = p.travID - 1 }
+func Aig_ObjIsTravIdCurrent(p *Graph, e Edge) bool  { return p.node(e).TravID == p.travID }
+func Aig_ObjIsTravIdPrevious(p *Graph, e Edge) bool { return p.node(e).TravID == p.travID-1 }
+
+func Aig_ObjPhase(p *Graph, e Edge) bool     { return p.node(e).Phase }
+func Aig_ObjPhaseReal(p *Graph, e Edge) bool { return p.node(e).Phase != e.Complemented() }
+func Aig_ObjRefs(p *Graph, e Edge) int32     { return int32(p.node(e).Refs) }
+func Aig_ObjRef(p *Graph, e Edge)            { p.node(e).Refs++ }
+func Aig_ObjDeref(p *Graph, e Edge) {
+	if p.node(e).Refs <= 0 {
+		panic("aig: reference underflow")
+	}
+	p.node(e).Refs--
+}
+func Aig_ObjClearRef(p *Graph, e Edge) { p.node(e).Refs = 0 }
+func Aig_ObjFaninId0(p *Graph, e Edge) int32 {
+	x := p.node(e).Fanins[0]
+	if x == InvalidEdge {
+		return -1
+	}
+	return int32(x.NodeID())
+}
+func Aig_ObjFaninId1(p *Graph, e Edge) int32 {
+	x := p.node(e).Fanins[1]
+	if x == InvalidEdge {
+		return -1
+	}
+	return int32(x.NodeID())
+}
+func Aig_ObjFaninC0(p *Graph, e Edge) int32   { return int32(p.node(e).Fanins[0] & 1) }
+func Aig_ObjFaninC1(p *Graph, e Edge) int32   { return int32(p.node(e).Fanins[1] & 1) }
+func Aig_ObjFanin0(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[0]) }
+func Aig_ObjFanin1(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[1]) }
+func Aig_ObjChild0(p *Graph, e Edge) Edge     { return p.node(e).Fanins[0] }
+func Aig_ObjChild1(p *Graph, e Edge) Edge     { return p.node(e).Fanins[1] }
+func Aig_ObjChild0Copy(p *Graph, e Edge) Edge { return Aig_ObjRealCopy(p, p.node(e).Fanins[0]) }
+func Aig_ObjChild1Copy(p *Graph, e Edge) Edge { return Aig_ObjRealCopy(p, p.node(e).Fanins[1]) }
+func Aig_ObjChild0Next(p *Graph, e Edge) Edge {
+	x := p.node(e).Fanins[0]
+	n, ok := p.next[x.NodeID()]
+	if !ok {
+		return InvalidEdge
+	}
+	if x.Complemented() {
+		n = n.Not()
+	}
+	return n
+}
+func Aig_ObjChild1Next(p *Graph, e Edge) Edge {
+	x := p.node(e).Fanins[1]
+	n, ok := p.next[x.NodeID()]
+	if !ok {
+		return InvalidEdge
+	}
+	if x.Complemented() {
+		n = n.Not()
+	}
+	return n
+}
+func Aig_ObjChild0Flip(p *Graph, e Edge) { p.node(e).Fanins[0] = p.node(e).Fanins[0].Not() }
+func Aig_ObjChild1Flip(p *Graph, e Edge) { p.node(e).Fanins[1] = p.node(e).Fanins[1].Not() }
+func Aig_ObjCopy(p *Graph, e Edge) Edge {
+	if x, ok := p.copies[e.NodeID()]; ok {
+		return x
+	}
+	return InvalidEdge
+}
+func Aig_ObjSetCopy(p *Graph, e, copy Edge) {
+	if p.copies == nil {
+		p.copies = make(map[int]Edge)
+	}
+	p.copies[e.NodeID()] = copy
+}
+func Aig_ObjRealCopy(p *Graph, e Edge) Edge {
+	x := Aig_ObjCopy(p, e)
+	if x == InvalidEdge {
+		return x
+	}
+	if e.Complemented() {
+		x = x.Not()
+	}
+	return x
+}
+func Aig_ObjToLit(e Edge) int32 { return int32(e) }
+func Aig_ObjFromLit(p *Graph, lit int32) Edge {
+	e := Edge(lit)
+	if !p.valid(e) {
+		panic("aig: invalid literal")
+	}
+	return e
+}
+func Aig_ObjLevel(p *Graph, e Edge) int32 { return int32(p.node(e).Level) }
+func Aig_ObjLevelNew(p *Graph, e Edge) int32 {
+	n := p.node(e)
+	if n.Kind == Buffer || n.Kind == Output {
+		return int32(p.node(n.Fanins[0]).Level)
+	}
+	if n.Kind == Constant || n.Kind == Input {
+		return 0
+	}
+	a, b := p.node(n.Fanins[0]).Level, p.node(n.Fanins[1]).Level
+	if a > b {
+		return int32(a + 1)
+	}
+	return int32(b + 1)
+}
+func Aig_ObjSetLevel(p *Graph, e Edge, l int32) int32 { p.node(e).Level = int(l); return l }
+func Aig_ObjClean(p *Graph, e Edge)                   { *p.node(e) = Node{} }
+func Aig_ObjFanout0(p *Graph, e Edge) Edge {
+	for id, n := range p.nodes {
+		if p.deleted[id] {
+			continue
+		}
+		for _, x := range nodeFanins(n) {
+			if x.NodeID() == e.NodeID() {
+				return Edge(id) << 1
+			}
+		}
+	}
+	return InvalidEdge
+}
+func Aig_ObjEquiv(p *Graph, e Edge) Edge {
+	if x, ok := p.equivs[e.NodeID()]; ok {
+		return x
+	}
+	return InvalidEdge
+}
+func Aig_ObjSetEquiv(p *Graph, e, x Edge) {
+	if p.equivs == nil {
+		p.equivs = make(map[int]Edge)
+	}
+	p.equivs[e.NodeID()] = x
+}
+func Aig_ObjRepr(p *Graph, e Edge) Edge {
+	if x, ok := p.reprs[e.NodeID()]; ok {
+		return x
+	}
+	return InvalidEdge
+}
+func Aig_ObjSetRepr(p *Graph, e, x Edge) {
+	if p.reprs == nil {
+		p.reprs = make(map[int]Edge)
+	}
+	p.reprs[e.NodeID()] = x
+}
+func Aig_ObjWhatFanin(p *Graph, e, fanin Edge) int32 {
+	for i, x := range p.node(e).Fanins {
+		if x.NodeID() == fanin.NodeID() {
+			return int32(i)
+		}
+	}
+	return -1
+}
+func Aig_ObjFanoutC(p *Graph, e, fanout Edge) int32 {
+	i := Aig_ObjWhatFanin(p, fanout, e)
+	if i < 0 {
+		panic("aig: not a fanout")
+	}
+	return int32(p.node(fanout).Fanins[i] & 1)
 }
 
 // create the ghost of the new node
-func Aig_ObjCreateGhost(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {
-    var pGhost *Aig_Obj_t;
-    assert(Type != AIG_OBJ_AND || !(Aig_ObjIsConst1(Aig_Regular(p0)) != 0), "Type != AIG_OBJ_AND || !Aig_ObjIsConst1(Aig_Regular(p0))");
-    assert(p1 == nil || !(Aig_ObjIsConst1(Aig_Regular(p1)) != 0), "p1 == nil || !Aig_ObjIsConst1(Aig_Regular(p1))");
-    assert(Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1), "Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1)");
-    pGhost = Aig_ManGhost(p);
-    pGhost.Type = Type;
-    if p1 == nil || Aig_Regular(p0).Id < Aig_Regular(p1).Id {
-        pGhost.pFanin0 = p0;
-        pGhost.pFanin1 = p1;
-    
-    } else {
-        pGhost.pFanin0 = p1;
-        pGhost.pFanin1 = p0;
-    }
-    return pGhost;
+func Aig_ObjCreateGhost(p *Graph, a, b Edge, kind Aig_Type_t) *Node {
+	if a > b {
+		a, b = b, a
+	}
+	k := And
+	if kind == AIG_OBJ_EXOR {
+		k = ExclusiveOr
+	}
+	p.ghost = Node{Kind: k, Fanins: [2]Edge{a, b}}
+	return &p.ghost
 }
 
 // internal memory manager
-func Aig_ManFetchMemory(p *Aig_Man_t) *Aig_Obj_t {
-    extern char * Aig_MmFixedEntryFetch( Aig_MmFixed_t * p );
-    var pTemp *Aig_Obj_t;
-    pTemp = (Aig_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObjs );
-    *pTemp = Aig_Obj_t{}; 
-    pTemp.Id = Vec_PtrSize(p.vObjs);
-    Vec_PtrPush( p.vObjs, pTemp );
-    return pTemp;
+func Aig_ManFetchMemory(p *Graph) Edge {
+	e := Edge(len(p.nodes)) << 1
+	p.nodes = append(p.nodes, Node{})
+	return e
 }
-func Aig_ManRecycleMemory(p *Aig_Man_t, pEntry *Aig_Obj_t) {
-    extern void Aig_MmFixedEntryRecycle( Aig_MmFixed_t * p, char * pEntry );
-    assert(pEntry.nRefs == 0, "pEntry.nRefs == 0");
-    pEntry.Type = AIG_OBJ_NONE; // distinquishes a dead node from a live node
-    Aig_MmFixedEntryRecycle( p.pMemObjs, (char *)pEntry );
-    p.nDeleted++;
+func Aig_ManRecycleMemory(p *Graph, e Edge) {
+	if p.node(e).Refs != 0 {
+		panic("aig: recycling referenced node")
+	}
+	p.deleted[e.NodeID()] = true
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                             ITERATORS                            ///
@@ -493,18 +522,47 @@ func Aig_ManRecycleMemory(p *Aig_Man_t, pEntry *Aig_Obj_t) {
 // #define Aig_ManForEachExorReverse( p, pObj, i )                                 \
 //     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p->vObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsExor(pObj) ) {} else
 
-
 // these two procedures are only here for the use inside the iterator
-func Aig_ObjFanout0Int(p *Aig_Man_t, ObjId int32) int32 { assert(ObjId < p.nFansAlloc, "ObjId < p.nFansAlloc");  return p.pFanData[5*ObjId];                         }
-func Aig_ObjFanoutNext(p *Aig_Man_t, iFan int32) int32 { assert(iFan/2 < p.nFansAlloc, "iFan/2 < p.nFansAlloc"); return p.pFanData[5*(iFan >> 1) + 3 + (iFan & 1)];  }
+func Aig_ObjFanout0Int(p *Graph, id int32) int32 {
+	for i, n := range p.nodes {
+		if p.deleted[i] {
+			continue
+		}
+		for pin, x := range nodeFanins(n) {
+			if x.NodeID() == int(id) {
+				return int32(i*2 + pin)
+			}
+		}
+	}
+	return 0
+}
+func Aig_ObjFanoutNext(p *Graph, fan int32) int32 {
+	if fan <= 0 {
+		return 0
+	}
+	node, slot := fan/2, fan&1
+	if int(node) >= len(p.nodes) || int(slot) >= len(nodeFanins(p.nodes[node])) {
+		panic("aig: invalid fanout handle")
+	}
+	source := p.nodes[node].Fanins[slot].NodeID()
+	for i := int(fan) + 1; i < len(p.nodes)*2; i++ {
+		if p.deleted[i/2] {
+			continue
+		}
+		n := p.nodes[i/2]
+		if i&1 < len(nodeFanins(n)) && n.Fanins[i&1].NodeID() == source {
+			return int32(i)
+		}
+	}
+	return 0
+}
+
 // iterator over the fanouts
 // Original macro:
 // #define Aig_ObjForEachFanout( p, pObj, pFanout, iFan, i )                       \
 //     for ( assert(p->pFanData), i = 0; (i < (int)(pObj)->nRefs) &&               \
 //           (((iFan) = i? Aig_ObjFanoutNext(p, iFan) : Aig_ObjFanout0Int(p, pObj->Id)), 1) && \
 //           (((pFanout) = Aig_ManObj(p, iFan>>1)), 1); i++ )
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                     SEQUENTIAL ITERATORS                         ///
@@ -536,13 +594,12 @@ func Aig_ObjFanoutNext(p *Aig_Man_t, iFan int32) int32 { assert(iFan/2 < p.nFans
 //     for ( k = 0; (k < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, k)), 1)    \
 //         && (((pObjLo)=Aig_ManLo(p, k)), 1); k++ )
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
 /*=== aigCheck.c ========================================================*/
-extern ABC_DLL int     Aig_ManCheck( Aig_Man_t * p );
+// Aig_ManCheck is implemented in aigCheck.go.
 // extern void            Aig_ManCheckMarkA( Aig_Man_t * p );
 
 // extern void            Aig_ManCheckPhase( Aig_Man_t * p );
@@ -831,7 +888,7 @@ extern ABC_DLL int     Aig_ManCheck( Aig_Man_t * p );
 // extern Aig_Man_t *     Aig_ManReduceLaches( Aig_Man_t * p, int fVerbose );
 
 // extern void            Aig_ManComputeSccs( Aig_Man_t * p );
- 
+
 // extern Aig_Man_t *     Aig_ManScl( Aig_Man_t * pAig, int fLatchConst, int fLatchEqual, int fUseMvSweep, int nFramesSymb, int nFramesSatur, int fVerbose, int fVeryVerbose );
 
 /*=== aigShow.c ========================================================*/
@@ -952,11 +1009,9 @@ extern ABC_DLL int     Aig_ManCheck( Aig_Man_t * p );
 
 // extern void            Aig_ManInvertConstraints( Aig_Man_t * pAig );
 
-
 /*=== aigWin.c =========================================================*/
 // extern void            Aig_ManFindCut( Aig_Obj_t * pRoot, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited, int nSizeLimit, int nFanoutLimit );
 
- 
 /*=== aigMem.c ===========================================================*/
 // fixed-size-block memory manager
 // extern Aig_MmFixed_t * Aig_MmFixedStart( int nEntrySize, int nEntriesMax );
@@ -995,16 +1050,16 @@ extern ABC_DLL int     Aig_ManCheck( Aig_Man_t * p );
 
 // extern int             Aig_MmStepReadMemUsage( Aig_MmStep_t * p );
 
-
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
+// Aig_ManSetConstrNum marks the trailing ordinary outputs as constraints.
+func Aig_ManSetConstrNum(p *Graph, count int32) {
+	if count < 0 || int(count) > len(p.outputs)-int(p.nRegs) {
+		panic("aig: invalid constraint count")
+	}
+	p.nConstrs = count
+}

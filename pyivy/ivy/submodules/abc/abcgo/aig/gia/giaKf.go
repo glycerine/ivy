@@ -1253,14 +1253,14 @@ Kf_Man_t * Kf_ManAlloc( Gia_Man_t * pGia, Jf_Par_t * pPars )
 }
 void Kf_ManFree( Kf_Man_t * p )
 {
-    ABC_FREE( p->pGia->pRefs );
-    ABC_FREE( p->vCuts.pArray );
-    ABC_FREE( p->vTime.pArray );
-    ABC_FREE( p->vArea.pArray );
-    ABC_FREE( p->vRefs.pArray );
+    p.pGia.Refs = nil;
+    p.vCuts.pArray = nil;
+    p.vTime.pArray = nil;
+    p.vArea.pArray = nil;
+    p.vRefs.pArray = nil;
     Vec_IntFreeP( &p->vTemp );
     Vec_SetFree_( &p->pMem );
-    ABC_FREE( p );
+    p = nil;
 }
 Gia_Man_t * Kf_ManDerive( Kf_Man_t * p )
 {

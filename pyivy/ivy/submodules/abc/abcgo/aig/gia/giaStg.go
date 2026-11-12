@@ -72,7 +72,7 @@ func Gia_ManPrintStateEncoding(vCodes *Vec_Vec_t, nBits int32) {
         fmt.Printf("%s\n", pBuffer);
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = "";
 }
 
 /**Function*************************************************************

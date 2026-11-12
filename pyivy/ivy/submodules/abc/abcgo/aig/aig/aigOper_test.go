@@ -1,0 +1,37 @@
+package aig
+
+import "testing"
+
+func TestOriginalAigOperations(t *testing.T) {
+	p := NewGraph()
+	a, b := Aig_IthVar(p, 0), Aig_IthVar(p, 1)
+	if _, ok := Aig_TableLookupInt(p, a, b); ok {
+		t.Fatal("unexpected hash entry")
+	}
+	n := Aig_And(p, a, b)
+	if got, ok := Aig_TableLookupInt(p, b, a); !ok || got != n {
+		t.Fatal("lookup failed")
+	}
+	p.AddOutput(Aig_CreateAnd(p, 3))
+	p.AddOutput(Aig_CreateOr(p, 3))
+	p.AddOutput(Aig_CreateExor(p, 3))
+	p.AddOutput(Aig_MiterTwo(p, []Edge{a, b}, []Edge{a, b}))
+	p.AddOutput(Aig_Miter(p, []Edge{a, a, b, b.Not()}))
+	for mask := 0; mask < 8; mask++ {
+		x, y, z := mask&1 != 0, mask&2 != 0, mask&4 != 0
+		out, err := p.Evaluate([]bool{x, y, z})
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := []bool{x && y && z, x || y || z, (x != y) != z, false, true}
+		for i, v := range want {
+			if out[i] != v {
+				t.Fatalf("assignment %d output %d", mask, i)
+			}
+		}
+	}
+	if err := p.Check(); err != nil {
+		t.Fatal(err)
+	}
+	Aig_MuxTest()
+}

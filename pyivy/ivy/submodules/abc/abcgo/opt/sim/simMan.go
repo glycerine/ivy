@@ -127,14 +127,10 @@ func Sym_ManStop(p *Sym_Man_t) {
     Vec_IntFree( p.vPairsTotal );
     Vec_IntFree( p.vPairsSym );
     Vec_IntFree( p.vPairsNonSym );
-    // inlining of macro ABC_FREE
-    ((p.uPatRand) ? (free((char *) (p.uPatRand)), (p.uPatRand) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.uPatCol) ? (free((char *) (p.uPatCol)), (p.uPatCol) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.uPatRow) ? (free((char *) (p.uPatRow)), (p.uPatRow) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.uPatRand = nil;
+    p.uPatCol = nil;
+    p.uPatRow = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -246,8 +242,7 @@ func Sim_ManStop(p *Sim_Man_t) {
     if p.pMmPat {       Extra_MmFixedStop( p.pMmPat ); }
     if p.vFifo {        Vec_PtrFree( p.vFifo ); }
     if p.vDiffs {       Vec_IntFree( p.vDiffs ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

@@ -212,8 +212,7 @@ func Bac_ManReadBac(pFileName string) *Bac_Man_t {
     // read the networks
     p = Bac_ManReadBacInt( vOut );
     if p != nil {
-        // inlining of macro ABC_FREE
-        ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);
+        p.pSpec = nil;
         p.pSpec = Abc_UtilStrsav( pFileName );
     }
     Vec_StrFree( vOut );

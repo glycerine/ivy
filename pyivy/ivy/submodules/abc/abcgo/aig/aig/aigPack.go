@@ -1,418 +1,244 @@
 package aig
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"math/bits"
+	"math/rand/v2"
+	"os"
+)
 
-/**CFile****************************************************************
- 
-  FileName    [aigPack.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Bit-packing code.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigPack.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// resubstitution manager
-   
+// Aig_ManPack_t packs compatible partial assignments into 64 simulation lanes.
+// AddPattern reserves lane zero for the all-zero input assignment. Literal
+// variable numbers refer to CI positions, not graph object IDs.
 type Aig_ManPack_t struct {
-    pAig         *Aig_Man_t;        // working manager 
-    vSigns         *Vec_Wrd_t;      // object signatures
-    vPiPats         *Vec_Wrd_t;     // PI assignments
-    vPiCare         *Vec_Wrd_t;     // PI care set
-    iPatCur                int32;     // current pattern
-    fVerbose                int32;    // verbosiness flag
-    // statistics
-    nPatTotal                int32;   // number of all patterns
-    nPatSkip                int32;    // number of skipped patterns
-    nPatRepeat                int32;  // number of repeated patterns
+	pAig                *Graph
+	vSigns              []uint64
+	vPiPats             []uint64
+	vPiCare             []uint64
+	nPatTotal, nPatSkip int32
 }
 
-func Aig_Word6CountOnes(t word) int32 { return Aig_WordCountOnes( uint32((t >> 32)) ) + Aig_WordCountOnes( uint32((t & 0xFFFFFFFF)) ); }
-func Aig_Word6HasOneBit(t word) int32 { return (t & (t-1)) == 0; }
+func Aig_Word6CountOnes(word uint64) int32 { return int32(bits.OnesCount64(word)) }
 
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackAlloc(pAig *Aig_Man_t) *Aig_ManPack_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Aig_ManPack_t{};
-    p.pAig    = pAig;
-    p.vSigns  = Vec_WrdStart( Aig_ManObjNumMax(pAig) );
-    p.vPiPats = Vec_WrdStart( Aig_ManCiNum(pAig) );
-    p.vPiCare = Vec_WrdStart( Aig_ManCiNum(pAig) );
-    p.iPatCur = 1;
-    return p;
+// ABC's historical name includes zero: this tests whether at most one bit is set.
+func Aig_Word6HasOneBit(word uint64) int32 {
+	if word&(word-1) == 0 {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Aig_ManPackAlloc(graph *Graph) *Aig_ManPack_t {
+	if graph == nil {
+		panic("aig: nil packing graph")
+	}
+	return &Aig_ManPack_t{pAig: graph, vSigns: make([]uint64, len(graph.nodes)), vPiPats: make([]uint64, len(graph.inputs)), vPiCare: make([]uint64, len(graph.inputs))}
+}
+func (p *Aig_ManPack_t) checkInputs() {
+	if p == nil || p.pAig == nil {
+		panic("aig: packing manager stopped")
+	}
+	if len(p.vPiPats) != len(p.pAig.inputs) {
+		panic("aig: input interface changed while packing")
+	}
+}
 func Aig_ManPackCountCares(p *Aig_ManPack_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, Total int32;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Total += Aig_Word6CountOnes( Vec_WrdEntry(p.vPiCare, i) );
-    }
-    return Total;
+	p.checkInputs()
+	var count int32
+	for _, care := range p.vPiCare {
+		count += Aig_Word6CountOnes(care)
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackPrintCare(p *Aig_ManPack_t) {
-    var pObj *Aig_Obj_t;
-    var Sign word;
-    var i int32;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Sign = Vec_WrdEntry( p.vPiCare, i );
-//        Extra_PrintBinary( stdout, (unsigned *)&Sign, 64 );
-//        printf( "\n" );
-    }
-//    printf( "\n" );
+// WriteCare makes the old optional bitset diagnostic usable with any Go writer.
+func (p *Aig_ManPack_t) WriteCare(writer io.Writer) {
+	p.checkInputs()
+	for _, care := range p.vPiCare {
+		fmt.Fprintf(writer, "%064b\n", care)
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Aig_ManPackPrintCare(p *Aig_ManPack_t) { p.WriteCare(os.Stdout) }
 func Aig_ManPackFree(p *Aig_ManPack_t) {
-//    Aig_ManPackPrintCare( p );
-    fmt.Printf("Patterns: ");
-    fmt.Printf("Total = %6d. ", p.nPatTotal);
-    fmt.Printf("Skipped = %6d. ", p.nPatSkip);
-    fmt.Printf("Cares = %6.2f %%  ", 100.0*Aig_ManPackCountCares(p)/Aig_ManCiNum(p.pAig)/64);
-    fmt.Printf("\n");
-    Vec_WrdFree( p.vSigns );
-    Vec_WrdFree( p.vPiPats );
-    Vec_WrdFree( p.vPiCare );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p == nil {
+		return
+	}
+	p.checkInputs()
+	percent := 0.0
+	if len(p.vPiPats) != 0 {
+		percent = 100 * float64(Aig_ManPackCountCares(p)) / float64(len(p.vPiPats)*64)
+	}
+	fmt.Printf("Patterns: Total = %6d. Skipped = %6d. Cares = %6.2f %%  \n", p.nPatTotal, p.nPatSkip, percent)
+	*p = Aig_ManPack_t{}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_ManPackSetRandom(p *Aig_ManPack_t) {
-    var pObj *Aig_Obj_t;
-    var Sign word;
-    var i int32;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Sign = (((word)Aig_ManRandom(0)) << 32) | ((word)Aig_ManRandom(0));
-        Vec_WrdWriteEntry( p.vPiPats, i, Sign << 1 );
-    }
+	p.checkInputs()
+	for i := range p.vPiPats {
+		p.vPiPats[i] = (rand.Uint64()<<1)&^p.vPiCare[i] | p.vPiPats[i]&p.vPiCare[i]
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_ManPackSimulate(p *Aig_ManPack_t) {
-    var pObj *Aig_Obj_t;
-    var Sign, Sign0, Sign1 word;
-    var i int32;
-    // set the constant
-    Vec_WrdWriteEntry( p.vSigns, 0, ~(word)0 );
-    // transfer into the array
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Vec_WrdEntry(p.vPiPats, i) );
-    }
-    // simulate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );
-        Sign1 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId1(pObj) );
-        if Aig_ObjFaninC0(pObj) && Aig_ObjFaninC1(pObj) {
-            Sign = ~(Sign0 | Sign1);
-        } else if Aig_ObjFaninC0(pObj) {
-            Sign = ~Sign0 &  Sign1;
-        } else if Aig_ObjFaninC1(pObj) {
-            Sign =  Sign0 & ~Sign1;
-        } else {
-            Sign =  Sign0 &  Sign1; }
-        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );
-    }
-    }
-    // set the outputs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );
-        if Aig_ObjFaninC0(pObj) {
-            Sign = ~Sign0;
-        } else {
-            Sign = Sign0;
-        }
-        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );
-    }
+	p.checkInputs()
+	g := p.pAig
+	if len(p.vSigns) != len(g.nodes) {
+		p.vSigns = make([]uint64, len(g.nodes))
+	}
+	state := make([]uint8, len(g.nodes))
+	p.vSigns[0] = ^uint64(0)
+	state[0] = 2
+	for i, input := range g.inputs {
+		p.vSigns[input.NodeID()] = p.vPiPats[i]
+		state[input.NodeID()] = 2
+	}
+	var simulate func(Edge) uint64
+	simulate = func(edge Edge) uint64 {
+		if !g.valid(edge) {
+			panic("aig: invalid packed simulation edge")
+		}
+		id := edge.NodeID()
+		if state[id] == 1 {
+			panic("aig: cyclic packed simulation graph")
+		}
+		if state[id] != 2 {
+			state[id] = 1
+			n := g.nodes[id]
+			var value uint64
+			switch n.Kind {
+			case And:
+				value = simulate(n.Fanins[0]) & simulate(n.Fanins[1])
+			case ExclusiveOr:
+				value = simulate(n.Fanins[0]) ^ simulate(n.Fanins[1])
+			case Buffer, Output:
+				value = simulate(n.Fanins[0])
+			default:
+				panic("aig: unbound simulation terminal")
+			}
+			p.vSigns[id] = value
+			state[id] = 2
+		}
+		value := p.vSigns[id]
+		if edge.Complemented() {
+			value = ^value
+		}
+		return value
+	}
+	for id := range g.nodes {
+		if !g.deleted[id] {
+			simulate(Edge(id) << 1)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackPrintStats(p *Aig_ManPack_t) {
-    var Sign word;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var Total int32;
-    var Count int32;
-    var Counts [33]int32 ; // the number of nodes having that many patterns
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );
-        Count = Aig_Word6CountOnes( Sign );
-        if Count > 32 {
-            Count = 64 - Count; }
-        Counts[Count]++;        
-    }
-    }
-    // print statistics
-    Total = 0;
-    for  i = 0; i <= 32; i++  {
-        Total += Counts[i];
-        fmt.Printf("%2d : ", i);
-        fmt.Printf("%6d  ", Counts[i]);
-        fmt.Printf("%6.1f %%", 100.0*Counts[i]/Aig_ManNodeNum(p.pAig));
-        fmt.Printf("%6.1f %%", 100.0*Total/Aig_ManNodeNum(p.pAig));
-        fmt.Printf("\n");
-    }
+func (p *Aig_ManPack_t) histogram() (counts [33]int, total int) {
+	p.checkInputs()
+	for id, n := range p.pAig.nodes {
+		if p.pAig.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+			continue
+		}
+		ones := bits.OnesCount64(p.vSigns[id])
+		if ones > 32 {
+			ones = 64 - ones
+		}
+		counts[ones]++
+		total++
+	}
+	return
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackConstNodes(p *Aig_ManPack_t) *Vec_Int_t {
-    var vNodes *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var Sign word;
-    var i int32;
-    vNodes = Vec_IntAlloc( 1000 );
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );
-        if Sign == 0 || ~Sign == 0 || (Aig_Word6HasOneBit(Sign) != 0) || (Aig_Word6HasOneBit(~Sign) != 0) {
-            Vec_IntPush( vNodes, Aig_ObjId(pObj) ); }
-    }
-    }
-    return vNodes;
+func (p *Aig_ManPack_t) WriteStats(writer io.Writer) {
+	counts, total := p.histogram()
+	sum := 0
+	for i, count := range counts {
+		sum += count
+		percent, cumulative := 0.0, 0.0
+		if total != 0 {
+			percent = 100 * float64(count) / float64(total)
+			cumulative = 100 * float64(sum) / float64(total)
+		}
+		fmt.Fprintf(writer, "%2d : %6d  %6.1f %%%6.1f %%\n", i, count, percent, cumulative)
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Packs patterns into array of simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-*************************************`**********************************/
-func Aig_ManPackAddPatternTry(p *Aig_ManPack_t, iBit int32, vLits *Vec_Int_t) int32 {
-    var pInfo, pPres *word;
-    var i, Lit int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLits)) && (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {
-        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );
-        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );
-        if Abc_InfoHasBit( (unsigned *)pPres, iBit ) && 
-             Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {
-             return 0; }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLits)) && (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {
-        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );
-        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );
-        Abc_InfoSetBit( (unsigned *)pPres, iBit );
-        if Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {
-             Abc_InfoXorBit( (unsigned *)pInfo, iBit ); }
-    }
-    return 1;
+func Aig_ManPackPrintStats(p *Aig_ManPack_t) { p.WriteStats(os.Stdout) }
+func Aig_ManPackConstNodes(p *Aig_ManPack_t) []int32 {
+	p.checkInputs()
+	var nodes []int32
+	for id, n := range p.pAig.nodes {
+		if p.pAig.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+			continue
+		}
+		signature := p.vSigns[id]
+		if Aig_Word6HasOneBit(signature) != 0 || Aig_Word6HasOneBit(^signature) != 0 {
+			nodes = append(nodes, int32(id))
+		}
+	}
+	return nodes
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackAddPattern(p *Aig_ManPack_t, vLits *Vec_Int_t) {
-    var k int32;
-    for  k = 1; k < 64; k++  {
-        if Aig_ManPackAddPatternTry( p, k, vLits ) != 0 {
-            break; }
-    }
-    if k == 64 {
-/*
-        word * pInfo, * pPres;
-        int i, Lit;
-        Vec_IntForEachEntry( vLits, Lit, i )
-            printf( "%d", Abc_LitIsCompl(Lit) );
-        printf( "\n\n" );
-        for ( k = 1; k < 64; k++ )
-        {
-            Vec_IntForEachEntry( vLits, Lit, i )
-            {
-                pInfo = Vec_WrdEntryP( p->vPiPats, Abc_Lit2Var(Lit) );
-                pPres = Vec_WrdEntryP( p->vPiCare, Abc_Lit2Var(Lit) );
-                if ( Abc_InfoHasBit( (unsigned *)pPres, k ) )
-                    printf( "%d", Abc_InfoHasBit( (unsigned *)pInfo, k ) );
-                else
-                    printf( "-" );
-            }
-            printf( "\n" );
-        }
-*/
-        p.nPatSkip++;
-    }
-    p.nPatTotal++;
+func Aig_ManPackAddPatternTry(p *Aig_ManPack_t, bit int32, literals []int32) int32 {
+	p.checkInputs()
+	if bit < 0 || bit >= 64 {
+		panic("aig: simulation lane out of range")
+	}
+	mask := uint64(1) << uint(bit)
+	// Validate the whole pattern before changing storage, including contradictory
+	// duplicate literals that the original two-loop implementation overlooked.
+	required := make(map[int]bool, len(literals))
+	for _, literal := range literals {
+		if literal < 0 || int(literal>>1) >= len(p.vPiPats) {
+			panic("aig: pattern literal outside CI interface")
+		}
+		variable := int(literal >> 1)
+		value := literal&1 == 0
+		if previous, exists := required[variable]; exists && previous != value {
+			return 0
+		}
+		required[variable] = value
+		if p.vPiCare[variable]&mask != 0 && (p.vPiPats[variable]&mask != 0) != value {
+			return 0
+		}
+	}
+	for variable, value := range required {
+		p.vPiCare[variable] |= mask
+		if value {
+			p.vPiPats[variable] |= mask
+		} else {
+			p.vPiPats[variable] &= ^mask
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManPackStart(pAig *Aig_Man_t) *Aig_ManPack_t {
-    var p *Aig_ManPack_t;
-    p = Aig_ManPackAlloc( pAig );
-    Aig_ManPackSetRandom( p );
-    Aig_ManPackSimulate( p );
-    Aig_ManPackPrintStats( p );
-    return p;
+func Aig_ManPackAddPattern(p *Aig_ManPack_t, literals []int32) {
+	p.checkInputs()
+	packed := false
+	for bit := int32(1); bit < 64; bit++ {
+		if Aig_ManPackAddPatternTry(p, bit, literals) != 0 {
+			packed = true
+			break
+		}
+	}
+	if !packed {
+		p.nPatSkip++
+	}
+	p.nPatTotal++
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Aig_ManPackStart(graph *Graph) *Aig_ManPack_t {
+	p := Aig_ManPackAlloc(graph)
+	Aig_ManPackSetRandom(p)
+	Aig_ManPackSimulate(p)
+	Aig_ManPackPrintStats(p)
+	return p
+}
 func Aig_ManPackStop(p *Aig_ManPack_t) {
-    Aig_ManPackSimulate( p );
-    Aig_ManPackPrintStats( p );
-    Aig_ManPackFree( p );
+	Aig_ManPackSimulate(p)
+	Aig_ManPackPrintStats(p)
+	Aig_ManPackFree(p)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Snapshot accessors keep callers from accidentally invalidating packing state.
+func (p *Aig_ManPack_t) InputWords() []uint64                  { return append([]uint64(nil), p.vPiPats...) }
+func (p *Aig_ManPack_t) CareWords() []uint64                   { return append([]uint64(nil), p.vPiCare...) }
+func (p *Aig_ManPack_t) Signatures() []uint64                  { return append([]uint64(nil), p.vSigns...) }
+func (p *Aig_ManPack_t) PatternCounts() (total, skipped int32) { return p.nPatTotal, p.nPatSkip }
 
-
-//ABC_NAMESPACE_IMPL_END
-
+// SetInputWord seeds uncared-for lanes without changing already packed cubes.
+func (p *Aig_ManPack_t) SetInputWord(input int, word uint64) {
+	p.checkInputs()
+	p.vPiPats[input] = word&^p.vPiCare[input] | p.vPiPats[input]&p.vPiCare[input]
+}

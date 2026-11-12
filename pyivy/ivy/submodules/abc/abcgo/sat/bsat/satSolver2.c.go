@@ -1320,8 +1320,7 @@ func sat_solver2_delete(s *sat_solver2) {
         var pCore *veci  = (veci *)Sat_ProofCore( s );
 //        Abc_Print(1, "UNSAT core contains %d clauses (%6.2f %%).\n", veci_size(pCore), 100.0*veci_size(pCore)/veci_size(&s->clauses) );
         veci_delete( pCore );
-        // inlining of macro ABC_FREE
-        ((pCore) ? (free((char *) (pCore)), (pCore) = 0) : 0);
+        pCore = nil;
 //        if ( s->fProofLogging )
 //            Sat_ProofCheck( s );
     }
@@ -1358,31 +1357,19 @@ func sat_solver2_delete(s *sat_solver2) {
             for i = 0; i < s.cap*2; i++ {
                 veci_delete(&s.wlists[i]);
             } }
-        // inlining of macro ABC_FREE
-        ((s.wlists) ? (free((char *) (s.wlists)), (s.wlists) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.vi) ? (free((char *) (s.vi)), (s.vi) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.levels) ? (free((char *) (s.levels)), (s.levels) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.assigns) ? (free((char *) (s.assigns)), (s.assigns) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.trail) ? (free((char *) (s.trail)), (s.trail) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.orderpos) ? (free((char *) (s.orderpos)), (s.orderpos) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.reasons) ? (free((char *) (s.reasons)), (s.reasons) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.units) ? (free((char *) (s.units)), (s.units) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.activity) ? (free((char *) (s.activity)), (s.activity) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.activity2) ? (free((char *) (s.activity2)), (s.activity2) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((s.model) ? (free((char *) (s.model)), (s.model) = 0) : 0);
+        s.wlists = nil;
+        s.vi = nil;
+        s.levels = nil;
+        s.assigns = nil;
+        s.trail = nil;
+        s.orderpos = nil;
+        s.reasons = nil;
+        s.units = nil;
+        s.activity = nil;
+        s.activity2 = nil;
+        s.model = nil;
     }
-    // inlining of macro ABC_FREE
-    ((s) ? (free((char *) (s)), (s) = 0) : 0);
+    s = nil;
 
 //    Abc_PrintTime( 1, "Time", Time );
 }
@@ -1567,8 +1554,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
     pPerm = Abc_MergeSortCost( pSortValues, nLearnedOld );
     assert(pSortValues[pPerm[0]] <= pSortValues[pPerm[nLearnedOld-1]], "pSortValues[pPerm[0]] <= pSortValues[pPerm[nLearnedOld-1]]");
     nCutoffValue = pSortValues[pPerm[nLearnedOld-nSelected]];
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
 //    nCutoffValue = ABC_INFINITY;
 
     // count how many clauses satisfy the condition
@@ -1585,8 +1571,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
     }
     }
     if j < nLearnedOld / 6 {
-        // inlining of macro ABC_FREE
-        ((pSortValues) ? (free((char *) (pSortValues)), (pSortValues) = 0) : 0);
+        pSortValues = nil;
         return;
     }
 
@@ -1616,8 +1601,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
         }
     }
     }
-    // inlining of macro ABC_FREE
-    ((pSortValues) ? (free((char *) (pSortValues)), (pSortValues) = 0) : 0);
+    pSortValues = nil;
     if s.pPrf2 {
         Prf_ManCompact( s.pPrf2, j ); }
 //    if ( j == nLearnedOld )

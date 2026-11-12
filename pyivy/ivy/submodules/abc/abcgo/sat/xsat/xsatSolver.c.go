@@ -780,8 +780,7 @@ func xSAT_SolverReduceDB(s *xSAT_Solver_t) {
             Vec_IntPush( s.vLearnts, CRef );
         }
     }
-    // inlining of macro ABC_FREE
-    ((learnts_cls) ? (free((char *) (learnts_cls)), (learnts_cls) = 0) : 0);
+    learnts_cls = nil;
 
     spStatic_xSAT_SolverReduceDB_TimeTotal += Abc_Clock() - clk;
     if s.Config.fVerbose {

@@ -175,8 +175,7 @@ func Io_WriteBaf(pNtk *Abc_Ntk_t, pFileName string) {
     // write the buffer
     fwrite( pBufferNode, 1, sizeof(int) * nBufferSize, pFile );
     _ = (pFile).Close();
-    // inlining of macro ABC_FREE
-    ((pBufferNode) ? (free((char *) (pBufferNode)), (pBufferNode) = 0) : 0);
+    pBufferNode = nil;
 }
 
 

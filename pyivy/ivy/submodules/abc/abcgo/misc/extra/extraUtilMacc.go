@@ -213,8 +213,7 @@ func Macc_ConstMultGenerate(nBits int32) *uint32 {
 func Macc_ConstMultGenTest0() {
     var nBits int32   =  8;
     var p *uint32  = Macc_ConstMultGenerate( nBits );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 func Macc_ConstMultGenOne_rec(pFile *os.File, p *uint32, n int32, nBits int32, nWidth int32) {
@@ -352,8 +351,7 @@ func Macc_ConstMultGenTest() {
         Macc_ConstMultGenMacc2( pFile, p, i, nBits, nWidth );
         _ = (pFile).Close();
     }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

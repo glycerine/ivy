@@ -460,8 +460,7 @@ func Fraig_FeedBackCovering(p *Fraig_Man_t, vPats *Msat_IntVec_t) {
         fmt.Printf("\n");
     }
     Fraig_NodeVecFree( vColumns );
-    // inlining of macro ABC_FREE
-    ((pHits) ? (free((char *) (pHits)), (pHits) = 0) : 0);
+    pHits = nil;
 }
 
 
@@ -940,8 +939,7 @@ printf( "\n" );
         assert((Fraig_ManSimulateBitNode( p, pNode, pModel ) != 0), "Fraig_ManSimulateBitNode( p, pNode, pModel )");
         return pModel;
     }
-    // inlining of macro ABC_FREE
-    ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
+    pModel = nil;
     return nil;
 }
 

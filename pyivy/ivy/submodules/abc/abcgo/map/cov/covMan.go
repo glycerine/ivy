@@ -111,10 +111,8 @@ func Cov_ManFree(p *Cov_Man_t) {
     Vec_IntFree( p.vComTo1 );
     Vec_IntFree( p.vPairs0 );
     Vec_IntFree( p.vPairs1 );
-    // inlining of macro ABC_FREE
-    ((p.pMemory) ? (free((char *) (p.pMemory)), (p.pMemory) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMemory = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

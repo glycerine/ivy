@@ -243,8 +243,7 @@ func Maj_ManFree(p *Maj_Man_t) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -592,8 +591,7 @@ func Exa_ManFree(p *Exa_Man_t) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -1014,8 +1012,7 @@ func Exa3_ManFree(p *Exa3_Man_t) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

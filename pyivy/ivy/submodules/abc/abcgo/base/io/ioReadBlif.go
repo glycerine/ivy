@@ -1253,8 +1253,7 @@ func Io_ReadBlifGetTokens(p *Io_ReadBlif_t) *Vec_Ptr_t {
     // get rid of the old tokens
     if p.vNewTokens.nSize > 0 {
         for  i = 0; i < p.vNewTokens.nSize; i++  {
-            // inlining of macro ABC_FREE
-            ((p.vNewTokens.pArray[i]) ? (free((char *) (p.vNewTokens.pArray[i])), (p.vNewTokens.pArray[i]) = 0) : 0);
+            p.vNewTokens.pArray[i] = nil;
         }
         p.vNewTokens.nSize = 0;
     }
@@ -1362,8 +1361,7 @@ func Io_ReadBlifFree(p *Io_ReadBlif_t) {
     Vec_IntFree( p.vOutReqs );
     Vec_IntFree( p.vInDrives );
     Vec_IntFree( p.vOutLoads );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -1520,8 +1518,7 @@ func Io_ReadBlifNetworkConnectBoxesOneBox(p *Io_ReadBlif_t, pBox *Abc_Obj_t, tNa
     // remove the array of names, assign the pointer to the model
     // inlining of macro Vec_PtrForEachEntry
     for  i = 0; (i < Vec_PtrSize((Vec_Ptr_t *)pBox.pData)) && (((pName) = (char *)Vec_PtrEntry((Vec_Ptr_t *)pBox.pData, i)), 1); i++  {
-        // inlining of macro ABC_FREE
-        ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);
+        pName = nil;
     }
     Vec_PtrFree( (Vec_Ptr_t *)pBox.pData );
     pBox.pData = pNtkModel;

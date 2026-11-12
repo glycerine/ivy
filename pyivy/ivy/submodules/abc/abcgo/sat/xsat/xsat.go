@@ -1,68 +1,21 @@
+// Package xsat ports Bruno Schmitt's xSAT solver from ABC to Go-owned storage.
+// Search uses xSAT's integer activities, binary watches and LBD heuristics.
 package xsat
 
-/**CFile****************************************************************
+import "time"
+const(Var0=1;Var1=0;VarX=3;LBoolUndef=0;LBoolTrue=1;LBoolFalse=-1;VarUndef=-1;LitUndef=-2)
+const CRefUndef uint32=0xffffffff
 
-  FileName    [xsat.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [xSAT - A SAT solver written in C. 
-               Read the license file for more info.]
-
-  Synopsis    [External definitions of the solver.]
-
-  Author      [Bruno Schmitt <boschmitt@inf.ufrgs.br>]
-
-  Affiliation [UC Berkeley / UFRGS]
-
-  Date        [Ver. 1.0. Started - November 10, 2016.]
-
-  Revision    []
-
-***********************************************************************/
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-//#include "misc/util/abc_global.h"
-//#include "misc/vec/vecInt.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-struct xSAT_Solver_t_;
-type xSAT_Solver_t = xSAT_Solver_t_;
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DECLARATIONS                        ///
-////////////////////////////////////////////////////////////////////////
-/*=== xsatCnfReader.c ================================================*/
-// extern int xSAT_SolverParseDimacs( FILE *, xSAT_Solver_t ** );
-
-
-/*=== xsatSolverAPI.c ================================================*/
-// extern xSAT_Solver_t * xSAT_SolverCreate();
-
-// extern void xSAT_SolverDestroy( xSAT_Solver_t * );
-
-
-// extern int xSAT_SolverAddClause( xSAT_Solver_t *, Vec_Int_t * );
-
-// extern int xSAT_SolverSimplify( xSAT_Solver_t * );
-
-// extern int xSAT_SolverSolve( xSAT_Solver_t * );
-
-
-// extern void xSAT_SolverPrintStats( xSAT_Solver_t * );
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+type Options struct {
+ Verbose bool
+ ConflictLimit,PropagationLimit int64
+ Deadline time.Time
+ K,R float64
+ FirstBlockRestart,LBDWindow,TrailWindow int
+ FirstReduce,ReduceIncrement,SpecialReduceIncrement int
+ FrozenLBD uint32
+}
+type xSAT_SolverOptions_t=Options
+var DefaultConfig=Options{K:0.8,R:1.4,FirstBlockRestart:10000,LBDWindow:50,TrailWindow:5000,FirstReduce:2000,ReduceIncrement:300,SpecialReduceIncrement:1000,FrozenLBD:30}
+type Stats struct {Starts,Reductions uint32;Decisions,Propagations,Inspections,Conflicts,ClauseLiterals,LearntLiterals int64}
+type xSAT_Stats_t=Stats

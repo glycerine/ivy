@@ -115,12 +115,9 @@ func Dau_TruthEnum(nVars int32) {
     Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
     fflush(os.Stdout);
     Vec_IntFree( vNpns );
-    // inlining of macro ABC_FREE
-    ((pPres) ? (free((char *) (pPres)), (pPres) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+    pPres = nil;
+    pPerm = nil;
+    pComp = nil;
     // write into file
     if pTable != nil {
         var pFile *os.File;
@@ -132,8 +129,7 @@ func Dau_TruthEnum(nVars int32) {
         RetValue = fwrite( pTable, 8, nSizeW, pFile );
         RetValue = 0;
         _ = (pFile).Close();
-        // inlining of macro ABC_FREE
-        ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+        pTable = nil;
     }
 }
 
@@ -378,8 +374,7 @@ func Dau_NetworkEnum(nVars int32) {
 
     Vec_WecFree( vNpns );
     Vec_WecFree( vNpns_ );
-    // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
     Abc_PrintTime( 1, "Total time", Abc_Clock() - clk );
     fflush(os.Stdout);
 }

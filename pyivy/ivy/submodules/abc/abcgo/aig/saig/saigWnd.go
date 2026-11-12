@@ -121,8 +121,7 @@ func Saig_ManWindowOutline(p *Aig_Man_t, pObj *Aig_Obj_t, nDist int32) *Vec_Ptr_
         assert(Aig_ObjIsTravIdCurrent(p, pObjLi) == 
                         Aig_ObjIsTravIdCurrent(p, pObjLo), "Aig_ObjIsTravIdCurrent(p, pObjLi) == \n                Aig_ObjIsTravIdCurrent(p, pObjLo)");
     }
-    // inlining of macro ABC_FREE
-    ((pDists) ? (free((char *) (pDists)), (pDists) = 0) : 0);
+    pDists = nil;
     return vNodes;
 }
 

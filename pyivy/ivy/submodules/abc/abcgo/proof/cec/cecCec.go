@@ -374,10 +374,8 @@ func Cec_ManVerify(pInit *Gia_Man_t, pPars *Cec_ParCec_t) int32 {
         Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
     }
     if fDumpUndecided != 0 {
-        // inlining of macro ABC_FREE
-        ((pNew.pReprs) ? (free((char *) (pNew.pReprs)), (pNew.pReprs) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((pNew.pNexts) ? (free((char *) (pNew.pNexts)), (pNew.pNexts) = 0) : 0);
+        pNew.pReprs = nil;
+        pNew.pNexts = nil;
         Gia_AigerWrite( pNew, "gia_cec_undecided.aig", 0, 0, 0 );
         Abc_Print( 1, "The result is written into file \"%s\".\n", "gia_cec_undecided.aig" );
     }

@@ -277,8 +277,7 @@ func CecG_AddClausesSuper(p *Cec_ManSat_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t) 
     }
     RetValue = sat_solver_addclause( p.pSat, pLits, nLits );
     assert((RetValue != 0), "RetValue");
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
 }
 
 /**Function*************************************************************

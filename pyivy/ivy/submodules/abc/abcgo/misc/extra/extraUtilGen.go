@@ -11,7 +11,7 @@ package extra
   Synopsis    [CF simulation.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -20,46 +20,9 @@ package extra
 
 ***********************************************************************/
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "aig/gia/gia.h"
-//#include "misc/vec/vecMem.h"
-//#include "misc/extra/extra.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_CommandGen(Algo int32, LutSize int32, nLuts int32, nLevels int32, Limit int32, nBestTries int32, Multi int32, fXor int32, fVerbose int32) *Gia_Man_t {
-    return nil;
+// Extra_CommandGen preserves the original source's unconditional NULL result.
+// The source contains no generation algorithm. Its graph boundary is the same
+// dependency-neutral interface used by the ZDD diagnostic, avoiding a Gia cycle.
+func Extra_CommandGen(algo, lutSize, nLuts, nLevels, limit, nBestTries, multi, xor, verbose int32) Abc_ZddGiaGraph {
+	return nil
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

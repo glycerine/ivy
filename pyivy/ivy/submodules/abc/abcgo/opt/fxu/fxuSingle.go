@@ -86,8 +86,7 @@ func Fxu_MatrixComputeSingles(p *Fxu_Matrix, fUse0 int32, nSingleMax int32) {
             if nDivCount >= nSingleMax {
                 break; }
         }
-        // inlining of macro ABC_FREE
-        ((pWeigtCounts) ? (free((char *) (pWeigtCounts)), (pWeigtCounts) = 0) : 0);
+        pWeigtCounts = nil;
         // collect singles with the given costs
         k = 0;
         for  i = 2; i < Vec_PtrSize(vSingles); i += 3  {

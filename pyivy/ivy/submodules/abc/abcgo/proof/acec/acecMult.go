@@ -194,10 +194,8 @@ func Extra_TruthCanonNPN3(uTruth word, nVars int32, vRes *Vec_Wrd_t) word {
         }
         assert(tTemp1 == tCur, "tTemp1 == tCur");
     }
-    // inlining of macro ABC_FREE
-    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pComp = nil;
+    pPerm = nil;
     return uTruthMin;
 }
 func Acec_MultFuncTest6() {
@@ -237,8 +235,7 @@ func Extra_TruthCanonNPN2(uTruth uint32, nVars int32, vRes *Vec_Int_t) uint32 {
         spStatic_Extra_TruthCanonNPN2_nVarsOld = nVars;
     
     } else if spStatic_Extra_TruthCanonNPN2_nVarsOld != nVars {
-        // inlining of macro ABC_FREE
-        ((spStatic_Extra_TruthCanonNPN2_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonNPN2_pPerms)), (spStatic_Extra_TruthCanonNPN2_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonNPN2_pPerms = nil;
         spStatic_Extra_TruthCanonNPN2_nPerms = Extra_Factorial( nVars );   
         spStatic_Extra_TruthCanonNPN2_pPerms = Extra_Permutations( nVars );
         spStatic_Extra_TruthCanonNPN2_nVarsOld = nVars;
@@ -442,8 +439,7 @@ func Acec_MultDetectInputs(p *Gia_Man_t, vLeafLits *Vec_Wec_t, vRootLits *Vec_We
     var vLevel *Vec_Int_t;
     var i, k, iLit, iObj, j, Entry int32;
 
-    // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.pRefs = nil;
     Gia_ManCreateRefs( p );
     // inlining of macro Gia_ManForEachCiId
     for  i = 0; (i < Vec_IntSize(p.vCis)) && ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {

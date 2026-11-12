@@ -765,8 +765,7 @@ func Abc_GenRandom(pFileName string, nPis int32) {
     fmt.Fprintf(pFile, ".end\n"); 
     fmt.Fprintf(pFile, "\n"); 
     _ = (pFile).Close();
-    // inlining of macro ABC_FREE
-    ((pTruth) ? (free((char *) (pTruth)), (pTruth) = 0) : 0);
+    pTruth = nil;
 }
 
 

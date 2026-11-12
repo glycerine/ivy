@@ -1,5 +1,7 @@
 package cudd
 
+import core "github.com/glycerine/abcgo/bdd/cudd/core"
+
 import (
 	"fmt"
 	"math"
@@ -1591,10 +1593,7 @@ func Cudd_ReadMinDead(dd *DdManager) unsigned int {
   SeeAlso [Cudd_ReduceHeap Cudd_ReadReorderingTime]
 
 ******************************************************************************/
-func Cudd_ReadReorderings(dd *DdManager) int32 {
-    return(dd.reorderings);
-
-} /* end of Cudd_ReadReorderings */
+func Cudd_ReadReorderings(dd *DdManager) int32 { return int32(core.Cudd_ReadReorderings(dd)) } /* end of Cudd_ReadReorderings */
 
 
 /**Function********************************************************************
@@ -1610,10 +1609,7 @@ func Cudd_ReadReorderings(dd *DdManager) int32 {
   SeeAlso     [Cudd_ReadReorderings]
 
 ******************************************************************************/
-func Cudd_ReadReorderingTime(dd *DdManager) long {
-    return(dd.reordTime);
-
-} /* end of Cudd_ReadReorderingTime */
+func Cudd_ReadReorderingTime(dd *DdManager) int64 { return core.Cudd_ReadReorderingTime(dd) } /* end of Cudd_ReadReorderingTime */
 
 
 /**Function********************************************************************
@@ -1762,10 +1758,7 @@ func Cudd_ReadUniqueLinks(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadSiftMaxSwap Cudd_SetSiftMaxVar]
 
 ******************************************************************************/
-func Cudd_ReadSiftMaxVar(dd *DdManager) int32 {
-    return(dd.siftMaxVar);
-
-} /* end of Cudd_ReadSiftMaxVar */
+func Cudd_ReadSiftMaxVar(dd *DdManager) int32 { return int32(core.Cudd_ReadSiftMaxVar(dd)) } /* end of Cudd_ReadSiftMaxVar */
 
 
 /**Function********************************************************************
@@ -1781,10 +1774,7 @@ func Cudd_ReadSiftMaxVar(dd *DdManager) int32 {
   SeeAlso     [Cudd_SetSiftMaxSwap Cudd_ReadSiftMaxVar]
 
 ******************************************************************************/
-func Cudd_SetSiftMaxVar(dd *DdManager, smv int32) {
-    dd.siftMaxVar = smv;
-
-} /* end of Cudd_SetSiftMaxVar */
+func Cudd_SetSiftMaxVar(dd *DdManager,n int32) { core.Cudd_SetSiftMaxVar(dd,int(n)) } /* end of Cudd_SetSiftMaxVar */
 
 
 /**Function********************************************************************
@@ -1802,10 +1792,7 @@ func Cudd_SetSiftMaxVar(dd *DdManager, smv int32) {
   SeeAlso     [Cudd_ReadSiftMaxVar Cudd_SetSiftMaxSwap]
 
 ******************************************************************************/
-func Cudd_ReadSiftMaxSwap(dd *DdManager) int32 {
-    return(dd.siftMaxSwap);
-
-} /* end of Cudd_ReadSiftMaxSwap */
+func Cudd_ReadSiftMaxSwap(dd *DdManager) int32 { return int32(core.Cudd_ReadSiftMaxSwap(dd)) } /* end of Cudd_ReadSiftMaxSwap */
 
 
 /**Function********************************************************************
@@ -1823,10 +1810,7 @@ func Cudd_ReadSiftMaxSwap(dd *DdManager) int32 {
   SeeAlso     [Cudd_SetSiftMaxVar Cudd_ReadSiftMaxSwap]
 
 ******************************************************************************/
-func Cudd_SetSiftMaxSwap(dd *DdManager, sms int32) {
-    dd.siftMaxSwap = sms;
-
-} /* end of Cudd_SetSiftMaxSwap */
+func Cudd_SetSiftMaxSwap(dd *DdManager,n int32) { core.Cudd_SetSiftMaxSwap(dd,int(n)) } /* end of Cudd_SetSiftMaxSwap */
 
 
 /**Function********************************************************************
@@ -1845,10 +1829,7 @@ func Cudd_SetSiftMaxSwap(dd *DdManager, sms int32) {
   SeeAlso     [Cudd_SetMaxGrowth Cudd_ReadMaxGrowthAlternate]
 
 ******************************************************************************/
-func Cudd_ReadMaxGrowth(dd *DdManager) float64 {
-    return(dd.maxGrowth);
-
-} /* end of Cudd_ReadMaxGrowth */
+func Cudd_ReadMaxGrowth(dd *DdManager) float64 { return core.Cudd_ReadMaxGrowth(dd) } /* end of Cudd_ReadMaxGrowth */
 
 
 /**Function********************************************************************
@@ -1867,10 +1848,7 @@ func Cudd_ReadMaxGrowth(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadMaxGrowth Cudd_SetMaxGrowthAlternate]
 
 ******************************************************************************/
-func Cudd_SetMaxGrowth(dd *DdManager, mg float64) {
-    dd.maxGrowth = mg;
-
-} /* end of Cudd_SetMaxGrowth */
+func Cudd_SetMaxGrowth(dd *DdManager,growth float64) { core.Cudd_SetMaxGrowth(dd,growth) } /* end of Cudd_SetMaxGrowth */
 
 
 /**Function********************************************************************

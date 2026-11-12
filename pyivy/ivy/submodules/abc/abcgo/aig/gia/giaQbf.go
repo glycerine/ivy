@@ -330,7 +330,7 @@ func Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {
         Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );
         fmt.Printf("\n");
         // inlining of macro ABC_FREE
-        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);
+        CodeX = nil;
     }
     // create several different pairs
     srand( time.Now().Unix() );
@@ -379,13 +379,13 @@ func Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {
         fmt.Printf("\n");
 
         // inlining of macro ABC_FREE
-        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);
+        CodeX = nil;
         // inlining of macro ABC_FREE
-        ((CodeY) ? (free((char *) (CodeY)), (CodeY) = 0) : 0);
+        CodeY = nil;
         // inlining of macro ABC_FREE
-        ((CodeXY) ? (free((char *) (CodeXY)), (CodeXY) = 0) : 0);
+        CodeXY = nil;
         // inlining of macro ABC_FREE
-        ((CodeXCodeY) ? (free((char *) (CodeXCodeY)), (CodeXCodeY) = 0) : 0);
+        CodeXCodeY = nil;
     }
 }
 func Gia_Gen2CodeTest() {
@@ -553,7 +553,7 @@ func Gia_QbfFree(p *Qbf_Man_t) {
     Vec_IntFree( p.vValues );
     Vec_IntFree( p.vParMap );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

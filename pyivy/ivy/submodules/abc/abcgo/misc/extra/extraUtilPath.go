@@ -99,8 +99,7 @@ func Abc_EnumeratePaths(nSize int32) *Gia_Man_t {
     Gia_ManAppendCo( pGia, pNodes[nSize] );
     pGia = Gia_ManCleanup( pTemp = pGia );
     Gia_ManStop( pTemp );
-    // inlining of macro ABC_FREE
-    ((pNodes) ? (free((char *) (pNodes)), (pNodes) = 0) : 0);
+    pNodes = nil;
     return pGia;
 }
 func Abc_EnumeratePathsTest() {
@@ -307,11 +306,9 @@ func Abc_GraphCountPaths(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) float64 {
     }
     Value = Abc_GraphCountPaths_rec( 0, 0, vNodes, pCache, pBuffer, vEdges );
     for  i = 0; i < Vec_WecSize(vNodes); i++  {
-        // inlining of macro ABC_FREE
-        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);
+        pCache[i] = nil;
     }
-    // inlining of macro ABC_FREE
-    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);
+    pCache = nil;
     return Value;
 }
 
@@ -364,11 +361,9 @@ func Abc_GraphDeriveGia(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) *Gia_Man_t {
     }
     Value = Abc_GraphDeriveGia_rec( p, 0, 0, vNodes, pCache, pBuffer, vEdges );
     for  i = 0; i < Vec_WecSize(vNodes); i++  {
-        // inlining of macro ABC_FREE
-        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);
+        pCache[i] = nil;
     }
-    // inlining of macro ABC_FREE
-    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);
+    pCache = nil;
     // cleanup
     Gia_ManAppendCo( p, Value );
     p = Gia_ManCleanup( pTemp = p );
@@ -523,8 +518,7 @@ func Abc_GraphBuildFrontier(nSize int32, vEdges *Vec_Int_t, vLife *Vec_Int_t, vF
     if fVerbose != 0 {
         Vec_IntPrint( vStateCount ); }
     Abc_GraphDeriveGiaDump( vNodes, vEdges, nSize );
-    // inlining of macro ABC_FREE
-    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);
+    pFront = nil;
     Vec_WecFree( vNodes );
     Vec_IntFree( vStateNew );
     Vec_IntFree( vStateCount );

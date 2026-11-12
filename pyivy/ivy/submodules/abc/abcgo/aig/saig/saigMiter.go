@@ -617,13 +617,13 @@ func Saig_ManDemiterSimple(p *Aig_Man_t, ppAig0 **Aig_Man_t, ppAig1 **Aig_Man_t)
     if ppAig0 {
         *ppAig0 = Aig_ManDupNodesHalf( p, vSet0, 0 );
         // inlining of macro ABC_FREE
-        (((*ppAig0).pName) ? (free((char *) ((*ppAig0).pName)), ((*ppAig0).pName) = 0) : 0);
+        (*ppAig0).pName = "";
         (*ppAig0).pName = Abc_UtilStrsav( "part0" );
     }
     if ppAig1 {
         *ppAig1 = Aig_ManDupNodesHalf( p, vSet1, 1 );
         // inlining of macro ABC_FREE
-        (((*ppAig1).pName) ? (free((char *) ((*ppAig1).pName)), ((*ppAig1).pName) = 0) : 0);
+        (*ppAig1).pName = "";
         (*ppAig1).pName = Abc_UtilStrsav( "part1" );
     }
     Vec_PtrFree( vSet0 );
@@ -761,12 +761,12 @@ func Saig_ManDemiterSimpleDiff(p *Aig_Man_t, ppAig0 **Aig_Man_t, ppAig1 **Aig_Ma
     // create new AIG
     *ppAig0 = Aig_ManDupNodesHalf( p, vSet0, 0 );
     // inlining of macro ABC_FREE
-    (((*ppAig0).pName) ? (free((char *) ((*ppAig0).pName)), ((*ppAig0).pName) = 0) : 0);
+    (*ppAig0).pName = "";
     (*ppAig0).pName = Abc_UtilStrsav( "part0" );
     // create new AIGs
     *ppAig1 = Aig_ManDupNodesHalf( p, vSet1, 1 );
     // inlining of macro ABC_FREE
-    (((*ppAig1).pName) ? (free((char *) ((*ppAig1).pName)), ((*ppAig1).pName) = 0) : 0);
+    (*ppAig1).pName = "";
     (*ppAig1).pName = Abc_UtilStrsav( "part1" );
     // cleanup
     Vec_PtrFree( vSet0 );
@@ -893,13 +893,13 @@ func Saig_ManDemiterSimpleDiff_old(p *Aig_Man_t, ppAig0 **Aig_Man_t, ppAig1 **Ai
     if ppAig0 {
         *ppAig0 = Aig_ManDupNodesAll( p, vSet0 );
         // inlining of macro ABC_FREE
-        (((*ppAig0).pName) ? (free((char *) ((*ppAig0).pName)), ((*ppAig0).pName) = 0) : 0);
+        (*ppAig0).pName = "";
         (*ppAig0).pName = Abc_UtilStrsav( "part0" );
     }
     if ppAig1 {
         *ppAig1 = Aig_ManDupNodesAll( p, vSet1 );
         // inlining of macro ABC_FREE
-        (((*ppAig1).pName) ? (free((char *) ((*ppAig1).pName)), ((*ppAig1).pName) = 0) : 0);
+        (*ppAig1).pName = "";
         (*ppAig1).pName = Abc_UtilStrsav( "part1" );
     }
     Vec_PtrFree( vSet0 );
@@ -1059,14 +1059,14 @@ func Saig_ManDemiter(p *Aig_Man_t, ppAig0 **Aig_Man_t, ppAig1 **Aig_Man_t) int32
         assert(false, "0");
         *ppAig0 = Aig_ManDupNodesHalf( p, vSet0, 0 ); // not ready
         // inlining of macro ABC_FREE
-        (((*ppAig0).pName) ? (free((char *) ((*ppAig0).pName)), ((*ppAig0).pName) = 0) : 0);
+        (*ppAig0).pName = "";
         (*ppAig0).pName = Abc_UtilStrsav( "part0" );
     }
     if ppAig1 {
         assert(false, "0");
         *ppAig1 = Aig_ManDupNodesHalf( p, vSet1, 1 ); // not ready
         // inlining of macro ABC_FREE
-        (((*ppAig1).pName) ? (free((char *) ((*ppAig1).pName)), ((*ppAig1).pName) = 0) : 0);
+        (*ppAig1).pName = "";
         (*ppAig1).pName = Abc_UtilStrsav( "part1" );
     }
     Vec_PtrFree( vSet0 );

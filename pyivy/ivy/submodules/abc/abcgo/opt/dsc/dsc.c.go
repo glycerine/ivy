@@ -320,8 +320,7 @@ func Dsc_alloc_pool(nVars int32) *word {
  * just free the memory pool
  */
 func Dsc_free_pool(pool *word) {
-    // inlining of macro ABC_FREE
-    ((pool) ? (free((char *) (pool)), (pool) = 0) : 0);
+    pool = nil;
 }
 
 /**
@@ -393,8 +392,7 @@ func Dsc_Decompose(pTruth *word, nVarsInit int32, pRes string, pool *word) int32
     //const int initialSupport = n;
     if n == 0 {
         if NEED_POOL_ALLOC {
-            // inlining of macro ABC_FREE
-            ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }
+            pool = nil; }
         if Abc_TtIsConst0(pTruth, TRUTH_WORDS) {
             { if pRes { pRes[0] = '0', pRes[1] = '\0'; } }
             return 0;
@@ -449,8 +447,7 @@ func Dsc_Decompose(pTruth *word, nVarsInit int32, pRes string, pool *word) int32
             if pRes {
                 pRes = solution.exp; }
             if NEED_POOL_ALLOC {
-                // inlining of macro ABC_FREE
-                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }
+                pool = nil; }
             return 0;
         } else if Abc_TtIsConst1(solution.pNegCof, TRUTH_WORDS) && Abc_TtIsConst0(solution.pPosCof, TRUTH_WORDS) {
             // Complementary solution found
@@ -459,20 +456,17 @@ func Dsc_Decompose(pTruth *word, nVarsInit int32, pRes string, pool *word) int32
                 strcpy( &pRes[1], solution.exp);
             }
             if NEED_POOL_ALLOC {
-                // inlining of macro ABC_FREE
-                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }
+                pool = nil; }
             return 0;
         } else {
             fmt.Printf("DSC ERROR: Final DSC node found, but differs from target function.\n");
             if NEED_POOL_ALLOC {
-                // inlining of macro ABC_FREE
-                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }
+                pool = nil; }
             return -1;
         }
     }
     if NEED_POOL_ALLOC {
-        // inlining of macro ABC_FREE
-        ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }
+        pool = nil; }
     return -1;
 }
 

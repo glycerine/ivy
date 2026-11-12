@@ -277,8 +277,7 @@ Counter++; }
         Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
     }
     Vec_IntFree( vData );
-    // inlining of macro ABC_FREE
-    ((pHash) ? (free((char *) (pHash)), (pHash) = 0) : 0);
+    pHash = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

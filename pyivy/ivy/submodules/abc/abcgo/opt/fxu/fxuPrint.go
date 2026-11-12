@@ -199,8 +199,7 @@ func Fxu_MatrixPrintDivisorProfile(pFile *os.File, p *Fxu_Matrix) {
             fmt.Fprintf(pFile, "Weight   %3d divisors = %6d\n", i, pProfile[i]); }
     }
     fmt.Fprintf(pFile, "End of divisor profile printout\n");
-    // inlining of macro ABC_FREE
-    ((pProfile) ? (free((char *) (pProfile)), (pProfile) = 0) : 0);
+    pProfile = nil;
 }
 
 

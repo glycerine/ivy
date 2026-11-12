@@ -274,8 +274,7 @@ func Fra_ManStop(p *Fra_Man_t) {
     // save mapping from original nodes into FRAIG nodes
     if p.pManAig {
         if p.pManAig.pObjCopies {
-            // inlining of macro ABC_FREE
-            ((p.pManAig.pObjCopies) ? (free((char *) (p.pManAig.pObjCopies)), (p.pManAig.pObjCopies) = 0) : 0); }
+            p.pManAig.pObjCopies = nil; }
         p.pManAig.pObjCopies = p.pMemFraig;
         p.pMemFraig = nil;
     }
@@ -287,16 +286,11 @@ func Fra_ManStop(p *Fra_Man_t) {
     if p.pSml {      Fra_SmlStop( p.pSml ); }
     if p.vCex {      Vec_IntFree( p.vCex ); }
     if p.vOneHots {  Vec_IntFree( p.vOneHots ); }
-    // inlining of macro ABC_FREE
-    ((p.pMemFraig) ? (free((char *) (p.pMemFraig)), (p.pMemFraig) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemFanins) ? (free((char *) (p.pMemFanins)), (p.pMemFanins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMemSatNums) ? (free((char *) (p.pMemSatNums)), (p.pMemSatNums) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMemFraig = nil;
+    p.pMemFanins = nil;
+    p.pMemSatNums = nil;
+    p.pPatWords = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

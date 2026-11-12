@@ -658,8 +658,7 @@ func Sat_ProofCollectCore(vProof *Vec_Set_t, vUsed *Vec_Int_t) *Vec_Int_t {
             }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pBitMap) ? (free((char *) (pBitMap)), (pBitMap) = 0) : 0);
+    pBitMap = nil;
 //    Vec_IntUniqify( vCore );
     return vCore;
 }

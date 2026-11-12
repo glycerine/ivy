@@ -118,8 +118,7 @@ func Pln_ManStop(p *Pln_Man_t) {
     Vec_IntFree( p.vTempM[2] );
     Vec_IntFree( p.vTempM[3] );
     Vec_IntFree( p.vOrder );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Pln_ManCompare3(pData0 *int32, pData1 *int32) int32 {
     if pData0[0] < pData1[0] { return -1; }

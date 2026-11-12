@@ -128,8 +128,7 @@ func Sim_SymmsStructCompute(pNtk *Abc_Ntk_t, vMatrs *Vec_Ptr_t, vSuppFun *Vec_Pt
             Vec_IntFree( ((Vec_Int_t *)pTemp.pCopy)  );
     }
     Vec_PtrFree( vNodes );
-    // inlining of macro ABC_FREE
-    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);
+    pMap = nil;
 }
 
 /**Function*************************************************************

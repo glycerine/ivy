@@ -193,8 +193,7 @@ func Fxu_CreateMatrix(pData *Fxu_Data_t) *Fxu_Matrix {
         }
     }
     }
-    // inlining of macro ABC_FREE
-    ((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);
+    pOrder = nil;
 
     // consider the case when cube pairs should be preprocessed
     // before adding them to the set of divisors

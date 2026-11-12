@@ -1,874 +1,675 @@
 package gia
 
-import "fmt"
+// Truth-table computation and Shannon synthesis, ported from giaTruth.c.
+// Tables use little-endian 64-bit words; unused variables repeat their pattern.
+import (
+	"encoding/binary"
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/dau/canon"
+	"time"
+)
 
-/**CFile****************************************************************
+// Keep the sentinel compatible with Gia_ObjResetNumId in gia.h.
+const giaTruthUnnumbered = -1_000_000_000
 
-  FileName    [giaTruth.c]
+var s_Truth6 = [6]word{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+func giaTruthWordCount64(n int32) int {
+	if n < 0 || n > 30 {
+		panic("GIA truth variable count out of range")
+	}
+	if n <= 6 {
+		return 1
+	}
+	return 1 << uint(n-6)
+}
+func giaTruthVariable(n int32, v int) []word {
+	r := make([]word, giaTruthWordCount64(n))
+	for i := range r {
+		if v < 6 {
+			r[i] = s_Truth6[v]
+		} else if i&(1<<uint(v-6)) != 0 {
+			r[i] = ^word(0)
+		}
+	}
+	return r
+}
+func Gla_ObjTruthElem(p *Gia_Man_t, i int32) []word {
+	return vec.Vec_PtrEntry(p.vTtInputs, int(i)).([]word)
+}
+func Gla_ObjTruthNodeId(p *Gia_Man_t, id int32) []word {
+	off := int(id * p.nTtWords)
+	return vec.Vec_WrdArray(p.vTtMemory)[off : off+int(p.nTtWords)]
+}
+func Gla_ObjTruthNode(p *Gia_Man_t, obj *Gia_Obj_t) []word {
+	return Gla_ObjTruthNodeId(p, vec.Vec_IntEntry(p.vTtNums, int(obj.id)))
+}
+func Gla_ObjTruthFree1(p *Gia_Man_t) []word {
+	a := vec.Vec_WrdArray(p.vTtMemory)
+	return a[len(a)-int(p.nTtWords):]
+}
+func Gla_ObjTruthFree2(p *Gia_Man_t) []word {
+	a := vec.Vec_WrdArray(p.vTtMemory)
+	n := int(p.nTtWords)
+	return a[len(a)-2*n : len(a)-n]
+}
+func Gla_ObjTruthConst0(p *Gia_Man_t, dst []word) []word { clear(dst[:p.nTtWords]); return dst }
+func Gla_ObjTruthDup(p *Gia_Man_t, dst, src []word, c int32) []word {
+	for i := 0; i < int(p.nTtWords); i++ {
+		dst[i] = src[i]
+		if c != 0 {
+			dst[i] = ^dst[i]
+		}
+	}
+	return dst
+}
 
-  PackageName [Scalable AIG package.]
+// A cut evaluator owns its memoized tables. A CI outside the cut is an error.
+// It also supports XOR, buffer and explicit MUX objects used by modern GIA.
+type giaTruthEval struct {
+	p      *Gia_Man_t
+	n      int32
+	memo   map[int32][]word
+	leaves map[int32]bool
+}
 
-  Synopsis    [Truth table computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaTruth.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-//#include "misc/vec/vecMem.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/util/utilTruth.h"
-//#include "opt/dau/dau.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-var s_Truth6 [6]word = [6]word{
-    ABC_CONST(0xAAAAAAAAAAAAAAAA),
-    ABC_CONST(0xCCCCCCCCCCCCCCCC),
-    ABC_CONST(0xF0F0F0F0F0F0F0F0),
-    ABC_CONST(0xFF00FF00FF00FF00),
-    ABC_CONST(0xFFFF0000FFFF0000),
-    ABC_CONST(0xFFFFFFFF00000000),
-};
-
-func Gla_ObjTruthElem(p *Gia_Man_t, i int32) *word { return (word *)Vec_PtrEntry( p.vTtInputs, i );                                           }
-func Gla_ObjTruthNodeId(p *Gia_Man_t, Id int32) *word { return Vec_WrdArray(p.vTtMemory) + p.nTtWords * Id;                                     }
-func Gla_ObjTruthNode(p *Gia_Man_t, pObj *Gia_Obj_t) *word { return Vec_WrdArray(p.vTtMemory) + p.nTtWords * Gia_ObjNum(p, pObj);                    }
-func Gla_ObjTruthFree1(p *Gia_Man_t) *word { return Vec_WrdArray(p.vTtMemory) + Vec_WrdSize(p.vTtMemory) - p.nTtWords * 1;          }
-func Gla_ObjTruthFree2(p *Gia_Man_t) *word { return Vec_WrdArray(p.vTtMemory) + Vec_WrdSize(p.vTtMemory) - p.nTtWords * 2;          }
-func Gla_ObjTruthConst0(p *Gia_Man_t, pDst *word) *word { var w int32; for  w = 0; w < p.nTtWords; w++  { pDst[w] = 0; }
- return pDst;                      }
-func Gla_ObjTruthDup(p *Gia_Man_t, pDst *word, pSrc *word, c int32) *word { var w int32; for  w = 0; w < p.nTtWords; w++  { pDst[w] = c ? ~pSrc[w] : pSrc[w]; }
- return pDst; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Compute truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_LutComputeTruth6Simple_rec(p *Gia_Man_t, iObj int32) word {
-    var Truth0, Truth1, Truth word;
-    var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);
-    if Gia_ObjIsConst0(pObj) {
-        return 0; }
-    if Gia_ObjIsCi(pObj) {
-        return s_Truths6[Gia_ObjCioId(pObj)]; }
-    Truth0 = Gia_LutComputeTruth6Simple_rec( p, Gia_ObjFaninId0(pObj, iObj) );
-    Truth1 = Gia_LutComputeTruth6Simple_rec( p, Gia_ObjFaninId1(pObj, iObj) );
-    if Gia_ObjFaninC0(pObj) {
-        Truth0 = ~Truth0;
-    } else {
-        Truth0 = Truth0;
-    }
-    if Gia_ObjFaninC1(pObj) {
-        Truth1 = ~Truth1;
-    } else {
-        Truth1 = Truth1;
-    }
-    if Gia_ObjIsXor(pObj) {
-        Truth = Truth0 ^ Truth1;
-    } else {
-        Truth = Truth0 & Truth1;
-    }
-    return Truth;
+func giaNewTruthEval(p *Gia_Man_t, n int32, leaves []int32) *giaTruthEval {
+	e := &giaTruthEval{p: p, n: n, memo: map[int32][]word{0: make([]word, giaTruthWordCount64(n))}, leaves: map[int32]bool{}}
+	for i, id := range leaves {
+		if _, ok := e.memo[id]; !ok {
+			e.memo[id] = giaTruthVariable(n, i)
+			e.leaves[id] = true
+		}
+	}
+	return e
+}
+func (e *giaTruthEval) lit(l int32) []word {
+	r := e.node(l >> 1)
+	if l&1 == 0 {
+		return r
+	}
+	out := make([]word, len(r))
+	for i, x := range r {
+		out[i] = ^x
+	}
+	return out
+}
+func (e *giaTruthEval) node(id int32) []word {
+	if r, ok := e.memo[id]; ok {
+		return r
+	}
+	o := Gia_ManObj(e.p, id)
+	if Gia_ObjIsCi(o) != 0 {
+		panic("GIA truth cut does not cover a CI")
+	}
+	a := e.lit(Gia_ObjFaninLit0(o, id))
+	r := make([]word, len(a))
+	if Gia_ObjIsCo(o) != 0 || Gia_ObjIsBuf(o) != 0 {
+		copy(r, a)
+	} else {
+		b := e.lit(Gia_ObjFaninLit1(o, id))
+		var c []word
+		if int(id) < len(e.p.pMuxes) && e.p.pMuxes[id] != 0 {
+			c = e.lit(int32(e.p.pMuxes[id]))
+		}
+		for i := range r {
+			if c != nil {
+				r[i] = c[i]&b[i] | ^c[i]&a[i]
+			} else if Gia_ObjIsXor(o) != 0 {
+				r[i] = a[i] ^ b[i]
+			} else {
+				r[i] = a[i] & b[i]
+			}
+		}
+	}
+	e.memo[id] = r
+	return r
+}
+func giaTruthCis(p *Gia_Man_t) []int32 { return append([]int32(nil), vec.Vec_IntArray(p.vCis)...) }
+func Gia_LutComputeTruth6Simple_rec(p *Gia_Man_t, id int32) word {
+	leaves := giaTruthCis(p)
+	if len(leaves) > 6 {
+		leaves = leaves[:6]
+	}
+	return giaNewTruthEval(p, 6, leaves).node(id)[0]
 }
 func Gia_LutComputeTruth6Simple(p *Gia_Man_t, iPo int32) word {
-    var pObj *Gia_Obj_t  = Gia_ManPo( p, iPo );
-    var Truth word  = Gia_LutComputeTruth6Simple_rec( p, Gia_ObjFaninId0p(p, pObj) );
-    if Gia_ObjFaninC0(pObj) {
-        return ~Truth;
-    } else {
-        return Truth;
-    }
+	return Gia_LutComputeTruth6Simple_rec(p, Gia_ManPo(p, iPo).id)
+}
+func Gia_LutComputeTruth6Map_rec(p *Gia_Man_t, id int32, m *Vec_Int_t) word {
+	e := giaNewTruthEval(p, 6, nil)
+	for i, ci := range giaTruthCis(p) {
+		v := vec.Vec_IntEntry(m, i)
+		if v >= 0 && v < 6 {
+			e.memo[ci] = []word{s_Truth6[v]}
+		}
+	}
+	return e.node(id)[0]
+}
+func Gia_LutComputeTruth6Map(p *Gia_Man_t, iPo int32, m *Vec_Int_t) word {
+	return Gia_LutComputeTruth6Map_rec(p, Gia_ManPo(p, iPo).id, m)
+}
+func Abc_Tt5HasVar(t uint32, v int32) int32 {
+	if Abc_Tt5Cofactor0(t, v) != Abc_Tt5Cofactor1(t, v) {
+		return 1
+	}
+	return 0
+}
+func Abc_Tt5Cofactor0(t uint32, v int32) uint32 {
+	if v < 0 || v >= 5 {
+		panic("five-input cofactor index out of range")
+	}
+	x := t &^ uint32(s_Truth6[v])
+	return x | x<<uint(1<<uint(v))
+}
+func Abc_Tt5Cofactor1(t uint32, v int32) uint32 {
+	if v < 0 || v >= 5 {
+		panic("five-input cofactor index out of range")
+	}
+	x := t & uint32(s_Truth6[v])
+	return x | x>>uint(1<<uint(v))
+}
+func giaTruthCof(t word, v int32, one bool) word {
+	m := s_Truth6[v]
+	s := uint(1 << uint(v))
+	if one {
+		x := t & m
+		return x | x>>s
+	}
+	x := t &^ m
+	return x | x<<s
+}
+func giaTruthAnd(p *Gia_Man_t, a, b int32, hash bool) int32 {
+	if a == 0 || b == 0 || a == b^1 {
+		return 0
+	}
+	if a == 1 {
+		return b
+	}
+	if b == 1 || a == b {
+		return a
+	}
+	return p.AndLiteral(a, b, hash)
+}
+func Gia_Truth6ToGia(p *Gia_Man_t, lits []int32, n int32, t word, hash int32) int32 {
+	if t == 0 {
+		return 0
+	}
+	if t == ^word(0) {
+		return 1
+	}
+	if n < 1 || n > 6 || int(n) > len(lits) {
+		panic("invalid Shannon synthesis input")
+	}
+	v := n - 1
+	for v >= 0 && giaTruthCof(t, v, false) == giaTruthCof(t, v, true) {
+		v--
+	}
+	if v < 0 {
+		panic("non-normalized truth table")
+	}
+	a := Gia_Truth6ToGia(p, lits, v, giaTruthCof(t, v, false), hash)
+	b := Gia_Truth6ToGia(p, lits, v, giaTruthCof(t, v, true), hash)
+	x := giaTruthAnd(p, lits[v], b, hash != 0)
+	y := giaTruthAnd(p, lits[v]^1, a, hash != 0)
+	return giaTruthAnd(p, x^1, y^1, hash != 0) ^ 1
+}
+func Gia_Truth5ToGia(p *Gia_Man_t, lits []int32, n int32, t uint32, hash int32) int32 {
+	if n > 5 {
+		panic("five-input synthesis input too wide")
+	}
+	return Gia_Truth6ToGia(p, lits, n, word(t)|word(t)<<32, hash)
+}
+func giaTruthLutLeaves(p *Gia_Man_t, id int32) []int32 {
+	a := vec.Vec_IntArray(p.vMapping)
+	if id < 0 || int(id) >= len(a) || a[id] <= 0 {
+		panic("GIA object has no LUT mapping")
+	}
+	off := int(a[id])
+	n := int(a[off])
+	if n > 6 {
+		panic("LUT has more than six inputs")
+	}
+	return a[off+1 : off+1+n]
+}
+func giaTruthSeed6(p *Gia_Man_t, leaves []int32, temp *Vec_Wrd_t) {
+	if len(leaves) > 6 {
+		panic("cut has more than six inputs")
+	}
+	vec.Vec_WrdFillExtra(temp, int(p.nObjs), 0)
+	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
+	vec.Vec_WrdWriteEntry(temp, 0, 0)
+	for i, id := range leaves {
+		vec.Vec_WrdWriteEntry(temp, int(id), s_Truth6[i])
+		Gia_ObjSetTravIdCurrentId(p, id)
+	}
 }
 
-func Gia_LutComputeTruth6Map_rec(p *Gia_Man_t, iObj int32, vMap *Vec_Int_t) word {
-    var Truth0, Truth1, Truth word;
-    var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);
-    if Gia_ObjIsConst0(pObj) {
-        return 0; }
-    if Gia_ObjIsCi(pObj) {
-        return s_Truths6[Vec_IntEntry(vMap, Gia_ObjCioId(pObj))]; }
-    Truth0 = Gia_LutComputeTruth6Map_rec( p, Gia_ObjFaninId0(pObj, iObj), vMap );
-    Truth1 = Gia_LutComputeTruth6Map_rec( p, Gia_ObjFaninId1(pObj, iObj), vMap );
-    if Gia_ObjFaninC0(pObj) {
-        Truth0 = ~Truth0;
-    } else {
-        Truth0 = Truth0;
-    }
-    if Gia_ObjFaninC1(pObj) {
-        Truth1 = ~Truth1;
-    } else {
-        Truth1 = Truth1;
-    }
-    if Gia_ObjIsXor(pObj) {
-        Truth = Truth0 ^ Truth1;
-    } else {
-        Truth = Truth0 & Truth1;
-    }
-    return Truth;
+// giaTruthWordNode evaluates one object after its fanins have been supplied.
+func giaTruthWordNode(p *Gia_Man_t, o *Gia_Obj_t, read func(int32) word) word {
+	if o.id == 0 {
+		return 0
+	}
+	if Gia_ObjIsCi(o) != 0 {
+		panic("GIA truth cut does not cover a CI")
+	}
+	a := read(Gia_ObjFaninId0(o, o.id))
+	if o.fCompl0 != 0 {
+		a = ^a
+	}
+	if Gia_ObjIsCo(o) != 0 || Gia_ObjIsBuf(o) != 0 {
+		return a
+	}
+	b := read(Gia_ObjFaninId1(o, o.id))
+	if o.fCompl1 != 0 {
+		b = ^b
+	}
+	if int(o.id) < len(p.pMuxes) && p.pMuxes[o.id] != 0 {
+		l := int32(p.pMuxes[o.id])
+		c := read(l >> 1)
+		if l&1 != 0 {
+			c = ^c
+		}
+		return c&b | ^c&a
+	}
+	if Gia_ObjIsXor(o) != 0 {
+		return a ^ b
+	}
+	return a & b
 }
-func Gia_LutComputeTruth6Map(p *Gia_Man_t, iPo int32, vMap *Vec_Int_t) word {
-    var pObj *Gia_Obj_t  = Gia_ManPo( p, iPo );
-    var Truth word  = Gia_LutComputeTruth6Map_rec( p, Gia_ObjFaninId0p(p, pObj), vMap );
-    if Gia_ObjFaninC0(pObj) {
-        return ~Truth;
-    } else {
-        return Truth;
-    }
+func Gia_LutComputeTruth6_rec(p *Gia_Man_t, id int32, temp *Vec_Wrd_t) word {
+	if Gia_ObjIsTravIdCurrentId(p, id) != 0 {
+		return vec.Vec_WrdEntry(temp, int(id))
+	}
+	r := giaTruthWordNode(p, p.pObjs[id], func(f int32) word { return Gia_LutComputeTruth6_rec(p, f, temp) })
+	vec.Vec_WrdWriteEntry(temp, int(id), r)
+	Gia_ObjSetTravIdCurrentId(p, id)
+	return r
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Generate MUX tree of the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var s_Truths5 [5]uint32 = [5]uint32{
-    0xAAAAAAAA,
-    0xCCCCCCCC,
-    0xF0F0F0F0,
-    0xFF00FF00,
-    0xFFFF0000,
-};
-func Abc_Tt5HasVar(t uint32, iVar int32) int32 {
-    return ((t << (1<<iVar)) & s_Truths5[iVar]) != (t & s_Truths5[iVar]);
+func Gia_LutComputeTruth6(p *Gia_Man_t, id int32, temp *Vec_Wrd_t) word {
+	giaTruthSeed6(p, giaTruthLutLeaves(p, id), temp)
+	return Gia_LutComputeTruth6_rec(p, id, temp)
 }
-func Abc_Tt5Cofactor0(t uint32, iVar int32) uint32 {
-    assert(iVar >= 0 && iVar < 6, "iVar >= 0 && iVar < 6");
-    return (t & ~s_Truths5[iVar]) | ((t & ~s_Truths5[iVar]) << (1<<iVar));
+func Gia_ObjComputeTruthTable6Lut_rec(p *Gia_Man_t, id int32, temp *Vec_Wrd_t) {
+	Gia_LutComputeTruth6_rec(p, id, temp)
 }
-func Abc_Tt5Cofactor1(t uint32, iVar int32) uint32 {
-    assert(iVar >= 0 && iVar < 6, "iVar >= 0 && iVar < 6");
-    return (t & s_Truths5[iVar]) | ((t & s_Truths5[iVar]) >> (1<<iVar));
+func Gia_ObjComputeTruthTable6Lut(p *Gia_Man_t, id int32, temp *Vec_Wrd_t) word {
+	return Gia_LutComputeTruth6(p, id, temp)
 }
-func Gia_Truth5ToGia(p *Gia_Man_t, pVarLits *int32, nVars int32, Truth uint32, fHash int32) int32 {
-    var Var, Lit0, Lit1 int32; 
-    if Truth == 0 {
-        return 0; }
-    if ~Truth == 0 {
-        return 1; }
-    assert(nVars > 0, "nVars > 0");
-    // find the topmost var
-    for  Var = nVars-1; Var >= 0; Var--  {
-        if Abc_Tt5HasVar( Truth, Var ) != 0 {
-             break; }
-    }
-    assert(Var >= 0, "Var >= 0");
-    // cofactor
-    Lit0 = Gia_Truth5ToGia( p, pVarLits, Var, Abc_Tt5Cofactor0(Truth, Var), fHash );
-    Lit1 = Gia_Truth5ToGia( p, pVarLits, Var, Abc_Tt5Cofactor1(Truth, Var), fHash );
-    if fHash != 0 {
-        return Gia_ManHashMux( p, pVarLits[Var], Lit1, Lit0 );
-    } else {
-        return Gia_ManAppendMux( p, pVarLits[Var], Lit1, Lit0 ); }
+func Gia_ObjComputeTruth6(p *Gia_Man_t, id int32, supp *Vec_Int_t, temp *Vec_Wrd_t) word {
+	giaTruthSeed6(p, vec.Vec_IntArray(supp), temp)
+	return Gia_LutComputeTruth6_rec(p, id, temp)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Generate MUX tree of the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_Truth6ToGia(p *Gia_Man_t, pVarLits *int32, nVars int32, Truth word, fHash int32) int32 {
-    var Var, Lit0, Lit1 int32; 
-    if Truth == 0 {
-        return 0; }
-    if ~Truth == 0 {
-        return 1; }
-    assert(nVars > 0, "nVars > 0");
-    // find the topmost var
-    for  Var = nVars-1; Var >= 0; Var--  {
-        if Abc_Tt6HasVar( Truth, Var ) {
-             break; }
-    }
-    assert(Var >= 0, "Var >= 0");
-    // cofactor
-    Lit0 = Gia_Truth6ToGia( p, pVarLits, Var, Abc_Tt6Cofactor0(Truth, Var), fHash );
-    Lit1 = Gia_Truth6ToGia( p, pVarLits, Var, Abc_Tt6Cofactor1(Truth, Var), fHash );
-    if fHash != 0 {
-        return Gia_ManHashMux( p, pVarLits[Var], Lit1, Lit0 );
-    } else {
-        return Gia_ManAppendMux( p, pVarLits[Var], Lit1, Lit0 ); }
+func Gia_ObjComputeTruth6CisSupport_rec(p *Gia_Man_t, id int32, supp *Vec_Int_t) {
+	if Gia_ObjIsTravIdCurrentId(p, id) != 0 {
+		return
+	}
+	Gia_ObjSetTravIdCurrentId(p, id)
+	o := Gia_ManObj(p, id)
+	if Gia_ObjIsCi(o) != 0 {
+		vec.Vec_IntPushOrder(supp, id)
+		return
+	}
+	for _, f := range giaObjectFanins(p, o) {
+		Gia_ObjComputeTruth6CisSupport_rec(p, f, supp)
+	}
 }
-func Gia_Truth6ToGiaTest(p *Gia_Man_t) {
-    var Size int32  = 5;
-    var Truth, TruthNew word;
-    var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManCiNum(p) );
-    var vSupp *Vec_Int_t  = Vec_IntStart( 100 );
-    var nCos int32 = Gia_ManCoNum(p);
-    var Count int32;
-    var i, k, Id, ObjId, iLitNew int32;
-    Gia_ManHashAlloc( p );
-    // inlining of macro Gia_ManForEachCoId
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
-        Gia_ManCollectCis( p, &Id, 1, vSupp ); // ObjIds
-        if Vec_IntSize(vSupp) <= Size && i < nCos {
-            var pVarLits [6]int32;
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vSupp)) && (((ObjId) = Vec_IntEntry(vSupp, k)), 1); k++  {
-                var CioId int32  = Gia_ObjCioId(Gia_ManObj(p, ObjId));
-                Vec_IntWriteEntry( vMap, CioId, k );
-                pVarLits[k] = Abc_Var2Lit( ObjId, 0 );
-            }
-            Truth = Gia_LutComputeTruth6Map( p, i, vMap );
-            if Size == 5 {
-                iLitNew = Gia_Truth5ToGia( p, pVarLits, Vec_IntSize(vSupp), uint32(Truth), 1 );
-            } else {
-                iLitNew = Gia_Truth6ToGia( p, pVarLits, Vec_IntSize(vSupp), Truth, 1 ); }
-            Gia_ManAppendCo( p, iLitNew );
-            TruthNew = Gia_LutComputeTruth6Map( p, Gia_ManCoNum(p)-1, vMap );
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vSupp)) && (((ObjId) = Vec_IntEntry(vSupp, k)), 1); k++  {
-                var CioId int32  = Gia_ObjCioId(Gia_ManObj(p, ObjId));
-                Vec_IntWriteEntry( vMap, CioId, -1 );
-            }
-            if Truth != TruthNew {
-                fmt.Printf("Error for output %d.\n", i); }
-            Count++;
-            //Dau_DsdPrintFromTruth( &Truth, Vec_IntSize(vSupp) );
-        }
-    }
-    Gia_ManHashStop( p );
-    fmt.Printf("Finished processing %d outputs.\n", Count);
-    Vec_IntFree( vSupp );
-    Vec_IntFree( vMap );
+func Gia_ObjComputeTruth6Cis(p *Gia_Man_t, lit int32, supp *Vec_Int_t, temp *Vec_Wrd_t) word {
+	vec.Vec_IntClear(supp)
+	Gia_ManIncrementTravId(p)
+	Gia_ObjComputeTruth6CisSupport_rec(p, lit>>1, supp)
+	if vec.Vec_IntSize(supp) > 6 {
+		return 0
+	}
+	r := Gia_ObjComputeTruth6(p, lit>>1, supp, temp)
+	if lit&1 != 0 {
+		r = ^r
+	}
+	return r
+}
+func Gia_ObjComputeTruthTable6_rec(p *Gia_Man_t, o *Gia_Obj_t, temp *Vec_Wrd_t) {
+	if Gia_ObjIsTravIdCurrentId(p, o.id) != 0 {
+		return
+	}
+	r := giaTruthWordNode(p, o, func(id int32) word {
+		f := p.pObjs[id]
+		Gia_ObjComputeTruthTable6_rec(p, f, temp)
+		return vec.Vec_WrdEntry(temp, int(f.Value))
+	})
+	o.Value = uint32(vec.Vec_WrdSize(temp))
+	vec.Vec_WrdPush(temp, r)
+	Gia_ObjSetTravIdCurrentId(p, o.id)
+}
+func Gia_ObjComputeTruthTable6(p *Gia_Man_t, o *Gia_Obj_t, supp *Vec_Int_t, temp *Vec_Wrd_t) word {
+	if vec.Vec_IntSize(supp) > 6 {
+		panic("cut too large")
+	}
+	vec.Vec_WrdClear(temp)
+	Gia_ManIncrementTravId(p)
+	for i, id := range vec.Vec_IntArray(supp) {
+		p.pObjs[id].Value = uint32(i)
+		vec.Vec_WrdPush(temp, s_Truth6[i])
+		Gia_ObjSetTravIdCurrentId(p, id)
+	}
+	if Gia_ObjIsTravIdCurrentId(p, 0) == 0 {
+		p.pObjs[0].Value = uint32(vec.Vec_WrdSize(temp))
+		vec.Vec_WrdPush(temp, 0)
+		Gia_ObjSetTravIdCurrentId(p, 0)
+	}
+	Gia_ObjComputeTruthTable6_rec(p, o, temp)
+	return vec.Vec_WrdEntry(temp, int(o.Value))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_LutComputeTruth6_rec(p *Gia_Man_t, iNode int32, vTruths *Vec_Wrd_t) word {
-    var pObj *Gia_Obj_t;
-    var Truth0, Truth1 word;
-    if Gia_ObjIsTravIdCurrentId(p, iNode) {
-        return Vec_WrdEntry(vTruths, iNode); }
-    Gia_ObjSetTravIdCurrentId(p, iNode);
-    pObj = Gia_ManObj( p, iNode );
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Truth0 = Gia_LutComputeTruth6_rec( p, Gia_ObjFaninId0p(p, pObj), vTruths );
-    Truth1 = Gia_LutComputeTruth6_rec( p, Gia_ObjFaninId1p(p, pObj), vTruths );
-    if Gia_ObjFaninC0(pObj) {
-        Truth0 = ~Truth0; }
-    if Gia_ObjFaninC1(pObj) {
-        Truth1 = ~Truth1; }
-    Vec_WrdWriteEntry( vTruths, iNode, Truth0 & Truth1 );
-    return Truth0 & Truth1;
-}
-func Gia_LutComputeTruth6(p *Gia_Man_t, iObj int32, vTruths *Vec_Wrd_t) word {
-    var k, iFan int32;
-    assert(Gia_ObjIsLut(p, iObj), "Gia_ObjIsLut(p, iObj)");
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_LutForEachFanin
-    for  k = 0; k < Gia_ObjLutSize(p,iObj) && ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {
-        Vec_WrdWriteEntry( vTruths, iFan, s_Truths6[k] );
-        Gia_ObjSetTravIdCurrentId( p, iFan );
-    }
-    return Gia_LutComputeTruth6_rec( p, iObj, vTruths );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of a 6-LUT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTable6Lut_rec(p *Gia_Man_t, iObj int32, vTemp *Vec_Wrd_t) {
-    var uTruth0, uTruth1 word;
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ObjComputeTruthTable6Lut_rec( p, Gia_ObjFaninId0p(p, pObj), vTemp );
-    Gia_ObjComputeTruthTable6Lut_rec( p, Gia_ObjFaninId1p(p, pObj), vTemp );
-    uTruth0 = Vec_WrdEntry( vTemp, Gia_ObjFaninId0p(p, pObj) );
-    if Gia_ObjFaninC0(pObj) {
-        uTruth0 = ~uTruth0;
-    } else {
-        uTruth0 = uTruth0;
-    }
-    uTruth1 = Vec_WrdEntry( vTemp, Gia_ObjFaninId1p(p, pObj) );
-    if Gia_ObjFaninC1(pObj) {
-        uTruth1 = ~uTruth1;
-    } else {
-        uTruth1 = uTruth1;
-    }
-    Vec_WrdWriteEntry( vTemp, iObj, uTruth0 & uTruth1 );
-}
-func Gia_ObjComputeTruthTable6Lut(p *Gia_Man_t, iObj int32, vTemp *Vec_Wrd_t) word {
-    var i, Fanin int32;
-    assert(Vec_WrdSize(vTemp) == Gia_ManObjNum(p), "Vec_WrdSize(vTemp) == Gia_ManObjNum(p)");
-    assert(Gia_ObjIsLut(p, iObj), "Gia_ObjIsLut(p, iObj)");
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_LutForEachFanin
-    for  i = 0; i < Gia_ObjLutSize(p,iObj) && ((Fanin = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {
-        Gia_ObjSetTravIdCurrentId( p, Fanin );
-        Vec_WrdWriteEntry( vTemp, Fanin, s_Truth6[i] );
-    }
-    assert(i <= 6, "i <= 6");
-    Gia_ObjComputeTruthTable6Lut_rec( p, iObj, vTemp );
-    return Vec_WrdEntry( vTemp, iObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table up to 6 inputs in terms of CIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruth6(p *Gia_Man_t, iObj int32, vSupp *Vec_Int_t, vTemp *Vec_Wrd_t) word {
-    var i, Fanin int32;
-    assert(Vec_WrdSize(vTemp) == Gia_ManObjNum(p), "Vec_WrdSize(vTemp) == Gia_ManObjNum(p)");
-    assert(Vec_IntSize(vSupp) <= 6, "Vec_IntSize(vSupp) <= 6");
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSupp)) && (((Fanin) = Vec_IntEntry(vSupp, i)), 1); i++  {
-        Gia_ObjSetTravIdCurrentId( p, Fanin );
-        Vec_WrdWriteEntry( vTemp, Fanin, s_Truth6[i] );
-    }
-    Gia_ObjComputeTruthTable6Lut_rec( p, iObj, vTemp );
-    return Vec_WrdEntry( vTemp, iObj );
-}
-func Gia_ObjComputeTruth6CisSupport_rec(p *Gia_Man_t, iObj int32, vSupp *Vec_Int_t) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPushOrder( vSupp, iObj );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ObjComputeTruth6CisSupport_rec( p, Gia_ObjFaninId0p(p, pObj), vSupp );
-    Gia_ObjComputeTruth6CisSupport_rec( p, Gia_ObjFaninId1p(p, pObj), vSupp );
-}
-func Gia_ObjComputeTruth6Cis(p *Gia_Man_t, iLit int32, vSupp *Vec_Int_t, vTemp *Vec_Wrd_t) word {
-    var iObj int32  = Abc_Lit2Var(iLit); 
-    Vec_IntClear( vSupp );
-    if !(iObj != 0) { if Abc_LitIsCompl(iLit) {
-        return ~(word)0;
-    } else {
-        return (word)0;
-    } }
-    Gia_ManIncrementTravId( p );
-    Gia_ObjComputeTruth6CisSupport_rec( p, iObj, vSupp );
-    if Vec_IntSize(vSupp) > 6 {
-        return 0; }
-    Gia_ObjComputeTruth6( p, iObj, vSupp, vTemp );
-    if Abc_LitIsCompl(iLit) {
-        return ~Vec_WrdEntry(vTemp, iObj);
-    } else {
-        return Vec_WrdEntry(vTemp, iObj);
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table up to 6 inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTable6_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vTruths *Vec_Wrd_t) {
-    var uTruth0, uTruth1 word;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    assert(!pObj.fMark0, "!pObj.fMark0");
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ObjComputeTruthTable6_rec( p, Gia_ObjFanin0(pObj), vTruths );
-    Gia_ObjComputeTruthTable6_rec( p, Gia_ObjFanin1(pObj), vTruths );
-    uTruth0 = Vec_WrdEntry( vTruths, Gia_ObjFanin0(pObj).Value );
-    if Gia_ObjFaninC0(pObj) {
-        uTruth0 = ~uTruth0;
-    } else {
-        uTruth0 = uTruth0;
-    }
-    uTruth1 = Vec_WrdEntry( vTruths, Gia_ObjFanin1(pObj).Value );
-    if Gia_ObjFaninC1(pObj) {
-        uTruth1 = ~uTruth1;
-    } else {
-        uTruth1 = uTruth1;
-    }
-    pObj.Value = Vec_WrdSize(vTruths);
-    Vec_WrdPush( vTruths, uTruth0 & uTruth1 );
-}
-func Gia_ObjComputeTruthTable6(p *Gia_Man_t, pObj *Gia_Obj_t, vSupp *Vec_Int_t, vTruths *Vec_Wrd_t) word {
-    var pLeaf *Gia_Obj_t;
-    var i int32;
-    assert(Vec_IntSize(vSupp) <= 6, "Vec_IntSize(vSupp) <= 6");
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(!pObj.fMark0, "!pObj.fMark0");
-    Vec_WrdClear( vTruths );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vSupp)) && ((pLeaf) = Gia_ManObj(p, Vec_IntEntry(vSupp,i))); i++  {
-        assert(pLeaf.fMark0 || Gia_ObjIsRo(p, pLeaf), "pLeaf.fMark0 || Gia_ObjIsRo(p, pLeaf)");
-        pLeaf.Value = Vec_WrdSize(vTruths);
-        Vec_WrdPush( vTruths, s_Truth6[i] );
-        Gia_ObjSetTravIdCurrent(p, pLeaf);
-    }
-    Gia_ObjComputeTruthTable6_rec( p, pObj, vTruths );
-    return Vec_WrdEntryLast( vTruths );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes reachable from the given node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjCollectInternal_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if !Gia_ObjIsAnd(pObj) {
-        return; }
-    if pObj.fMark0 {
-        return; }
-    pObj.fMark0 = 1;
-    Gia_ObjCollectInternal_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ObjCollectInternal_rec( p, Gia_ObjFanin1(pObj) );
-    Gia_ObjSetNum( p, pObj, Vec_IntSize(p.vTtNodes) );
-    Vec_IntPush( p.vTtNodes, Gia_ObjId(p, pObj) );
-}
-func Gia_ObjCollectInternal(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    Vec_IntClear( p.vTtNodes );
-    Gia_ObjCollectInternal_rec( p, pObj );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computing the truth table for GIA object.]
-
-  Description [The truth table should be used by the calling application
-  (or saved into the user's storage) before this procedure is called again.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTable(p *Gia_Man_t, pObj *Gia_Obj_t) *word {
-    var pTemp, pRoot *Gia_Obj_t;
-    var pTruth, pTruthL, pTruth0, pTruth1 *word;
-    var i int32;
-    if p.vTtMemory == nil {
-        p.nTtVars   = Gia_ManPiNum( p );
-        p.nTtWords  = Abc_Truth6WordNum( p.nTtVars );
-        p.vTtNums   = Vec_IntStart( Gia_ManObjNum(p) + 1000 );
-        p.vTtNodes  = Vec_IntAlloc( 256 );
-        p.vTtInputs = Vec_PtrAllocTruthTables( Abc_MaxInt(6, p.nTtVars) );
-        p.vTtMemory = Vec_WrdStart( p.nTtWords * 256 );
-    
-    } else {
-        // make sure the number of primary inputs did not change 
-        // since the truth table computation storage was prepared
-        assert(p.nTtVars == Gia_ManPiNum(p), "p.nTtVars == Gia_ManPiNum(p)");
-    }
-    // extend ID numbers
-    if Vec_IntSize(p.vTtNums) < Gia_ManObjNum(p) {
-        Vec_IntFillExtra( p.vTtNums, Gia_ManObjNum(p), 0 ); }
-    // collect internal nodes
-    if Gia_ObjIsCo(pObj) {
-        pRoot = Gia_ObjFanin0(pObj);
-    } else {
-        pRoot = pObj;
-    }
-    Gia_ObjCollectInternal( p, pRoot );
-    // extend TT storage
-    if Vec_WrdSize(p.vTtMemory) < p.nTtWords * (Vec_IntSize(p.vTtNodes) + 2) {
-        Vec_WrdFillExtra( p.vTtMemory, p.nTtWords * (Vec_IntSize(p.vTtNodes) + 2), 0 ); }
-    // compute the truth table for internal nodes
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(p.vTtNodes)) && ((pTemp) = Gia_ManObj(p, Vec_IntEntry(p.vTtNodes,i))); i++  {
-        pTemp.fMark0 = 0; // unmark nodes marked by Gia_ObjCollectInternal()
-        pTruth  = Gla_ObjTruthNode(p, pTemp);
-        pTruthL = pTruth + p.nTtWords;
-        if Gia_ObjIsAnd(Gia_ObjFanin0(pTemp)) {
-            pTruth0 = Gla_ObjTruthNode(p, Gia_ObjFanin0(pTemp));
-        } else {
-            pTruth0 = Gla_ObjTruthElem(p, Gia_ObjCioId(Gia_ObjFanin0(pTemp)) );
-        }
-        if Gia_ObjIsAnd(Gia_ObjFanin1(pTemp)) {
-            pTruth1 = Gla_ObjTruthNode(p, Gia_ObjFanin1(pTemp));
-        } else {
-            pTruth1 = Gla_ObjTruthElem(p, Gia_ObjCioId(Gia_ObjFanin1(pTemp)) );
-        }
-        if Gia_ObjFaninC0(pTemp) {
-            if Gia_ObjFaninC1(pTemp) {
-                for  pTruth < pTruthL  {
-                    *pTruth++ = ~*pTruth0++ & ~*pTruth1++;
-                }
-            } else {
-                for  pTruth < pTruthL  {
-                    *pTruth++ = ~*pTruth0++ &  *pTruth1++;
-                } }
-        
-        } else {
-            if Gia_ObjFaninC1(pTemp) {
-                for  pTruth < pTruthL  {
-                    *pTruth++ =  *pTruth0++ & ~*pTruth1++;
-                }
-            } else {
-                for  pTruth < pTruthL  {
-                    *pTruth++ =  *pTruth0++ &  *pTruth1++;
-                } }
-        }
-    }
-    // compute the final table
-    if Gia_ObjIsConst0(pRoot) {
-        pTruth = Gla_ObjTruthConst0( p, Gla_ObjTruthFree1(p) );
-    } else if Gia_ObjIsPi(p, pRoot) {
-        pTruth = Gla_ObjTruthElem( p, Gia_ObjCioId(pRoot) );
-    } else if Gia_ObjIsAnd(pRoot) {
-        pTruth = Gla_ObjTruthNode( p, pRoot );
-    } else {
-        pTruth = nil; }
-    return Gla_ObjTruthDup( p, Gla_ObjTruthFree2(p), pTruth, Gia_ObjIsCo(pObj) && Gia_ObjFaninC0(pObj) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Testing truth table computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTableTest(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var pTruth *uint32;
-    var clk abctime  = Abc_Clock();
-    var i int32;
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        pTruth = (unsigned *)Gia_ObjComputeTruthTable( p, pObj );
-//        Extra_PrintHex( stdout, pTruth, Gia_ManPiNum(p) ); printf( "\n" );
-    }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTableStart(p *Gia_Man_t, nVarsMax int32) {
-    assert(p.vTtMemory == nil, "p.vTtMemory == nil");
-    p.nTtVars   = nVarsMax;
-    p.nTtWords  = Abc_Truth6WordNum( p.nTtVars );
-    p.vTtNodes  = Vec_IntAlloc( 256 );
-    p.vTtInputs = Vec_PtrAllocTruthTables( Abc_MaxInt(6, p.nTtVars) );
-    p.vTtMemory = Vec_WrdStart( p.nTtWords * 64 );
-    p.vTtNums   = Vec_IntAlloc( Gia_ManObjNum(p) + 1000 );
-    Vec_IntFill( p.vTtNums, Vec_IntCap(p.vTtNums), -ABC_INFINITY );
+func Gia_ObjComputeTruthTableStart(p *Gia_Man_t, n int32) {
+	if p.vTtMemory != nil {
+		panic("truth workspace already active")
+	}
+	p.nTtVars = n
+	p.nTtWords = int32(giaTruthWordCount64(n))
+	p.vTtNums = vec.Vec_IntStart(int(p.nObjs))
+	vec.Vec_IntFill(p.vTtNums, int(p.nObjs), giaTruthUnnumbered)
+	p.vTtNodes = vec.Vec_IntAlloc(256)
+	p.vTtInputs = vec.Vec_PtrAlloc(max(6, int(n)))
+	for i := 0; i < max(6, int(n)); i++ {
+		vec.Vec_PtrPush(p.vTtInputs, giaTruthVariable(n, i))
+	}
+	p.vTtMemory = vec.Vec_WrdStart(int(p.nTtWords) * 64)
 }
 func Gia_ObjComputeTruthTableStop(p *Gia_Man_t) {
-    p.nTtVars   = 0;
-    p.nTtWords  = 0;
-    Vec_IntFreeP( &p.vTtNums );
-    Vec_IntFreeP( &p.vTtNodes );
-    Vec_PtrFreeP( &p.vTtInputs );
-    Vec_WrdFreeP( &p.vTtMemory );
+	p.nTtVars = 0
+	p.nTtWords = 0
+	p.vTtNums = nil
+	p.vTtNodes = nil
+	p.vTtInputs = nil
+	p.vTtMemory = nil
+}
+func Gia_ObjCollectInternal_rec(p *Gia_Man_t, o *Gia_Obj_t) {
+	if Gia_ObjIsAnd(o) == 0 || o.fMark0 != 0 {
+		return
+	}
+	o.fMark0 = 1
+	for _, id := range giaObjectFanins(p, o) {
+		Gia_ObjCollectInternal_rec(p, p.pObjs[id])
+	}
+	vec.Vec_IntFillExtra(p.vTtNums, int(p.nObjs), giaTruthUnnumbered)
+	vec.Vec_IntWriteEntry(p.vTtNums, int(o.id), int32(vec.Vec_IntSize(p.vTtNodes)))
+	vec.Vec_IntPush(p.vTtNodes, o.id)
+}
+func Gia_ObjCollectInternal(p *Gia_Man_t, o *Gia_Obj_t) {
+	vec.Vec_IntClear(p.vTtNodes)
+	Gia_ObjCollectInternal_rec(p, o)
+}
+func Gia_ObjCollectInternalCut_rec(p *Gia_Man_t, id int32) {
+	if id == 0 || vec.Vec_IntEntry(p.vTtNums, int(id)) > giaTruthUnnumbered {
+		return
+	}
+	o := p.pObjs[id]
+	if Gia_ObjIsCi(o) != 0 {
+		panic("cut does not cover CI")
+	}
+	for _, f := range giaObjectFanins(p, o) {
+		Gia_ObjCollectInternalCut_rec(p, f)
+	}
+	vec.Vec_IntWriteEntry(p.vTtNums, int(id), int32(vec.Vec_IntSize(p.vTtNodes)))
+	vec.Vec_IntPush(p.vTtNodes, id)
+}
+func Gia_ObjCollectInternalCut(p *Gia_Man_t, id int32, leaves *Vec_Int_t) {
+	vec.Vec_IntFillExtra(p.vTtNums, int(p.nObjs), giaTruthUnnumbered)
+	for i, l := range vec.Vec_IntArray(leaves) {
+		if l == id {
+			panic("cut root is also a leaf")
+		}
+		if vec.Vec_IntEntry(p.vTtNums, int(l)) <= giaTruthUnnumbered {
+			vec.Vec_IntWriteEntry(p.vTtNums, int(l), -int32(i))
+		}
+	}
+	vec.Vec_IntClear(p.vTtNodes)
+	vec.Vec_IntPush(p.vTtNodes, -1)
+	Gia_ObjCollectInternalCut_rec(p, id)
+}
+func giaTruthSave(p *Gia_Man_t, e *giaTruthEval, root int32, cut bool) []word {
+	n := int(p.nTtWords)
+	vec.Vec_IntFillExtra(p.vTtNums, int(p.nObjs), giaTruthUnnumbered)
+	vec.Vec_IntClear(p.vTtNodes)
+	if cut {
+		vec.Vec_IntPush(p.vTtNodes, -1)
+	}
+	seen := map[int32]bool{}
+	var collect func(int32)
+	collect = func(id int32) {
+		if id == 0 || seen[id] || e.leaves[id] {
+			return
+		}
+		seen[id] = true
+		o := p.pObjs[id]
+		for _, f := range giaObjectFanins(p, o) {
+			collect(f)
+		}
+		if Gia_ObjIsAnd(o) != 0 {
+			vec.Vec_IntWriteEntry(p.vTtNums, int(id), int32(vec.Vec_IntSize(p.vTtNodes)))
+			vec.Vec_IntPush(p.vTtNodes, id)
+		}
+	}
+	collect(root)
+	vec.Vec_WrdFillExtra(p.vTtMemory, (vec.Vec_IntSize(p.vTtNodes)+2)*n, 0)
+	for _, id := range vec.Vec_IntArray(p.vTtNodes) {
+		if id >= 0 {
+			copy(Gla_ObjTruthNode(p, p.pObjs[id]), e.memo[id])
+			p.pObjs[id].fMark0 = 0
+		}
+	}
+	copy(Gla_ObjTruthFree2(p), e.memo[root])
+	if cut && Gia_ObjIsAnd(p.pObjs[root]) != 0 {
+		return Gla_ObjTruthNode(p, p.pObjs[root])
+	}
+	return Gla_ObjTruthFree2(p)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes reachable from the given node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjCollectInternalCut_rec(p *Gia_Man_t, iObj int32) {
-    if Gia_ObjHasNumId(p, iObj) {
-        return; }
-    assert(Gia_ObjIsAnd(Gia_ManObj(p, iObj)), "Gia_ObjIsAnd(Gia_ManObj(p, iObj))");
-    Gia_ObjCollectInternalCut_rec( p, Gia_ObjFaninId0(Gia_ManObj(p, iObj), iObj) );
-    Gia_ObjCollectInternalCut_rec( p, Gia_ObjFaninId1(Gia_ManObj(p, iObj), iObj) );
-    Gia_ObjSetNumId( p, iObj, Vec_IntSize(p.vTtNodes) );
-    Vec_IntPush( p.vTtNodes, iObj );
+// Returned tables borrow manager storage until the next computation or Stop.
+func Gia_ObjComputeTruthTable(p *Gia_Man_t, o *Gia_Obj_t) []word {
+	n := Gia_ManPiNum(p)
+	if p.vTtMemory == nil {
+		Gia_ObjComputeTruthTableStart(p, n)
+	} else if p.nTtVars != n {
+		panic("primary input count changed since workspace creation")
+	}
+	leaves := giaTruthCis(p)[:n]
+	e := giaNewTruthEval(p, n, leaves)
+	e.node(o.id)
+	r := giaTruthSave(p, e, o.id, false)
+	return r
 }
-func Gia_ObjCollectInternalCut(p *Gia_Man_t, iRoot int32, vLeaves *Vec_Int_t) {
-    var i, iObj int32;
-    assert(!Gia_ObjHasNumId(p, iRoot), "!Gia_ObjHasNumId(p, iRoot)");
-    assert(Gia_ObjIsAnd(Gia_ManObj(p, iRoot)), "Gia_ObjIsAnd(Gia_ManObj(p, iRoot))");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && (((iObj) = Vec_IntEntry(vLeaves, i)), 1); i++  {
-        if Gia_ObjHasNumId(p, iObj) { // if cuts have repeated variables, skip 
-            continue; }
-        assert(!Gia_ObjHasNumId(p, iObj), "!Gia_ObjHasNumId(p, iObj)");
-        Gia_ObjSetNumId( p, iObj, -i );
-    }
-    assert(!Gia_ObjHasNumId(p, iRoot), "!Gia_ObjHasNumId(p, iRoot)"); // the root cannot be one of the leaves
-    Vec_IntClear( p.vTtNodes );
-    Vec_IntPush( p.vTtNodes, -1 );
-    Gia_ObjCollectInternalCut_rec( p, iRoot );
+func Gia_ObjComputeTruthTableCut(p *Gia_Man_t, o *Gia_Obj_t, leaves *Vec_Int_t) []word {
+	if p.vTtMemory == nil || vec.Vec_IntSize(leaves) > int(p.nTtVars) {
+		panic("invalid truth workspace or cut width")
+	}
+	for _, l := range vec.Vec_IntArray(leaves) {
+		if l == o.id {
+			panic("cut root is also a leaf")
+		}
+	}
+	e := giaNewTruthEval(p, p.nTtVars, vec.Vec_IntArray(leaves))
+	e.node(o.id)
+	r := giaTruthSave(p, e, o.id, true)
+	vec.Vec_IntFill(p.vTtNums, vec.Vec_IntSize(p.vTtNums), giaTruthUnnumbered)
+	return r
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the truth table of pRoot in terms of leaves.]
-
-  Description [The root cannot be one of the leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ObjComputeTruthTableCut(p *Gia_Man_t, pRoot *Gia_Obj_t, vLeaves *Vec_Int_t) *word {
-    var pTemp *Gia_Obj_t;
-    var pTruth, pTruthL, pTruth0, pTruth1 *word;
-    var i, iObj, Id0, Id1 int32;
-    assert(p.vTtMemory != nil, "p.vTtMemory != nil");
-    assert(Vec_IntSize(vLeaves) <= p.nTtVars, "Vec_IntSize(vLeaves) <= p.nTtVars");
-    // extend ID numbers
-    if Vec_IntSize(p.vTtNums) < Gia_ManObjNum(p) {
-        Vec_IntFillExtra( p.vTtNums, Gia_ManObjNum(p), -ABC_INFINITY ); }
-    // collect internal nodes
-    Gia_ObjCollectInternalCut( p, Gia_ObjId(p, pRoot), vLeaves );
-    // extend TT storage
-    if Vec_WrdSize(p.vTtMemory) < p.nTtWords * (Vec_IntSize(p.vTtNodes) + 2) {
-        Vec_WrdFillExtra( p.vTtMemory, p.nTtWords * (Vec_IntSize(p.vTtNodes) + 2), 0 ); }
-    // compute the truth table for internal nodes
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(p.vTtNodes)) && (((iObj) = Vec_IntEntry(p.vTtNodes, i)), 1); i++  {
-        assert(i == Gia_ObjNumId(p, iObj), "i == Gia_ObjNumId(p, iObj)");
-        pTemp   = Gia_ManObj( p, iObj );
-        pTruth  = Gla_ObjTruthNodeId( p, i );  
-        pTruthL = pTruth + p.nTtWords;
-        Id0 = Gia_ObjNumId( p, Gia_ObjFaninId0(pTemp, iObj) );
-        Id1 = Gia_ObjNumId( p, Gia_ObjFaninId1(pTemp, iObj) );
-        if Id0 > 0 {
-            pTruth0 = Gla_ObjTruthNodeId(p, Id0);
-        } else {
-            pTruth0 = Gla_ObjTruthElem(p, -Id0);
-        }
-        if Id1 > 0 {
-            pTruth1 = Gla_ObjTruthNodeId(p, Id1);
-        } else {
-            pTruth1 = Gla_ObjTruthElem(p, -Id1);
-        }
-        if Gia_ObjFaninC0(pTemp) {
-            if Gia_ObjFaninC1(pTemp) {
-                for  pTruth < pTruthL  {
-                    *pTruth++ = ~*pTruth0++ & ~*pTruth1++;
-                }
-            } else {
-                for  pTruth < pTruthL  {
-                    *pTruth++ = ~*pTruth0++ &  *pTruth1++;
-                } }
-        
-        } else {
-            if Gia_ObjFaninC1(pTemp) {
-                for  pTruth < pTruthL  {
-                    *pTruth++ =  *pTruth0++ & ~*pTruth1++;
-                }
-            } else {
-                for  pTruth < pTruthL  {
-                    *pTruth++ =  *pTruth0++ &  *pTruth1++;
-                } }
-        }
-    }
-    pTruth = Gla_ObjTruthNode( p, pRoot );
-    // unmark leaves marked by Gia_ObjCollectInternal()
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && (((iObj) = Vec_IntEntry(vLeaves, i)), 1); i++  {
-        Gia_ObjResetNumId( p, iObj );
-    }
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(p.vTtNodes)) && (((iObj) = Vec_IntEntry(p.vTtNodes, i)), 1); i++  {
-        Gia_ObjResetNumId( p, iObj );
-    }
-    return pTruth;
+func Gia_ObjComputeTruthTableTest(p *Gia_Man_t) {
+	start := time.Now()
+	for i := int32(0); i < Gia_ManPoNum(p); i++ {
+		Gia_ObjComputeTruthTable(p, Gia_ManPo(p, i))
+	}
+	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+}
+func Gia_Truth6ToGiaTest(p *Gia_Man_t) {
+	count := 0
+	n := Gia_ManCoNum(p)
+	supp := vec.Vec_IntAlloc(6)
+	temp := vec.Vec_WrdStart(int(p.nObjs))
+	for i := int32(0); i < n; i++ {
+		o := Gia_ManCo(p, i)
+		t := Gia_ObjComputeTruth6Cis(p, Gia_ObjFaninLit0(o, o.id), supp, temp)
+		if vec.Vec_IntSize(supp) > 5 {
+			continue
+		}
+		lits := append([]int32(nil), vec.Vec_IntArray(supp)...)
+		for k := range lits {
+			lits[k] <<= 1
+		}
+		l := Gia_Truth5ToGia(p, lits, int32(len(lits)), uint32(t), 1)
+		Gia_ManAppendCo(p, l)
+		count++
+	}
+	fmt.Printf("Finished processing %d outputs.\n", count)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reduces GIA to contain isomorphic POs.]
-
-  Description [The root cannot be one of the leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoNpnReduce(p *Gia_Man_t, pvPosEquivs **Vec_Ptr_t, fVerbose int32) *Gia_Man_t {
-    var pCanonPerm [16]byte;
-    var i, iObj, uCanonPhase, nVars, lastId, truthId int32;
-    var IndexCon int32 = -1;
-    var IndexVar int32 = -1;
-    var vPosEquivs *Vec_Wec_t  = Vec_WecAlloc( 100 );
-    var pTruth *word;
-    var pObj *Gia_Obj_t;
-    var vTtMem [17]*Vec_Mem_t;   // truth table memory and hash table
-    var pNew *Gia_Man_t  = nil;
-    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 16 );
-    var vFirsts *Vec_Int_t;
-    var vTt2Class [17]*Vec_Int_t;
-    for  i = 0; i < 17; i++  {
-        vTtMem[i] = Vec_MemAlloc( Abc_TtWordNum(i), 10 );
-        Vec_MemHashAlloc( vTtMem[i], 1000 );
-        vTt2Class[i] = Vec_IntStartFull( Gia_ManCoNum(p)+1 );
-    }
-    Gia_ObjComputeTruthTableStart( p, 16 );
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        iObj = Gia_ObjId(p, pObj);
-        Gia_ManCollectCis( p, &iObj, 1, vLeaves );
-        if Vec_IntSize(vLeaves) > 16 {
-            Vec_IntPush( Vec_WecPushLevel(vPosEquivs), i );
-            continue;
-        }
-        pObj = Gia_ObjFanin0(pObj);
-        if Gia_ObjIsConst0(pObj) {
-            if IndexCon == -1 {
-                IndexCon = Vec_WecSize(vPosEquivs);
-                Vec_WecPushLevel(vPosEquivs);
-            }
-            Vec_WecPush( vPosEquivs, IndexCon, i );
-            continue;
-        }
-        if Gia_ObjIsCi(pObj) {
-            if IndexVar == -1 {
-                IndexVar = Vec_WecSize(vPosEquivs);
-                Vec_WecPushLevel(vPosEquivs);
-            }
-            Vec_WecPush( vPosEquivs, IndexVar, i );
-            continue;
-        }
-        assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-        pTruth = Gia_ObjComputeTruthTableCut( p, pObj, vLeaves );
-        Abc_TtMinimumBase( pTruth, nil, Vec_IntSize(vLeaves), &nVars );
-        if nVars == 0 {
-            if IndexCon == -1 {
-                IndexCon = Vec_WecSize(vPosEquivs);
-                Vec_WecPushLevel(vPosEquivs);
-            }
-            Vec_WecPush( vPosEquivs, IndexCon, i );
-            continue;
-        }
-        if nVars == 1 {
-            if IndexVar == -1 {
-                IndexVar = Vec_WecSize(vPosEquivs);
-                Vec_WecPushLevel(vPosEquivs);
-            }
-            Vec_WecPush( vPosEquivs, IndexVar, i );
-            continue;
-        }
-        uCanonPhase = Abc_TtCanonicize( pTruth, nVars, pCanonPerm );
-        lastId = Vec_MemEntryNum( vTtMem[nVars] );
-        truthId = Vec_MemHashInsert( vTtMem[nVars], pTruth );
-        if lastId != Vec_MemEntryNum( vTtMem[nVars] ) { // new one
-        
-            assert(Vec_IntEntry(vTt2Class[nVars], truthId) == -1, "Vec_IntEntry(vTt2Class[nVars], truthId) == -1");
-            Vec_IntWriteEntry( vTt2Class[nVars], truthId, Vec_WecSize(vPosEquivs) );
-            Vec_WecPushLevel(vPosEquivs);
-        }
-        assert(Vec_IntEntry(vTt2Class[nVars], truthId) >= 0, "Vec_IntEntry(vTt2Class[nVars], truthId) >= 0");
-        Vec_WecPush( vPosEquivs, Vec_IntEntry(vTt2Class[nVars], truthId), i );
-    }
-    Gia_ObjComputeTruthTableStop( p );
-    Vec_IntFree( vLeaves );
-    for  i = 0; i < 17; i++  {
-        Vec_MemHashFree( vTtMem[i] );
-        Vec_MemFree( vTtMem[i] );
-        Vec_IntFree( vTt2Class[i] );
-    }
-
-    // find the first outputs and derive GIA
-    vFirsts = Vec_WecCollectFirsts( vPosEquivs );
-    pNew = Gia_ManDupCones( p, Vec_IntArray(vFirsts), Vec_IntSize(vFirsts), 0 );
-    Vec_IntFree( vFirsts );
-    // report and return    
-    if fVerbose != 0 { 
-        fmt.Printf("Nontrivial classes:\n");
-        Vec_WecPrint( vPosEquivs, 1 );
-    }
-    if pvPosEquivs {
-        *pvPosEquivs = Vec_WecConvertToVecPtr( vPosEquivs ); }
-    Vec_WecFree( vPosEquivs );
-    return pNew;
+// Minimum-base compression retains the original order of supported variables.
+func giaTruthMinBase(t []word, n int) ([]word, int) {
+	used := []int{}
+	for v := 0; v < n; v++ {
+		has := false
+		for a := 0; a < 1<<uint(n); a++ {
+			b := a ^ (1 << uint(v))
+			if (t[a>>6]>>uint(a&63))&1 != (t[b>>6]>>uint(b&63))&1 {
+				has = true
+				break
+			}
+		}
+		if has {
+			used = append(used, v)
+		}
+	}
+	r := make([]word, giaTruthWordCount64(int32(len(used))))
+	for a := 0; a < len(r)*64; a++ {
+		old := 0
+		for j, v := range used {
+			if a&(1<<uint(j)) != 0 {
+				old |= 1 << uint(v)
+			}
+		}
+		if t[old>>6]&(1<<uint(old&63)) != 0 {
+			r[a>>6] |= 1 << uint(a&63)
+		}
+	}
+	return r, len(used)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Gia_ManIsoNpnReduce(p *Gia_Man_t, equivs **Vec_Ptr_t, verbose int32) *Gia_Man_t {
+	classes := [][]int32{}
+	lookup := map[string]int{}
+	supp := vec.Vec_IntAlloc(16)
+	for i := int32(0); i < Gia_ManPoNum(p); i++ {
+		o := Gia_ManPo(p, i)
+		vec.Vec_IntClear(supp)
+		Gia_ManIncrementTravId(p)
+		Gia_ObjComputeTruth6CisSupport_rec(p, o.id, supp)
+		leaves := vec.Vec_IntArray(supp)
+		key := fmt.Sprintf("unique:%d", i)
+		if len(leaves) <= 16 {
+			t := giaNewTruthEval(p, int32(len(leaves)), leaves).node(o.id)
+			t, n := giaTruthMinBase(t, len(leaves))
+			if n < 2 {
+				key = fmt.Sprint(n)
+			} else {
+				perm := make([]byte, n)
+				canon.Canonicalize(t, int32(n), perm)
+				b := make([]byte, 1+8*len(t))
+				b[0] = byte(n)
+				for k, w := range t {
+					binary.LittleEndian.PutUint64(b[1+8*k:], w)
+				}
+				key = string(b)
+			}
+		}
+		c, ok := lookup[key]
+		if !ok {
+			c = len(classes)
+			lookup[key] = c
+			classes = append(classes, nil)
+		}
+		classes[c] = append(classes[c], i)
+	}
+	out := Gia_ManStart(p.nObjs)
+	ci := map[int32]int32{0: 0}
+	out.pName, out.pSpec = p.pName, p.pSpec
+	for i := int32(0); i < Gia_ManPiNum(p); i++ {
+		ci[Gia_ManPi(p, i).id] = Gia_ManAppendCi(out)
+	}
+	// Follow register-input cones to a fixed point, as Gia_ManDupCones does.
+	roots := make([]int32, 0, len(classes))
+	for _, c := range classes {
+		roots = append(roots, Gia_ManPo(p, c[0]).id)
+	}
+	seen := map[int32]bool{0: true}
+	var collect func(int32)
+	collect = func(id int32) {
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		o := p.pObjs[id]
+		if Gia_ObjIsCi(o) != 0 {
+			idx := Gia_ObjCioId(o) - Gia_ManPiNum(p)
+			if idx >= 0 {
+				roots = append(roots, Gia_ManRi(p, idx).id)
+				ci[id] = Gia_ManAppendCi(out)
+			}
+			return
+		}
+		for _, f := range giaObjectFanins(p, o) {
+			collect(f)
+		}
+	}
+	for i := 0; i < len(roots); i++ {
+		collect(roots[i])
+	}
+	var clone func(int32) int32
+	clone = func(id int32) int32 {
+		if l, ok := ci[id]; ok {
+			return l
+		}
+		o := p.pObjs[id]
+		a := clone(Gia_ObjFaninId0(o, id)) ^ int32(o.fCompl0)
+		var l int32
+		if Gia_ObjIsCo(o) != 0 || Gia_ObjIsBuf(o) != 0 {
+			l = a
+		} else {
+			b := clone(Gia_ObjFaninId1(o, id)) ^ int32(o.fCompl1)
+			if int(id) < len(p.pMuxes) && p.pMuxes[id] != 0 {
+				c := int32(p.pMuxes[id])
+				control := clone(c>>1) ^ (c & 1)
+				l = giaTruthAnd(out, giaTruthAnd(out, control, b, true)^1, giaTruthAnd(out, control^1, a, true)^1, true) ^ 1
+			} else if Gia_ObjIsXor(o) != 0 {
+				l = giaTruthAnd(out, giaTruthAnd(out, a, b^1, true)^1, giaTruthAnd(out, a^1, b, true)^1, true) ^ 1
+			} else {
+				l = giaTruthAnd(out, a, b, true)
+			}
+		}
+		ci[id] = l
+		return l
+	}
+	for _, root := range roots {
+		Gia_ManAppendCo(out, clone(root))
+	}
+	out.nRegs = int32(len(roots) - len(classes))
+	if equivs != nil {
+		*equivs = vec.Vec_PtrAlloc(len(classes))
+		for _, c := range classes {
+			v := vec.Vec_IntAlloc(len(c))
+			for _, i := range c {
+				vec.Vec_IntPush(v, i)
+			}
+			vec.Vec_PtrPush(*equivs, v)
+		}
+	}
+	if verbose != 0 {
+		fmt.Printf("Nontrivial classes:\n")
+		for _, c := range classes {
+			if len(c) > 1 {
+				fmt.Println(c)
+			}
+		}
+	}
+	return out
+}

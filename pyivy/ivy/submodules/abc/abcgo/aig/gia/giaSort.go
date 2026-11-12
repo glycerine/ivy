@@ -181,7 +181,7 @@ Abc_Print(1, "%s =", ("qsort  "));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
     Gia_SortVerifySorted( pArray, nSize );
     // inlining of macro ABC_FREE
-    ((pArray) ? (free((char *) (pArray)), (pArray) = 0) : 0);
+    pArray = nil;
 
     pArray = Gia_SortGetTest( nSize );
 clk = Abc_Clock();
@@ -191,7 +191,7 @@ Abc_Print(1, "%s =", ("minisat"));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
     Gia_SortVerifySorted( pArray, nSize );
     // inlining of macro ABC_FREE
-    ((pArray) ? (free((char *) (pArray)), (pArray) = 0) : 0);
+    pArray = nil;
 
     pArray = Gia_SortGetTest( nSize );
 clk = Abc_Clock();
@@ -201,7 +201,7 @@ Abc_Print(1, "%s =", ("minisat with inlined comparison"));
 Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
     Gia_SortVerifySorted( pArray, nSize );
     // inlining of macro ABC_FREE
-    ((pArray) ? (free((char *) (pArray)), (pArray) = 0) : 0);
+    pArray = nil;
 }
 
 /**Function*************************************************************

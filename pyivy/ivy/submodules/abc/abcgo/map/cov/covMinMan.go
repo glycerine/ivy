@@ -105,10 +105,8 @@ func Min_ManClean(p *Min_Man_t, nSupp int32) {
 ***********************************************************************/
 func Min_ManFree(p *Min_Man_t) {
     Extra_MmFixedStop( p.pMemMan );
-    // inlining of macro ABC_FREE
-    ((p.ppStore) ? (free((char *) (p.ppStore)), (p.ppStore) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.ppStore = nil;
+    p = nil;
 }
 
 

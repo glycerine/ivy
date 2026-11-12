@@ -218,28 +218,17 @@ var fFirst int32 = 1;
     return p;
 }
 func Wln_RetFree(p *Wln_Ret_t) {
-    // inlining of macro ABC_FREE
-    ((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFanouts.pArray) ? (free((char *) (p.vFanouts.pArray)), (p.vFanouts.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vEdgeLinks.pArray) ? (free((char *) (p.vEdgeLinks.pArray)), (p.vEdgeLinks.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFfClasses.pArray) ? (free((char *) (p.vFfClasses.pArray)), (p.vFfClasses.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vNodeDelays.pArray) ? (free((char *) (p.vNodeDelays.pArray)), (p.vNodeDelays.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vPathDelays.pArray) ? (free((char *) (p.vPathDelays.pArray)), (p.vPathDelays.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vSources.pArray) ? (free((char *) (p.vSources.pArray)), (p.vSources.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vSinks.pArray) ? (free((char *) (p.vSinks.pArray)), (p.vSinks.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vFront.pArray) ? (free((char *) (p.vFront.pArray)), (p.vFront.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vMoves.pArray) ? (free((char *) (p.vMoves.pArray)), (p.vMoves.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.vFanins.pArray = nil;
+    p.vFanouts.pArray = nil;
+    p.vEdgeLinks.pArray = nil;
+    p.vFfClasses.pArray = nil;
+    p.vNodeDelays.pArray = nil;
+    p.vPathDelays.pArray = nil;
+    p.vSources.pArray = nil;
+    p.vSinks.pArray = nil;
+    p.vFront.pArray = nil;
+    p.vMoves.pArray = nil;
+    p = nil;
 }
 func Wln_RetMemUsage(p *Wln_Ret_t) int32 {
     var Mem int32  = sizeof(Wln_Ret_t);

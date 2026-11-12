@@ -845,8 +845,7 @@ func Gia_ManDupMapped(p *Gia_Man_t, vMapping *Vec_Int_t) *Gia_Man_t {
     for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
         pObj.Value = pObj2Obj[i];
     }
-    // inlining of macro ABC_FREE
-    ((pObj2Obj) ? (free((char *) (pObj2Obj)), (pObj2Obj) = 0) : 0);
+    pObj2Obj = nil;
     return pNew;
 }
 
@@ -936,10 +935,8 @@ func Gla_ManStart(pGia0 *Gia_Man_t, pPars *Abs_Par_t) *Gla_Man_t {
     }
     // update mapping after the offset (currently not being done because it is not used)
     Vec_IntFree( p.pCnf.vMapping );  p.pCnf.vMapping    = vMappingNew;
-    // inlining of macro ABC_FREE
-    ((p.pCnf.pObj2Count) ? (free((char *) (p.pCnf.pObj2Count)), (p.pCnf.pObj2Count) = 0) : 0);   p.pCnf.pObj2Count  = pObj2Count;
-    // inlining of macro ABC_FREE
-    ((p.pCnf.pObj2Clause) ? (free((char *) (p.pCnf.pObj2Clause)), (p.pCnf.pObj2Clause) = 0) : 0);  p.pCnf.pObj2Clause = pObj2Clause;
+    p.pCnf.pObj2Count = nil;   p.pCnf.pObj2Count  = pObj2Count;
+    p.pCnf.pObj2Clause = nil;  p.pCnf.pObj2Clause = pObj2Clause;
 
 
     // count the number of variables
@@ -1158,13 +1155,11 @@ func Gla_ManStop(p *Gla_Man_t) {
 
     if p.pvRefis {
     for  i = 0; i < Gia_ManObjNum(p.pGia); i++  {
-        // inlining of macro ABC_FREE
-        ((p.pvRefis[i].pArray) ? (free((char *) (p.pvRefis[i].pArray)), (p.pvRefis[i].pArray) = 0) : 0);
+        p.pvRefis[i].pArray = nil;
     } }
     // inlining of macro Gla_ManForEachObj
     for  pGla = p.pObjs + 1; pGla < p.pObjs + p.nObjs; pGla++  { 
-        // inlining of macro ABC_FREE
-        ((pGla.vFrames.pArray) ? (free((char *) (pGla.vFrames.pArray)), (pGla.vFrames.pArray) = 0) : 0);
+        pGla.vFrames.pArray = nil;
     }
     Cnf_DataFree( p.pCnf );
     if p.pGia0 != nil {
@@ -1177,14 +1172,10 @@ func Gla_ManStop(p *Gla_Man_t) {
     Vec_IntFreeP( &p.vProofIds );
     Vec_IntFreeP( &p.vTemp );
     Vec_IntFreeP( &p.vAbs );
-    // inlining of macro ABC_FREE
-    ((p.pvRefis) ? (free((char *) (p.pvRefis)), (p.pvRefis) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObj2Obj) ? (free((char *) (p.pObj2Obj)), (p.pObj2Obj) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pvRefis = nil;
+    p.pObj2Obj = nil;
+    p.pObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1730,8 +1721,7 @@ func Gia_ManPerformGlaOld(pAig *Gia_Man_t, pPars *Abs_Par_t, fStartVta int32) in
             fmt.Printf("Sequential miter is trivially UNSAT.\n");
             return 1;
         }
-        // inlining of macro ABC_FREE
-        ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+        pAig.pCexSeq = nil;
         pAig.pCexSeq = Abc_CexMakeTriv( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), 1, 0 );
         fmt.Printf("Sequential miter is trivially SAT.\n");
         return 0;
@@ -1973,8 +1963,7 @@ finish:
     } else {
         if p.pPars.fVerbose {
             fmt.Printf("\n"); }
-        // inlining of macro ABC_FREE
-        ((pAig.pCexSeq) ? (free((char *) (pAig.pCexSeq)), (pAig.pCexSeq) = 0) : 0);
+        pAig.pCexSeq = nil;
         pAig.pCexSeq = pCex;
         if !Gia_ManVerifyCex( pAig, pCex, 0 ) {
             Abc_Print( 1, "    Gia_ManPerformGlaOld(): CEX verification has failed!\n" ); }

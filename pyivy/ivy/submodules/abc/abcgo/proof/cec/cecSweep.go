@@ -120,10 +120,8 @@ func Cec_ManFraSpecReduction(p *Cec_ManFra_t) *Gia_Man_t {
         if p.pPars.nDepthMax && pDepths[i] >= p.pPars.nDepthMax {
             piCopies[i] = -1; }
     }
-    // inlining of macro ABC_FREE
-    ((piCopies) ? (free((char *) (piCopies)), (piCopies) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pDepths) ? (free((char *) (pDepths)), (pDepths) = 0) : 0);
+    piCopies = nil;
+    pDepths = nil;
     Gia_ManHashStop( pNew );
     Gia_ManSetRegNum( pNew, 0 );
     pNew = Gia_ManCleanup( pTemp = pNew );

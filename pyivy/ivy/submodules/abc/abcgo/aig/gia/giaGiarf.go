@@ -114,9 +114,9 @@ func Gia_ManEquivStop(p *Hcd_Man_t) {
     Vec_IntFree( p.vClassTemp );
     Vec_IntFree( p.vRefinedC );
     // inlining of macro ABC_FREE
-    ((p.pSimInfo) ? (free((char *) (p.pSimInfo)), (p.pSimInfo) = 0) : 0);
+    p.pSimInfo = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -329,7 +329,7 @@ func Hcd_ManClassesRehash(p *Hcd_Man_t, vRefined *Vec_Int_t) {
         pTable[Key] = i;
     }
     // inlining of macro ABC_FREE
-    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);
+    pTable = nil;
 //    Gia_ManEquivPrintClasses( p->pGia, 0, 0.0 );
     // refine classes in the table
     // inlining of macro Vec_IntForEachEntry

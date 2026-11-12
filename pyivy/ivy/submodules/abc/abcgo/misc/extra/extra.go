@@ -1,5 +1,10 @@
 package extra
 
+import (
+	"math/bits"
+	"slices"
+)
+
 /**CFile****************************************************************
 
   FileName    [extra.h]
@@ -10,16 +15,16 @@ package extra
 
   Synopsis    [Various reusable software utilities.]
 
-  Description [This library contains a number of operators and 
-  traversal routines developed to extend the functionality of 
+  Description [This library contains a number of operators and
+  traversal routines developed to extend the functionality of
   CUDD v.2.3.x, by Fabio Somenzi (http://vlsi.colorado.edu/~fabio/)
-  To compile your code with the library, #include "extra.h" 
-  in your source files and link your project to CUDD and this 
-  library. Use the library at your own risk and with caution. 
+  To compile your code with the library, #include "extra.h"
+  in your source files and link your project to CUDD and this
+  library. Use the library at your own risk and with caution.
   Note that debugging of some operators still continues.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -28,13 +33,7 @@ package extra
 
 ***********************************************************************/
 
-
-
-
-
-#ifdef _WIN32
-#define inline __inline // compatible with MS VS 6.0
-#endif
+// Go requires no platform-specific inline keyword.
 
 /*---------------------------------------------------------------------------*/
 /* Nested includes                                                           */
@@ -48,7 +47,6 @@ package extra
 //#include "misc/st/st.h"
 
 //ABC_NAMESPACE_HEADER_START
-
 
 /*---------------------------------------------------------------------------*/
 /* Constant declarations                                                     */
@@ -70,9 +68,7 @@ package extra
 /* Macro declarations                                                        */
 /*---------------------------------------------------------------------------*/
 
-typedef unsigned char      uint8;
-typedef unsigned short     uint16;
-typedef unsigned int       uint32;
+// C uint8/uint16/uint32 aliases map directly to Go built-in integer types.
 
 /*===========================================================================*/
 /*     Various Utilities                                                     */
@@ -80,7 +76,6 @@ typedef unsigned int       uint32;
 
 /*=== extraUtilBitMatrix.c ================================================================*/
 
-type Extra_BitMat_t = Extra_BitMat_t_;
 // extern Extra_BitMat_t * Extra_BitMatrixStart( int nSize );
 
 // extern void         Extra_BitMatrixClean( Extra_BitMat_t * p );
@@ -112,7 +107,6 @@ type Extra_BitMat_t = Extra_BitMat_t_;
 // extern int          Extra_BitMatrixIsDisjoint( Extra_BitMat_t * p1, Extra_BitMat_t * p2 );
 
 // extern int          Extra_BitMatrixIsClique( Extra_BitMat_t * p );
-
 
 /*=== extraUtilFile.c ========================================================*/
 
@@ -176,11 +170,9 @@ type Extra_BitMat_t = Extra_BitMat_t_;
 
 // extern void         Extra_PrintSymbols( FILE * pFile, char Char, int nTimes, int fPrintNewLine );
 
-
 /*=== extraUtilReader.c ========================================================*/
 
-type Extra_FileReader_t = Extra_FileReader_t_;
-// extern Extra_FileReader_t * Extra_FileReaderAlloc( char * pFileName, 
+// extern Extra_FileReader_t * Extra_FileReaderAlloc( char * pFileName,
 //     char * pCharsComment, char * pCharsStop, char * pCharsClean );
 
 // extern void         Extra_FileReaderFree( Extra_FileReader_t * p );
@@ -195,12 +187,7 @@ type Extra_FileReader_t = Extra_FileReader_t_;
 
 // extern int          Extra_FileReaderGetLineNumber( Extra_FileReader_t * p, int iToken );
 
-
 /*=== extraUtilMemory.c ========================================================*/
-
-type Extra_MmFixed_t =    Extra_MmFixed_t_;    
-type Extra_MmFlex_t =     Extra_MmFlex_t_;     
-type Extra_MmStep_t =     Extra_MmStep_t_;     
 
 // fixed-size-block memory manager
 // extern Extra_MmFixed_t *  Extra_MmFixedStart( int nEntrySize );
@@ -238,7 +225,6 @@ type Extra_MmStep_t =     Extra_MmStep_t_;
 // extern void        Extra_MmStepEntryRecycle( Extra_MmStep_t * p, char * pEntry, int nBytes );
 
 // extern int         Extra_MmStepReadMemUsage( Extra_MmStep_t * p );
-
 
 /*=== extraUtilMisc.c ========================================================*/
 
@@ -315,16 +301,13 @@ type Extra_MmStep_t =     Extra_MmStep_t_;
 
 // extern word        Extra_Truth6MinimumHeuristic( word t );
 
-
 /*=== extraUtilCanon.c ========================================================*/
 
 /* fast computation of N-canoninical form up to 6 inputs */
 // extern int         Extra_TruthCanonFastN( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes );
 
-
 /*=== extraUtilDsd.c ========================================================*/
 
-type Sdm_Man_t = Sdm_Man_t_; 
 // extern int         Sdm_ManCanRead();
 
 // extern Sdm_Man_t * Sdm_ManRead();
@@ -347,10 +330,9 @@ type Sdm_Man_t = Sdm_Man_t_;
 
 // extern void        Sdm_ManReadCnfCosts( Sdm_Man_t * p, int * pCosts, int nCosts );
 
-
 /*=== extraUtilProgress.c ================================================================*/
 
-type ProgressBar = ProgressBarStruct;
+// ProgressBar and update implementation are defined in extraUtilProgress.go.
 
 // extern ProgressBar * Extra_ProgressBarStart( FILE * pFile, int nItemsTotal );
 
@@ -358,140 +340,115 @@ type ProgressBar = ProgressBarStruct;
 
 // extern void        Extra_ProgressBarUpdate_int( ProgressBar * p, int nItemsCur, char * pString );
 
-
-func Extra_ProgressBarUpdate(p *ProgressBar, nItemsCur int32, pString string) {  if p && nItemsCur < *((int*)p) { return; }
- Extra_ProgressBarUpdate_int(p, nItemsCur, pString); }
-
 /*=== extraUtilTruth.c ================================================================*/
 
-func Extra_BitWordNum(nBits int32) int32 { return nBits/(8*sizeof(unsigned)) + ((nBits%(8*sizeof(unsigned))) > 0);  }
-func Extra_TruthWordNum(nVars int32) int32 { if nVars <= 5 {
-    return 1;
-} else {
-    return (1 << (nVars - 5));
-} }
-
-func Extra_TruthSetBit(p *uint32, Bit int32) { p[Bit>>5] |= uint32((1<<(Bit & 31)));               }
-func Extra_TruthXorBit(p *uint32, Bit int32) { p[Bit>>5] ^= uint32((1<<(Bit & 31)));               }
-func Extra_TruthHasBit(p *uint32, Bit int32) int32 { return (p[Bit>>5] & uint32((1<<(Bit & 31)))) > 0;   }
-
-func Extra_WordCountOnes(uWord uint32) int32 {
-    uWord = (uWord & 0x55555555) + ((uWord>>1) & 0x55555555);
-    uWord = (uWord & 0x33333333) + ((uWord>>2) & 0x33333333);
-    uWord = (uWord & 0x0F0F0F0F) + ((uWord>>4) & 0x0F0F0F0F);
-    uWord = (uWord & 0x00FF00FF) + ((uWord>>8) & 0x00FF00FF);
-    return  (uWord & 0x0000FFFF) + (uWord>>16);
+// Truth tables retain ABC's convention: at least one complete 32-bit word,
+// with functions of fewer than five variables repeated across that word.
+func Extra_BitWordNum(nBits int32) int32 {
+	if nBits < 0 {
+		panic("negative bit count")
+	}
+	return int32((int64(nBits) + 31) / 32)
 }
-func Extra_TruthCountOnes(pIn *uint32, nVars int32) int32 {
-    var w, Counter int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        Counter += Extra_WordCountOnes(pIn[w]);
-    }
-    return Counter;
+func Extra_TruthWordNum(nVars int32) int32        { return int32(truthWords(nVars)) }
+func Extra_TruthSetBit(table []uint32, bit int32) { table[bit>>5] |= 1 << uint(bit&31) }
+func Extra_TruthXorBit(table []uint32, bit int32) { table[bit>>5] ^= 1 << uint(bit&31) }
+func Extra_TruthHasBit(table []uint32, bit int32) int32 {
+	if table[bit>>5]&(1<<uint(bit&31)) != 0 {
+		return 1
+	}
+	return 0
 }
-func Extra_TruthIsEqual(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        if pIn0[w] != pIn1[w] {
-            return 0; }
-    }
-    return 1;
+func Extra_WordCountOnes(word uint32) int32 { return int32(bits.OnesCount32(word)) }
+func Extra_TruthCountOnes(table []uint32, n int32) int32 {
+	var count int32
+	for _, word := range truthTable(table, n) {
+		count += int32(bits.OnesCount32(word))
+	}
+	return count
 }
-func Extra_TruthIsConst0(pIn *uint32, nVars int32) int32 {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        if pIn[w] {
-            return 0; }
-    }
-    return 1;
+func Extra_TruthIsEqual(a, b []uint32, n int32) int32 {
+	if slices.Equal(truthTable(a, n), truthTable(b, n)) {
+		return 1
+	}
+	return 0
 }
-func Extra_TruthIsConst1(pIn *uint32, nVars int32) int32 {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        if pIn[w] != ~uint32(0) {
-            return 0; }
-    }
-    return 1;
+func Extra_TruthIsConst0(table []uint32, n int32) int32 {
+	for _, word := range truthTable(table, n) {
+		if word != 0 {
+			return 0
+		}
+	}
+	return 1
 }
-func Extra_TruthIsImply(pIn1 *uint32, pIn2 *uint32, nVars int32) int32 {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        if pIn1[w] & ~pIn2[w] {
-            return 0; }
-    }
-    return 1;
+func Extra_TruthIsConst1(table []uint32, n int32) int32 {
+	for _, word := range truthTable(table, n) {
+		if word != ^uint32(0) {
+			return 0
+		}
+	}
+	return 1
 }
-func Extra_TruthCopy(pOut *uint32, pIn *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn[w];
-    }
+func Extra_TruthIsImply(a, b []uint32, n int32) int32 {
+	a = truthTable(a, n)
+	b = truthTable(b, n)
+	for i, value := range a {
+		if value&^b[i] != 0 {
+			return 0
+		}
+	}
+	return 1
 }
-func Extra_TruthClear(pOut *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = 0;
-    }
+func Extra_TruthCopy(out, in []uint32, n int32) { copy(truthTable(out, n), truthTable(in, n)) }
+func Extra_TruthClear(out []uint32, n int32)    { clear(truthTable(out, n)) }
+func Extra_TruthFill(out []uint32, n int32) {
+	for i := range truthTable(out, n) {
+		out[i] = ^uint32(0)
+	}
 }
-func Extra_TruthFill(pOut *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~uint32(0);
-    }
+func Extra_TruthNot(out, in []uint32, n int32) {
+	in = slices.Clone(truthTable(in, n))
+	out = truthTable(out, n)
+	for i, value := range in {
+		out[i] = ^value
+	}
 }
-func Extra_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~pIn[w];
-    }
+func truthBinaryWords(out, a, b []uint32, n int32, operation byte) {
+	out = truthTable(out, n)
+	a = slices.Clone(truthTable(a, n))
+	b = slices.Clone(truthTable(b, n))
+	for i, x := range a {
+		y := b[i]
+		switch operation {
+		case '&':
+			out[i] = x & y
+		case '|':
+			out[i] = x | y
+		case '-':
+			out[i] = x &^ y
+		case '!':
+			out[i] = ^(x & y)
+		}
+	}
 }
-func Extra_TruthAnd(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn0[w] & pIn1[w];
-    }
-}
-func Extra_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn0[w] | pIn1[w];
-    }
-}
-func Extra_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn0[w] & ~pIn1[w];
-    }
-}
-func Extra_TruthNand(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~(pIn0[w] & pIn1[w]);
-    }
-}
-func Extra_TruthAndPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, fCompl0 int32, fCompl1 int32) {
-    var w int32;
-    if (fCompl0 != 0) && (fCompl1 != 0) {
-        for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-            pOut[w] = ~(pIn0[w] | pIn1[w]);
-        }
-    
-    } else if (fCompl0 != 0) && !(fCompl1 != 0) {
-        for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-            pOut[w] = ~pIn0[w] & pIn1[w];
-        }
-    
-    } else if !(fCompl0 != 0) && (fCompl1 != 0) {
-        for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-            pOut[w] = pIn0[w] & ~pIn1[w];
-        }
-    
-    } else { // if ( !fCompl0 && !fCompl1 )
-    
-        for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-            pOut[w] = pIn0[w] & pIn1[w];
-        }
-    }
+func Extra_TruthAnd(out, a, b []uint32, n int32)   { truthBinaryWords(out, a, b, n, '&') }
+func Extra_TruthOr(out, a, b []uint32, n int32)    { truthBinaryWords(out, a, b, n, '|') }
+func Extra_TruthSharp(out, a, b []uint32, n int32) { truthBinaryWords(out, a, b, n, '-') }
+func Extra_TruthNand(out, a, b []uint32, n int32)  { truthBinaryWords(out, a, b, n, '!') }
+func Extra_TruthAndPhase(out, a, b []uint32, n, compl0, compl1 int32) {
+	out = truthTable(out, n)
+	a = slices.Clone(truthTable(a, n))
+	b = slices.Clone(truthTable(b, n))
+	var mask0, mask1 uint32
+	if compl0 != 0 {
+		mask0 = ^uint32(0)
+	}
+	if compl1 != 0 {
+		mask1 = ^uint32(0)
+	}
+	for i, x := range a {
+		out[i] = (x ^ mask0) & (b[i] ^ mask1)
+	}
 }
 
 // extern unsigned ** Extra_TruthElementary( int nVars );
@@ -528,7 +485,6 @@ func Extra_TruthAndPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, 
 
 // extern unsigned    Extra_TruthSemiCanonicize( unsigned * pInOut, unsigned * pAux, int nVars, char * pCanonPerm, short * pStore );
 
-
 /*=== extraUtilUtil.c ================================================================*/
 
 // extern abctime       Extra_CpuTime();
@@ -537,7 +493,7 @@ func Extra_TruthAndPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, 
 
 // extern int           Extra_GetSoftDataLimit();
 
-extern ABC_DLL void  Extra_UtilGetoptReset();
+// Extra_UtilGetoptReset is defined in extraUtilUtil.go.
 // extern int           Extra_UtilGetopt( int argc, char *argv[], const char *optstring );
 
 // extern char *        Extra_UtilPrintTime( long t );
@@ -548,17 +504,10 @@ extern ABC_DLL void  Extra_UtilGetoptReset();
 
 // extern char *        Extra_UtilFileSearch( char *file, char *path, char *mode );
 
-extern void          (*Extra_UtilMMoutOfMemory)( long size );
+// Extra_UtilMMoutOfMemory is defined in extraUtilUtil.go.
 
-var globalUtilOptarg string;
-var globalUtilOptind int32;
+// Option globals are defined in extraUtilUtil.go.
 
 /**AutomaticEnd***************************************************************/
 
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-

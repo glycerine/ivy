@@ -454,8 +454,7 @@ func Fsim_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords i
             Aig_InfoSetBit( p.pData, Counter + iPioId ); }
     }
     }
-    // inlining of macro ABC_FREE
-    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);
+    pData = nil;
     return p;
 }
 

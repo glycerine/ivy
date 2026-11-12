@@ -480,10 +480,8 @@ func Dss_NtkAlloc(nVars int32) *Dss_Ntk_t {
 }
 func Dss_NtkFree(p *Dss_Ntk_t) {
     Vec_PtrFree( p.vObjs );
-    // inlining of macro ABC_FREE
-    ((p.pMem) ? (free((char *) (p.pMem)), (p.pMem) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pMem = nil;
+    p = nil;
 }
 func Dss_NtkPrint_rec(p *Dss_Ntk_t, pObj *Dss_Obj_t) {
     var OpenType [7]byte = [7]byte{0, 0, 0, '(', '[', '<', '{'};
@@ -906,8 +904,7 @@ func Dss_ManCacheFree(p *Dss_Man_t) {
         return; }
     assert(p.nCache != 0, "p.nCache != 0");
     p.nCache = 0;
-    // inlining of macro ABC_FREE
-    ((p.pCache) ? (free((char *) (p.pCache)), (p.pCache) = 0) : 0);
+    p.pCache = nil;
 }
 var spStatic_Dss_ManCacheHashKey_s_Primes [8]int32 = [8]int32{ 1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };
 func Dss_ManCacheHashKey(p *Dss_Man_t, pEnt *Dss_Ent_t) uint32 { 
@@ -1002,10 +999,8 @@ func Dss_ManFree(p *Dss_Man_t) {
     Vec_IntFreeP( &p.vNexts );
     Vec_PtrFreeP( &p.vObjs );
     Mem_FlexStop( p.pMem, 0 );
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p = nil;
 }
 func Dss_ManPrint_rec(pFile *os.File, p *Dss_Man_t, pObj *Dss_Obj_t, pPermLits *int32, pnSupp *int32) {
     var OpenType [7]byte = [7]byte{0, 0, 0, '(', '[', '<', '{'};

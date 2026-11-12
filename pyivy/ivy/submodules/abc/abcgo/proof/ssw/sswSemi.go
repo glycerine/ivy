@@ -117,8 +117,7 @@ func Ssw_SemManStop(p *Ssw_Sem_t) {
     Vec_PtrFree( p.vTargets );
     Vec_PtrFree( p.vPatterns );
     Vec_IntFree( p.vHistory );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

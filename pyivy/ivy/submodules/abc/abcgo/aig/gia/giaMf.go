@@ -187,8 +187,8 @@ func Mf_ManTruthCollect(Limit int32) *Vec_Wrd_t {
             assert(tTemp1 == tCur, "tTemp1 == tCur");
         }
     }
-    ABC_FREE( pPerm );
-    ABC_FREE( pComp );
+    pPerm = nil;
+    pComp = nil;
     fmt.Printf("Original = %d.  ", Vec_WrdSize(vTruths));
     Vec_WrdFree( vTruths );
     fmt.Printf("Total = %d.  ", Vec_WrdSize(vResult));
@@ -1442,7 +1442,7 @@ func Mf_ManAlloc(pGia *Gia_Man_t, pPars *Jf_Par_t) *Mf_Man_t {
     var i, Entry int32;
     assert(pPars.nCutNum > 1  && pPars.nCutNum <= MF_CUT_MAX, "pPars.nCutNum > 1  && pPars.nCutNum <= MF_CUT_MAX");
     assert(pPars.nLutSize > 1 && pPars.nLutSize <= MF_LEAF_MAX, "pPars.nLutSize > 1 && pPars.nLutSize <= MF_LEAF_MAX");
-    ABC_FREE( pGia.pRefs );
+    pGia.Refs = nil;
     Vec_IntFreeP( &pGia.vMapping );
     if Gia_ManHasChoices(pGia) {
         Gia_ManSetPhase(pGia); }
@@ -1478,12 +1478,12 @@ func Mf_ManFree(p *Mf_Man_t) {
     if p.pPars.fCutMin {
         Vec_MemFree( p.vTtMem ); }
     Vec_PtrFreeData( &p.vPages );
-    ABC_FREE( p.vCnfSizes.pArray );
-    ABC_FREE( p.vCnfMem.pArray );
-    ABC_FREE( p.vPages.pArray );
-    ABC_FREE( p.vTemp.pArray );
-    ABC_FREE( p.pLfObjs );
-    ABC_FREE( p );
+    p.vCnfSizes.pArray = nil;
+    p.vCnfMem.pArray = nil;
+    p.vPages.pArray = nil;
+    p.vTemp.pArray = nil;
+    p.pLfObjs = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

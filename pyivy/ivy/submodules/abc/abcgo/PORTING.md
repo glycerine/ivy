@@ -11,6 +11,10 @@ Twenty workers own separate areas: misc/{vec,util,mem,hash,avl,extra,nm,st,tim},
 aig/{miniaig,hop,aig,gia}, bool/{kit,dec}, bdd/{reo,mtr,epd}, sat/{bsat,satoko}.
 The main thread coordinates dependencies, reviews results and runs integration
 checks. Workers do not use git. All work stays in the shared current checkout.
+As owners finish a first component, assignments extend into adjacent unported
+families: misc/extra and Espresso cube/cover integration, SAT/XSAT, CGlucose,
+base/main and AIG forward retiming. Ownership and dependency changes are
+coordinated in-thread; no branches or worktrees are used.
 
 ## Verification
 
@@ -195,13 +199,53 @@ heap, propagation, restart, learning and assumption logic. Its race/vet suites
 pass, including 900 original-C differential comparisons; declaration-only C
 interfaces with no implementation in the checkout are documented, not stubbed.
 
-## AIG free-to-nil audit
+## Expanded `ABC_FREE` cleanup
 
-The AIG owner scanned every `abcgo/aig/aig/*.go` file and converted all four
-remaining live null-safe free-and-clear expansions to nil assignments. The
-`pMemory` example disappeared as part of the actual `Part_Man` pool port: the
-Go manager now owns typed pooled blocks and `Part_ManStop` clears the manager,
-so there is no C-style `pMemory` local to retain. `no_c_free_test.go` lexes every
-Go file in the package and fails on live `free`/`ABC_FREE` calls while ignoring
-comments and literals. `GOCACHE=/tmp/abcgo-cache go test
-abcgo/aig/aig/no_c_free_test.go -count=1` passes.
+A project-wide cleanup converted 1,181 expanded null-safe `ABC_FREE` ternaries
+across 277 `.go` files: pointer and slice targets now clear to `nil`, while
+known string fields clear to `""`. The AIG `pMemory` example disappeared as
+part of the actual `Part_Man` pool port; the Go manager owns typed pooled
+blocks and `Part_ManStop` clears the manager. A follow-up scan found no
+remaining expanded null-safe `ABC_FREE` ternary call sites; the sole textual
+match is the macro definition in `misc/espresso/util_old.go`. This audit does
+not cover raw, unexpanded C `free`/`ABC_FREE` calls in other draft files.
+Owners reviewed the cleanup in their converted files, including AIG, GIA,
+Hop, Kit, PartSat, BSAT, set/sparse and placement; reports found no type
+mismatches after review. GIA's review found string-valued cell/name fields that
+had been cleared to `nil`; those were corrected to empty strings and their
+nil comparisons were updated. The full package build remains the semantic
+validation gate for each area.
+
+The latest `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./aig/aig` still fails
+to parse `aigRet.go` (first errors at lines 68, 75 and 85); that file is being
+ported. The earlier focused AIG free scanner passed before this latest Ret
+work. Full AIG and module completion remain outstanding.
+
+The Espresso sparse row/column/matrix family has since been ported, with
+12,800 operations checked against fixtures generated from the original C
+implementation and 6,000 randomized mutation checks for link and identity
+invariants. The shared minimum-cover family reports 1,000 C-oracle matches and
+1,000 independent optimality cases. Whole Espresso integration is still
+pending; its current reported compile blocker is `expand.go:49` (U+000C), now
+assigned for cleanup and porting. These component checks do not yet prove the
+package builds as a whole.
+
+Latest whole-module snapshot: `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...`
+reports 38 passing and 79 failing package lines. The failing set still includes
+many unported generated drafts; first reported blockers include Espresso's
+`expand.go`, the retained placement test harness, PSAT types, root `demo.go`,
+and several C-shaped headers. The full module remains unbuildable and
+incomplete.
+
+## Active integration after the latest snapshot
+
+The parallel owners have advanced several package frontiers since that
+whole-module run: GIA truth/DAU canonicalization and MiniAIG balance have
+focused race-tested implementations; base/abc has moved through the MV APIs
+and is now blocked by `abcCheck.go`; GIA AIGER codecs are in round-trip and
+malformed-input review; and misc/extra has replaced its central truth/bit
+operator header, with Cube and DSD next in the compile chain. Espresso's
+shared cube/header/expand ownership is now assigned across util/hash/tim,
+without duplicate type definitions. SAT/XSAT, base/main, CGlucose and AIG
+forward retiming also have explicit owners. These component and focused tests
+do not replace the whole-module gate; rerun it after the current ports land.

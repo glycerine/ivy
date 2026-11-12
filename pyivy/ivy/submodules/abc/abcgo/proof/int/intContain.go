@@ -350,8 +350,7 @@ func Inter_ManCheckUniqueness(p *Aig_Man_t, pSat *sat_solver, pCnf *Cnf_Dat_t, n
     fmt.Printf("Uniquness does not hold in %d frames.\n", Counter);
 
     Fra_SmlStop( pSml );
-    // inlining of macro ABC_FREE
-    ((pCounterEx) ? (free((char *) (pCounterEx)), (pCounterEx) = 0) : 0);
+    pCounterEx = nil;
     return 1;
 }
 

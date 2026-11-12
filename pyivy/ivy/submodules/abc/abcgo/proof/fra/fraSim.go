@@ -884,8 +884,7 @@ func Fra_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32
 
 ***********************************************************************/
 func Fra_SmlStop(p *Fra_Sml_t) {
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

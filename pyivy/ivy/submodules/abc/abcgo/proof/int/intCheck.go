@@ -152,8 +152,7 @@ func Inter_CheckStop(p *Inter_Check_t) {
     Cnf_DataFree( p.pCnf );
     Aig_ManStop( p.pFrames );
     sat_solver_delete( p.pSat );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 

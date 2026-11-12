@@ -193,10 +193,8 @@ func Saig_TsiStop(p *Saig_Tsim_t) {
         Vec_IntFree( p.vNonXRegs ); }
     Aig_MmFixedStop( p.pMem, 0 );
     Vec_PtrFree( p.vStates );
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -871,8 +869,7 @@ func Saig_ManPerformAbstraction(pTsi *Saig_Tsim_t, nFrames int32, fVerbose int32
 //Aig_ManPrintStats( pFrames );
 //    Aig_ManCiCleanup( pFrames );
 //Aig_ManPrintStats( pFrames );
-    // inlining of macro ABC_FREE
-    ((pObjMap) ? (free((char *) (pObjMap)), (pObjMap) = 0) : 0);
+    pObjMap = nil;
     return pFrames;
 }
 

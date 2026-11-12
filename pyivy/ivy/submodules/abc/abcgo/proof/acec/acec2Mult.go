@@ -1185,8 +1185,7 @@ func Sdb_StoFree(p *Sdb_Sto_t) {
         Vec_MemHashFree( p.vTtMem ); }
     if p.fCutMin {
         Vec_MemFree( p.vTtMem ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 func Sdb_StoComputeCutsConst0(p *Sdb_Sto_t, iObj int32) {
     Sdb_CutAddZero( p, iObj );

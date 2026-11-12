@@ -325,7 +325,7 @@ func Gia_ManUnrollStop(pMan any) {
     Vec_IntFreeP( &p.vFirst );
     Vec_IntFreeP( &p.vStore );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -672,7 +672,7 @@ func Gia_ManFraStop(p *Gia_ManFra_t) {
     Vec_VecFree( (Vec_Vec_t *)p.vAnds );
     Vec_VecFree( (Vec_Vec_t *)p.vOuts );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

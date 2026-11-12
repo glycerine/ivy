@@ -2,569 +2,589 @@ package abc
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [abcHie.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures to handle hierarchy.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHie.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#define ABC_OBJ_VOID ((Abc_Obj_t *)(ABC_PTRINT_T)1)
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Checks the the hie design has no duplicated networks.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCheckSingleInstance(pNtk *Abc_Ntk_t) int32 {
-    var pTemp, pModel *Abc_Ntk_t;
-    var pBox *Abc_Obj_t;
-    var i int32;
-    var k int32;
-    var RetValue int32 = 1;
-    if pNtk.pDesign == nil {
-        return 1; }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-        pTemp.fHieVisited = 0;
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-        // inlining of macro Abc_NtkForEachBox
-        for  k = 0; (k < Vec_PtrSize((pTemp).vBoxes)) && (((pBox) = Abc_NtkBox(pTemp, k)), 1); k++  {
-            pModel = (Abc_Ntk_t *)pBox.pData;
-            if pModel == nil {
-                continue; }
-            if Abc_NtkLatchNum(pModel) > 0 {
-                fmt.Printf("Network \"%s\" contains %d flops.\n", Abc_NtkName(pNtk), Abc_NtkLatchNum(pModel));
-                RetValue = 0;
-            }
-            if pModel.fHieVisited {
-                fmt.Printf("Network \"%s\" contains box \"%s\" whose model \"%s\" is instantiated more than once.\n", Abc_NtkName(pNtk), Abc_ObjName(pBox), Abc_NtkName(pModel));
-                RetValue = 0;
-            }
-            pModel.fHieVisited = 1;
-        }
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-        pTemp.fHieVisited = 0;
-    }
-    return RetValue;
+func hierarchyModules(root *Network) []*Network {
+	var modules []*Network
+	seen := map[*Network]bool{}
+	var walk func(*Network)
+	walk = func(n *Network) {
+		if seen[n] {
+			return
+		}
+		seen[n] = true
+		modules = append(modules, n)
+		for _, box := range n.Boxes() {
+			if model, ok := box.Data.(*Network); ok && model != nil {
+				walk(model)
+			}
+		}
+	}
+	walk(root)
+	return modules
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collect PIs and POs of internal networks in the topo order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCollectPiPos_rec(pNet *Abc_Obj_t, vLiMaps *Vec_Ptr_t, vLoMaps *Vec_Ptr_t) int32 {
-    extern int Abc_NtkCollectPiPos_int( Abc_Obj_t * pBox, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLiMaps, Vec_Ptr_t * vLoMaps );
-    var pObj, pFanin *Abc_Obj_t; 
-    var i, Counter int32;
-    assert(Abc_ObjIsNet(pNet), "Abc_ObjIsNet(pNet)");
-    if Abc_NodeIsTravIdCurrent( pNet ) {
-        return 0; }
-    Abc_NodeSetTravIdCurrent( pNet );
-    pObj = Abc_ObjFanin0(pNet);
-    if Abc_ObjIsNode(pObj) {
-        // inlining of macro Abc_ObjForEachFanin
-        for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-            Counter += Abc_NtkCollectPiPos_rec( pFanin, vLiMaps, vLoMaps );
-        } }
-    if Abc_ObjIsNode(pObj) {
-        return Counter; }
-    if Abc_ObjIsBo(pObj) {
-        pObj = Abc_ObjFanin0(pObj); }
-    assert(Abc_ObjIsBox(pObj), "Abc_ObjIsBox(pObj)");
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanin) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( Abc_ObjFanout0(pFanin) );
-    }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Counter += Abc_NtkCollectPiPos_rec( Abc_ObjFanin0(pFanin), vLiMaps, vLoMaps );
-    }
-    Counter += Abc_NtkCollectPiPos_int( pObj, Abc_ObjModel(pObj), vLiMaps, vLoMaps );
-    return Counter;
+func Abc_NtkCheckSingleInstance(root *Network) int32 {
+	if root.Design == nil {
+		return 1
+	}
+	modules := root.Design.Modules
+	uses := map[*Network]int{}
+	known := map[*Network]bool{}
+	for _, n := range modules {
+		known[n] = true
+	}
+	if !known[root] {
+		return 0
+	}
+	for _, n := range modules {
+		for _, box := range n.Boxes() {
+			model, ok := box.Data.(*Network)
+			if !ok || model == nil {
+				return 0
+			}
+			if !known[model] || len(model.ObjectsOfKind(ObjectLatch)) > 0 {
+				return 0
+			}
+			uses[model]++
+			if uses[model] > 1 || len(box.fanins) != len(model.ObjectsOfKind(ObjectPI)) || len(box.fanouts) != len(model.ObjectsOfKind(ObjectPO)) {
+				return 0
+			}
+		}
+	}
+	state := map[*Network]uint8{}
+	var visit func(*Network) bool
+	visit = func(n *Network) bool {
+		if state[n] == 1 {
+			return false
+		}
+		if state[n] == 2 {
+			return true
+		}
+		state[n] = 1
+		for _, box := range n.Boxes() {
+			if !visit(boxModel(box)) {
+				return false
+			}
+		}
+		state[n] = 2
+		return true
+	}
+	for _, n := range modules {
+		if !visit(n) {
+			return 0
+		}
+	}
+	return 1
 }
-func Abc_NtkCollectPiPos_int(pBox *Abc_Obj_t, pNtk *Abc_Ntk_t, vLiMaps *Vec_Ptr_t, vLoMaps *Vec_Ptr_t) int32 {
-    var pObj *Abc_Obj_t; 
-    var i, Counter int32;
-    // mark primary inputs
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( Abc_ObjFanout0(pObj) );
-    }
-    // add primary inputs
-    if pBox != nil {
-        // inlining of macro Abc_ObjForEachFanin
-        for  i = 0; (i < Abc_ObjFaninNum(pBox)) && (((pObj) = Abc_ObjFanin(pBox, i)), 1); i++  {
-            Vec_PtrPush( vLiMaps, pObj );
-        }
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Vec_PtrPush( vLoMaps, pObj );
-        }
-    }
-    // visit primary outputs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Counter += Abc_NtkCollectPiPos_rec( Abc_ObjFanin0(pObj), vLiMaps, vLoMaps );
-    }
-    // add primary outputs
-    if pBox != nil {
-        // inlining of macro Abc_NtkForEachPo
-        for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-            Vec_PtrPush( vLiMaps, pObj );
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  i = 0; (i < Abc_ObjFanoutNum(pBox)) && (((pObj) = Abc_ObjFanout(pBox, i)), 1); i++  {
-            Vec_PtrPush( vLoMaps, pObj );
-        }
-        Counter++;
-    }
-    return Counter;
+func Abc_NtkCollectPiPos_rec(net *Object, li, lo *[]*Object) int32 {
+	if net.Kind != ObjectNet || len(net.fanins) != 1 {
+		panic("hierarchy traversal requires driven net")
+	}
+	if Abc_NodeIsTravIdCurrent(net) != 0 {
+		return 0
+	}
+	Abc_NodeSetTravIdCurrent(net)
+	driver := net.fanins[0].Object
+	count := int32(0)
+	if driver.Kind == ObjectNode {
+		for _, e := range driver.fanins {
+			count += Abc_NtkCollectPiPos_rec(e.Object, li, lo)
+		}
+		return count
+	}
+	if driver.Kind == ObjectConst1 {
+		return 0
+	}
+	if driver.Kind == ObjectBO {
+		if len(driver.fanins) != 1 {
+			panic("box output has no box")
+		}
+		driver = driver.fanins[0].Object
+	}
+	if Abc_ObjIsBox(driver) == 0 {
+		panic("unmarked primary input net")
+	}
+	for _, out := range driver.fanouts {
+		if len(out.fanouts) != 1 {
+			panic("box output must drive one net")
+		}
+		Abc_NodeSetTravIdCurrent(out.fanouts[0])
+	}
+	for _, e := range driver.fanins {
+		if len(e.Object.fanins) != 1 {
+			panic("box input requires net")
+		}
+		count += Abc_NtkCollectPiPos_rec(e.Object.fanins[0].Object, li, lo)
+	}
+	return count + Abc_NtkCollectPiPos_int(driver, boxModel(driver), li, lo)
 }
-func Abc_NtkCollectPiPos(pNtk *Abc_Ntk_t, pvLiMaps **Vec_Ptr_t, pvLoMaps **Vec_Ptr_t) int32 {
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    *pvLiMaps = Vec_PtrAlloc( 1000 );
-    *pvLoMaps = Vec_PtrAlloc( 1000 );
-    return Abc_NtkCollectPiPos_int( nil, pNtk, *pvLiMaps, *pvLoMaps );
+func Abc_NtkCollectPiPos_int(box *Object, n *Network, li, lo *[]*Object) int32 {
+	Abc_NtkIncrementTravId(n)
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		for _, net := range pi.fanouts {
+			if net.Kind == ObjectNet {
+				Abc_NodeSetTravIdCurrent(net)
+			}
+		}
+	}
+	if box != nil {
+		for _, e := range box.fanins {
+			*li = append(*li, e.Object)
+		}
+		*lo = append(*lo, n.ObjectsOfKind(ObjectPI)...)
+	}
+	count := int32(0)
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		if len(po.fanins) != 1 {
+			panic("PO requires net")
+		}
+		count += Abc_NtkCollectPiPos_rec(po.fanins[0].Object, li, lo)
+	}
+	if box != nil {
+		*li = append(*li, n.ObjectsOfKind(ObjectPO)...)
+		*lo = append(*lo, box.fanouts...)
+		count++
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives logic network with barbufs from the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToBarBufs_rec(pNtkNew *Abc_Ntk_t, pNet *Abc_Obj_t) *Abc_Obj_t {
-    var pObj, pFanin *Abc_Obj_t; 
-    var i int32;
-    assert(Abc_ObjIsNet(pNet), "Abc_ObjIsNet(pNet)");
-    if pNet.pCopy {
-        return pNet.pCopy; }
-    pObj = Abc_ObjFanin0(pNet);
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    pNet.pCopy = Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Abc_ObjAddFanin( pObj.pCopy, Abc_NtkToBarBufs_rec(pNtkNew, pFanin) );
-    }
-    return pNet.pCopy;
+func Abc_NtkCollectPiPos(n *Network, li, lo *[]*Object) int32 {
+	if li == nil || lo == nil {
+		panic("missing boundary maps")
+	}
+	*li = nil
+	*lo = nil
+	return Abc_NtkCollectPiPos_int(nil, n, li, lo)
 }
-func Abc_NtkToBarBufs(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var Buffer string // was [1000]byte in C
-
-    var vLiMaps, vLoMaps *Vec_Ptr_t;
-    var pNtkNew, pTemp *Abc_Ntk_t;
-    var pLatch, pObjLi, pObjLo *Abc_Obj_t;
-    var pObj, pLiMap, pLoMap *Abc_Obj_t;
-    var i, k, nBoxes int32;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    if !(Abc_NtkCheckSingleInstance(pNtk) != 0) {
-        return nil; }
-    assert(pNtk.pDesign != nil, "pNtk.pDesign != nil");
-    // start the network
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, pNtk.ntkFunc, 1 );
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // clone CIs/CIs/boxes
-    Abc_NtkCleanCopy_rec( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjFanout0(pObj).pCopy = Abc_NtkDupObj( pNtkNew, pObj, 1 );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-    }
-    // create latches and transfer copy labels
-    nBoxes = Abc_NtkCollectPiPos( pNtk, &vLiMaps, &vLoMaps );
-    // inlining of macro Vec_PtrForEachEntryTwo
-    for  i = 0; (i < Vec_PtrSize(vLiMaps)) && (((pLiMap) = (Abc_Obj_t *)Vec_PtrEntry(vLiMaps, i)), 1) && (((pLoMap) = (Abc_Obj_t *)Vec_PtrEntry(vLoMaps, i)), 1); i++  {
-        pObjLi = Abc_NtkCreateBi(pNtkNew);
-        pLatch = Abc_NtkCreateLatch(pNtkNew);
-        pObjLo = Abc_NtkCreateBo(pNtkNew);
-        Abc_ObjAddFanin( pLatch, pObjLi );
-        Abc_ObjAddFanin( pObjLo, pLatch );
-        pLatch.pData = (void *)ABC_INIT_ZERO;
-        pTemp = nil;
-        if Abc_ObjFanin0(pLiMap).pNtk != pNtk {
-            pTemp = Abc_ObjFanin0(pLiMap).pNtk;
-        } else if Abc_ObjFanout0(pLoMap).pNtk != pNtk {
-            pTemp = Abc_ObjFanout0(pLoMap).pNtk;
-        } else { assert(false, "0"); }
-        Buffer = fmt.Sprintf("_%s_in", Abc_NtkName(pTemp));
-        Abc_ObjAssignName( pObjLi, Abc_ObjName(Abc_ObjFanin0(pLiMap)), Buffer );
-        Buffer = fmt.Sprintf("_%s_out", Abc_NtkName(pTemp));
-        Abc_ObjAssignName( pObjLo, Abc_ObjName(Abc_ObjFanout0(pLoMap)), Buffer );
-        pLiMap.pCopy = pObjLi;
-        Abc_ObjFanout0(pLoMap).pCopy = pObjLo;
-        assert(Abc_ObjIsNet(Abc_ObjFanout0(pLoMap)), "Abc_ObjIsNet(Abc_ObjFanout0(pLoMap))");
-    }
-    Vec_PtrFree( vLiMaps );
-    Vec_PtrFree( vLoMaps );
-    // rebuild networks
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-        // inlining of macro Abc_NtkForEachCo
-        for  k = 0; (k < Abc_NtkCoNum(pTemp)) && (((pObj) = Abc_NtkCo(pTemp, k)), 1); k++  {
-            Abc_ObjAddFanin( pObj.pCopy, Abc_NtkToBarBufs_rec(pNtkNew, Abc_ObjFanin0(pObj)) );
-        }
-    }
-    pNtkNew.nBarBufs = Abc_NtkLatchNum(pNtkNew);
-    fmt.Printf("Hierarchy reader flattened %d instances of logic boxes and introduced %d barbufs.\n", nBoxes, pNtkNew.nBarBufs);
-    return pNtkNew;
+func toBarSignal(n *Network, net *Object) Edge {
+	if e := getCopy(net); e.Object != nil {
+		return e
+	}
+	if net.Kind != ObjectNet || len(net.fanins) != 1 {
+		panic("flattening requires driven net")
+	}
+	driver := net.fanins[0]
+	o := driver.Object
+	if o.Kind == ObjectConst1 {
+		e := n.One()
+		e.Complement = driver.Complement
+		setCopy(net, e)
+		return e
+	}
+	if o.Kind != ObjectNode {
+		panic("hierarchy boundary has no copy mapping")
+	}
+	dup := Abc_NtkDupObj(n, o, 0)
+	result := dup.Signal()
+	result.Complement = driver.Complement
+	setCopy(net, result)
+	for _, e := range o.fanins {
+		fanin := toBarSignal(n, e.Object)
+		fanin.Complement = fanin.Complement != e.Complement
+		Abc_ObjAddFanin(dup, fanin)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the logic with barbufs into a hierarchical network.]
-
-  Description [The base network is the original hierarchical network. The
-  second argument is the optimized network with barbufs.  This procedure
-  reconstructs the original hierarcical network which adding logic from
-  the optimized network.  It is assumed that the PIs/POs of the original
-  network one-to-one mapping with the flops of the optimized network.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromBarBufs_rec(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {
-    var pFanin *Abc_Obj_t; 
-    var i int32;
-    if pObj.pCopy {
-        return pObj.pCopy; }
-    Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Abc_ObjAddFanin( pObj.pCopy, Abc_NtkFromBarBufs_rec(pNtkNew, pFanin) );
-    }
-    return pObj.pCopy;
+func Abc_NtkToBarBufs_rec(n *Network, net *Object) Edge { return toBarSignal(n, net) }
+func Abc_NtkToBarBufs(root *Network) *Network {
+	if root.Design == nil {
+		panic("flattening requires a design")
+	}
+	if Abc_NtkCheckSingleInstance(root) == 0 {
+		return nil
+	}
+	cleanHierarchyCopies(root)
+	n := copyNetworkMetadata(root)
+	n.Type = uint8(ABC_NTK_LOGIC)
+	setCopy(root.constant, n.One())
+	for _, pi := range root.ObjectsOfKind(ObjectPI) {
+		dup := Abc_NtkDupObj(n, pi, 1)
+		for _, net := range pi.fanouts {
+			if net.Kind == ObjectNet {
+				setCopy(net, dup.Signal())
+			}
+		}
+	}
+	for _, po := range root.ObjectsOfKind(ObjectPO) {
+		Abc_NtkDupObj(n, po, 1)
+	}
+	var li, lo []*Object
+	count := Abc_NtkCollectPiPos(root, &li, &lo)
+	if len(li) != len(lo) {
+		panic("unbalanced boundary mapping")
+	}
+	for i, from := range li {
+		to := lo[i]
+		input, _, output := newBarrier(n, ABC_INIT_ZERO)
+		var internal *Network
+		if len(from.fanins) == 1 && from.fanins[0].Object.network != root {
+			internal = from.fanins[0].Object.network
+		} else if len(to.fanouts) == 1 && to.fanouts[0].network != root {
+			internal = to.fanouts[0].network
+		} else {
+			panic("boundary does not cross root module")
+		}
+		input.SetName(fmt.Sprintf("%s_%s_in", from.fanins[0].Object.Name(), internal.Name))
+		output.SetName(fmt.Sprintf("%s_%s_out", to.fanouts[0].Name(), internal.Name))
+		setCopy(from, input.Signal())
+		if len(to.fanouts) != 1 || to.fanouts[0].Kind != ObjectNet {
+			panic("boundary requires net")
+		}
+		setCopy(to.fanouts[0], output.Signal())
+	}
+	for _, module := range hierarchyModules(root) {
+		for _, co := range module.Outputs() {
+			copy := getCopy(co)
+			if copy.Object == nil {
+				continue
+			}
+			if len(co.fanins) != 1 {
+				panic("CO requires one net")
+			}
+			e := toBarSignal(n, co.fanins[0].Object)
+			e.Complement = e.Complement != co.fanins[0].Complement
+			Abc_ObjAddFanin(copy.Object, e)
+		}
+	}
+	n.Barriers = len(n.ObjectsOfKind(ObjectLatch))
+	fmt.Printf("Hierarchy reader flattened %d instances of logic boxes and introduced %d barbufs.\n", count, n.Barriers)
+	return n
 }
-func Abc_NtkFromBarBufs(pNtkBase *Abc_Ntk_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew, pTemp *Abc_Ntk_t;
-    var vLiMaps, vLoMaps *Vec_Ptr_t;
-    var pObj, pLiMap, pLoMap *Abc_Obj_t;
-    var i, k int32;
-    assert(pNtkBase.pDesign != nil, "pNtkBase.pDesign != nil");
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_NtkIsNetlist(pNtkBase), "Abc_NtkIsNetlist(pNtkBase)");
-    assert(Abc_NtkLatchNum(pNtkBase) == 0, "Abc_NtkLatchNum(pNtkBase) == 0");
-    assert(Abc_NtkLatchNum(pNtk) == pNtk.nBarBufs, "Abc_NtkLatchNum(pNtk) == pNtk.nBarBufs");
-    assert(Abc_NtkWhiteboxNum(pNtk) == 0, "Abc_NtkWhiteboxNum(pNtk) == 0");
-    assert(Abc_NtkBlackboxNum(pNtk) == 0, "Abc_NtkBlackboxNum(pNtk) == 0");
-    assert(Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkBase), "Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkBase)");
-    assert(Abc_NtkPoNum(pNtk) == Abc_NtkPoNum(pNtkBase), "Abc_NtkPoNum(pNtk) == Abc_NtkPoNum(pNtkBase)");
-    // start networks
-    Abc_NtkCleanCopy_rec( pNtkBase );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtkBase.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkBase.pDesign.vModules, i)), 1); i++  {
-        pTemp.pCopy = Abc_NtkStartFrom( pTemp, pNtk.ntkType, pNtk.ntkFunc );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtkBase.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkBase.pDesign.vModules, i)), 1); i++  {
-        if pTemp.pAltView {
-            pTemp.pCopy.pAltView = pTemp.pAltView.pCopy;
-        } else {
-            pTemp.pCopy.pAltView = nil;
-        }
-    }
-    // update box models
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtkBase.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkBase.pDesign.vModules, i)), 1); i++  {
-        // inlining of macro Abc_NtkForEachBox
-        for  k = 0; (k < Vec_PtrSize((pTemp).vBoxes)) && (((pObj) = Abc_NtkBox(pTemp, k)), 1); k++  {
-            if Abc_ObjIsWhitebox(pObj) || Abc_ObjIsBlackbox(pObj) {
-                pObj.pCopy.pData = Abc_ObjModel(pObj).pCopy; }
-        }
-    }
-    // create the design
-    pNtkNew = pNtkBase.pCopy;
-    pNtkNew.pDesign = Abc_DesCreate( pNtkBase.pDesign.pName );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtkBase.pDesign.vModules)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkBase.pDesign.vModules, i)), 1); i++  {
-        Abc_DesAddModel( pNtkNew.pDesign, pTemp.pCopy );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pNtkBase.pDesign.vTops)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkBase.pDesign.vTops, i)), 1); i++  {
-        Vec_PtrPush( pNtkNew.pDesign.vTops, pTemp.pCopy );
-    }
-    assert(Vec_PtrEntry(pNtkNew.pDesign.vTops, 0) == pNtkNew, "Vec_PtrEntry(pNtkNew.pDesign.vTops, 0) == pNtkNew");
-    // transfer copy attributes to pNtk
-    Abc_NtkCleanCopy( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pObj.pCopy = Abc_NtkPi(pNtkNew, i);
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        pObj.pCopy = Abc_NtkPo(pNtkNew, i);
-    }
-    Abc_NtkCollectPiPos( pNtkBase, &vLiMaps, &vLoMaps );
-    assert(Vec_PtrSize(vLiMaps) == Abc_NtkLatchNum(pNtk), "Vec_PtrSize(vLiMaps) == Abc_NtkLatchNum(pNtk)");
-    assert(Vec_PtrSize(vLoMaps) == Abc_NtkLatchNum(pNtk), "Vec_PtrSize(vLoMaps) == Abc_NtkLatchNum(pNtk)");
-    // inlining of macro Vec_PtrForEachEntryTwo
-    for  i = 0; (i < Vec_PtrSize(vLiMaps)) && (((pLiMap) = (Abc_Obj_t *)Vec_PtrEntry(vLiMaps, i)), 1) && (((pLoMap) = (Abc_Obj_t *)Vec_PtrEntry(vLoMaps, i)), 1); i++  {
-        pObj = Abc_NtkBox( pNtk, i );
-        Abc_ObjFanin0(pObj).pCopy = pLiMap.pCopy; 
-        Abc_ObjFanout0(pObj).pCopy = pLoMap.pCopy; 
-    }
-    Vec_PtrFree( vLiMaps );
-    Vec_PtrFree( vLoMaps );
-    // create internal nodes
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Abc_ObjAddFanin( pObj.pCopy, Abc_NtkFromBarBufs_rec(pObj.pCopy.pNtk, Abc_ObjFanin0(pObj)) );
-    }
-    // transfer net names
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        if Abc_ObjFanoutNum(pObj.pCopy) == 0 { // handle PI without fanout
-            Abc_ObjAddFanin( Abc_NtkCreateNet(pObj.pCopy.pNtk), pObj.pCopy ); }
-        Nm_ManStoreIdName( pObj.pCopy.pNtk.pManName, Abc_ObjFanout0(pObj.pCopy).Id, Abc_ObjFanout0(pObj.pCopy).Type, Abc_ObjName(Abc_ObjFanout0(pObj)), nil );
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Nm_ManStoreIdName( pObj.pCopy.pNtk.pManName, Abc_ObjFanin0(pObj.pCopy).Id, Abc_ObjFanin0(pObj.pCopy).Type, Abc_ObjName(Abc_ObjFanin0(pObj)), nil );
-    }
-    return pNtkNew;
+func fromBarSignal(n *Network, o *Object) Edge {
+	if e := getCopy(o); e.Object != nil {
+		if e.Object.network != n {
+			panic("logic crosses unmarked hierarchy boundary")
+		}
+		return e
+	}
+	if o.Kind == ObjectConst1 {
+		return n.One()
+	}
+	if o.Kind == ObjectNet {
+		if len(o.fanins) != 1 {
+			panic("undriven optimized net")
+		}
+		e := fromBarSignal(n, o.fanins[0].Object)
+		e.Complement = e.Complement != o.fanins[0].Complement
+		if n.Type == uint8(ABC_NTK_NETLIST) {
+			e = netForDriver(n, e).Signal()
+		}
+		setCopy(o, e)
+		return e
+	}
+	if o.Kind != ObjectNode {
+		panic("unmapped optimized boundary")
+	}
+	dup := Abc_NtkDupObj(n, o, 0)
+	setCopy(o, dup.Signal())
+	for _, fanin := range o.fanins {
+		e := fromBarSignal(n, fanin.Object)
+		e.Complement = e.Complement != fanin.Complement
+		if n.Type == uint8(ABC_NTK_NETLIST) {
+			e = netForDriver(n, e).Signal()
+		}
+		Abc_ObjAddFanin(dup, e)
+	}
+	result := dup.Signal()
+	if n.Type == uint8(ABC_NTK_NETLIST) {
+		result = netForDriver(n, result).Signal()
+	}
+	setCopy(o, result)
+	return result
 }
+func Abc_NtkFromBarBufs_rec(n *Network, o *Object) Edge { return fromBarSignal(n, o) }
+func Abc_NtkFromBarBufs(base, flat *Network) *Network {
+	if base.Design == nil || len(flat.ObjectsOfKind(ObjectLatch)) != flat.Barriers || len(base.ObjectsOfKind(ObjectPI)) != len(flat.ObjectsOfKind(ObjectPI)) || len(base.ObjectsOfKind(ObjectPO)) != len(flat.ObjectsOfKind(ObjectPO)) {
+		panic("incompatible hierarchy/barrier interfaces")
+	}
+	if Abc_NtkCheckSingleInstance(base) == 0 {
+		panic("invalid hierarchy base")
+	}
+	if len(flat.Boxes()) != len(flat.ObjectsOfKind(ObjectLatch)) {
+		panic("optimized graph contains non-barrier boxes")
+	}
+	for _, latch := range flat.ObjectsOfKind(ObjectLatch) {
+		if len(latch.fanins) != 1 || len(latch.fanouts) != 1 || latch.fanins[0].Object.Kind != ObjectBI || latch.fanouts[0].Kind != ObjectBO {
+			panic("malformed optimized barrier")
+		}
+	}
+	for _, co := range flat.Outputs() {
+		if len(co.fanins) != 1 {
+			panic("optimized output undriven")
+		}
+	}
+	cleanHierarchyCopies(base)
+	modules := base.Design.Modules
+	used := map[*Network]bool{}
+	for _, module := range hierarchyModules(base) {
+		used[module] = true
+	}
+	for _, module := range modules {
+		clearCopies(module)
+	}
+	for _, module := range modules {
+		if used[module] {
+			cloneInterfaces(module)
+		} else {
+			cloneNetwork(module)
+		}
+	}
+	design := NewDesign(base.Design.Name)
+	for _, module := range modules {
+		if err := design.AddModule(module.Copy); err != nil {
+			panic(err)
+		}
+		if module.AltView != nil {
+			module.Copy.AltView = module.AltView.Copy
+		}
+		for _, box := range module.Boxes() {
+			box.Copy.Data = boxModel(box).Copy
+		}
+	}
+	root := base.Copy
+	for _, top := range base.Design.Tops {
+		if top.Copy != nil {
+			design.Tops = append(design.Tops, top.Copy)
+		}
+	}
+	if len(design.Tops) == 0 {
+		design.Tops = []*Network{root}
+	}
+	clearCopies(flat)
+	for i, pi := range flat.ObjectsOfKind(ObjectPI) {
+		setCopy(pi, root.ObjectsOfKind(ObjectPI)[i].Signal())
+	}
+	for i, po := range flat.ObjectsOfKind(ObjectPO) {
+		setCopy(po, root.ObjectsOfKind(ObjectPO)[i].Signal())
+	}
+	var li, lo []*Object
+	Abc_NtkCollectPiPos(base, &li, &lo)
+	latches := flat.ObjectsOfKind(ObjectLatch)
+	if len(li) != len(latches) || len(lo) != len(latches) {
+		panic("barrier count changed")
+	}
+	for i, latch := range latches {
+		if len(latch.fanins) != 1 || len(latch.fanouts) != 1 {
+			panic("malformed barrier latch")
+		}
+		setCopy(latch.fanins[0].Object, getCopy(li[i]))
+		setCopy(latch.fanouts[0], getCopy(lo[i]))
+	}
+	for _, co := range flat.Outputs() {
+		copy := getCopy(co)
+		if copy.Object == nil || len(co.fanins) != 1 {
+			panic("unmapped optimized CO")
+		}
+		n := copy.Object.network
+		e := fromBarSignal(n, co.fanins[0].Object)
+		e.Complement = e.Complement != co.fanins[0].Complement
+		if n.Type == uint8(ABC_NTK_NETLIST) {
+			e = netForDriver(n, e).Signal()
+		}
+		Abc_ObjAddFanin(copy.Object, e)
+	}
 
-/**Function*************************************************************
+	for _, module := range modules {
+		for _, ci := range module.Inputs() {
+			copy := getCopy(ci)
+			if copy.Object == nil {
+				continue
+			}
+			net := netForDriver(copy.Object.network, copy)
+			for _, oldNet := range ci.fanouts {
+				if oldNet.Kind == ObjectNet {
+					net.SetName(oldNet.Name())
+					break
+				}
+			}
+		}
+		for _, co := range module.Outputs() {
+			if len(co.fanins) == 1 && co.fanins[0].Object.Kind == ObjectNet && co.Copy != nil && len(co.Copy.fanins) == 1 {
+				co.Copy.fanins[0].Object.SetName(co.fanins[0].Object.Name())
+			}
+		}
+	}
+	for _, ci := range flat.Inputs() {
+		copy := getCopy(ci)
+		if copy.Object != nil && len(ci.fanouts) > 0 && ci.fanouts[0].Kind == ObjectNet {
+			netForDriver(copy.Object.network, copy).SetName(ci.fanouts[0].Name())
+		}
+	}
 
-  Synopsis    [Collect nodes in the barbuf-friendly order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToBarBufsCollect_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {
-    var pFanin *Abc_Obj_t; 
-    var i int32;
-    if Abc_NodeIsTravIdCurrent( pObj ) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pObj );
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Abc_NtkToBarBufsCollect_rec( pFanin, vNodes );
-    }
-    Vec_PtrPush( vNodes, pObj );
+	return root
 }
-func Abc_NtkToBarBufsCollect(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    assert(pNtk.nBarBufs > 0, "pNtk.nBarBufs > 0");
-    assert(pNtk.nBarBufs == Abc_NtkLatchNum(pNtk), "pNtk.nBarBufs == Abc_NtkLatchNum(pNtk)");
-    vNodes = Vec_PtrAlloc( Abc_NtkObjNum(pNtk) );
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        if i >= Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        Vec_PtrPush( vNodes, pObj );
-        Abc_NodeSetTravIdCurrent( pObj );
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if i < Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {
-            continue; }
-        Abc_NtkToBarBufsCollect_rec( Abc_ObjFanin0(pObj), vNodes );
-        Vec_PtrPush( vNodes, pObj );
-        Vec_PtrPush( vNodes, Abc_ObjFanout0(pObj) );
-        Vec_PtrPush( vNodes, Abc_ObjFanout0(Abc_ObjFanout0(pObj)) );
-        Abc_NodeSetTravIdCurrent( pObj );
-        Abc_NodeSetTravIdCurrent( Abc_ObjFanout0(pObj) );
-        Abc_NodeSetTravIdCurrent( Abc_ObjFanout0(Abc_ObjFanout0(pObj)) );
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if i >= Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        Abc_NtkToBarBufsCollect_rec( Abc_ObjFanin0(pObj), vNodes );
-        Vec_PtrPush( vNodes, pObj );
-        Abc_NodeSetTravIdCurrent( pObj );
-    }
-    assert(Vec_PtrSize(vNodes) == Abc_NtkObjNum(pNtk), "Vec_PtrSize(vNodes) == Abc_NtkObjNum(pNtk)");
-    return vNodes;
+func Abc_NtkToBarBufsCollect_rec(o *Object, nodes *[]*Object) {
+	if Abc_NodeIsTravIdCurrent(o) != 0 {
+		return
+	}
+	Abc_NodeSetTravIdCurrent(o)
+	if o.Kind != ObjectNode && o.Kind != ObjectConst1 {
+		panic("barrier traversal reached unordered boundary")
+	}
+	for _, e := range o.fanins {
+		Abc_NtkToBarBufsCollect_rec(e.Object, nodes)
+	}
+	*nodes = append(*nodes, o)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count barrier buffers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCountBarBufs(pNtk *Abc_Ntk_t) int32 {
-    var pObj *Abc_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        Counter += Abc_ObjIsBarBuf( pObj ); }
-    }
-    return Counter;
+func Abc_NtkToBarBufsCollect(n *Network) []*Object {
+	latches := n.ObjectsOfKind(ObjectLatch)
+	if n.Barriers == 0 || n.Barriers != len(latches) {
+		panic("invalid barrier count")
+	}
+	Abc_NtkIncrementTravId(n)
+	nodes := []*Object{n.constant}
+	Abc_NodeSetTravIdCurrent(n.constant)
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		nodes = append(nodes, pi)
+		Abc_NodeSetTravIdCurrent(pi)
+	}
+	for _, latch := range latches {
+		if len(latch.fanins) != 1 || len(latch.fanouts) != 1 {
+			panic("invalid barrier terminals")
+		}
+		in, out := latch.fanins[0].Object, latch.fanouts[0]
+		if len(in.fanins) != 1 {
+			panic("barrier input undriven")
+		}
+		Abc_NtkToBarBufsCollect_rec(in.fanins[0].Object, &nodes)
+		nodes = append(nodes, in, latch, out)
+		Abc_NodeSetTravIdCurrent(in)
+		Abc_NodeSetTravIdCurrent(latch)
+		Abc_NodeSetTravIdCurrent(out)
+	}
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		if len(po.fanins) != 1 {
+			panic("PO undriven")
+		}
+		Abc_NtkToBarBufsCollect_rec(po.fanins[0].Object, &nodes)
+		nodes = append(nodes, po)
+		Abc_NodeSetTravIdCurrent(po)
+	}
+	if len(nodes) != len(n.Objects()) {
+		panic("barrier-friendly traversal missed objects")
+	}
+	return nodes
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network to dedicated barbufs and back.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBarBufsToBuffers(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var vNodes *Vec_Ptr_t;
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    assert(pNtk.pDesign == nil, "pNtk.pDesign == nil");
-    assert(pNtk.nBarBufs > 0, "pNtk.nBarBufs > 0");
-    assert(pNtk.nBarBufs == Abc_NtkLatchNum(pNtk), "pNtk.nBarBufs == Abc_NtkLatchNum(pNtk)");
-    vNodes = Abc_NtkToBarBufsCollect( pNtk );
-    // start the network
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, pNtk.ntkFunc, 1 );
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // create objects
-    Abc_NtkCleanCopy( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        if Abc_ObjIsPi(pObj) {
-            Abc_NtkDupObj( pNtkNew, pObj, 1 );
-        } else if Abc_ObjIsPo( pObj) {
-            Abc_ObjAddFanin( Abc_NtkDupObj(pNtkNew, pObj, 1), Abc_ObjFanin0(pObj).pCopy );
-        } else if Abc_ObjIsBi(pObj) || Abc_ObjIsBo(pObj) {
-            pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;
-        } else if Abc_ObjIsLatch(pObj) {
-            Abc_ObjAddFanin( (pObj.pCopy = Abc_NtkCreateNode(pNtkNew)), Abc_ObjFanin0(pObj).pCopy );
-        } else if Abc_ObjIsNode(pObj) {
-            Abc_NtkDupObj( pNtkNew, pObj, 1 );
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-            }
-        
-        } else { assert(false, "0"); }
-    }
-    Vec_PtrFree( vNodes );
-    return pNtkNew;
+func isBarrierBuffer(o *Object) bool {
+	return o.Kind == ObjectNode && len(o.fanins) == 1 && (o.Barrier || o.Data == nil)
 }
-func Abc_NtkBarBufsFromBuffers(pNtkBase *Abc_Ntk_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pFanin, pLatch *Abc_Obj_t;
-    var i, k, nBarBufs int32;
-    assert(Abc_NtkIsLogic(pNtkBase), "Abc_NtkIsLogic(pNtkBase)");
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    assert(pNtkBase.nBarBufs == Abc_NtkLatchNum(pNtkBase), "pNtkBase.nBarBufs == Abc_NtkLatchNum(pNtkBase)");
-    // start the network
-    pNtkNew = Abc_NtkStartFrom( pNtkBase, pNtk.ntkType, pNtk.ntkFunc );
-    // transfer PI pointers
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pObj.pCopy = Abc_NtkPi(pNtkNew, i);
-    }
-    // assuming that the order/number of barbufs remains the same
-    nBarBufs = 0;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        if Abc_ObjIsBarBuf(pObj) {
-            pLatch = Abc_NtkBox(pNtkNew, nBarBufs++);
-            Abc_ObjAddFanin( Abc_ObjFanin0(pLatch), Abc_ObjFanin0(pObj).pCopy );
-            pObj.pCopy = Abc_ObjFanout0(pLatch);
-        
-        } else {
-            Abc_NtkDupObj( pNtkNew, pObj, 1 );
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-            }
-        }
-    }
-    }
-    assert(nBarBufs == pNtkBase.nBarBufs, "nBarBufs == pNtkBase.nBarBufs");
-    // connect POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_ObjAddFanin( Abc_NtkPo(pNtkNew, i), Abc_ObjFanin0(pObj).pCopy );
-    }
-    return pNtkNew;
+func Abc_NtkCountBarBufs(n *Network) int32 {
+	count := int32(0)
+	for _, o := range n.ObjectsOfKind(ObjectNode) {
+		if isBarrierBuffer(o) {
+			count++
+		}
+	}
+	return count
 }
-func Abc_NtkBarBufsOnOffTest(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew, pNtkNew2 *Abc_Ntk_t;
-    pNtkNew  = Abc_NtkBarBufsToBuffers( pNtk );
-    pNtkNew2 = Abc_NtkBarBufsFromBuffers( pNtk, pNtkNew );
-    Abc_NtkDelete( pNtkNew );
-    return pNtkNew2;
+func Abc_NtkBarBufsToBuffers(old *Network) *Network {
+	if old.Design != nil {
+		panic("convert flattened hierarchy first")
+	}
+	nodes := Abc_NtkToBarBufsCollect(old)
+	n := copyNetworkMetadata(old)
+	n.Barriers = 0
+	clearCopies(old)
+	setCopy(old.constant, n.One())
+	for _, o := range nodes {
+		switch o.Kind {
+		case ObjectConst1:
+			continue
+		case ObjectPI:
+			Abc_NtkDupObj(n, o, 1)
+		case ObjectPO:
+			dup := Abc_NtkDupObj(n, o, 1)
+			e := getCopy(o.fanins[0].Object)
+			e.Complement = e.Complement != o.fanins[0].Complement
+			Abc_ObjAddFanin(dup, e)
+		case ObjectBI, ObjectBO:
+			e := getCopy(o.fanins[0].Object)
+			e.Complement = e.Complement != o.fanins[0].Complement
+			setCopy(o, e)
+		case ObjectLatch:
+			in := getCopy(o.fanins[0].Object)
+			dup := n.NewObject(ObjectNode)
+			dup.Barrier = true
+			Abc_ObjAddFanin(dup, in)
+			setCopy(o, dup.Signal())
+		case ObjectNode:
+			dup := Abc_NtkDupObj(n, o, 1)
+			for _, fanin := range o.fanins {
+				e := getCopy(fanin.Object)
+				e.Complement = e.Complement != fanin.Complement
+				Abc_ObjAddFanin(dup, e)
+			}
+		default:
+			panic("unexpected barrier conversion object")
+		}
+	}
+	return n
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_NtkBarBufsFromBuffers(base, buffers *Network) *Network {
+	if base.Barriers != len(base.ObjectsOfKind(ObjectLatch)) || len(base.ObjectsOfKind(ObjectPI)) != len(buffers.ObjectsOfKind(ObjectPI)) || len(base.ObjectsOfKind(ObjectPO)) != len(buffers.ObjectsOfKind(ObjectPO)) {
+		panic("incompatible buffer interfaces")
+	}
+	if int(Abc_NtkCountBarBufs(buffers)) != base.Barriers {
+		panic("barrier buffer count changed")
+	}
+	if err := buffers.Check(); err != nil {
+		panic(err)
+	}
+	for _, po := range buffers.ObjectsOfKind(ObjectPO) {
+		if len(po.fanins) != 1 {
+			panic("optimized PO undriven")
+		}
+	}
+	for _, latch := range base.ObjectsOfKind(ObjectLatch) {
+		if len(latch.fanins) != 1 || len(latch.fanouts) != 1 || latch.fanins[0].Object.Kind != ObjectBI || latch.fanouts[0].Kind != ObjectBO {
+			panic("invalid base barrier terminals")
+		}
+	}
+	clearCopies(base)
+	n := cloneInterfaces(base)
+	n.Design = nil
+	clearCopies(buffers)
+	setCopy(buffers.constant, n.One())
+	for i, pi := range buffers.ObjectsOfKind(ObjectPI) {
+		setCopy(pi, n.ObjectsOfKind(ObjectPI)[i].Signal())
+	}
+	order, err := buffers.Topological(buffers.Objects())
+	if err != nil {
+		panic(err)
+	}
+	latches := n.ObjectsOfKind(ObjectLatch)
+	index := 0
+	for _, o := range order {
+		if o.Kind != ObjectNode {
+			continue
+		}
+		if isBarrierBuffer(o) {
+			if index >= len(latches) {
+				panic("too many barrier buffers")
+			}
+			latch := latches[index]
+			index++
+			in, out := latch.fanins[0].Object, latch.fanouts[0]
+			e := getCopy(o.fanins[0].Object)
+			e.Complement = e.Complement != o.fanins[0].Complement
+			Abc_ObjAddFanin(in, e)
+			setCopy(o, out.Signal())
+		} else {
+			dup := Abc_NtkDupObj(n, o, 1)
+			for _, fanin := range o.fanins {
+				e := getCopy(fanin.Object)
+				e.Complement = e.Complement != fanin.Complement
+				Abc_ObjAddFanin(dup, e)
+			}
+		}
+	}
+	if index != len(latches) {
+		panic("barrier buffer count changed")
+	}
+	for i, po := range buffers.ObjectsOfKind(ObjectPO) {
+		e := getCopy(po.fanins[0].Object)
+		e.Complement = e.Complement != po.fanins[0].Complement
+		Abc_ObjAddFanin(n.ObjectsOfKind(ObjectPO)[i], e)
+	}
+	return n
+}
+func Abc_NtkBarBufsOnOffTest(n *Network) *Network {
+	return Abc_NtkBarBufsFromBuffers(n, Abc_NtkBarBufsToBuffers(n))
+}

@@ -388,15 +388,15 @@ func Gia_ResbFree(p *Gia_ResbMan_t) {
     Vec_PtrFree( p.vDivs            );
     Vec_WecFree( p.vSorter          );
     // inlining of macro ABC_FREE
-    ((p.pSets[0]) ? (free((char *) (p.pSets[0])), (p.pSets[0]) = 0) : 0);
+    p.pSets[0] = nil;
     // inlining of macro ABC_FREE
-    ((p.pSets[1]) ? (free((char *) (p.pSets[1])), (p.pSets[1]) = 0) : 0);
+    p.pSets[1] = nil;
     // inlining of macro ABC_FREE
-    ((p.pDivA) ? (free((char *) (p.pDivA)), (p.pDivA) = 0) : 0);
+    p.pDivA = nil;
     // inlining of macro ABC_FREE
-    ((p.pDivB) ? (free((char *) (p.pDivB)), (p.pDivB) = 0) : 0);
+    p.pDivB = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1186,17 +1186,17 @@ func Gia_ManResubPerformMux_rec(p *Gia_ResbMan_t, nLimit int32) int32 {
     iResLit0 = Gia_ManResubPerform_rec( p, nLimit-3 );
     if iResLit0 == -1 {
         // inlining of macro ABC_FREE
-        ((pCopy[0]) ? (free((char *) (pCopy[0])), (pCopy[0]) = 0) : 0);
+        pCopy[0] = nil;
         // inlining of macro ABC_FREE
-        ((pCopy[1]) ? (free((char *) (pCopy[1])), (pCopy[1]) = 0) : 0);
+        pCopy[1] = nil;
         return -1;
     }
     Abc_TtAndSharp( p.pSets[0], pCopy[0], pDiv, p.nWords,  Abc_LitIsCompl(iDivBest) );
     Abc_TtAndSharp( p.pSets[1], pCopy[1], pDiv, p.nWords,  Abc_LitIsCompl(iDivBest) );
     // inlining of macro ABC_FREE
-    ((pCopy[0]) ? (free((char *) (pCopy[0])), (pCopy[0]) = 0) : 0);
+    pCopy[0] = nil;
     // inlining of macro ABC_FREE
-    ((pCopy[1]) ? (free((char *) (pCopy[1])), (pCopy[1]) = 0) : 0);
+    pCopy[1] = nil;
     nNodes = Vec_IntSize(p.vGates)/2 - nNodes;
     if nLimit-nNodes < 3 {
         return -1; }
@@ -1833,9 +1833,9 @@ func Gia_ManTryResub(p *Gia_Man_t) {
     Vec_PtrFree( vvSims );
     Vec_WrdFree( vSims );
     // inlining of macro ABC_FREE
-    ((pSets[0]) ? (free((char *) (pSets[0])), (pSets[0]) = 0) : 0);
+    pSets[0] = nil;
     // inlining of macro ABC_FREE
-    ((pSets[1]) ? (free((char *) (pSets[1])), (pSets[1]) = 0) : 0);
+    pSets[1] = nil;
 }
 
 

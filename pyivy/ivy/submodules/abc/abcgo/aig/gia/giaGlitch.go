@@ -203,9 +203,9 @@ func Gli_ManStop(p *Gli_Man_t) {
     Vec_IntFree( p.vAffected );
     Vec_IntFree( p.vFrontier );
     // inlining of macro ABC_FREE
-    ((p.pSimInfoPrev) ? (free((char *) (p.pSimInfoPrev)), (p.pSimInfoPrev) = 0) : 0);
+    p.pSimInfoPrev = nil;
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

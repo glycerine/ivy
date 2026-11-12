@@ -135,12 +135,9 @@ func Dch_ManStop(p *Dch_Man_t) {
     Vec_PtrFree( p.vFanins );
     Vec_PtrFree( p.vSimRoots );
     Vec_PtrFree( p.vSimClasses );
-    // inlining of macro ABC_FREE
-    ((p.pReprsProved) ? (free((char *) (p.pReprsProved)), (p.pReprsProved) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pSatVars) ? (free((char *) (p.pSatVars)), (p.pSatVars) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pReprsProved = nil;
+    p.pSatVars = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

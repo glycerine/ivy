@@ -61,33 +61,22 @@ func Mig_ManStop(p *Mig_Man_t) {
     if false {
     fmt.Printf("Subject graph uses %d pages of %d objects with %d entries. Total memory = %.2f MB.\n", Vec_PtrSize(&p.vPages), MIG_MASK + 1, p.nObjs, 1.0 * Vec_PtrSize(&p.vPages) * (MIG_MASK + 1) * 16 / (1 << 20)); }
     // attributes
-    // inlining of macro ABC_FREE
-    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vRefs.pArray) ? (free((char *) (p.vRefs.pArray)), (p.vRefs.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vSibls.pArray) ? (free((char *) (p.vSibls.pArray)), (p.vSibls.pArray) = 0) : 0);
+    p.vTravIds.pArray = nil;
+    p.vCopies.pArray = nil;
+    p.vLevels.pArray = nil;
+    p.vRefs.pArray = nil;
+    p.vSibls.pArray = nil;
     // pages
     // inlining of macro Vec_PtrForEachEntry
     for  p.iPage = 0; (p.iPage < Vec_PtrSize(&p.vPages)) && (((p.pPage) = (Mig_Obj_t *)Vec_PtrEntry(&p.vPages, p.iPage)), 1); p.iPage++  {
-        // inlining of macro ABC_FREE
-        --p.pPage, ((p.pPage) ? (free((char *) (p.pPage)), (p.pPage) = 0) : 0);
+        --p.pPage, p.pPage = nil;
     }
     // objects
-    // inlining of macro ABC_FREE
-    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.vPages.pArray = nil;
+    p.vCis.pArray = nil;
+    p.vCos.pArray = nil;
+    p.pName = nil;
+    p = nil;
 }
 
 /**Function*************************************************************

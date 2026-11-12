@@ -100,7 +100,7 @@ func Unm_ManFree(p *Unm_Man_t) *Gia_Man_t {
     // free data structures
     Hash_IntManStop( p.pHash );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 
     Gia_ManStop( pTemp );
     pTemp = nil;

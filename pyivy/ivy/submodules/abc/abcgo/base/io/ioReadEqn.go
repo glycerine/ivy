@@ -167,8 +167,7 @@ func Io_ReadEqnNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {
             // derive the function
             pNode.pData = Parse_FormulaParserEqn( os.Stdout, pFormula, vVars, (Hop_Man_t *)pNtk.pManFunc );
             // remove the cubes
-            // inlining of macro ABC_FREE
-            ((pFormulaCopy) ? (free((char *) (pFormulaCopy)), (pFormulaCopy) = 0) : 0);
+            pFormulaCopy = nil;
         }
     }
     Extra_ProgressBarStop( pProgress );

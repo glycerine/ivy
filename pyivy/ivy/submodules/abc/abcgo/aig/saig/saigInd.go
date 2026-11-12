@@ -136,8 +136,7 @@ func Saig_ManAddUniqueness(pSat *sat_solver, vState *Vec_Int_t, nRegs int32, i i
     }
     assert(iVars <= nRegs, "iVars <= nRegs");
     RetValue = sat_solver_addclause( pSat, pClause, pClause + iVars );
-    // inlining of macro ABC_FREE
-    ((pClause) ? (free((char *) (pClause)), (pClause) = 0) : 0);
+    pClause = nil;
     if RetValue == 0 {
         if fVerbose != 0 {
             fmt.Printf("SAT solver became UNSAT after adding a uniqueness constraint.\n"); }

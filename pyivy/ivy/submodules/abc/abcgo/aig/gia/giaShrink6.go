@@ -158,7 +158,7 @@ func Shr_ManFree(p *Shr_Man_t) *Gia_Man_t {
     Vec_IntFree( p.vDivResub );
     Vec_IntFree( p.vLeaves );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
     return pTemp;
 }
 

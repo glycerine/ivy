@@ -80,10 +80,8 @@ func Map_SuperTableCreate(pLib *Map_SuperLib_t) *Map_HashTable_t {
 
 ***********************************************************************/
 func Map_SuperTableFree(p *Map_HashTable_t) {
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pBins = nil;
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -266,8 +264,7 @@ func Map_SuperTableResize(p *Map_HashTable_t) {
     }
     assert(Counter == p.nEntries, "Counter == p.nEntries");
     // replace the table and the parameters
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
+    p.pBins = nil;
     p.pBins = pBinsNew;
     p.nBins = nBinsNew;
 }
@@ -358,8 +355,7 @@ func Map_SuperTableSortSupergates(p *Map_HashTable_t, nSupersMax int32) {
         fmt.Printf("%s", ppSupers[i].pFormula);
         fmt.Printf("\n");
     }
-    // inlining of macro ABC_FREE
-    ((ppSupers) ? (free((char *) (ppSupers)), (ppSupers) = 0) : 0);
+    ppSupers = nil;
 }
 
 /**Function*************************************************************
@@ -407,8 +403,7 @@ func Map_SuperTableSortSupergatesByDelay(p *Map_HashTable_t, nSupersMax int32) {
             pEnt.pGates.nSupers = nSupers;
         }
     }
-    // inlining of macro ABC_FREE
-    ((ppSupers) ? (free((char *) (ppSupers)), (ppSupers) = 0) : 0);
+    ppSupers = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////

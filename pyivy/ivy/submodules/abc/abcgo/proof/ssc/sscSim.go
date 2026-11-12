@@ -121,8 +121,7 @@ func Vec_WrdDoubleSimInfo(p *Vec_Wrd_t, nObjs int32) {
     for  i = 0; i < nObjs; i++  {
         memcpy( pArray + 2*i*nWords, p.pArray + i*nWords, sizeof(word) * nWords );
     }
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0); p.pArray = pArray;
+    p.pArray = nil; p.pArray = pArray;
     p.nSize = p.nCap = 2*nWords*nObjs;
 }
 
@@ -204,8 +203,7 @@ func Ssc_GiaTransferPiPattern(pAig *Gia_Man_t, pCare *Gia_Man_t, vPivot *Vec_Int
     var Count int32  = Ssc_SimCountBits( pCareMask, nWords );
     var pSimPiCare, pSimPiAig *word;
     if Count == 0 {
-        // inlining of macro ABC_FREE
-        ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);
+        pCareMask = nil;
         return 0;
     }
     Ssc_GiaResetPiPattern( pAig, nWords );
@@ -220,8 +218,7 @@ func Ssc_GiaTransferPiPattern(pAig *Gia_Man_t, pCare *Gia_Man_t, vPivot *Vec_Int
                 pSimPiAig[w] = pSimPiCare[w] & pCareMask[w]; }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);
+    pCareMask = nil;
     return Count;
 }
 
@@ -315,8 +312,7 @@ func Ssc_GiaGetOneSim(p *Gia_Man_t) *Vec_Int_t {
     var nWords int32 = Gia_ObjSimWords( p );
     var pRes *word  = Ssc_GiaGetCareMask( p );
     iBit = Ssc_SimFindBit( pRes, nWords );
-    // inlining of macro ABC_FREE
-    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);
+    pRes = nil;
     if iBit == -1 {
         return nil; }
     vInit = Vec_IntAlloc( 100 );
@@ -349,8 +345,7 @@ func Ssc_GiaCountCaresSim(p *Gia_Man_t) int32 {
     var pRes *word  = Ssc_GiaGetCareMask( p );
     var nWords int32  = Gia_ObjSimWords( p );
     var Count int32  = Ssc_SimCountBits( pRes, nWords );
-    // inlining of macro ABC_FREE
-    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);
+    pRes = nil;
     return Count;
 }
 func Ssc_GiaEstimateCare(p *Gia_Man_t, nWords int32) int32 {

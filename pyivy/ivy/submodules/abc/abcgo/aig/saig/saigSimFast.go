@@ -301,8 +301,7 @@ func Faig_ManSimulateFrames(p *Faig_Man_t, nFrames int32, nPref int32, fTrans in
             }
         }
     }
-    // inlining of macro ABC_FREE
-    ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);
+    pSimInfo = nil;
     return pNumOnes;
 }
 
@@ -447,10 +446,8 @@ clk = Abc_Clock();
         }
         assert(Counter == pAig.nObjs, "Counter == pAig.nObjs");
     }
-    // inlining of macro ABC_FREE
-    ((pProbs) ? (free((char *) (pProbs)), (pProbs) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pAig) ? (free((char *) (pAig)), (pAig) = 0) : 0);
+    pProbs = nil;
+    pAig = nil;
 //ABC_PRT( "Switch    ", Abc_Clock() - clk );
 //ABC_PRT( "TOTAL     ", Abc_Clock() - clkTotal );
     return vSwitching;

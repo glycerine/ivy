@@ -89,13 +89,13 @@ func Gia_ManSupStart(nVarsMax int32) *Gia_ManSup_t {
 
 ***********************************************************************/
 func Gia_ManSupStop(p *Gia_ManSup_t) {
-    ABC_FREE( p.pTruthIn );
-    ABC_FREE( p.pTruthOut );
+    p.pTruthIn = nil;
+    p.pTruthOut = nil;
     Vec_IntFreeP( &p.vConeCare );
     Vec_IntFreeP( &p.vConeData );
     Vec_PtrFreeP( &p.vTruthVars );
     Vec_PtrFreeP( &p.vTruthNodes );
-    ABC_FREE( p );
+    p = nil;
 }
 
 /**Function*************************************************************

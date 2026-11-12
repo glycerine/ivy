@@ -155,8 +155,7 @@ func Inter_ManGetCounterExample(pAig *Aig_Man_t, nFrames int32, fVerbose int32) 
             if pModel[i] {
                 Abc_InfoSetBit( pCtrex.pData, Saig_ManRegNum(pAig) + i ); }
         }
-        // inlining of macro ABC_FREE
-        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);
+        pModel = nil;
     }
     // free the sat_solver
     sat_solver_delete( pSat );

@@ -49,11 +49,8 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManIncrementTravId(p *Ivy_Man_t) {
-    if p.nTravIds >= (1<<30)-1 - 1000 {
-        Ivy_ManCleanTravId( p ); }
-    p.nTravIds++;
-}
+// Ivy_ManIncrementTravId is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -66,16 +63,8 @@ func Ivy_ManIncrementTravId(p *Ivy_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManCleanTravId(p *Ivy_Man_t) {
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    p.nTravIds = 1;
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.TravId = 0; }
-    }
-}
+// Ivy_ManCleanTravId is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 
@@ -622,13 +611,8 @@ func Ivy_ObjRecognizeMux(pNode *Ivy_Obj_t, ppNodeT **Ivy_Obj_t, ppNodeE **Ivy_Ob
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjReal(pObj *Ivy_Obj_t) *Ivy_Obj_t {
-    var pFanin *Ivy_Obj_t;
-    if pObj == nil || !Ivy_ObjIsBuf( Ivy_Regular(pObj) ) {
-        return pObj; }
-    pFanin = Ivy_ObjReal( Ivy_ObjChild0(Ivy_Regular(pObj)) );
-    return Ivy_NotCond( pFanin, Ivy_IsComplement(pObj) );
-}
+// Ivy_ObjReal is implemented in the ported core API group.
+
 
 /**Function*************************************************************
 

@@ -139,8 +139,7 @@ func Fra_ClausRunSat(p *Clu_Man_t) int32 {
     } 
     // try to solve the problem
     RetValue = sat_solver_solve( p.pSatMain, pLits, pLits + p.nFrames + 1, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    // inlining of macro ABC_FREE
-    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);
+    pLits = nil;
     if RetValue == l_False {
         return 1; }
     // get the counter-example
@@ -403,8 +402,7 @@ func Fra_ClausSelectClauses(p *Clu_Man_t) int32 {
         }
         Vec_IntWriteEntry( p.vCosts, i, -1 );
     }
-    // inlining of macro ABC_FREE
-    ((pCostCount) ? (free((char *) (pCostCount)), (pCostCount) = 0) : 0);
+    pCostCount = nil;
     p.nClauses = nClauCount;
 if p.fVerbose {
 fmt.Printf("Selected %d clauses. Cost range: [%d < %d < %d]\n", nClauCount, 1, c, CostMax); }
@@ -1443,8 +1441,7 @@ func Fra_ClausFree(p *Clu_Man_t) {
     if p.pCnf {      Cnf_DataFree( p.pCnf ); }
     if p.pSatMain {  sat_solver_delete( p.pSatMain ); }
     if p.pSatBmc {   sat_solver_delete( p.pSatBmc ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 
@@ -1593,8 +1590,7 @@ func Fra_ClausWriteIndClauses(p *Clu_Man_t) {
         Aig_ObjCreateCo( pNew, pClause );
         Beg = End;
     }
-    // inlining of macro ABC_FREE
-    ((pVar2Id) ? (free((char *) (pVar2Id)), (pVar2Id) = 0) : 0);
+    pVar2Id = nil;
     Aig_ManCleanup( pNew );
     pName = Ioa_FileNameGenericAppend( p.pAig.pName, "_care.aig" );
     fmt.Printf("Care one-hotness clauses will be written into file \"%s\".\n", pName);
@@ -1685,8 +1681,7 @@ func Fra_ClausEstimateCoverage(p *Clu_Man_t) {
         nCovered += Aig_WordCountOnes( pResultTot[w] );
     }
     Fra_SmlStop( pComb );
-    // inlining of macro ABC_FREE
-    ((pVar2Id) ? (free((char *) (pVar2Id)), (pVar2Id) = 0) : 0);
+    pVar2Id = nil;
     // print the result
     fmt.Printf("Care states ratio = %f. ", 1.0 * (nCombSimWords * 32 - nCovered) / (nCombSimWords * 32));
     fmt.Printf("(%d out of %d patterns)  ", nCombSimWords * 32 - nCovered, nCombSimWords * 32);

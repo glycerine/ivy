@@ -123,14 +123,10 @@ func Ssw_RarManStop(p *Ssw_RarMan_t) {
     if p.ppClasses { Ssw_ClassesStop( p.ppClasses ); }
     Vec_PtrFreeP( &p.vSimInfo );
     Vec_IntFreeP( &p.vInits );
-    // inlining of macro ABC_FREE
-    ((p.pGroupValues) ? (free((char *) (p.pGroupValues)), (p.pGroupValues) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPatCosts) ? (free((char *) (p.pPatCosts)), (p.pPatCosts) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pRarity) ? (free((char *) (p.pRarity)), (p.pRarity) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p.pGroupValues = nil;
+    p.pPatCosts = nil;
+    p.pRarity = nil;
+    p = nil;
 }
 
 
@@ -511,10 +507,8 @@ func Ssw_RarSignalFilterGia2(p *Gia_Man_t, nFrames int32, nWords int32, nBinSize
     pAig = Gia_ManToAigSimple( p );
     if p.pReprs != nil {
         Gia_ManReprToAigRepr2( pAig, p );
-        // inlining of macro ABC_FREE
-        ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);
-        // inlining of macro ABC_FREE
-        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);
+        p.pReprs = nil;
+        p.pNexts = nil;
     }
     RetValue = Ssw_RarSignalFilter2( pAig, nFrames, nWords, nBinSize, nRounds, TimeOut, pCex, fLatchOnly, fVerbose );
     Gia_ManReprFromAigRepr( pAig, p );

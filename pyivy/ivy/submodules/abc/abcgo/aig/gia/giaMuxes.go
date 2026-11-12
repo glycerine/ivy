@@ -108,7 +108,7 @@ func Gia_ManDupMuxes(p *Gia_Man_t, Limit int32) *Gia_Man_t {
     assert(p.pMuxes == nil, "p.pMuxes == nil");
     assert(Limit >= 0, "Limit >= 0"); // allows to create AIG with XORs without MUXes
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     // start the new manager
     pNew = Gia_ManStart( Gia_ManObjNum(p) );
@@ -247,7 +247,7 @@ func Gia_ManMuxRestructure(p *Gia_Man_t) *Gia_Man_t {
     assert(!Gia_ManHasMapping(p), "!Gia_ManHasMapping(p)");
     assert(p.pMuxes != nil, "p.pMuxes != nil");
     // inlining of macro ABC_FREE
-    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    p.Refs = nil;
     Gia_ManCreateRefs( p ); 
     // start the new manager
     pNew = Gia_ManStart( Gia_ManObjNum(p) );
@@ -518,7 +518,7 @@ func Mux_ManFree(p *Mux_Man_t) {
     Abc_NamStop( p.pNames );
     Vec_WecFree( p.vTops );
     // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************
@@ -1016,7 +1016,7 @@ func Gia_ManProfileStructuresInt(p *Gia_Man_t, nLimit int32, fVerbose int32) {
 
     // cleanup
     // inlining of macro ABC_FREE
-    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    pPerm = nil;
     Vec_IntFree( vRes );
     Vec_IntFree( vCount );
     Vec_IntFree( vFirst );
@@ -1207,7 +1207,7 @@ func Gia_ManFindDerive(pNew *Gia_Man_t, nOuts int32, vIns *Vec_Int_t, vCofs *Vec
         Gia_ManAppendCo( pNew, Value );
     }
     // inlining of macro ABC_FREE
-    ((pTruth) ? (free((char *) (pTruth)), (pTruth) = 0) : 0);
+    pTruth = nil;
     Vec_IntFree( vUsed );
     Vec_IntFree( vBits );
     Vec_IntFree( vData );

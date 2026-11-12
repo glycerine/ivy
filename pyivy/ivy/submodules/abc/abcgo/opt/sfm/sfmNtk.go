@@ -196,8 +196,7 @@ func Sfm_NtkConstruct(vFanins *Vec_Wec_t, nPis int32, nPos int32, vFixed *Vec_St
     p.vFanins  = *vFanins;
     p.vStarts  = vStarts;
     p.vTruths2 = vTruths2;
-    // inlining of macro ABC_FREE
-    ((vFanins) ? (free((char *) (vFanins)), (vFanins) = 0) : 0);
+    vFanins = nil;
     // attributes
     Sfm_CreateFanout( &p.vFanins, &p.vFanouts );
     Sfm_CreateLevel( &p.vFanins, &p.vLevels, vEmpty );
@@ -238,20 +237,13 @@ func Sfm_NtkFree(p *Sfm_Ntk_t) {
     Vec_WrdFree( p.vTruths2 );
     // attributes
     Vec_WecErase( &p.vFanouts );
-    // inlining of macro ABC_FREE
-    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vLevelsR.pArray) ? (free((char *) (p.vLevelsR.pArray)), (p.vLevelsR.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vCounts.pArray) ? (free((char *) (p.vCounts.pArray)), (p.vCounts.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vTravIds2.pArray) ? (free((char *) (p.vTravIds2.pArray)), (p.vTravIds2.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vId2Var.pArray) ? (free((char *) (p.vId2Var.pArray)), (p.vId2Var.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.vVar2Id.pArray) ? (free((char *) (p.vVar2Id.pArray)), (p.vVar2Id.pArray) = 0) : 0);
+    p.vLevels.pArray = nil;
+    p.vLevelsR.pArray = nil;
+    p.vCounts.pArray = nil;
+    p.vTravIds.pArray = nil;
+    p.vTravIds2.pArray = nil;
+    p.vId2Var.pArray = nil;
+    p.vVar2Id.pArray = nil;
     Vec_WecFree( p.vCnfs );
     Vec_IntFree( p.vCover );
     // other data
@@ -268,8 +260,7 @@ func Sfm_NtkFree(p *Sfm_Ntk_t) {
     Vec_WecFreeP( &p.vClauses );
     Vec_IntFreeP( &p.vFaninMap );
     if p.pSat { sat_solver_delete( p.pSat ); }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    p = nil;
 }
 
 /**Function*************************************************************

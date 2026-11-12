@@ -241,7 +241,7 @@ func Gia_ManCheckUnateVecTest(p *Gia_Man_t, fVerbose int32) {
             fmt.Printf("Out%4d : %s\n", o, pBuffer); }
     }
     // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+    pBuffer = "";
     // print stats
     fmt.Printf("Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\n", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);
     // inlining of macro ABC_PRT
@@ -293,7 +293,7 @@ func Gia_ManCheckUnateTest(p *Gia_Man_t, fComputeAll int32, fVerbose int32) {
                 fmt.Printf("Out%4d : %s\n", o, pBuffer); }
         }
         // inlining of macro ABC_FREE
-        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
+        pBuffer = "";
         // print stats
         fmt.Printf("Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\n", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);
         // inlining of macro ABC_PRT

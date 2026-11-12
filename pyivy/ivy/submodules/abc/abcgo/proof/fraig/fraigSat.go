@@ -147,8 +147,7 @@ func Fraig_ManProveMiter(p *Fraig_Man_t) {
 func Fraig_ManCheckMiter(p *Fraig_Man_t) int32 {
     var pNode *Fraig_Node_t;
     var i int32;
-    // inlining of macro ABC_FREE
-    ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0);
+    p.pModel = nil;
     for  i = 0; i < p.vOutputs.nSize; i++  {
         // get the output node (it can be complemented!)
         pNode = p.vOutputs.pArray[i];
