@@ -2,165 +2,91 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/bool/rsb"
+	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [giaShrink6.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Implementation of DAG-aware unmapping for 6-input cuts.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaShrink6.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-//#include "bool/bdc/bdc.h"
-//#include "bool/rsb/rsb.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Resynthesizes nodes using bi-decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    [Compute truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMapShrink6(p *Gia_Man_t, nFanoutMax int32, fKeepLevel int32, fVerbose int32) *Gia_Man_t {
-    var pMan *Shr_Man_t;
-    var pObj, pFanin *Gia_Obj_t;
-    var uTruth, uTruth0, uTruth1 word;
-    var i, k, nDivs, iNode int32;
-    var RetValue, Counter1, Counter2 int32;
-    var clk2 abctime;
-    var clk abctime = Abc_Clock();
-    var timeFanout abctime;
-    assert(Gia_ManHasMapping(p), "Gia_ManHasMapping(p)");
-    pMan = Shr_ManAlloc( p );
-    Gia_ManFillValue( p );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pMan.pNew );
-            if p.vLevels {
-                Gia_ObjSetLevel( pMan.pNew, Gia_ObjFromLit(pMan.pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) ); }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );
-        
-        } else if Gia_ObjIsLut(p, i) {
-            // collect leaves of this gate  
-            Vec_IntClear( pMan.vLeaves );
-            // inlining of macro Gia_LutForEachFanin
-            for  k = 0; k < Gia_ObjLutSize(p,i) && ((iNode = Gia_ObjLutFanins(p,i)[k]),1); k++  {
-                Vec_IntPush( pMan.vLeaves, iNode );
-            }
-            assert(Vec_IntSize(pMan.vLeaves) <= 6, "Vec_IntSize(pMan.vLeaves) <= 6");
-            // compute truth table 
-            uTruth = Shr_ManComputeTruth6( pMan.pGia, pObj, pMan.vLeaves, pMan.vTruths );
-            assert(pObj.Value == ~0, "pObj.Value == ~0");
-            if uTruth == 0 || ~uTruth == 0 {
-                pObj.Value = Abc_LitNotCond( 0, ~uTruth == 0 );
-            } else {
-                // inlining of macro Gia_ManForEachObjVec
-                for  k = 0; (k < Vec_IntSize(pMan.vLeaves)) && ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {
-                    if uTruth == Truth[k] || ~uTruth == Truth[k] {
-                        pObj.Value = Abc_LitNotCond( pFanin.Value, ~uTruth == Truth[k] ); }
-                } }
-            if pObj.Value != ~0 {
-                continue; }
-            // translate into new nodes
-            // inlining of macro Gia_ManForEachObjVec
-            for  k = 0; (k < Vec_IntSize(pMan.vLeaves)) && ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {
-                if Abc_LitIsCompl(pFanin.Value) {
-                    uTruth = ((uTruth & Truth[k]) >> (1 << k)) | ((uTruth & ~Truth[k]) << (1 << k)); }
-                Vec_IntWriteEntry( pMan.vLeaves, k, Abc_Lit2Var(pFanin.Value) );
-            }
-            // compute divisors
-            clk2 = Abc_Clock();
-            nDivs = Shr_ManCollectDivisors( pMan, pMan.vLeaves, pMan.nDivMax, nFanoutMax );
-            assert(nDivs <= pMan.nDivMax, "nDivs <= pMan.nDivMax");
-            timeFanout += Abc_Clock() - clk2;
-            // compute truth tables
-            Shr_ManComputeTruths( pMan.pNew, Vec_IntSize(pMan.vLeaves), pMan.vDivs, pMan.vDivTruths, pMan.vTruths );
-            // perform resubstitution
-            RetValue = Rsb_ManPerformResub6( pMan.pManRsb, Vec_IntSize(pMan.vLeaves), uTruth, pMan.vDivTruths, &uTruth0, &uTruth1, 0 );
-            if RetValue { // resub exists
-            
-                var vResult *Vec_Int_t  = Rsb_ManGetFanins(pMan.pManRsb);
-                Vec_IntClear( pMan.vDivResub );
-                // inlining of macro Vec_IntForEachEntry
-                for  k = 0; (k < Vec_IntSize(vResult)) && (((iNode) = Vec_IntEntry(vResult, k)), 1); k++  {
-                    Vec_IntPush( pMan.vDivResub, Vec_IntEntry(pMan.vDivs, iNode) );
-                }
-                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vDivResub, uTruth1, uTruth0 | uTruth1 );
-                Counter1++;
-            
-            } else {
-                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vLeaves, uTruth, ~(word)0 );
-                Counter2++;
-            }
-        }
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Performed %d resubs and %d decomps.  ", Counter1, Counter2);
-        fmt.Printf("Gain in AIG nodes = %d.  ", Gia_ManObjNum(p)-Gia_ManObjNum(pMan.pNew));
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Runtime"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-//        ABC_PRT( "Divisors", timeFanout );        
-    }
-    return Shr_ManFree( pMan );
+// Gia_ManMapShrink6 resynthesizes mapped LUTs using divisors and bidecomposition.
+func Gia_ManMapShrink6(g *Gia_Man_t, maxFanout, keepLevel, verbose int32) *Gia_Man_t {
+	_ = keepLevel
+	if Gia_ManHasMapping(g) == 0 {
+		panic("gia: LUT shrinking requires mapping")
+	}
+	started := time.Now()
+	p := Shr_ManAlloc(g)
+	Gia_ManFillValue(g)
+	Gia_ManConst0(g).Value = 0
+	patterns := [6]word{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
+	var resubs, decomps int32
+	for id := int32(1); id < g.nObjs; id++ {
+		obj := Gia_ManObj(g, id)
+		switch {
+		case Gia_ObjIsCi(obj) != 0:
+			lit := Gia_ManAppendCi(p.pNew)
+			obj.Value = uint32(lit)
+			if g.vLevels != nil {
+				Gia_ObjSetLevelId(p.pNew, lit>>1, Gia_ObjLevelId(g, id))
+			}
+		case Gia_ObjIsCo(obj) != 0:
+			obj.Value = uint32(Gia_ManAppendCo(p.pNew, Gia_ObjFanin0Copy(obj)))
+		case Gia_ObjIsLut(g, id) != 0:
+			vec.Vec_IntClear(p.vLeaves)
+			for _, fan := range Gia_ObjLutFanins(g, id) {
+				vec.Vec_IntPush(p.vLeaves, fan)
+			}
+			if vec.Vec_IntSize(p.vLeaves) > 6 {
+				panic("gia: LUT exceeds six inputs")
+			}
+			truth := Shr_ManComputeTruth6(g, obj, p.vLeaves, p.vTruths)
+			if truth == 0 {
+				obj.Value = 0
+			} else if truth == ^word(0) {
+				obj.Value = 1
+			} else {
+				for i, fan := range vec.Vec_IntArray(p.vLeaves) {
+					if truth == patterns[i] {
+						obj.Value = Gia_ManObj(g, fan).Value
+						break
+					}
+					if ^truth == patterns[i] {
+						obj.Value = Gia_ManObj(g, fan).Value ^ 1
+						break
+					}
+				}
+			}
+			if obj.Value != ^uint32(0) {
+				continue
+			}
+			for i, fan := range vec.Vec_IntArray(p.vLeaves) {
+				value := Gia_ManObj(g, fan).Value
+				if value == ^uint32(0) {
+					panic("gia: unmapped shrink LUT fanin")
+				}
+				if value&1 != 0 {
+					shift := uint(1) << uint(i)
+					truth = ((truth & patterns[i]) >> shift) | ((truth &^ patterns[i]) << shift)
+				}
+				vec.Vec_IntWriteEntry(p.vLeaves, i, int32(value>>1))
+			}
+			Shr_ManCollectDivisors(p, p.vLeaves, p.nDivMax, maxFanout)
+			Shr_ManComputeTruths(p.pNew, int32(vec.Vec_IntSize(p.vLeaves)), p.vDivs, p.vDivTruths, p.vTruths)
+			var off, on word
+			if rsb.Rsb_ManPerformResub6(p.pManRsb, int32(vec.Vec_IntSize(p.vLeaves)), truth, vec.Vec_WrdArray(p.vDivTruths), &off, &on, 0) != 0 {
+				vec.Vec_IntClear(p.vDivResub)
+				for _, index := range rsb.Rsb_ManGetFanins(p.pManRsb) {
+					vec.Vec_IntPush(p.vDivResub, vec.Vec_IntEntry(p.vDivs, int(index)))
+				}
+				obj.Value = uint32(Shr_ObjPerformBidec(p, p.pManDec, p.pNew, p.vDivResub, on, off|on))
+				resubs++
+			} else {
+				obj.Value = uint32(Shr_ObjPerformBidec(p, p.pManDec, p.pNew, p.vLeaves, truth, ^word(0)))
+				decomps++
+			}
+		}
+	}
+	if verbose != 0 {
+		fmt.Printf("Performed %d resubs and %d decomps. Gain in AIG nodes = %d. Runtime %.2f sec\n", resubs, decomps, g.nObjs-p.pNew.nObjs, time.Since(started).Seconds())
+	}
+	return Shr_ManFree(p)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
