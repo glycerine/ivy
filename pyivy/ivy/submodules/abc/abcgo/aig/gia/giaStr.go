@@ -468,99 +468,13 @@ func Gia_ManLutBalance(p *Gia_Man_t, nLutSize int32, fUseMuxes int32, fRecursive
 
 ***********************************************************************/
     
-type Str_Edg_t struct {
-    Fan            int32;      // fanin ID
-    fCompl            int32;   // fanin complement
-    FanDel            int32;   // fanin delay
-    Copy            int32;     // fanin copy
-}
 
-    // 64 bytes
-type Str_Mux_t struct {
-    Id            int32;       // node ID
-    Delay            int32;    // node delay
-    Copy            int32;     // node copy
-    nLutSize            int32; // LUT size
-    Edge [3]Str_Edg_t;  // fanins
-}
 
-func Str_MuxFanin(pMux *Str_Mux_t, i int32) *Str_Mux_t { return pMux - pMux.Id + pMux.Edge[i].Fan;                         }
-func Str_MuxHasFanin(pMux *Str_Mux_t, i int32) int32 { return pMux.Edge[i].Fan > 0 && Str_MuxFanin(pMux, i).Copy != -2;  }
 
-func Str_MuxDelayPrint_rec(pMux *Str_Mux_t, i int32) {
-    var fShowDelay int32  = 1;
-    var pFanin *Str_Mux_t;
-    if pMux.Edge[i].Fan <= 0 {
-        fmt.Printf("%d", -pMux.Edge[i].Fan);
-        if fShowDelay != 0 {
-            fmt.Printf("{%d}", pMux.Edge[i].FanDel); }
-        return;
-    }
-    pFanin = Str_MuxFanin( pMux, i );
-    fmt.Printf("[ ");
-    if pFanin.Edge[0].fCompl {
-        fmt.Printf("!"); }
-    Str_MuxDelayPrint_rec( pFanin, 0 );
-    fmt.Printf("|");
-    if pFanin.Edge[1].fCompl {
-        fmt.Printf("!"); }
-    Str_MuxDelayPrint_rec( pFanin, 1 );
-    fmt.Printf("(");
-    if pFanin.Edge[2].fCompl {
-        fmt.Printf("!"); }
-    Str_MuxDelayPrint_rec( pFanin, 2 );
-    fmt.Printf(")");
-    fmt.Printf(" ]");
-}
-func Str_MuxDelayEdge_rec(pMux *Str_Mux_t, i int32) int32 {
-    if pMux.Edge[i].Fan > 0 {
-        var pFanin *Str_Mux_t  = Str_MuxFanin( pMux, i );
-        Str_MuxDelayEdge_rec( pFanin, 0 );
-        Str_MuxDelayEdge_rec( pFanin, 1 );
-        pMux.Edge[i].FanDel = Str_Delay3( pFanin.Edge[0].FanDel, pFanin.Edge[1].FanDel, pFanin.Edge[2].FanDel, pFanin.nLutSize );
-    }
-    return pMux.Edge[i].FanDel;
-}
-func Str_MuxCreate(pTree *Str_Mux_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32) {
-    var pObj *Str_Obj_t;
-    var pMux *Str_Mux_t;
-    var i, k, nPis int32;
-    assert(nMuxes >= 2, "nMuxes >= 2");
-    memset( pTree, 0, sizeof(Str_Mux_t) * (nMuxes + 1) );
-    pTree.nLutSize = nLutSize;
-    pTree.Edge[0].Fan = 1;
-    for  i = 1; i <= nMuxes; i++  {
-        pMux = pTree + i;
-        pMux.Id = i;
-        pMux.nLutSize = nLutSize;
-        pMux.Delay = pMux.Copy = -1;
-        // assign fanins
-        pObj = Str_NtkObj( pNtk, iMux + nMuxes - i );
-        assert(pObj.Type == STR_MUX, "pObj.Type == STR_MUX");
-        for  k = 0; k < 3; k++  {
-            pMux.Edge[k].fCompl = Str_ObjFaninC(pNtk, pObj, k);
-            if Str_ObjFaninId(pNtk, pObj, k) >= iMux {
-                pMux.Edge[k].Fan = iMux + nMuxes - Str_ObjFaninId(pNtk, pObj, k);
-            } else {
-                pMux.Edge[k].Fan = -nPis++; // count external inputs, including controls
-                pMux.Edge[k].Copy = Str_ObjFanin(pNtk, pObj, k).iCopy;
-                pMux.Edge[k].FanDel = Vec_IntEntry( vDelay, Abc_Lit2Var(pMux.Edge[k].Copy) );
-            }
-        }
-    }
-}
-func Str_MuxToGia_rec(pNew *Gia_Man_t, pMux *Str_Mux_t, i int32, vDelay *Vec_Int_t) int32 {
-    if pMux.Edge[i].Fan > 0 {
-        var pFanin *Str_Mux_t  = Str_MuxFanin( pMux, i );
-        var iLit0 int32  = Str_MuxToGia_rec( pNew, pFanin, 0, vDelay );
-        var iLit1 int32  = Str_MuxToGia_rec( pNew, pFanin, 1, vDelay );
-        assert(pFanin.Edge[2].Fan <= 0, "pFanin.Edge[2].Fan <= 0");
-        assert(pFanin.Edge[2].fCompl == 0, "pFanin.Edge[2].fCompl == 0");
-        pMux.Edge[i].Copy = Gia_ManHashMuxReal( pNew, pFanin.Edge[2].Copy, iLit1, iLit0 );
-        Str_ObjDelay( pNew, Abc_Lit2Var(pMux.Edge[i].Copy), pFanin.nLutSize, vDelay );
-    }
-    return Abc_LitNotCond( pMux.Edge[i].Copy, pMux.Edge[i].fCompl );
-}
+
+
+
+
 func Str_MuxChangeOnce(pTree *Str_Mux_t, pPath *int32, i int32, k int32, pBackup *Str_Mux_t, pNew *Gia_Man_t, vDelay *Vec_Int_t) {
     var pSpots [3]*Str_Mux_t;
     var pInds [3]int32;
@@ -632,44 +546,10 @@ func Str_MuxChangeUndo(pTree *Str_Mux_t, pPath *int32, i int32, k int32, pBackup
     pTree[ Abc_Lit2Var(pPath[i+1])] = pBackup[1]; 
     pTree[ Abc_Lit2Var(pPath[i])  ] = pBackup[2]; 
 }
-func Str_MuxFindPathEdge_rec(pMux *Str_Mux_t, i int32, pPath *int32, pnLength *int32) int32 {
-    extern int Str_MuxFindPath_rec( Str_Mux_t * pMux, int * pPath, int * pnLength );
-    if pMux.Edge[i].Fan > 0 && !(Str_MuxFindPath_rec(Str_MuxFanin(pMux, i), pPath, pnLength) != 0) {
-        return 0; }
-    pPath[ (*pnLength)++ ] = Abc_Var2Lit(pMux.Id, i);
-    return 1;
-}
-func Str_MuxFindPath_rec(pMux *Str_Mux_t, pPath *int32, pnLength *int32) int32 {
-    var i int32;
-    var DelayMax int32 = Abc_MaxInt( pMux.Edge[0].FanDel, Abc_MaxInt(pMux.Edge[1].FanDel, pMux.Edge[2].FanDel) );
-    for  i = 0; i < 2; i++  {
-        if pMux.Edge[i].FanDel == DelayMax {
-            return Str_MuxFindPathEdge_rec( pMux, i, pPath, pnLength ); }
-    }
-    if pMux.Edge[2].FanDel == DelayMax {
-        return 0; }
-    assert(false, "0");
-    return -1;
-}
+
+
 // return node whose both branches are non-trivial
-func Str_MuxFindBranching(pRoot *Str_Mux_t, i int32) *Str_Mux_t {
-    var pMux *Str_Mux_t;
-    if pRoot.Edge[i].Fan <= 0 {
-        return nil; }
-    pMux = Str_MuxFanin( pRoot, i );
-    for {
-        if pMux.Edge[0].Fan <= 0 && pMux.Edge[1].Fan <= 0 {
-            return nil; }
-        if pMux.Edge[0].Fan > 0 && pMux.Edge[1].Fan > 0 {
-            return pMux; }
-        if pMux.Edge[0].Fan > 0 {
-            pMux = Str_MuxFanin( pMux, 0 ); }
-        if pMux.Edge[1].Fan > 0 {
-            pMux = Str_MuxFanin( pMux, 1 ); }
-    }
-    assert(false, "0");
-    return nil;
-}
+
 func Str_MuxTryOnce(pNew *Gia_Man_t, pNtk *Str_Ntk_t, pTree *Str_Mux_t, pRoot *Str_Mux_t, Edge int32, vDelay *Vec_Int_t, fVerbose int32) int32 {
     var pPath [MAX_TREE]int32;
     var pBackup [3]Str_Mux_t;
