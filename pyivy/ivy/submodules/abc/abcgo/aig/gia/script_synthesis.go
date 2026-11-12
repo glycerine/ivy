@@ -2,6 +2,74 @@ package gia
 
 import "github.com/glycerine/abcgo/misc/util"
 
+// giaAigSyn2 carries out the area/delay script using the supplied DSD mapper.
+// The mapper lives in the IF package, which itself imports GIA.
+func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose, veryVerbose int32, dsdBalance func(*Gia_Man_t, int32, int32, int32, int32) *Gia_Man_t) *Gia_Man_t {
+	var pars Jf_Par_t
+	if old != 0 {
+		Jf_ManSetDefaultPars(&pars)
+		pars.fCutMin = cutMin
+	} else {
+		Lf_ManSetDefaultPars(&pars)
+		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = cutMin, coarsen, relax
+		pars.nAreaTuner, pars.nCutNum = 1, 4
+	}
+	if verbose != 0 {
+		Gia_ManPrintStats(input, nil)
+	}
+	p := Gia_ManDup(input)
+	Gia_ManTransferTiming(p, input)
+	if Gia_ManAndNum(p) == 0 {
+		result := Gia_ManDup(p)
+		Gia_ManTransferTiming(result, p)
+		Gia_ManStop(p)
+		return result
+	}
+	mapGraph := func(g *Gia_Man_t) *Gia_Man_t {
+		if old != 0 {
+			return Jf_ManPerformMapping(g, &pars)
+		}
+		return Lf_ManPerformMapping(g, &pars)
+	}
+	if delayMin != 0 && p.pManTime == nil {
+		savedCutMin, savedCoarsen, savedRelax := pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio
+		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = 0, 0, 0
+		mapGraph(p)
+		area0, delay0 := int32(pars.Area), int32(pars.Delay)
+		balanced := dsdBalance(p, 6, 4, 0, 0)
+		mapGraph(balanced)
+		area1, delay1 := int32(pars.Area), int32(pars.Delay)
+		if delay1 < delay0-1 || (delay1 == delay0+1 && 100.0*float64(area1-area0)/float64(area1) < 3.0) {
+			Gia_ManStop(p)
+			p = balanced
+		} else {
+			Gia_ManStop(balanced)
+			p.vMapping = nil
+		}
+		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = savedCutMin, savedCoarsen, savedRelax
+	}
+	result := Gia_ManAreaBalance(p, 0, util.ABC_INFINITY, veryVerbose, 0)
+	if verbose != 0 {
+		Gia_ManPrintStats(result, nil)
+	}
+	Gia_ManStop(p)
+	previous := result
+	result = mapGraph(previous)
+	if verbose != 0 {
+		Gia_ManPrintStats(result, nil)
+	}
+	if previous != result {
+		Gia_ManStop(previous)
+	}
+	previous = result
+	result = Gia_ManAreaBalance(previous, 0, util.ABC_INFINITY, veryVerbose, 0)
+	if verbose != 0 {
+		Gia_ManPrintStats(result, nil)
+	}
+	Gia_ManStop(previous)
+	return result
+}
+
 func Gia_ManAigSyn3(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)

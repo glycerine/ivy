@@ -61,88 +61,10 @@ import abcmain "github.com/glycerine/abcgo/base/main"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo int32, fCoarsen int32, fCutMin int32, nRelaxRatio int32, fDelayMin int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {
-    var p, pNew, pTemp *Gia_Man_t;
-    var Pars Jf_Par_t;
-    var pPars *Jf_Par_t = &Pars;
-    if fOldAlgo != 0 {
-        Jf_ManSetDefaultPars( pPars );
-        pPars.fCutMin     = fCutMin;
-    
-    } else {
-        Lf_ManSetDefaultPars( pPars );
-        pPars.fCutMin     = fCutMin;
-        pPars.fCoarsen    = fCoarsen;
-        pPars.nRelaxRatio = nRelaxRatio;
-        pPars.nAreaTuner  = 1;
-        pPars.nCutNum     = 4;
-    }
-    if fVerbose != 0 {  Gia_ManPrintStats( pInit, nil ); }
-    p = Gia_ManDup( pInit );
-    Gia_ManTransferTiming( p, pInit );
-    if Gia_ManAndNum(p) == 0 {
-        pNew = Gia_ManDup(p);
-        Gia_ManTransferTiming( pNew, p );
-        Gia_ManStop( p );
-        return pNew;
-    }
-    // delay optimization
-    if (fDelayMin != 0) && p.pManTime == nil {
-        var Area0, Area1, Delay0, Delay1 int32;
-        var fCutMin int32  = pPars.fCutMin;
-        var fCoarsen int32  = pPars.fCoarsen;
-        var nRelaxRatio int32  = pPars.nRelaxRatio;
-        pPars.fCutMin = 0;
-        pPars.fCoarsen = 0;
-        pPars.nRelaxRatio = 0;
-        // perform mapping
-        if fOldAlgo != 0 {
-            Jf_ManPerformMapping( p, pPars );
-        } else {
-            Lf_ManPerformMapping( p, pPars ); }
-        Area0  = int32(pPars.Area);
-        Delay0 = int32(pPars.Delay);
-        // perform balancing
-        pNew = Gia_ManPerformDsdBalance( p, 6, 4, 0, 0 );
-        // perform mapping again
-        if fOldAlgo != 0 {
-            Jf_ManPerformMapping( pNew, pPars );
-        } else {
-            Lf_ManPerformMapping( pNew, pPars ); }
-        Area1  = int32(pPars.Area);
-        Delay1 = int32(pPars.Delay);
-        // choose the best result
-        if Delay1 < Delay0 - 1 || (Delay1 == Delay0 + 1 && 100.0 * (Area1 - Area0) / Area1 < 3.0) {
-            Gia_ManStop( p );
-            p = pNew;
-        
-        } else {
-            Gia_ManStop( pNew );
-            Vec_IntFreeP( &p.vMapping );
-        }
-        // reset params
-        pPars.fCutMin = fCutMin;
-        pPars.fCoarsen = fCoarsen;
-        pPars.nRelaxRatio = nRelaxRatio;
-    }
-    // perform balancing
-    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );
-    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }
-    Gia_ManStop( p );
-    // perform mapping
-    if fOldAlgo != 0 {
-        pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );
-    } else {
-        pNew = Lf_ManPerformMapping( pTemp = pNew, pPars ); }
-    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }
-    if pTemp != pNew {
-        Gia_ManStop( pTemp ); }
-    // perform balancing
-    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );
-    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }
-    Gia_ManStop( pTemp );
-    return pNew;
+func Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo, fCoarsen, fCutMin, nRelaxRatio, fDelayMin, fVerbose, fVeryVerbose int32) *Gia_Man_t {
+    return giaAigSyn2(pInit, fOldAlgo, fCoarsen, fCutMin, nRelaxRatio, fDelayMin, fVerbose, fVeryVerbose, Gia_ManPerformDsdBalance)
 }
+
 /**Function*************************************************************
 
   Synopsis    [Duplicates the AIG manager.]

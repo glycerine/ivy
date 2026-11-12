@@ -48,6 +48,29 @@ func TestScriptSynthesisTruth(t *testing.T) {
 	}
 }
 
+func TestSyn2SynthesisTruth(t *testing.T) {
+	for _, old := range []int32{0, 1} {
+		for _, delay := range []int32{0, 1} {
+			p := Gia_ManStart(10)
+			a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+			x := Gia_ManAppendAnd(p, a, b^1)
+			Gia_ManAppendCo(p, Gia_ManAppendAnd(p, x, c))
+			calls := 0
+			balance := func(g *Gia_Man_t, size, cuts, relax, verbose int32) *Gia_Man_t {
+				calls++
+				if size != 6 || cuts != 4 || relax != 0 || verbose != 0 {
+					t.Fatal("incorrect DSD balancing parameters")
+				}
+				return Gia_ManDup(g)
+			}
+			q := giaAigSyn2(p, old, 0, 0, 0, delay, 0, 0, balance)
+			if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 || calls != int(delay) {
+				t.Fatalf("old=%d delay=%d calls=%d: incorrect result", old, delay, calls)
+			}
+		}
+	}
+}
+
 func TestScriptPortOrdering(t *testing.T) {
 	g := Gia_ManStart(8)
 	a := Gia_ManAppendCi(g)
