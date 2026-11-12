@@ -43,3 +43,26 @@ func TestStateOrGate(t *testing.T) {
 		t.Fatal("OR truth mismatch")
 	}
 }
+
+func TestStateTransitionOneHot(t *testing.T) {
+	lines := vec.Vec_IntAlloc(16)
+	for _, v := range []int32{0, 1, 1, 0, 1, 1, 2, 1, 0, 2, 1, 0, 1, 2, 2, 1} {
+		vec.Vec_IntPush(lines, v)
+	}
+	p := Gia_ManStgOneHot(lines, 1, 1, 2)
+	if Gia_ManPiNum(p) != 1 || Gia_ManPoNum(p) != 1 || Gia_ManRegNum(p) != 2 {
+		t.Fatal("bad state interface")
+	}
+	state := []bool{false, false}
+	for _, input := range []bool{true, false} {
+		values := []bool{input, state[0], state[1]}
+		out, err := p.Evaluate(values)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if out[0] != input {
+			t.Fatalf("input %v output %v", input, out)
+		}
+		copy(state, out[1:])
+	}
+}
