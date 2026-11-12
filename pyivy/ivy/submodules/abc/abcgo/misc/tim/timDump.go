@@ -1,216 +1,124 @@
 package tim
 
-/**CFile****************************************************************
-
-  FileName    [timDump.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Hierarchy/timing manager.]
-
-  Synopsis    [Saving and loading the hierarchy timing manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: timDump.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "timInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
+import (
+	"encoding/binary"
+	"math"
+)
 
 const TIM_DUMP_VER_NUM = 1
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Transform the timing manager into the char stream.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManSave(p *Tim_Man_t, fHieOnly int32) *Vec_Str_t {
-    var pBox *Tim_Box_t;
-    var pObj *Tim_Obj_t;
-    var vStr *Vec_Str_t;
-    var pDelayTable *float32;
-    var i, k, TableSize int32;
-    // create output stream
-    vStr = Vec_StrAlloc( 10000 );
-    // dump version number
-    Vec_StrPutI_ne( vStr, TIM_DUMP_VER_NUM );
-    // save CI/CO counts
-    Vec_StrPutI_ne( vStr, Tim_ManCiNum(p) );
-    Vec_StrPutI_ne( vStr, Tim_ManCoNum(p) );
-    // save PI/PO counts
-    Vec_StrPutI_ne( vStr, Tim_ManPiNum(p) );
-    Vec_StrPutI_ne( vStr, Tim_ManPoNum(p) );
-    // save number of boxes
-    Vec_StrPutI_ne( vStr, Tim_ManBoxNum(p) );
-    // for each box, save num_inputs, num_outputs, delay table ID, and copy field
-    if Tim_ManBoxNum(p) > 0 {
-    // inlining of macro Tim_ManForEachBox
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vBoxes)) && (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {
-        Vec_StrPutI_ne( vStr, Tim_ManBoxInputNum(p, pBox.iBox) );
-        Vec_StrPutI_ne( vStr, Tim_ManBoxOutputNum(p, pBox.iBox) );
-        Vec_StrPutI_ne( vStr, Tim_ManBoxDelayTableId(p, pBox.iBox) ); // can be -1 if delay table is not given
-        Vec_StrPutI_ne( vStr, Tim_ManBoxCopy(p, pBox.iBox) );         // can be -1 if the copy is node defined
-        //Vec_StrPutI_ne( vStr, Tim_ManBoxIsBlack(p, pBox->iBox) );
-    } }
-    if fHieOnly != 0 {
-        return vStr; }
-    // save the number of delay tables
-    Vec_StrPutI_ne( vStr, Tim_ManDelayTableNum(p) );
-    // save the delay tables
-    if Tim_ManDelayTableNum(p) > 0 {
-    // inlining of macro Tim_ManForEachTable
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vDelayTables)) && (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {
-        assert(int32(pDelayTable[0]) == i, "int32(pDelayTable[0]) == i");
-        // save table ID and dimensions (inputs x outputs)
-        Vec_StrPutI_ne( vStr, int32(pDelayTable[0]) );
-        Vec_StrPutI_ne( vStr, int32(pDelayTable[1]) );
-        Vec_StrPutI_ne( vStr, int32(pDelayTable[2]) );
-        // save table contents
-        TableSize = int32(pDelayTable[1]) * int32(pDelayTable[2]);
-        for  k = 0; k < TableSize; k++  {
-            Vec_StrPutF( vStr, pDelayTable[k+3] );
-        }
-    } }
-    // save PI arrival times
-    // inlining of macro Tim_ManForEachPi
-    // inlining of macro Tim_ManForEachCi
-    for  i = 0; (i < (p).nCis) && ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Vec_StrPutF( vStr, Tim_ManGetCiArrival(p, pObj.Id) ); }
-    }
-    // save PO required times
-    // inlining of macro Tim_ManForEachPo
-    // inlining of macro Tim_ManForEachCo
-    for  i = 0; (i < (p).nCos) && ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Vec_StrPutF( vStr, Tim_ManGetCoRequired(p, pObj.Id) ); }
-    }
-    return vStr;
+// Tim_ManSave preserves ABC's version-1 stream: integers are big endian,
+// while float32 payloads use the host byte order (as in Vec_StrPutF).
+func Tim_ManSave(p *Tim_Man_t, hierarchyOnly int) []byte {
+	var data []byte
+	putInt := func(n int) { data = binary.BigEndian.AppendUint32(data, uint32(int32(n))) }
+	putFloat := func(n float32) { data = binary.NativeEndian.AppendUint32(data, math.Float32bits(n)) }
+	for _, n := range []int{TIM_DUMP_VER_NUM, p.nCis, p.nCos, Tim_ManPiNum(p), Tim_ManPoNum(p), len(p.vBoxes)} {
+		putInt(n)
+	}
+	for _, b := range p.vBoxes {
+		for _, n := range []int{b.nInputs, b.nOutputs, b.iDelayTable, b.iCopy} {
+			putInt(n)
+		}
+	}
+	if hierarchyOnly != 0 {
+		return data
+	}
+	putInt(len(p.vDelayTables))
+	for i, t := range p.vDelayTables {
+		if len(t) < 3 || int(t[0]) != i || len(t) != 3+int(t[1])*int(t[2]) {
+			panic("tim: invalid table for serialization")
+		}
+		putInt(i)
+		putInt(int(t[1]))
+		putInt(int(t[2]))
+		for _, n := range t[3:] {
+			putFloat(n)
+		}
+	}
+	for i, o := range p.pCis {
+		if o.iObj2Box < 0 {
+			putFloat(Tim_ManGetCiArrival(p, i))
+		}
+	}
+	for i, o := range p.pCos {
+		if o.iObj2Box < 0 {
+			putFloat(Tim_ManGetCoRequired(p, i))
+		}
+	}
+	return data
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Restores the timing manager from the char stream.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManLoad(p *Vec_Str_t, fHieOnly int32) *Tim_Man_t {
-    var pMan *Tim_Man_t;
-    var pObj *Tim_Obj_t;
-    var VerNum, nCis, nCos, nPis, nPos int32;
-    var nBoxes, nBoxIns, nBoxOuts, CopyBox, fBlack int32;
-    var TableId, nTables, TableSize, TableX, TableY int32;
-    var i, k, curPi, curPo, iStr int32;
-    var pDelayTable *float32;
-    // get version number 
-    VerNum = Vec_StrGetI_ne( p, &iStr );
-    assert(VerNum == TIM_DUMP_VER_NUM, "VerNum == TIM_DUMP_VER_NUM");
-    // get the number of CIs/COs
-    nCis = Vec_StrGetI_ne( p, &iStr );
-    nCos = Vec_StrGetI_ne( p, &iStr );
-    // get the number of PIs/POs
-    nPis = Vec_StrGetI_ne( p, &iStr );
-    nPos = Vec_StrGetI_ne( p, &iStr );
-    // start the timing manager
-    pMan = Tim_ManStart( nCis, nCos );
-    // start boxes
-    nBoxes = Vec_StrGetI_ne( p, &iStr );
-    assert(pMan.vBoxes == nil, "pMan.vBoxes == nil");
-    if nBoxes > 0 {
-        pMan.vBoxes = Vec_PtrAlloc( nBoxes ); }
-    // create boxes
-    curPi = nPis;
-    curPo = 0;
-    for  i = 0; i < nBoxes; i++  {
-        nBoxIns  = Vec_StrGetI_ne( p, &iStr );
-        nBoxOuts = Vec_StrGetI_ne( p, &iStr );
-        TableId  = Vec_StrGetI_ne( p, &iStr );
-        CopyBox  = Vec_StrGetI_ne( p, &iStr );
-        fBlack   = 0;//Vec_StrGetI_ne( p, &iStr );
-        Tim_ManCreateBox( pMan, curPo, nBoxIns, curPi, nBoxOuts, TableId, fBlack );
-        Tim_ManBoxSetCopy( pMan, i, CopyBox );
-        curPi += nBoxOuts;
-        curPo += nBoxIns;
-    }
-    curPo += nPos;
-    assert(curPi == nCis, "curPi == nCis");
-    assert(curPo == nCos, "curPo == nCos");
-    if fHieOnly != 0 {
-        return pMan; }
-    // create delay tables
-    nTables = Vec_StrGetI_ne( p, &iStr );
-    assert(pMan.vDelayTables == nil, "pMan.vDelayTables == nil");
-    if nTables > 0 {
-        pMan.vDelayTables = Vec_PtrAlloc( nTables ); }
-    // read delay tables
-    for  i = 0; i < nTables; i++  {
-        // read table ID and dimensions
-        TableId = Vec_StrGetI_ne( p, &iStr );
-        TableX  = Vec_StrGetI_ne( p, &iStr );
-        TableY  = Vec_StrGetI_ne( p, &iStr );
-        assert(TableId == i, "TableId == i");
-        // create new table
-        TableSize = TableX * TableY;
-        // inlining of macro ABC_ALLOC
-        pDelayTable = ((float *) malloc(sizeof(float) * (size_t)(TableSize + 3)));
-        pDelayTable[0] = TableId;
-        pDelayTable[1] = TableX;
-        pDelayTable[2] = TableY;
-        // read table contents
-        for  k = 0; k < TableSize; k++  {
-            pDelayTable[k+3] = Vec_StrGetF( p, &iStr );
-        }
-        assert(Vec_PtrSize(pMan.vDelayTables) == TableId, "Vec_PtrSize(pMan.vDelayTables) == TableId");
-        Vec_PtrPush( pMan.vDelayTables, pDelayTable );
-    }
-    assert(Tim_ManDelayTableNum(pMan) == nTables, "Tim_ManDelayTableNum(pMan) == nTables");
-    // read PI arrival times
-    // inlining of macro Tim_ManForEachPi
-    // inlining of macro Tim_ManForEachCi
-    for  i = 0; (i < (pMan).nCis) && ((pObj) = (pMan).pCis + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Tim_ManInitPiArrival( pMan, i, Vec_StrGetF(p, &iStr) ); }
-    }
-    // read PO required times
-    // inlining of macro Tim_ManForEachPo
-    // inlining of macro Tim_ManForEachCo
-    for  i = 0; (i < (pMan).nCos) && ((pObj) = (pMan).pCos + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Tim_ManInitPoRequired( pMan, i, Vec_StrGetF(p, &iStr) ); }
-    }
-    assert(Vec_StrSize(p) == iStr, "Vec_StrSize(p) == iStr");
-//    Tim_ManPrint( pMan );
-    return pMan;
+func Tim_ManLoad(data []byte, hierarchyOnly int) *Tim_Man_t {
+	pos := 0
+	getWord := func(order binary.ByteOrder) uint32 {
+		if len(data)-pos < 4 {
+			panic("tim: truncated timing stream")
+		}
+		v := order.Uint32(data[pos:])
+		pos += 4
+		return v
+	}
+	getInt := func() int { return int(int32(getWord(binary.BigEndian))) }
+	getFloat := func() float32 { return math.Float32frombits(getWord(binary.NativeEndian)) }
+	if getInt() != TIM_DUMP_VER_NUM {
+		panic("tim: unsupported dump version")
+	}
+	cis, cos, pi, po := getInt(), getInt(), getInt(), getInt()
+	// A valid timing file contains at least one value per terminal in full mode;
+	// cap all counts by encoded bytes even in hierarchy-only mode.
+	if cis < 0 || cos < 0 || pi < 0 || po < 0 || pi > cis || po > cos || cis > 1<<28 || cos > 1<<28 {
+		panic("tim: invalid terminal counts")
+	}
+	p := Tim_ManStart(cis, cos)
+	n := getInt()
+	if n < 0 || n > (len(data)-pos)/16 {
+		panic("tim: invalid box count")
+	}
+	ci, co := pi, 0
+	for i := 0; i < n; i++ {
+		ins, outs, table, copyID := getInt(), getInt(), getInt(), getInt()
+		Tim_ManCreateBox(p, co, ins, ci, outs, table, 0)
+		p.vBoxes[i].iCopy = copyID
+		ci += outs
+		co += ins
+	}
+	if ci != cis || co+po != cos {
+		panic("tim: inconsistent terminal counts")
+	}
+	if hierarchyOnly != 0 {
+		return p
+	}
+	tables := getInt()
+	if tables < 0 || tables > (len(data)-pos)/12 {
+		panic("tim: invalid table count")
+	}
+	p.vDelayTables = make([][]float32, tables)
+	for i := 0; i < tables; i++ {
+		id, x, y := getInt(), getInt(), getInt()
+		if id != i || x < 0 || y < 0 || int64(x)*int64(y) > int64((len(data)-pos)/4) {
+			panic("tim: invalid delay table dimensions")
+		}
+		table := make([]float32, 3+x*y)
+		table[0] = float32(id)
+		table[1] = float32(x)
+		table[2] = float32(y)
+		for k := 3; k < len(table); k++ {
+			table[k] = getFloat()
+		}
+		p.vDelayTables[i] = table
+	}
+	for i := range p.pCis {
+		if p.pCis[i].iObj2Box < 0 {
+			p.pCis[i].timeArr = getFloat()
+		}
+	}
+	for i := range p.pCos {
+		if p.pCos[i].iObj2Box < 0 {
+			p.pCos[i].timeReq = getFloat()
+		}
+	}
+	if pos != len(data) {
+		panic("tim: trailing timing stream data")
+	}
+	return p
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

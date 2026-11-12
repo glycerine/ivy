@@ -2,277 +2,119 @@ package tim
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [timTime.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Hierarchy/timing manager.]
-
-  Synopsis    [Setting and resetting timing information of the boxes.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: timTime.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "timInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Initializes arrival time of the PI.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManInitPiArrival(p *Tim_Man_t, iPi int32, Delay float32) {
-    assert(iPi < p.nCis, "iPi < p.nCis");
-    p.pCis[iPi].timeArr = Delay;
+func Tim_ManInitPiArrival(p *Tim_Man_t, i int, delay float32)  { p.pCis[i].timeArr = delay }
+func Tim_ManInitPoRequired(p *Tim_Man_t, i int, delay float32) { p.pCos[i].timeReq = delay }
+func Tim_ManInitPiArrivalAll(p *Tim_Man_t, delay float32) {
+	for i := range p.pCis {
+		if p.pCis[i].iObj2Box < 0 {
+			Tim_ManInitPiArrival(p, i, delay)
+		}
+	}
+}
+func Tim_ManInitPoRequiredAll(p *Tim_Man_t, delay float32) {
+	for i := range p.pCos {
+		if p.pCos[i].iObj2Box < 0 {
+			Tim_ManSetCoRequired(p, i, delay)
+		}
+	}
+}
+func Tim_ManSetCoArrival(p *Tim_Man_t, i int, delay float32) {
+	o := &p.pCos[i]
+	if p.fUseTravId && o.TravId == p.nTravIds {
+		panic("tim: CO arrival already updated in this traversal")
+	}
+	o.timeArr = delay
+	o.TravId = p.nTravIds
+}
+func Tim_ManSetCiRequired(p *Tim_Man_t, i int, delay float32) {
+	o := &p.pCis[i]
+	if p.fUseTravId && o.TravId == p.nTravIds {
+		panic("tim: CI required already updated in this traversal")
+	}
+	o.timeReq = delay
+	o.TravId = p.nTravIds
+}
+func Tim_ManSetCoRequired(p *Tim_Man_t, i int, delay float32) {
+	o := &p.pCos[i]
+	if p.fUseTravId && p.nTravIds != 0 && o.TravId == p.nTravIds {
+		panic("tim: CO required already updated in this traversal")
+	}
+	o.timeReq = delay
+	o.TravId = p.nTravIds
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Initializes required time of the PO.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManInitPoRequired(p *Tim_Man_t, iPo int32, Delay float32) {
-    assert(iPo < p.nCos, "iPo < p.nCos");
-    p.pCos[iPo].timeReq = Delay;
+// Arrival propagation computes every output when any output is requested.
+func Tim_ManGetCiArrival(p *Tim_Man_t, i int) float32 {
+	o := &p.pCis[i]
+	if p.fUseTravId && o.TravId == p.nTravIds {
+		return o.timeArr
+	}
+	o.TravId = p.nTravIds
+	b := Tim_ManCiBox(p, i)
+	if b == nil {
+		return o.timeArr
+	}
+	b.TravId = p.nTravIds
+	if p.fUseTravId {
+		for j := 0; j < b.nInputs; j++ {
+			if Tim_ManBoxInput(p, b, j).TravId != p.nTravIds {
+				fmt.Println("Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!")
+			}
+		}
+	}
+	table := Tim_ManBoxDelayTable(p, b.iBox)
+	for output := 0; output < b.nOutputs; output++ {
+		best := float32(-1000000000)
+		for input := 0; input < b.nInputs; input++ {
+			delay := table[3+output*b.nInputs+input]
+			if delay == -1000000000 {
+				continue
+			}
+			if arrival := Tim_ManBoxInput(p, b, input).timeArr + delay; arrival > best {
+				best = arrival
+			}
+		}
+		result := Tim_ManBoxOutput(p, b, output)
+		result.timeArr = best
+		result.TravId = p.nTravIds
+	}
+	return o.timeArr
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets arrival times of all PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManInitPiArrivalAll(p *Tim_Man_t, Delay float32) {
-    var pObj *Tim_Obj_t;
-    var i int32;
-    // inlining of macro Tim_ManForEachPi
-    // inlining of macro Tim_ManForEachCi
-    for  i = 0; (i < (p).nCis) && ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Tim_ManInitPiArrival( p, i, Delay ); }
-    }
+// Required propagation takes the tightest output constraint for each input.
+func Tim_ManGetCoRequired(p *Tim_Man_t, i int) float32 {
+	o := &p.pCos[i]
+	if p.fUseTravId && o.TravId == p.nTravIds {
+		return o.timeReq
+	}
+	o.TravId = p.nTravIds
+	b := Tim_ManCoBox(p, i)
+	if b == nil {
+		return o.timeReq
+	}
+	b.TravId = p.nTravIds
+	if p.fUseTravId {
+		for j := 0; j < b.nOutputs; j++ {
+			if Tim_ManBoxOutput(p, b, j).TravId != p.nTravIds {
+				fmt.Printf("Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\n", j, b.iBox)
+			}
+		}
+	}
+	table := Tim_ManBoxDelayTable(p, b.iBox)
+	for input := 0; input < b.nInputs; input++ {
+		best := float32(1000000000)
+		for output := 0; output < b.nOutputs; output++ {
+			delay := table[3+output*b.nInputs+input]
+			if delay == -1000000000 {
+				continue
+			}
+			if required := Tim_ManBoxOutput(p, b, output).timeReq - delay; required < best {
+				best = required
+			}
+		}
+		result := Tim_ManBoxInput(p, b, input)
+		result.timeReq = best
+		result.TravId = p.nTravIds
+	}
+	return o.timeReq
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets required times of all POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManInitPoRequiredAll(p *Tim_Man_t, Delay float32) {
-    var pObj *Tim_Obj_t;
-    var i int32;
-    // inlining of macro Tim_ManForEachPo
-    // inlining of macro Tim_ManForEachCo
-    for  i = 0; (i < (p).nCos) && ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box >= 0 {} else { 
-        Tim_ManSetCoRequired( p, i, Delay ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Updates arrival time of the CO.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManSetCoArrival(p *Tim_Man_t, iCo int32, Delay float32) {
-    assert(iCo < p.nCos, "iCo < p.nCos");
-    assert(!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds, "!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds");
-    p.pCos[iCo].timeArr = Delay;
-    p.pCos[iCo].TravId = p.nTravIds;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Updates required time of the CI.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManSetCiRequired(p *Tim_Man_t, iCi int32, Delay float32) {
-    assert(iCi < p.nCis, "iCi < p.nCis");
-    assert(!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds, "!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds");
-    p.pCis[iCi].timeReq = Delay;
-    p.pCis[iCi].TravId = p.nTravIds;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Updates required time of the CO.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManSetCoRequired(p *Tim_Man_t, iCo int32, Delay float32) {
-    assert(iCo < p.nCos, "iCo < p.nCos");
-    assert(!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds, "!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds");
-    p.pCos[iCo].timeReq = Delay;
-    p.pCos[iCo].TravId = p.nTravIds;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns CO arrival time.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManGetCiArrival(p *Tim_Man_t, iCi int32) float32 {
-    var pBox *Tim_Box_t;
-    var pObjThis, pObj, pObjRes *Tim_Obj_t;
-    var pTable *float32;
-    var pDelays *float32;
-    var DelayBest float32;
-    var i, k int32;
-    // consider the already processed PI
-    pObjThis = Tim_ManCi( p, iCi );
-    if p.fUseTravId && pObjThis.TravId == p.nTravIds {
-        return pObjThis.timeArr; }
-    pObjThis.TravId = p.nTravIds;
-    // consider the main PI
-    pBox = Tim_ManCiBox( p, iCi );
-    if pBox == nil {
-        return pObjThis.timeArr; }
-    // update box timing
-    pBox.TravId = p.nTravIds;
-    // get the arrival times of the inputs of the box (POs)
-    if p.fUseTravId {
-    // inlining of macro Tim_ManBoxForEachInput
-    for  i = 0; (i < (pBox).nInputs) && ((pObj) = Tim_ManBoxInput(p, pBox, i)); i++  {
-        if pObj.TravId != p.nTravIds {
-            fmt.Printf("Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!\n"); }
-    } }
-    // compute the arrival times for each output of the box (PIs)
-    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );
-    // inlining of macro Tim_ManBoxForEachOutput
-    for  i = 0; (i < (pBox).nOutputs) && ((pObjRes) = Tim_ManBoxOutput(p, pBox, i)); i++  {
-        pDelays = pTable + 3 + i * pBox.nInputs;
-        DelayBest = -TIM_ETERNITY;
-        // inlining of macro Tim_ManBoxForEachInput
-        for  k = 0; (k < (pBox).nInputs) && ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {
-            if pDelays[k] != -ABC_INFINITY {
-                DelayBest = Abc_MaxInt( DelayBest, pObj.timeArr + pDelays[k] ); }
-        }
-        pObjRes.timeArr = DelayBest;
-        pObjRes.TravId = p.nTravIds;
-    }
-    return pObjThis.timeArr;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns CO required time.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tim_ManGetCoRequired(p *Tim_Man_t, iCo int32) float32 {
-    var pBox *Tim_Box_t;
-    var pObjThis, pObj, pObjRes *Tim_Obj_t;
-    var pTable *float32;
-    var pDelays *float32;
-    var DelayBest float32;
-    var i, k int32;
-    // consider the already processed PO
-    pObjThis = Tim_ManCo( p, iCo );
-    if p.fUseTravId && pObjThis.TravId == p.nTravIds {
-        return pObjThis.timeReq; }
-    pObjThis.TravId = p.nTravIds;
-    // consider the main PO
-    pBox = Tim_ManCoBox( p, iCo );
-    if pBox == nil {
-        return pObjThis.timeReq; }
-    // update box timing
-    pBox.TravId = p.nTravIds;
-    // get the required times of the outputs of the box (PIs)
-    if p.fUseTravId {
-    // inlining of macro Tim_ManBoxForEachOutput
-    for  i = 0; (i < (pBox).nOutputs) && ((pObj) = Tim_ManBoxOutput(p, pBox, i)); i++  {
-        if pObj.TravId != p.nTravIds {
-            fmt.Printf("Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\n", i, pBox.iBox); }
-    } }
-    // compute the required times for each input of the box (POs)
-    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );
-    // inlining of macro Tim_ManBoxForEachInput
-    for  i = 0; (i < (pBox).nInputs) && ((pObjRes) = Tim_ManBoxInput(p, pBox, i)); i++  {
-        DelayBest = TIM_ETERNITY;
-        // inlining of macro Tim_ManBoxForEachOutput
-        for  k = 0; (k < (pBox).nOutputs) && ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {
-            pDelays = pTable + 3 + k * pBox.nInputs;
-            if pDelays[k] != -ABC_INFINITY {
-                DelayBest = Abc_MinFloat( DelayBest, pObj.timeReq - pDelays[i] ); }
-        }
-        pObjRes.timeReq = DelayBest;
-        pObjRes.TravId = p.nTravIds;
-    }
-    return pObjThis.timeReq;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
