@@ -1,398 +1,188 @@
 package dec
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/misc/mvc"
+	"strings"
+)
 
-  FileName    [ftFactor.c]
-
-  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]
-
-  Synopsis    [Procedures for algebraic factoring.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - February 1, 2003.]
-
-  Revision    [$Id: ftFactor.c,v 1.3 2003/09/01 04:56:43 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/main.h"
-//#include "misc/mvc/mvc.h"
-//#include "dec.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static Dec_Edge_t       Dec_Factor_rec( Dec_Graph_t * pFForm, Mvc_Cover_t * pCover );
-
-// static Dec_Edge_t       Dec_FactorLF_rec( Dec_Graph_t * pFForm, Mvc_Cover_t * pCover, Mvc_Cover_t * pSimple );
-
-// static Dec_Edge_t       Dec_FactorTrivial( Dec_Graph_t * pFForm, Mvc_Cover_t * pCover );
-
-// static Dec_Edge_t       Dec_FactorTrivialCube( Dec_Graph_t * pFForm, Mvc_Cover_t * pCover, Mvc_Cube_t * pCube, Vec_Int_t * vEdgeLits );
-
-// static Dec_Edge_t       Dec_FactorTrivialTree_rec( Dec_Graph_t * pFForm, Dec_Edge_t * peNodes, int nNodes, int fNodeOr );
-
-// static int              Dec_FactorVerify( char * pSop, Dec_Graph_t * pFForm );
-
-// static Mvc_Cover_t *    Dec_ConvertSopToMvc( char * pSop );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Factors the cover.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_Factor(pSop string) *Dec_Graph_t {
-    var pCover *Mvc_Cover_t;
-    var pFForm *Dec_Graph_t;
-    var eRoot Dec_Edge_t;
-    if Abc_SopIsConst0(pSop) {
-        return Dec_GraphCreateConst0(); }
-    if Abc_SopIsConst1(pSop) {
-        return Dec_GraphCreateConst1(); }
-
-    // derive the cover from the SOP representation
-    pCover = Dec_ConvertSopToMvc( pSop );
-
-    // make sure the cover is CCS free (should be done before CST)
-    Mvc_CoverContain( pCover );
-
-    // check for trivial functions
-    assert(!Mvc_CoverIsEmpty(pCover), "!Mvc_CoverIsEmpty(pCover)");
-    assert(!Mvc_CoverIsTautology(pCover), "!Mvc_CoverIsTautology(pCover)");
-
-    // perform CST
-    Mvc_CoverInverse( pCover ); // CST
-    // start the factored form
-    pFForm = Dec_GraphCreate( Abc_SopGetVarNum(pSop) );
-    // factor the cover
-    eRoot = Dec_Factor_rec( pFForm, pCover );
-    // finalize the factored form
-    Dec_GraphSetRoot( pFForm, eRoot );
-    // complement the factored form if SOP is complemented
-    if Abc_SopIsComplement(pSop) {
-        Dec_GraphComplement( pFForm ); }
-    // verify the factored form
-//    if ( !Dec_FactorVerify( pSop, pFForm ) )
-//        printf( "Verification has failed.\n" );
-//    Mvc_CoverInverse( pCover ); // undo CST
-    Mvc_CoverFree( pCover );
-    return pFForm;
+func sopRows(sop string) ([]string, int, bool) {
+	var cubes []string
+	n := -1
+	complement := false
+	for _, line := range strings.Split(strings.TrimSpace(sop), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		if len(fields) == 1 {
+			if fields[0] == "0" {
+				return nil, 0, false
+			}
+			if fields[0] == "1" {
+				return []string{""}, 0, false
+			}
+			panic("dec: invalid SOP")
+		}
+		cube, out := fields[0], fields[1]
+		if out != "0" && out != "1" {
+			panic("dec: invalid SOP output")
+		}
+		if n < 0 {
+			n = len(cube)
+			complement = out == "0"
+		}
+		if len(cube) != n || complement != (out == "0") {
+			panic("dec: inconsistent SOP")
+		}
+		for _, c := range cube {
+			if c != '0' && c != '1' && c != '-' {
+				panic("dec: invalid SOP literal")
+			}
+		}
+		cubes = append(cubes, cube)
+	}
+	if n < 0 {
+		n = 0
+	}
+	return cubes, n, complement
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Internal recursive factoring procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_Factor_rec(pFForm *Dec_Graph_t, pCover *Mvc_Cover_t) Dec_Edge_t {
-    var pDiv, pQuo, pRem, pCom *Mvc_Cover_t;
-    var eNodeDiv, eNodeQuo, eNodeRem Dec_Edge_t;
-    var eNodeAnd, eNode Dec_Edge_t;
-
-    // make sure the cover contains some cubes
-    assert(Mvc_CoverReadCubeNum(pCover), "Mvc_CoverReadCubeNum(pCover)");
-
-    // get the divisor
-    pDiv = Mvc_CoverDivisor( pCover );
-    if pDiv == nil {
-        return Dec_FactorTrivial( pFForm, pCover ); }
-
-    // divide the cover by the divisor
-    Mvc_CoverDivideInternal( pCover, pDiv, &pQuo, &pRem );
-    assert(Mvc_CoverReadCubeNum(pQuo), "Mvc_CoverReadCubeNum(pQuo)");
-
-    Mvc_CoverFree( pDiv );
-    Mvc_CoverFree( pRem );
-
-    // check the trivial case
-    if Mvc_CoverReadCubeNum(pQuo) == 1 {
-        eNode = Dec_FactorLF_rec( pFForm, pCover, pQuo );
-        Mvc_CoverFree( pQuo );
-        return eNode;
-    }
-
-    // make the quotient cube ABC_FREE
-    Mvc_CoverMakeCubeFree( pQuo );
-
-    // divide the cover by the quotient
-    Mvc_CoverDivideInternal( pCover, pQuo, &pDiv, &pRem );
-
-    // check the trivial case
-    if Mvc_CoverIsCubeFree( pDiv ) {
-        eNodeDiv = Dec_Factor_rec( pFForm, pDiv );
-        eNodeQuo = Dec_Factor_rec( pFForm, pQuo );
-        Mvc_CoverFree( pDiv );
-        Mvc_CoverFree( pQuo );
-        eNodeAnd = Dec_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );
-        if Mvc_CoverReadCubeNum(pRem) == 0 {
-            Mvc_CoverFree( pRem );
-            return eNodeAnd;
-        
-        } else {
-            eNodeRem = Dec_Factor_rec( pFForm, pRem );
-            Mvc_CoverFree( pRem );
-            return Dec_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );
-        }
-    }
-
-    // get the common cube
-    pCom = Mvc_CoverCommonCubeCover( pDiv );
-    Mvc_CoverFree( pDiv );
-    Mvc_CoverFree( pQuo );
-    Mvc_CoverFree( pRem );
-
-    // solve the simple problem
-    eNode = Dec_FactorLF_rec( pFForm, pCover, pCom );
-    Mvc_CoverFree( pCom );
-    return eNode;
+func Dec_Factor(sop string) *Dec_Graph_t {
+	rows, n, compl := sopRows(sop)
+	if len(rows) == 0 {
+		return Dec_GraphCreateConst0()
+	}
+	for _, row := range rows {
+		if strings.Trim(row, "-") == "" {
+			if compl {
+				return Dec_GraphCreateConst0()
+			}
+			return Dec_GraphCreateConst1()
+		}
+	}
+	cover := Dec_ConvertSopToMvc(sop)
+	mvc.Mvc_CoverContain(cover)
+	mvc.Mvc_CoverInverse(cover)
+	g := Dec_GraphCreate(int32(n))
+	g.eRoot = Dec_Factor_rec(g, cover)
+	if compl {
+		Dec_GraphComplement(g)
+	}
+	return g
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Internal recursive factoring procedure for the leaf case.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_FactorLF_rec(pFForm *Dec_Graph_t, pCover *Mvc_Cover_t, pSimple *Mvc_Cover_t) Dec_Edge_t {
-    var pManDec *Dec_Man_t  = (Dec_Man_t *)Abc_FrameReadManDec();
-    var vEdgeLits *Vec_Int_t   = pManDec.vLits;
-    var pDiv, pQuo, pRem *Mvc_Cover_t;
-    var eNodeDiv, eNodeQuo, eNodeRem Dec_Edge_t;
-    var eNodeAnd Dec_Edge_t;
-
-    // get the most often occurring literal
-    pDiv = Mvc_CoverBestLiteralCover( pCover, pSimple );
-    // divide the cover by the literal
-    Mvc_CoverDivideByLiteral( pCover, pDiv, &pQuo, &pRem );
-    // get the node pointer for the literal
-    eNodeDiv = Dec_FactorTrivialCube( pFForm, pDiv, Mvc_CoverReadCubeHead(pDiv), vEdgeLits );
-    Mvc_CoverFree( pDiv );
-    // factor the quotient and remainder
-    eNodeQuo = Dec_Factor_rec( pFForm, pQuo );
-    Mvc_CoverFree( pQuo );
-    eNodeAnd = Dec_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );
-    if Mvc_CoverReadCubeNum(pRem) == 0 {
-        Mvc_CoverFree( pRem );
-        return eNodeAnd;
-    
-    } else {
-        eNodeRem = Dec_Factor_rec( pFForm, pRem );
-        Mvc_CoverFree( pRem );
-        return Dec_GraphAddNodeOr( pFForm,  eNodeAnd, eNodeRem );
-    }
+func Dec_Factor_rec(g *Dec_Graph_t, c *mvc.Mvc_Cover_t) Dec_Edge_t {
+	if mvc.Mvc_CoverReadCubeNum(c) == 0 {
+		panic("dec: empty factoring cover")
+	}
+	divisor := mvc.Mvc_CoverDivisor(c)
+	if divisor == nil {
+		return Dec_FactorTrivial(g, c)
+	}
+	quotient, _ := mvc.Mvc_CoverDivideInternal(c, divisor)
+	if mvc.Mvc_CoverReadCubeNum(quotient) == 1 {
+		return Dec_FactorLF_rec(g, c, quotient)
+	}
+	mvc.Mvc_CoverMakeCubeFree(quotient)
+	divisor, remainder := mvc.Mvc_CoverDivideInternal(c, quotient)
+	if mvc.Mvc_CoverIsCubeFree(divisor) {
+		a, b := Dec_Factor_rec(g, divisor), Dec_Factor_rec(g, quotient)
+		product := Dec_GraphAddNodeAnd(g, a, b)
+		if mvc.Mvc_CoverReadCubeNum(remainder) == 0 {
+			return product
+		}
+		return Dec_GraphAddNodeOr(g, product, Dec_Factor_rec(g, remainder))
+	}
+	return Dec_FactorLF_rec(g, c, mvc.Mvc_CoverCommonCubeCover(divisor))
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring the cover, which has no algebraic divisors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_FactorTrivial(pFForm *Dec_Graph_t, pCover *Mvc_Cover_t) Dec_Edge_t {
-    var pManDec *Dec_Man_t  = (Dec_Man_t *)Abc_FrameReadManDec();
-    var vEdgeCubes *Vec_Int_t  = pManDec.vCubes;
-    var vEdgeLits *Vec_Int_t   = pManDec.vLits;
-    var eNode Dec_Edge_t;
-    var pCube *Mvc_Cube_t;
-    // create the factored form for each cube
-    Vec_IntClear( vEdgeCubes );
-    Mvc_CoverForEachCube( pCover, pCube )
-    {
-        eNode = Dec_FactorTrivialCube( pFForm, pCover, pCube, vEdgeLits );
-        Vec_IntPush( vEdgeCubes, Dec_EdgeToInt_(eNode) );
-    }
-    // balance the factored forms
-    return Dec_FactorTrivialTree_rec( pFForm, (Dec_Edge_t *)vEdgeCubes.pArray, vEdgeCubes.nSize, 1 );
+func Dec_FactorLF_rec(g *Dec_Graph_t, c, simple *mvc.Mvc_Cover_t) Dec_Edge_t {
+	divisor := mvc.Mvc_CoverBestLiteralCover(c, simple)
+	quotient, remainder := mvc.Mvc_CoverDivideByLiteral(c, divisor)
+	lit := Dec_FactorTrivialCube(g, divisor, mvc.Mvc_CoverReadCubeHead(divisor), nil)
+	product := Dec_GraphAddNodeAnd(g, lit, Dec_Factor_rec(g, quotient))
+	if mvc.Mvc_CoverReadCubeNum(remainder) == 0 {
+		return product
+	}
+	return Dec_GraphAddNodeOr(g, product, Dec_Factor_rec(g, remainder))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Factoring the cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_FactorTrivialCube(pFForm *Dec_Graph_t, pCover *Mvc_Cover_t, pCube *Mvc_Cube_t, vEdgeLits *Vec_Int_t) Dec_Edge_t {
-    var eNode Dec_Edge_t;
-    var iBit, Value int32;
-    // create the factored form for each literal
-    Vec_IntClear( vEdgeLits );
-    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )
-        if Value != 0 {
-            eNode = Dec_EdgeCreate( iBit/2, iBit%2 ); // CST
-            Vec_IntPush( vEdgeLits, Dec_EdgeToInt_(eNode) );
-        }
-    // balance the factored forms
-    return Dec_FactorTrivialTree_rec( pFForm, (Dec_Edge_t *)vEdgeLits.pArray, vEdgeLits.nSize, 0 );
+func Dec_FactorTrivial(g *Dec_Graph_t, c *mvc.Mvc_Cover_t) Dec_Edge_t {
+	var edges []Dec_Edge_t
+	for cube := c.Cubes.Head; cube != nil; cube = cube.Next {
+		edges = append(edges, Dec_FactorTrivialCube(g, c, cube, nil))
+	}
+	return Dec_FactorTrivialTree_rec(g, edges, int32(len(edges)), 1)
 }
- 
-/**Function*************************************************************
-
-  Synopsis    [Create the well-balanced tree of nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_FactorTrivialTree_rec(pFForm *Dec_Graph_t, peNodes *Dec_Edge_t, nNodes int32, fNodeOr int32) Dec_Edge_t {
-    var eNode1, eNode2 Dec_Edge_t;
-    var nNodes1, nNodes2 int32;
-
-    if nNodes == 1 {
-        return peNodes[0]; }
-
-    // split the nodes into two parts
-    nNodes1 = nNodes/2;
-    nNodes2 = nNodes - nNodes1;
-//    nNodes2 = nNodes/2;
-//    nNodes1 = nNodes - nNodes2;
-
-    // recursively construct the tree for the parts
-    eNode1 = Dec_FactorTrivialTree_rec( pFForm, peNodes,           nNodes1, fNodeOr );
-    eNode2 = Dec_FactorTrivialTree_rec( pFForm, peNodes + nNodes1, nNodes2, fNodeOr );
-
-    if fNodeOr != 0 {
-        return Dec_GraphAddNodeOr( pFForm, eNode1, eNode2 );
-    } else {
-        return Dec_GraphAddNodeAnd( pFForm, eNode1, eNode2 ); }
+func Dec_FactorTrivialCube(g *Dec_Graph_t, c *mvc.Mvc_Cover_t, cube *mvc.Mvc_Cube_t, scratch []int32) Dec_Edge_t {
+	var edges []Dec_Edge_t
+	for i := 0; i < c.NBits; i++ {
+		if mvc.Mvc_CubeBitValue(cube, i) {
+			edges = append(edges, Dec_EdgeCreate(int32(i/2), int32(i%2)))
+		}
+	}
+	return Dec_FactorTrivialTree_rec(g, edges, int32(len(edges)), 0)
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts SOP into MVC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_ConvertSopToMvc(pSop string) *Mvc_Cover_t {
-    var pManDec *Dec_Man_t  = (Dec_Man_t *)Abc_FrameReadManDec();
-    var pMem *Mvc_Manager_t  = (Mvc_Manager_t *)pManDec.pMvcMem;
-    var pMvc *Mvc_Cover_t;
-    var pMvcCube *Mvc_Cube_t;
-    var pCube string;
-    var nVars, Value, v int32;
-
-    // start the cover
-    nVars = Abc_SopGetVarNum(pSop);
-    assert(nVars > 0, "nVars > 0");
-    pMvc = Mvc_CoverAlloc( pMem, nVars * 2 );
-    // check the logic function of the node
-    Abc_SopForEachCube( pSop, nVars, pCube )
-    {
-        // create and add the cube
-        pMvcCube = Mvc_CubeAlloc( pMvc );
-        Mvc_CoverAddCubeTail( pMvc, pMvcCube );
-        // fill in the literals
-        Mvc_CubeBitFill( pMvcCube );
-        Abc_CubeForEachVar( pCube, Value, v )
-        {
-            if Value == '0' {
-                Mvc_CubeBitRemove( pMvcCube, v * 2 + 1 );
-            } else if Value == '1' {
-                Mvc_CubeBitRemove( pMvcCube, v * 2 ); }
-        }
-    }
-    return pMvc;
+func Dec_FactorTrivialTree_rec(g *Dec_Graph_t, edges []Dec_Edge_t, count, or int32) Dec_Edge_t {
+	if count <= 0 || int(count) > len(edges) {
+		panic("dec: empty factoring tree")
+	}
+	if count == 1 {
+		return edges[0]
+	}
+	split := count / 2
+	a := Dec_FactorTrivialTree_rec(g, edges[:split], split, or)
+	b := Dec_FactorTrivialTree_rec(g, edges[split:count], count-split, or)
+	if or != 0 {
+		return Dec_GraphAddNodeOr(g, a, b)
+	}
+	return Dec_GraphAddNodeAnd(g, a, b)
 }
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies that the factoring is correct.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Dec_FactorVerify( char * pSop, Dec_Graph_t * pFForm )
-{
-    extern DdNode * Abc_ConvertSopToBdd( DdManager * dd, char * pSop, DdNode ** pbVars );
-    extern DdNode * Dec_GraphDeriveBdd( DdManager * dd, Dec_Graph_t * pGraph );
-    DdManager * dd = (DdManager *)Abc_FrameReadManDd();
-    DdNode * bFunc1, * bFunc2;
-    int RetValue;
-    bFunc1 = Abc_ConvertSopToBdd( dd, pSop, NULL );    Cudd_Ref( bFunc1 );
-    bFunc2 = Dec_GraphDeriveBdd( dd, pFForm );   Cudd_Ref( bFunc2 );
-//Extra_bddPrint( dd, bFunc1 ); printf("\n");
-//Extra_bddPrint( dd, bFunc2 ); printf("\n");
-    RetValue = (bFunc1 == bFunc2);
-    if ( bFunc1 != bFunc2 )
-    {
-        int s;
-        Extra_bddPrint( dd, bFunc1 ); printf("\n");
-        Extra_bddPrint( dd, bFunc2 ); printf("\n");
-        s  = 0;
-    }
-    Cudd_RecursiveDeref( dd, bFunc1 );
-    Cudd_RecursiveDeref( dd, bFunc2 );
-    return RetValue;
+func Dec_ConvertSopToMvc(sop string) *mvc.Mvc_Cover_t {
+	rows, n, _ := sopRows(sop)
+	cover := mvc.Mvc_CoverAlloc(mvc.Mvc_ManagerStart(), n*2)
+	for _, row := range rows {
+		cube := mvc.Mvc_CubeAlloc(cover)
+		mvc.Mvc_CoverAddCubeTail(cover, cube)
+		mvc.Mvc_CubeBitFill(cube)
+		for i, c := range row {
+			if c == '0' {
+				mvc.Mvc_CubeBitRemove(cube, i*2+1)
+			} else if c == '1' {
+				mvc.Mvc_CubeBitRemove(cube, i*2)
+			}
+		}
+	}
+	return cover
 }
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Dec_FactorVerify(sop string, g *Dec_Graph_t) int32 {
+	rows, n, compl := sopRows(sop)
+	native := g.Native()
+	if !native.Constant && native.LeafCount != n {
+		return 0
+	}
+	inputs := make([]bool, n)
+	var check func(int) bool
+	check = func(i int) bool {
+		if i < n {
+			inputs[i] = false
+			if !check(i + 1) {
+				return false
+			}
+			inputs[i] = true
+			return check(i + 1)
+		}
+		want := false
+		for _, row := range rows {
+			match := true
+			for j, c := range row {
+				if c != '-' && (c == '1') != inputs[j] {
+					match = false
+					break
+				}
+			}
+			want = want || match
+		}
+		if compl {
+			want = !want
+		}
+		return native.Evaluate(inputs) == want
+	}
+	return decBool(check(0))
+}

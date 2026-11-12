@@ -1,94 +1,31 @@
 package dec
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/misc/extra/npn"
+	"github.com/glycerine/abcgo/misc/mvc"
+)
 
-  FileName    [decMan.c]
-
-  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]
-
-  Synopsis    [Decomposition manager.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - February 1, 2003.]
-
-  Revision    [$Id: decMan.c,v 1.1 2003/05/22 19:20:05 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "misc/mvc/mvc.h"
-//#include "dec.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Start the MVC manager used in the factoring package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Dec_ManStart allocates per-manager factoring scratch and full four-input NPN
+// canonicalization tables. It has no dependency on an ABC process-global frame.
 func Dec_ManStart() *Dec_Man_t {
-    var p *Dec_Man_t;
-//    abctime clk = Abc_Clock();
-    // inlining of macro ABC_ALLOC
-    p = ((Dec_Man_t *) malloc(sizeof(Dec_Man_t) * (size_t)(1)));
-    p.pMvcMem = Mvc_ManagerStart();
-    p.vCubes = Vec_IntAlloc( 8 );
-    p.vLits = Vec_IntAlloc( 8 );
-    // canonical forms, phases, perms
-    Extra_Truth4VarNPN( &p.puCanons, &p.pPhases, &p.pPerms, &p.pMap );
-//ABC_PRT( "NPN classes precomputation time", Abc_Clock() - clk ); 
-    return p;
+	canon, phases, perms, classes := npn.Extra_Truth4VarNPN()
+	return &Dec_Man_t{pMvcMem: mvc.Mvc_ManagerStart(), vCubes: make([]int32, 0, 8), vLits: make([]int32, 0, 8), puCanons: canon, pPhases: phases, pPerms: perms, pMap: classes}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the MVC maanager used in the factoring package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Dec_ManStop(p *Dec_Man_t) {
-    Mvc_ManagerFree( (Mvc_Manager_t *)p.pMvcMem );
-    Vec_IntFree( p.vCubes );
-    Vec_IntFree( p.vLits );
-    // inlining of macro ABC_FREE
-    ((p.puCanons) ? (free((char *) (p.puCanons)), (p.puCanons) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPhases) ? (free((char *) (p.pPhases)), (p.pPhases) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pPerms) ? (free((char *) (p.pPerms)), (p.pPerms) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p == nil {
+		return
+	}
+	if manager, ok := p.pMvcMem.(*mvc.Mvc_Manager_t); ok {
+		mvc.Mvc_ManagerFree(manager)
+	}
+	*p = Dec_Man_t{}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// CanonicalTruth returns the canonical representative and ABC phase/permutation
+// indices, followed by the NPN equivalence-class number for a four-input truth.
+func (p *Dec_Man_t) CanonicalTruth(truth uint16) (uint16, byte, byte, byte) {
+	if len(p.puCanons) != 1<<16 {
+		panic("dec: manager stopped")
+	}
+	return p.puCanons[truth], p.pPhases[truth], p.pPerms[truth], p.pMap[truth]
+}

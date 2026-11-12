@@ -1,701 +1,161 @@
 package dec
 
-/**CFile****************************************************************
-
-  FileName    [dec.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [A simple decomposition tree/node data structure and its APIs.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: dec.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
+// C-compatible entry points for decomposition graphs. Node pointers remain
+// stable when the graph grows: Go owns individually allocated node objects.
 type Dec_Edge_t struct {
-    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // the complemented bit
-    Node uint32; /* C bitfield: 30 bits; review packing and truncation */   // the decomposition node pointed by the edge
+	fCompl uint32
+	Node   uint32
 }
-
-   
 type Dec_Node_t struct {
-    eEdge0        Dec_Edge_t;          // the left child of the node
-    eEdge1        Dec_Edge_t;          // the right child of the node
-    // other info
-    union { int       iFunc;           // the literal of the node (AIG)
-    void *            pFunc; };        // the function of the node (BDD or AIG)
-    Level uint32; /* C bitfield: 14 bits; review packing and truncation */   // the level of this node in the global AIG
-    // printing info 
-    fNodeOr uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original OR node
-    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge
-    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge
-    // latch info
-    nLat0 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the first edge
-    nLat1 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the second edge
-    nLat2 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the output edge
+	eEdge0, eEdge1            Dec_Edge_t
+	iFunc                     int32
+	pFunc                     any
+	Level                     uint32
+	fNodeOr, fCompl0, fCompl1 uint32
+	nLat0, nLat1, nLat2       uint32
 }
-
-   
 type Dec_Graph_t struct {
-    fConst               int32;          // marks the constant 1 graph
-    nLeaves               int32;         // the number of leaves
-    nSize               int32;           // the number of nodes (including the leaves) 
-    nCap               int32;            // the number of allocated nodes
-    pNodes       *Dec_Node_t;          // the array of leaves and internal nodes
-    eRoot        Dec_Edge_t;           // the pointer to the topmost node
+	fConst               int32
+	nLeaves, nSize, nCap int32
+	pNodes               []*Dec_Node_t
+	eRoot                Dec_Edge_t
 }
-
-   
 type Dec_Man_t struct {
-    pMvcMem             any;         // memory manager for MVC cover (used for factoring)
-    vCubes        *Vec_Int_t;          // storage for cubes
-    vLits        *Vec_Int_t;           // storage for literals 
-    // precomputation information about 4-variable functions
-    unsigned short *  puCanons;        // canonical forms
-    pPhases             string;         // canonical phases
-    pPerms             string;          // canonical permutations
-    unsigned char *   pMap;            // mapping of functions into class numbers
+	pMvcMem               any
+	vCubes, vLits         []int32
+	puCanons              []uint16
+	pPhases, pPerms, pMap []byte
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                        ITERATORS                                 ///
-////////////////////////////////////////////////////////////////////////
-
-// iterator through the leaves
-// Original macro:
-// #define Dec_GraphForEachLeaf( pGraph, pLeaf, i )                                              \
-//     for ( i = 0; (i < (pGraph)->nLeaves) && (((pLeaf) = Dec_GraphNode(pGraph, i)), 1); i++ )
-
-// iterator through the internal nodes
-// Original macro:
-// #define Dec_GraphForEachNode( pGraph, pAnd, i )                                               \
-//     for ( i = (pGraph)->nLeaves; (i < (pGraph)->nSize) && (((pAnd) = Dec_GraphNode(pGraph, i)), 1); i++ )
-
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== decAbc.c ========================================================*/
-/*=== decFactor.c ========================================================*/
-// extern Dec_Graph_t *  Dec_Factor( char * pSop );
-
-/*=== decMan.c ========================================================*/
-// extern Dec_Man_t *    Dec_ManStart();
-
-// extern void           Dec_ManStop( Dec_Man_t * p );
-
-/*=== decPrint.c ========================================================*/
-// extern void           Dec_GraphPrint( FILE * pFile, Dec_Graph_t * pGraph, char * pNamesIn[], char * pNameOut );
-
-/*=== decUtil.c ========================================================*/
-// extern unsigned       Dec_GraphDeriveTruth( Dec_Graph_t * pGraph );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates an edge pointing to the node in the given polarity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_EdgeCreate(Node int32, fCompl int32) Dec_Edge_t {
-    var eEdge Dec_Edge_t  = Dec_Edge_t{ uint32(fCompl), uint32(Node) }; 
-    return eEdge; 
+func decBool(b bool) int32 {
+	if b {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the edge into unsigned integer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_EdgeToInt(eEdge Dec_Edge_t) uint32 {
-    return (eEdge.Node << 1) | eEdge.fCompl; 
+func Dec_EdgeCreate(node, compl int32) Dec_Edge_t {
+	if node < 0 || node >= 1<<30 {
+		panic("dec: edge index")
+	}
+	return Dec_Edge_t{uint32(compl) & 1, uint32(node)}
 }
+func Dec_EdgeToInt(e Dec_Edge_t) uint32 { return e.Node<<1 | e.fCompl }
+func Dec_IntToEdge(e uint32) Dec_Edge_t { return Dec_EdgeCreate(int32(e>>1), int32(e&1)) }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts unsigned integer into the edge.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_IntToEdge(Edge uint32) Dec_Edge_t {
-    return Dec_EdgeCreate( Edge >> 1, Edge & 1 ); 
+// The historical union variant uses native bitfield layout: complement first.
+func Dec_EdgeToInt_(e Dec_Edge_t) uint32 { return Dec_EdgeToInt(e) }
+func Dec_IntToEdge_(e uint32) Dec_Edge_t { return Dec_IntToEdge(e) }
+func Dec_GraphCreate(leaves int32) *Dec_Graph_t {
+	if leaves < 0 {
+		panic("dec: negative leaves")
+	}
+	g := &Dec_Graph_t{nLeaves: leaves, nSize: leaves, nCap: 2*leaves + 50, pNodes: make([]*Dec_Node_t, leaves, 2*leaves+50)}
+	for i := range g.pNodes {
+		g.pNodes[i] = new(Dec_Node_t)
+	}
+	return g
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the edge into unsigned integer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_EdgeToInt_(m Dec_Edge_t) uint32 { union { var x Dec_Edge_t; var y uint32; }
- v; v.x = m; return v.y;  }
-/*
-static inline unsigned Dec_EdgeToInt_( Dec_Edge_t eEdge )   
-{
-    return *(unsigned *)&eEdge;
-}
-*/
-
-/**Function*************************************************************
-
-  Synopsis    [Converts unsigned integer into the edge.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_IntToEdge_(m uint32) Dec_Edge_t { union { var x Dec_Edge_t; var y uint32; }
- v; v.y = m; return v.x;  }
-/*
-static inline Dec_Edge_t Dec_IntToEdge_( unsigned Edge )   
-{
-    return *(Dec_Edge_t *)&Edge;
-}
-*/
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a graph with the given number of leaves.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphCreate(nLeaves int32) *Dec_Graph_t {
-    var pGraph *Dec_Graph_t;
-    pGraph = new(Dec_Graph_t);
-    *pGraph = Dec_Graph_t{};
-    pGraph.nLeaves = nLeaves;
-    pGraph.nSize = nLeaves;
-    pGraph.nCap = 2 * nLeaves + 50;
-    pGraph.pNodes = ABC_ALLOC( Dec_Node_t, pGraph.nCap );
-    memset( pGraph.pNodes, 0, sizeof(Dec_Node_t) * pGraph.nSize );
-    return pGraph;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates constant 0 graph.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Dec_GraphCreateConst0() *Dec_Graph_t {
-    var pGraph *Dec_Graph_t;
-    pGraph = new(Dec_Graph_t);
-    *pGraph = Dec_Graph_t{};
-    pGraph.fConst = 1;
-    pGraph.eRoot.fCompl = 1;
-    return pGraph;
+	return &Dec_Graph_t{fConst: 1, eRoot: Dec_Edge_t{fCompl: 1}}
+}
+func Dec_GraphCreateConst1() *Dec_Graph_t { return &Dec_Graph_t{fConst: 1} }
+func Dec_GraphCreateLeaf(i, n, c int32) *Dec_Graph_t {
+	g := Dec_GraphCreate(n)
+	if i < 0 || i >= n {
+		panic("dec: leaf index")
+	}
+	g.eRoot = Dec_EdgeCreate(i, c)
+	return g
+}
+func Dec_GraphFree(g *Dec_Graph_t) {
+	if g != nil {
+		g.pNodes = nil
+		g.nSize = 0
+		g.nCap = 0
+	}
+}
+func Dec_GraphIsConst(g *Dec_Graph_t) int32             { return g.fConst }
+func Dec_GraphIsConst0(g *Dec_Graph_t) int32            { return decBool(g.fConst != 0 && g.eRoot.fCompl != 0) }
+func Dec_GraphIsConst1(g *Dec_Graph_t) int32            { return decBool(g.fConst != 0 && g.eRoot.fCompl == 0) }
+func Dec_GraphIsComplement(g *Dec_Graph_t) int32        { return int32(g.eRoot.fCompl) }
+func Dec_GraphComplement(g *Dec_Graph_t)                { g.eRoot.fCompl ^= 1 }
+func Dec_GraphLeaveNum(g *Dec_Graph_t) int32            { return g.nLeaves }
+func Dec_GraphNodeNum(g *Dec_Graph_t) int32             { return g.nSize - g.nLeaves }
+func Dec_GraphNode(g *Dec_Graph_t, i int32) *Dec_Node_t { return g.pNodes[i] }
+func Dec_GraphNodeLast(g *Dec_Graph_t) *Dec_Node_t      { return g.pNodes[g.nSize-1] }
+func Dec_GraphNodeInt(g *Dec_Graph_t, n *Dec_Node_t) int32 {
+	for i, p := range g.pNodes {
+		if p == n {
+			return int32(i)
+		}
+	}
+	panic("dec: foreign node")
+}
+func Dec_GraphIsVar(g *Dec_Graph_t) int32 { return decBool(g.eRoot.Node < uint32(g.nLeaves)) }
+func Dec_GraphNodeIsVar(g *Dec_Graph_t, n *Dec_Node_t) int32 {
+	return decBool(Dec_GraphNodeInt(g, n) < g.nLeaves)
+}
+func Dec_GraphVar(g *Dec_Graph_t) *Dec_Node_t       { return Dec_GraphNode(g, int32(g.eRoot.Node)) }
+func Dec_GraphVarInt(g *Dec_Graph_t) int32          { return int32(g.eRoot.Node) }
+func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t) { g.eRoot = e }
+func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
+	n := new(Dec_Node_t)
+	g.pNodes = append(g.pNodes, n)
+	g.nSize = int32(len(g.pNodes))
+	g.nCap = int32(cap(g.pNodes))
+	return n
+}
+func Dec_GraphAddNodeAnd(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
+	n := Dec_GraphAppendNode(g)
+	n.eEdge0 = a
+	n.eEdge1 = b
+	n.fCompl0 = a.fCompl
+	n.fCompl1 = b.fCompl
+	return Dec_EdgeCreate(g.nSize-1, 0)
+}
+func Dec_GraphAddNodeOr(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
+	e := Dec_GraphAddNodeAnd(g, a, b)
+	n := Dec_GraphNodeLast(g)
+	n.fNodeOr = 1
+	n.eEdge0.fCompl ^= 1
+	n.eEdge1.fCompl ^= 1
+	e.fCompl = 1
+	return e
+}
+func Dec_GraphAddNodeXor(g *Dec_Graph_t, a, b Dec_Edge_t, kind int32) Dec_Edge_t {
+	if kind == 0 {
+		na := a
+		na.fCompl ^= 1
+		nb := b
+		nb.fCompl ^= 1
+		return Dec_GraphAddNodeOr(g, Dec_GraphAddNodeAnd(g, na, b), Dec_GraphAddNodeAnd(g, a, nb))
+	}
+	na, nb := a, b
+	na.fCompl ^= 1
+	nb.fCompl ^= 1
+	e := Dec_GraphAddNodeOr(g, Dec_GraphAddNodeAnd(g, a, b), Dec_GraphAddNodeAnd(g, na, nb))
+	e.fCompl ^= 1
+	return e
+}
+func Dec_GraphAddNodeMux(g *Dec_Graph_t, c, t, e Dec_Edge_t, kind int32) Dec_Edge_t {
+	if kind != 0 {
+		t.fCompl ^= 1
+		e.fCompl ^= 1
+	}
+	nc := c
+	nc.fCompl ^= 1
+	r := Dec_GraphAddNodeOr(g, Dec_GraphAddNodeAnd(g, c, t), Dec_GraphAddNodeAnd(g, nc, e))
+	if kind != 0 {
+		r.fCompl ^= 1
+	}
+	return r
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates constant 1 graph.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphCreateConst1() *Dec_Graph_t {
-    var pGraph *Dec_Graph_t;
-    pGraph = new(Dec_Graph_t);
-    *pGraph = Dec_Graph_t{};
-    pGraph.fConst = 1;
-    return pGraph;
+// SetLeafSignal binds a graph input to an adapter-owned network signal.
+func (g *Dec_Graph_t) SetLeafSignal(index int, signal any) {
+	if index < 0 || index >= int(g.nLeaves) {
+		panic("dec: leaf index")
+	}
+	g.pNodes[index].pFunc = signal
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the literal graph.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphCreateLeaf(iLeaf int32, nLeaves int32, fCompl int32) *Dec_Graph_t {
-    var pGraph *Dec_Graph_t;
-    assert(0 <= iLeaf && iLeaf < nLeaves, "0 <= iLeaf && iLeaf < nLeaves");
-    pGraph = Dec_GraphCreate( nLeaves );
-    pGraph.eRoot.Node   = iLeaf;
-    pGraph.eRoot.fCompl = fCompl;
-    return pGraph;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a graph with the given number of leaves.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphFree(pGraph *Dec_Graph_t) {
-    ABC_FREE( pGraph.pNodes );
-    ABC_FREE( pGraph );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the graph is a constant.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphIsConst(pGraph *Dec_Graph_t) int32 {
-    return pGraph.fConst;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the graph is constant 0.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphIsConst0(pGraph *Dec_Graph_t) int32 {
-    return pGraph.fConst && pGraph.eRoot.fCompl;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the graph is constant 1.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphIsConst1(pGraph *Dec_Graph_t) int32 {
-    return pGraph.fConst && !pGraph.eRoot.fCompl;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the graph is complemented.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphIsComplement(pGraph *Dec_Graph_t) int32 {
-    return pGraph.eRoot.fCompl;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the graph is complemented.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphComplement(pGraph *Dec_Graph_t) {
-    pGraph.eRoot.fCompl ^= 1;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of leaves.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphLeaveNum(pGraph *Dec_Graph_t) int32 {
-    return pGraph.nLeaves;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphNodeNum(pGraph *Dec_Graph_t) int32 {
-    return pGraph.nSize - pGraph.nLeaves;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the pointer to the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphNode(pGraph *Dec_Graph_t, i int32) *Dec_Node_t {
-    return pGraph.pNodes + i;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the pointer to the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphNodeLast(pGraph *Dec_Graph_t) *Dec_Node_t {
-    return pGraph.pNodes + pGraph.nSize - 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of the given node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphNodeInt(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {
-    return pNode - pGraph.pNodes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Check if the graph represents elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphIsVar(pGraph *Dec_Graph_t) int32 {
-    return pGraph.eRoot.Node < uint32(pGraph.nLeaves);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Check if the graph represents elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphNodeIsVar(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {
-    return Dec_GraphNodeInt(pGraph,pNode) < pGraph.nLeaves;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the elementary variable elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphVar(pGraph *Dec_Graph_t) *Dec_Node_t {
-    assert((Dec_GraphIsVar( pGraph ) != 0), "Dec_GraphIsVar( pGraph )");
-    return Dec_GraphNode( pGraph, pGraph.eRoot.Node );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of the elementary variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphVarInt(pGraph *Dec_Graph_t) int32 {
-    assert((Dec_GraphIsVar( pGraph ) != 0), "Dec_GraphIsVar( pGraph )");
-    return Dec_GraphNodeInt( pGraph, Dec_GraphVar(pGraph) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the root of the graph.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphSetRoot(pGraph *Dec_Graph_t, eRoot Dec_Edge_t) {
-    pGraph.eRoot = eRoot;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Appends a new node to the graph.]
-
-  Description [This procedure is meant for internal use.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphAppendNode(pGraph *Dec_Graph_t) *Dec_Node_t {
-    var pNode *Dec_Node_t;
-    if pGraph.nSize == pGraph.nCap {
-        pGraph.pNodes = ABC_REALLOC( Dec_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); 
-        pGraph.nCap   = 2 * pGraph.nCap;
-    }
-    pNode = pGraph.pNodes + pGraph.nSize++;
-    *pNode = Dec_Node_t{};
-    return pNode;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates an AND node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphAddNodeAnd(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {
-    var pNode *Dec_Node_t;
-    // get the new node
-    pNode = Dec_GraphAppendNode( pGraph );
-    // set the inputs and other info
-    pNode.eEdge0 = eEdge0;
-    pNode.eEdge1 = eEdge1;
-    pNode.fCompl0 = eEdge0.fCompl;
-    pNode.fCompl1 = eEdge1.fCompl;
-    return Dec_EdgeCreate( pGraph.nSize - 1, 0 );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates an OR node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphAddNodeOr(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {
-    var pNode *Dec_Node_t;
-    // get the new node
-    pNode = Dec_GraphAppendNode( pGraph );
-    // set the inputs and other info
-    pNode.eEdge0 = eEdge0;
-    pNode.eEdge1 = eEdge1;
-    pNode.fCompl0 = eEdge0.fCompl;
-    pNode.fCompl1 = eEdge1.fCompl;
-    // make adjustments for the OR gate
-    pNode.fNodeOr = 1;
-    pNode.eEdge0.fCompl = !pNode.eEdge0.fCompl;
-    pNode.eEdge1.fCompl = !pNode.eEdge1.fCompl;
-    return Dec_EdgeCreate( pGraph.nSize - 1, 1 );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates an XOR node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphAddNodeXor(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t, Type int32) Dec_Edge_t {
-    var eNode0, eNode1, eNode Dec_Edge_t;
-    if Type == 0 {
-        // derive the first AND
-        eEdge0.fCompl ^= 1;
-        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );
-        eEdge0.fCompl ^= 1;
-        // derive the second AND
-        eEdge1.fCompl ^= 1;
-        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );
-        // derive the final OR
-        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );
-    
-    } else {
-        // derive the first AND
-        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );
-        // derive the second AND
-        eEdge0.fCompl ^= 1;
-        eEdge1.fCompl ^= 1;
-        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );
-        // derive the final OR
-        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );
-        eNode.fCompl ^= 1;
-    }
-    return eNode;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates an XOR node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dec_GraphAddNodeMux(pGraph *Dec_Graph_t, eEdgeC Dec_Edge_t, eEdgeT Dec_Edge_t, eEdgeE Dec_Edge_t, Type int32) Dec_Edge_t {
-    var eNode0, eNode1, eNode Dec_Edge_t;
-    if Type == 0 {
-        // derive the first AND
-        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );
-        // derive the second AND
-        eEdgeC.fCompl ^= 1;
-        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );
-        // derive the final OR
-        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );
-    
-    } else {
-        // complement the arguments
-        eEdgeT.fCompl ^= 1;
-        eEdgeE.fCompl ^= 1;
-        // derive the first AND
-        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );
-        // derive the second AND
-        eEdgeC.fCompl ^= 1;
-        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );
-        // derive the final OR
-        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );
-        eNode.fCompl ^= 1;
-    }
-    return eNode;
-}
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func (g *Dec_Graph_t) LeafCount() int { return int(g.nLeaves) }
