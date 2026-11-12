@@ -316,3 +316,18 @@ and SAT/BMC.
 The fixture-directory convention is now `test_vectors`; a fresh directory
 scan should remain part of integration checks to prevent reintroducing
 `testdata`.
+
+## Follow-up integration snapshot
+
+The current `go test ./...` result remains 62 package lines passing and 60
+failing (`/tmp/abcgo-full-current.log`). The newly added CUDD ADD numeric
+oracle was corrected to match the IEEE-enabled original C build; the complete
+`bdd/cudd/core` race/vet suite is green again. Additional tested commits after
+the preceding entry include SAIG cone/cleanup (`bfb9ba4ca`), SAT-cost
+evaluation (`4aa58ea04`), DCH (`d5f507d4e`), resubstitution SAT clauses
+(`601fd3fb2`), BMC packed-field/pivot helpers (`24f25f00a`), and BSAT
+consumer bridges (`3c92e21e0`). Further root CUDD numeric tests are in
+`b8a9cd8c3`. `base/cmd` now selects the exact MF/Satoko backend by default
+(`d6f8d2cf7`). The full port remains active; GIA, Ivy, SAIG, base/abc,
+`map/if`, SCL, DAU, Extra, FRET, resubstitution and proof/SAT packages still
+have visible incomplete algorithm families.
