@@ -151,183 +151,20 @@ func Abc_ResubPrintDivs(ppDivs *any, nDivs int32) {
 // returns the number of nodes added to the window when is iPivot is added
 // the window nodes in vNodes are labeled with the current traversal ID
 // the new node iPivot and its fanout are temporarily labeled and then unlabeled
-func Gia_WinTryAddingNode(p *Gia_Man_t, iPivot int32, iPivot2 int32, vLevels *Vec_Wec_t, vNodes *Vec_Int_t) int32 {
-    var vLevel *Vec_Int_t; 
-    var pObj, pFanout *Gia_Obj_t;
-    var k, i, f, Count int32;
-    // precondition:  the levelized structure is empty
-    assert(Vec_WecSizeSize(vLevels) == 0, "Vec_WecSizeSize(vLevels) == 0");
-    // precondition:  the new object to be added (iPivot) is not in the window
-    assert(!Gia_ObjIsTravIdCurrentId(p, iPivot), "!Gia_ObjIsTravIdCurrentId(p, iPivot)");
-    // add the object to the window and to the levelized structure
-    Gia_ObjSetTravIdCurrentId( p, iPivot );
-    Vec_WecPush( vLevels, Gia_ObjLevelId(p, iPivot), iPivot );
-    // the same about the second node if it is given
-    if iPivot2 != -1 {
-        // precondition:  the new object to be added (iPivot2) is not in the window
-        assert(!Gia_ObjIsTravIdCurrentId(p, iPivot2), "!Gia_ObjIsTravIdCurrentId(p, iPivot2)");
-        // add the object to the window and to the levelized structure
-        Gia_ObjSetTravIdCurrentId( p, iPivot2 );
-        Vec_WecPush( vLevels, Gia_ObjLevelId(p, iPivot2), iPivot2 );
-    }
-    // iterate through all objects and explore their fanouts
-    // inlining of macro Vec_WecForEachLevel
-    for  k = 0; (k < Vec_WecSize(vLevels)) && (((vLevel) = Vec_WecEntry(vLevels, k)), 1); k++  {
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vLevel)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLevel,i))); i++  {
-            // inlining of macro Gia_ObjForEachFanoutStatic
-            for  f = 0; (f < Gia_ObjFanoutNum(p, pObj))   && (((pFanout) = Gia_ObjFanout(p, pObj, f)), 1); f++  {
-                if f == 5 { // explore first 5 fanouts of the node
-                    break; }
-                if Gia_ObjIsAnd(pFanout) && // internal node
-                    !Gia_ObjIsTravIdCurrent(p, pFanout) && // not in the window
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin0(pFanout)) && // but fanins are
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin1(pFanout)) {  // in the window
-                
-                    // add fanout to the window and to the levelized structure
-                    Gia_ObjSetTravIdCurrent( p, pFanout );
-                    Vec_WecPush( vLevels, Gia_ObjLevel(p, pFanout), Gia_ObjId(p, pFanout) );
-                    // count the number of nodes in the structure
-                    Count++;
-                }
-            }
-        }
-    }
-    // iterate through the nodes in the levelized structure
-    // inlining of macro Vec_WecForEachLevel
-    for  k = 0; (k < Vec_WecSize(vLevels)) && (((vLevel) = Vec_WecEntry(vLevels, k)), 1); k++  {
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vLevel)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLevel,i))); i++  {
-            if vNodes == nil { // it was a test run - unmark the node
-                Gia_ObjSetTravIdPrevious( p, pObj );
-            } else { // it was a real run - permanently add to the node to the window
-                Vec_IntPush( vNodes, Gia_ObjId(p, pObj) ); }
-        }
-        // clean the levelized structure
-        Vec_IntClear( vLevel );
-    }
-    // return the number of nodes to be added
-    return Count;
-}
+
 // find the first PI to add based on the fanout count
-func Gia_WinAddCiWithMaxFanouts(p *Gia_Man_t) int32 {
-    var i int32;
-    var Id int32;
-    var nMaxFan int32 = -1;
-    var iMaxFan int32 = -1;
-    // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
-        if nMaxFan < Gia_ObjFanoutNumId(p, Id) {
-            nMaxFan = Gia_ObjFanoutNumId(p, Id);
-            iMaxFan = Id;
-        }
-    }
-    assert(iMaxFan >= 0, "iMaxFan >= 0");
-    return iMaxFan;
-}
+
 // find the next PI to add based on how many nodes will be added to the window
-func Gia_WinAddCiWithMaxDivisors(p *Gia_Man_t, vLevels *Vec_Wec_t) int32 {
-    var i int32;
-    var Id int32;
-    var nCurFan int32;
-    var nMaxFan int32 = -1;
-    var iMaxFan int32 = -1;
-    // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
-        if Gia_ObjIsTravIdCurrentId( p, Id ) {
-            continue; }
-        nCurFan = Gia_WinTryAddingNode( p, Id, -1, vLevels, nil );
-        if nMaxFan < nCurFan {
-            nMaxFan = nCurFan;
-            iMaxFan = Id;
-        }
-    }
-    assert(iMaxFan >= 0, "iMaxFan >= 0");
-    return iMaxFan;
-}
+
 // check if the node has unmarked fanouts
-func Gia_WinNodeHasUnmarkedFanouts(p *Gia_Man_t, iPivot int32) int32 {
-    var f, iFan int32;
-    // inlining of macro Gia_ObjForEachFanoutStaticId
-    for  f = 0; (f < Gia_ObjFanoutNumId(p, iPivot))   && (((iFan) = Gia_ObjFanoutId(p, iPivot, f)), 1); f++  {
-        if !Gia_ObjIsTravIdCurrentId(p, iFan) {
-            return 1; }
-    }
-    return 0;
-}
+
 // this is a translation procedure, which converts the array of node IDs (vObjs) 
 // into the internal represnetation for the resub engine, which is returned
 // (this procedure is not needed when we simply construct a window)
-func Gia_RsbCiTranslate(p *Gia_Man_t, vObjs *Vec_Int_t, vMap *Vec_Int_t) *Vec_Int_t {
-    var i, iObj, Lit0, Lit1, Fan0, Fan1 int32;
-    var vNodes *Vec_Int_t  = Vec_IntAlloc( 100 );
-    assert(Vec_IntSize(vMap) == Gia_ManObjNum(p), "Vec_IntSize(vMap) == Gia_ManObjNum(p)");
-    Vec_IntPushTwo( vNodes, 0, 0 ); // const0 node
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);
-        assert(Gia_ObjIsTravIdCurrentId(p, iObj), "Gia_ObjIsTravIdCurrentId(p, iObj)");
-        if Gia_ObjIsCi(pObj) {
-            Fan0 = 0;
-        } else {
-            Fan0 = Vec_IntEntry(vMap, Gia_ObjFaninId0(pObj, iObj));
-        }
-        if Gia_ObjIsCi(pObj) {
-            Fan1 = 0;
-        } else {
-            Fan1 = Vec_IntEntry(vMap, Gia_ObjFaninId1(pObj, iObj));
-        }
-        if Gia_ObjIsCi(pObj) {
-            Lit0 = 0;
-        } else {
-            Lit0 = Abc_LitNotCond( Fan0, Gia_ObjFaninC0(pObj) );
-        }
-        if Gia_ObjIsCi(pObj) {
-            Lit1 = 0;
-        } else {
-            Lit1 = Abc_LitNotCond( Fan1, Gia_ObjFaninC1(pObj) );
-        }
-        Vec_IntWriteEntry( vMap, iObj, Vec_IntSize(vNodes) );
-        Vec_IntPushTwo( vNodes, Lit0, Lit1 );
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        if Gia_WinNodeHasUnmarkedFanouts( p, iObj ) != 0 {
-            Vec_IntPushTwo( vNodes, Vec_IntEntry(vMap, iObj), Vec_IntEntry(vMap, iObj) ); }
-    }
-    return vNodes;
-}
+
 // construct a high-volume window support by the given number (nPis) of primary inputs
-func Gia_RsbCiWindow(p *Gia_Man_t, nPis int32) *Vec_Int_t {
-    var vRes *Vec_Int_t;  var i, iMaxFan int32;
-    var vNodes *Vec_Int_t   = Vec_IntAlloc( 100 );
-    var vMap *Vec_Int_t     = Vec_IntStartFull( Gia_ManObjNum(p) );
-    var vLevels *Vec_Wec_t  = Vec_WecStart( Gia_ManLevelNum(p)+1 );
-    Gia_ManStaticFanoutStart( p );
-    Gia_ManIncrementTravId(p);
-    // add the first one
-    iMaxFan = Gia_WinAddCiWithMaxFanouts( p );
-    Gia_ObjSetTravIdCurrentId( p, iMaxFan );
-    Vec_IntPush( vNodes, iMaxFan );
-    // add remaining ones
-    for  i = 1; i < nPis; i++  {
-        iMaxFan = Gia_WinAddCiWithMaxDivisors( p, vLevels );
-        Gia_WinTryAddingNode( p, iMaxFan, -1, vLevels, vNodes );
-    }
-    Vec_IntSort( vNodes, 0 );
-    vRes = Gia_RsbCiTranslate( p, vNodes, vMap );
-    Gia_ManStaticFanoutStop( p );
-    Vec_WecFree( vLevels );
-    Vec_IntFree( vMap );
-//Vec_IntPrint( vNodes );
-    Vec_IntFree( vNodes );
-    return vRes;
-}
-func Gia_RsbCiWindowTest(p *Gia_Man_t) {
-    var vWin *Vec_Int_t  = Gia_RsbCiWindow( p, 6 );
-    //Vec_IntPrint( vWin );
-    Vec_IntFree( vWin );
-}
+
+
 
 
 
