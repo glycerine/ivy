@@ -27,6 +27,26 @@ func TestSfmDecomposeWindow(t *testing.T) {
 	}
 }
 
+func TestSfmDecompositionSessionKeepsPatterns(t *testing.T) {
+	cnfs := [][][]int{Sfm_TruthToCnf(0x8888888888888888, nil, 2)}
+	w := &sfmDecWindow{gates: []int{-1, -1, 0}, fanins: [][]int{nil, nil, {0, 1}}, roots: []int{2}, pivot: 2}
+	s, ok := sfmNewDecSession(w, cnfs, 2, Sfm_Par_t{VarMax: 6, UseAndOr: true}, 0, 0, []uint64{0, 0}, []int{0, 1})
+	if !ok {
+		t.Fatal("solver setup failed")
+	}
+	if _, _, ok = s.attempt(0); !ok || len(s.history) == 0 {
+		t.Fatal("first forced attempt failed")
+	}
+	counts := s.patterns.counts
+	s.history = s.history[:1]
+	if _, _, ok = s.attempt(1); !ok {
+		t.Fatal("second forced attempt failed")
+	}
+	if s.patterns.counts[0] < counts[0] || s.patterns.counts[1] < counts[1] || len(s.history) < 2 {
+		t.Fatal("session lost patterns or decomposition choices")
+	}
+}
+
 func TestSfmDecomposeWindowExhaustiveThreeInputs(t *testing.T) {
 	successes := 0
 	for function := 0; function < 256; function++ {

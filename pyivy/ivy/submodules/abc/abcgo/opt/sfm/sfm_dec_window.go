@@ -6,18 +6,33 @@ func sfmDecomposeWindow(window *sfmDecWindow, gateCNFs [][][]int, divisors int, 
 }
 
 func sfmDecomposeWindowForced(window *sfmDecWindow, gateCNFs [][][]int, divisors int, pars Sfm_Par_t, care, target uint64, sim []uint64, fallback []int, forced int) ([]uint64, []int32, bool) {
-	if divisors < 0 || divisors > window.pivot || len(sim) != divisors || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX {
-		panic("sfm: invalid decomposition parameters")
-	}
-	if forced < -1 || forced >= divisors {
-		panic("sfm: invalid forced divisor")
-	}
-	solver, ok := window.prepareSolver(gateCNFs)
+	s, ok := sfmNewDecSession(window, gateCNFs, divisors, pars, care, target, sim, fallback)
 	if !ok {
 		return nil, nil, false
 	}
-	s := sfmDecSearch{solver: solver, target: window.pivot, limit: pars.VarMax, conflictLimit: pars.BTLimit, useAndOr: pars.UseAndOr, fallback: fallback, forced: forced}
+	return s.attempt(forced)
+}
+
+// sfmNewDecSession retains solver clauses, counterexamples, and decomposition
+// choices across attempts for one window, as required by nDecMax.
+func sfmNewDecSession(window *sfmDecWindow, gateCNFs [][][]int, divisors int, pars Sfm_Par_t, care, target uint64, sim []uint64, fallback []int) (*sfmDecSearch, bool) {
+	if divisors < 0 || divisors > window.pivot || len(sim) != divisors || pars.VarMax < 1 || pars.VarMax > SFM_SUPP_MAX {
+		panic("sfm: invalid decomposition parameters")
+	}
+	solver, ok := window.prepareSolver(gateCNFs)
+	if !ok {
+		return nil, false
+	}
+	s := &sfmDecSearch{solver: solver, target: window.pivot, limit: pars.VarMax, conflictLimit: pars.BTLimit, useAndOr: pars.UseAndOr, fallback: fallback, forced: -1}
 	s.patterns.setupSimulation(care, target, sim, pars.UseSim)
+	return s, true
+}
+
+func (s *sfmDecSearch) attempt(forced int) ([]uint64, []int32, bool) {
+	if forced < -1 || forced >= s.patterns.divisors {
+		panic("sfm: invalid forced divisor")
+	}
+	s.forced = forced
 	var masks [2][SFM_SIM_WORDS]uint64
 	for set := 0; set < 2; set++ {
 		for i := 0; i < s.patterns.counts[set]; i++ {

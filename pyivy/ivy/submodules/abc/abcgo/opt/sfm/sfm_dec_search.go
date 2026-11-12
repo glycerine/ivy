@@ -14,6 +14,7 @@ type sfmDecSearch struct {
 	useAndOr      bool
 	fallback      []int
 	forced        int
+	history       []int
 }
 
 func (s *sfmDecSearch) record(set int, mask *[2][SFM_SIM_WORDS]uint64) {
@@ -158,11 +159,11 @@ func (s *sfmDecSearch) rec(assumptions []int, mask [2][SFM_SIM_WORDS]uint64, use
 			}
 		}
 		masks := [2][]uint64{mask[0][:], mask[1][:]}
-		p.decomposition = used
+		p.decomposition = s.history
 		variable = p.bestImplication(masks)
 		if variable < 0 && allowFallback {
 			for i := len(s.fallback) - 1; i >= 0; i-- {
-				if !slices.Contains(used, s.fallback[i]) {
+				if !slices.Contains(s.history, s.fallback[i]) {
 					variable = s.fallback[i]
 					break
 				}
@@ -173,6 +174,7 @@ func (s *sfmDecSearch) rec(assumptions []int, mask [2][SFM_SIM_WORDS]uint64, use
 	if variable < 0 || slices.Contains(used, variable) {
 		return nil, nil, false
 	}
+	s.history = append(s.history, variable)
 	var truth [2][]uint64
 	var support [2][]int32
 	for branch := 0; branch < 2; branch++ {
