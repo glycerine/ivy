@@ -638,50 +638,7 @@ func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
 
 ***********************************************************************/
 
-func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pGia *Gia_Man_t = p.pGia;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var k int32;
-    var pCut *int32;
-    assert(!p.pPars.fCutMin && pGia.pMuxes, "!p.pPars.fCutMin && pGia.pMuxes");
-    // create new manager
-    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );
-    pNew.pName = Abc_UtilStrsav( pGia.pName );
-    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
-    // map primary inputs
-    Gia_ManConst0(pGia).Value = 0;
-    Gia_ManForEachCi( pGia, pObj, i )
-        pObj.Value = Gia_ManAppendCi( pNew );
-    // start mapping
-    pNew.vMapping = Vec_IntAlloc( Gia_ManObjNum(pGia) + 2*Gia_ManXorNum(pGia) + 2*Gia_ManMuxNum(pGia) + int32(p.pPars.Edge) + int32(p.pPars.Area) * 2 );
-    Vec_IntFill( pNew.vMapping, Gia_ManObjNum(pGia) + 2*Gia_ManXorNum(pGia) + 2*Gia_ManMuxNum(pGia), 0 );
-    // iterate through nodes used in the mapping
-    Gia_ManForEachAnd( pGia, pObj, i )
-    {
-        if Gia_ObjIsMuxId(pGia, i) {
-            pObj.Value = Gia_ManAppendMux( pNew, Gia_ObjFanin2Copy(pGia, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsXor(pObj) {
-            pObj.Value = Gia_ManAppendXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else { 
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        if !(Mf_ObjMapRefNum(p, i) != 0) {
-            continue; }
-        pCut = Mf_ObjCutBest( p, i );
-        Vec_IntWriteEntry( pNew.vMapping, Abc_Lit2Var(pObj.Value), Vec_IntSize(pNew.vMapping) );
-        Vec_IntPush( pNew.vMapping, Mf_CutSize(pCut));
-        for  k = 1; k <= Mf_CutSize(pCut); k++  {
-            Vec_IntPush( pNew.vMapping, Abc_Lit2Var(Gia_ManObj(pGia, pCut[k]).Value) );
-        }
-        Vec_IntPush( pNew.vMapping, Abc_Lit2Var(pObj.Value) );
-    }
-    Gia_ManForEachCo( pGia, pObj, i )
-        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
-    assert(Vec_IntCap(pNew.vMapping) == 16 || Vec_IntSize(pNew.vMapping) == Vec_IntCap(pNew.vMapping), "Vec_IntCap(pNew.vMapping) == 16 || Vec_IntSize(pNew.vMapping) == Vec_IntCap(pNew.vMapping)");
-    return pNew;
-}
+
 
 
 /**Function*************************************************************

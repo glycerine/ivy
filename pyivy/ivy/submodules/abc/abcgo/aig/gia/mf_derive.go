@@ -83,3 +83,57 @@ func Mf_ManDeriveMappingGia(p *Mf_Man_t) *Gia_Man_t {
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
 	return dst
 }
+
+func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
+	src := p.pGia
+	if p.pPars.fCutMin != 0 || src.pMuxes == nil {
+		panic("gia: coarse mapping requires coarse gates without cut minimization")
+	}
+	dst := Gia_ManStart(src.nObjs)
+	dst.CopyIdentityFrom(src)
+	src.pObjs[0].Value = 0
+	for _, id := range vec.Vec_IntArray(src.vCis) {
+		Gia_ManObj(src, id).Value = uint32(Gia_ManAppendCi(dst))
+	}
+	records := []int32{0}
+	offsets := make(map[int32]int32)
+	for _, obj := range src.pObjs {
+		if Gia_ObjIsAnd(obj) == 0 {
+			continue
+		}
+		var lit int32
+		if Gia_ObjIsMuxId(src, obj.id) != 0 {
+			lit = Gia_ManAppendMux(dst, Gia_ObjFanin2Copy(src, obj), Gia_ObjFanin1Copy(obj), Gia_ObjFanin0Copy(obj))
+		} else if Gia_ObjIsXor(obj) != 0 {
+			lit = Gia_ManAppendXor(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj))
+		} else {
+			lit = Gia_ManAppendAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj))
+		}
+		obj.Value = uint32(lit)
+		if Mf_ObjMapRefNum(p, obj.id) == 0 {
+			continue
+		}
+		cut := Mf_ObjCutBest(p, obj.id)
+		size := Mf_CutSize(cut)
+		offsets[lit>>1] = int32(len(records))
+		records = append(records, size)
+		for _, id := range cut[1 : 1+size] {
+			records = append(records, int32(Gia_ManObj(src, id).Value)>>1)
+		}
+		records = append(records, lit>>1)
+	}
+	for _, id := range vec.Vec_IntArray(src.vCos) {
+		obj := Gia_ManObj(src, id)
+		obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
+	}
+	mapping := vec.Vec_IntStart(int(dst.nObjs))
+	for id, offset := range offsets {
+		vec.Vec_IntWriteEntry(mapping, int(id), dst.nObjs+offset)
+	}
+	for _, v := range records {
+		vec.Vec_IntPush(mapping, v)
+	}
+	dst.vMapping = mapping
+	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
+	return dst
+}

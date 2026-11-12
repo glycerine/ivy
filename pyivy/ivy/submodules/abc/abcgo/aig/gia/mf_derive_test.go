@@ -19,3 +19,21 @@ func TestMfDeriveTruthMapping(t *testing.T) {
 	}
 	Gia_ManMappingVerify(mapped)
 }
+
+func TestMfDeriveCoarseMapping(t *testing.T) {
+	g := Gia_ManStart(12)
+	g.EnableMuxes()
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendMuxReal(g, a, b, c)
+	Gia_ManAppendCo(g, x)
+	var pars Jf_Par_t
+	Mf_ManSetDefaultPars(&pars)
+	p := Mf_ManAlloc(g, &pars)
+	Mf_ObjMergeOrder(p, x>>1)
+	Mf_ManSetMapRefs(p)
+	mapped := Mf_ManDeriveMappingCoarse(p)
+	if Gia_ManPoNum(mapped) != 1 || Gia_ManLutNum(mapped) != 1 {
+		t.Fatal("missing coarse LUT")
+	}
+	Gia_ManMappingVerify(mapped)
+}
