@@ -591,48 +591,6 @@ func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {
-    var iObj0 int32  = Abc_Lit2Var(p.iLits[0]);
-    var iObj1 int32  = Abc_Lit2Var(p.iLits[1]);
-    var n, i, status, iVar0, iVar1, iTemp int32;
-    assert(iObj0 > 0 && iObj1 > 0, "iObj0 > 0 && iObj1 > 0");
-//    Vec_IntForEachEntry( &p->pGia->vCopies, iTemp, i )
-//        assert( iTemp == -1 );
-    Vec_IntFillExtra( &p.pGia.vCopies, Gia_ManObjNum(p.pGia), -1 );
-    Vec_IntClear( p.vSatVars );
-    assert(satoko_varnum(p.pSat) == 0, "satoko_varnum(p.pSat) == 0");
-    iVar0 = Gia_Min2ObjGetCnfVar( p, iObj0 );
-    iVar1 = Gia_Min2ObjGetCnfVar( p, iObj1 );
-    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, Abc_LitIsCompl(p.iLits[0])) );
-    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, Abc_LitIsCompl(p.iLits[1])) );
-    status = satoko_solve( p.pSat );
-    satoko_assump_pop( p.pSat );
-    satoko_assump_pop( p.pSat );
-    if status == SATOKO_SAT {
-        //printf( "Disproved %d %d\n", p->iLits[0], p->iLits[1] );
-        assert(Gia_Min2ManSimulate(p) == 1, "Gia_Min2ManSimulate(p) == 1");
-        for  n = 0; n < 2; n++  {
-            Vec_IntForEachEntry( p.vCis[n], iTemp, i )
-                Gia_Min2SimSetInputBit( p, iTemp, satoko_var_polarity(p.pSat, Gia_Min2ObjSatId(p.pGia, Gia_ManObj(p.pGia, iTemp))) == SATOKO_LIT_TRUE, p.iPattern );
-        }
-        //assert( Gia_Min2ManSimulate(p) == 0 );
-        if p.iPattern == 63 {
-            p.iPattern = 1;
-        } else {
-            p.iPattern = p.iPattern + 1;
-        }
-        p.nSatSat++;
-    }
-    //printf( "supp %d  node %d  vars %d\n", 
-    //    Vec_IntSize(p->vCis[0]) + Vec_IntSize(p->vCis[1]), 
-    //    Vec_IntSize(p->vObjs[0]) + Vec_IntSize(p->vObjs[1]),
-    //    Vec_IntSize(p->vSatVars) );
-    satoko_rollback( p.pSat );
-    Vec_IntForEachEntry( p.vSatVars, iTemp, i )
-        Gia_Min2ObjCleanSatId( p.pGia, Gia_ManObj(p.pGia, iTemp) );
-    return status == SATOKO_UNSAT;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Collect nodes.]
