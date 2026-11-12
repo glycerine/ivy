@@ -1,9 +1,15 @@
 package util
 
 import (
+	"fmt"
 	"math/bits"
 	"math/rand"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"reflect"
+	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -153,6 +159,99 @@ func TestIsopCnfAndCubeCost(t *testing.T) {
 	for _, cube := range cover[:count] {
 		if bits.OnesCount32(uint32(cube)) == 0 {
 			t.Fatal("missing output literal")
+		}
+	}
+}
+
+// Compare recursion costs and literal order against the original C routines.
+// The production package has no C dependency; this differential test is optional
+// on systems without a C compiler or the reference checkout.
+func TestIsopScalarCReference(t *testing.T) {
+	cc, err := exec.LookPath("cc")
+	if err != nil {
+		t.Skip("C compiler unavailable for reference comparison")
+	}
+	source, err := os.ReadFile("../../../src/misc/util/utilIsop.c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	extract := func(name string) string {
+		pattern := regexp.MustCompile(`(?m)^(?:static inline )?(?:word|int|void) ` + name + `\([^\n]*\)\n\{`)
+		loc := pattern.FindIndex(source)
+		if loc == nil {
+			t.Fatalf("missing C reference %s", name)
+		}
+		open := loc[1] - 1
+		depth := 1
+		end := open + 1
+		for ; end < len(source) && depth > 0; end++ {
+			if source[end] == '{' {
+				depth++
+			}
+			if source[end] == '}' {
+				depth--
+			}
+		}
+		return string(source[loc[0]:end]) + "\n"
+	}
+	code := `#include <stdint.h>
+#include <stdio.h>
+#include <assert.h>
+typedef uint64_t word;
+static word s_Truths6[6]={0xAAAAAAAAAAAAAAAAULL,0xCCCCCCCCCCCCCCCCULL,0xF0F0F0F0F0F0F0F0ULL,0xFF00FF00FF00FF00ULL,0xFFFF0000FFFF0000ULL,0xFFFFFFFF00000000ULL};
+static word s_Truths6Neg[6];
+#define Abc_Cube2Cost(n) ((word)(n)<<32)
+#define Abc_CostCubes(c) ((int)((c)>>32))
+#define Abc_Var2Lit(v,c) ((v)*2+(c))
+#define Abc_MaxWord(a,b) ((a)>(b)?(a):(b))
+word Abc_Tt6Cofactor0(word t,int v){word x=t&~s_Truths6[v];return x|(x<<(1<<v));}
+word Abc_Tt6Cofactor1(word t,int v){word x=t&s_Truths6[v];return x|(x>>(1<<v));}
+int Abc_Tt6HasVar(word t,int v){return Abc_Tt6Cofactor0(t,v)!=Abc_Tt6Cofactor1(t,v);}
+`
+	for _, name := range []string{"Abc_IsopAddLits", "Abc_Isop6Cover", "Abc_EsopAddLits", "Abc_Esop6Cover"} {
+		code += extract(name)
+	}
+	code += `int main(void){for(int v=0;v<6;v++)s_Truths6Neg[v]=~s_Truths6[v];for(int x=0;x<256;x++){word t=x;for(int s=8;s<64;s*=2)t|=t<<s;word r=0;int cubes[100];word cost=Abc_Isop6Cover(t,t,&r,3,Abc_Cube2Cost(1000),cubes);printf("%llu ",(unsigned long long)cost);for(int i=0;i<Abc_CostCubes(cost);i++)printf("%u ",(unsigned)cubes[i]);cost=Abc_Esop6Cover(t,3,Abc_Cube2Cost(1000),cubes);printf("%llu ",(unsigned long long)cost);for(int i=0;i<Abc_CostCubes(cost);i++)printf("%u ",(unsigned)cubes[i]);puts("");}return 0;}`
+	dir := t.TempDir()
+	file := filepath.Join(dir, "reference.c")
+	binary := filepath.Join(dir, "reference")
+	if err := os.WriteFile(file, []byte(code), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if out, err := exec.Command(cc, "-std=c99", "-O2", file, "-o", binary).CombinedOutput(); err != nil {
+		t.Fatalf("reference compile: %v\n%s", err, out)
+	}
+	out, err := exec.Command(binary).Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	reader := strings.NewReader(string(out))
+	for x := word(0); x < 256; x++ {
+		truth := isopTestStretch(x, 3)
+		for mode := 0; mode < 2; mode++ {
+			var expected word
+			if _, err := fmt.Fscan(reader, &expected); err != nil {
+				t.Fatal(err)
+			}
+			cover := make([]int32, 100)
+			var cost word
+			if mode == 0 {
+				cost = Abc_Isop6Cover(truth, truth, make([]word, 1), 3, Abc_Cube2Cost(1000), cover)
+			} else {
+				cost = Abc_Esop6Cover(truth, 3, Abc_Cube2Cost(1000), cover)
+			}
+			if cost != expected {
+				t.Fatalf("truth %x mode %d cost %x != C %x", truth, mode, cost, expected)
+			}
+			for i := int32(0); i < Abc_CostCubes(cost); i++ {
+				var cube uint32
+				if _, err := fmt.Fscan(reader, &cube); err != nil {
+					t.Fatal(err)
+				}
+				if uint32(cover[i]) != cube {
+					t.Fatalf("truth %x mode %d cube %d = %x != C %x", truth, mode, i, cover[i], cube)
+				}
+			}
 		}
 	}
 }
