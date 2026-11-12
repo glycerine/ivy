@@ -871,54 +871,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteBench(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var fUseLuts int32;
-    var c int32;
 
-    fUseLuts = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "lh" ) ) != -1  {
-        switch  c  {
-            case 'l':
-                fUseLuts ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    if !(fUseLuts != 0) {
-        Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_BENCH );
-    } else if pAbc.pNtkCur {
-        var pNtkTemp *Abc_Ntk_t;
-        pNtkTemp = Abc_NtkToNetlist( pAbc.pNtkCur );
-        Abc_NtkToAig( pNtkTemp );
-        Io_WriteBenchLut( pNtkTemp, pFileName );
-        Abc_NtkDelete( pNtkTemp );
-    
-    } else {
-        fmt.Printf("There is no current network.\n"); }
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_bench [-lh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network in BENCH format\n");
-    fmt.Fprintf(pAbc.Err, "\t-l     : toggle using LUTs in the output [default = %s]\n", fUseLuts? "yes" : "no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .bench)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
