@@ -436,24 +436,6 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManBfsForCrossCut(p *Gia_Man_t) *Vec_Int_t {
-    var vNodes *Vec_Int_t  = Vec_IntAlloc( Gia_ManObjNum(p) );
-    var vLevels *Vec_Vec_t  = Gia_ManLevelize( p );
-    var vObjs *Vec_Ptr_t;
-    var pObj *Gia_Obj_t;
-    var i, k int32;
-    Vec_VecForEachLevel( vLevels, vObjs, i )
-        Vec_PtrForEachEntry( Gia_Obj_t *, vObjs, pObj, k )
-            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-    Vec_VecFree( vLevels );
-    return vNodes;
-}
-
-
-
-
-
-
 /**Function*************************************************************
 
   Synopsis    [Collects PO Ids into one array.]
@@ -644,84 +626,6 @@ func Gia_ManBfsForCrossCut(p *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPrint(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    fmt.Printf("GIA manager has %d ANDs, %d XORs, %d MUXes.\n", Gia_ManAndNum(p) - Gia_ManXorNum(p) - Gia_ManMuxNum(p), Gia_ManXorNum(p), Gia_ManMuxNum(p)); 
-    Gia_ManForEachObj( p, pObj, i )
-        Gia_ObjPrint( p, pObj );
-}
-func Gia_ManPrintCo_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if Gia_ObjIsAnd(pObj) {
-        Gia_ManPrintCo_rec( p, Gia_ObjFanin0(pObj) );
-        Gia_ManPrintCo_rec( p, Gia_ObjFanin1(pObj) );
-        if Gia_ObjIsMux(p, pObj) {
-            Gia_ManPrintCo_rec( p, Gia_ObjFanin2(p, pObj) ); }
-    }
-    Gia_ObjPrint( p, pObj );
-}
-func Gia_ManPrintCo(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    assert(Gia_ObjIsCo(pObj), "Gia_ObjIsCo(pObj)");
-    fmt.Printf("TFI cone of CO number %d:\n", Gia_ObjCioId(pObj));
-    Gia_ManPrintCo_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ObjPrint( p, pObj );
-}
-
-func Gia_ManPrintCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
-    if Vec_IntFind(vNodes, Gia_ObjId(p, pObj)) >= 0 {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManPrintCollect_rec( p, Gia_ObjFanin0(pObj), vNodes );
-    Gia_ManPrintCollect_rec( p, Gia_ObjFanin1(pObj), vNodes );
-    if Gia_ObjIsMux(p, pObj) {
-        Gia_ManPrintCollect_rec( p, Gia_ObjFanin2(p, pObj), vNodes ); }
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-}
-func Gia_ManPrintCone(p *Gia_Man_t, pObj *Gia_Obj_t, pLeaves []int32, nLeaves int32, vNodes *Vec_Int_t) {
-    var i int32;
-    Vec_IntClear( vNodes );
-    for  i = 0; i < nLeaves; i++  {
-        Vec_IntPush( vNodes, pLeaves[i] );
-    }
-    Gia_ManPrintCollect_rec( p, pObj, vNodes );
-    fmt.Printf("GIA logic cone for node %d:\n", Gia_ObjId(p, pObj));
-    Gia_ManForEachObjVec( vNodes, p, pObj, i )
-        Gia_ObjPrint( p, pObj );
-}
-func Gia_ManPrintConeMulti(p *Gia_Man_t, vObjs *Vec_Int_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Vec_IntClear( vNodes );
-    Vec_IntAppend( vNodes, vLeaves );
-    Gia_ManForEachObjVec( vObjs, p, pObj, i )
-        Gia_ManPrintCollect_rec( p, pObj, vNodes );
-    fmt.Printf("GIA logic cone for %d nodes:\n", Vec_IntSize(vObjs));
-    Gia_ManForEachObjVec( vNodes, p, pObj, i )
-        Gia_ObjPrint( p, pObj );
-}
-
-func Gia_ManPrintCollect2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
-    if Vec_IntFind(vNodes, Gia_ObjId(p, pObj)) >= 0 {
-        return; }
-    if Gia_ObjIsCo(pObj) || Gia_ObjIsAnd(pObj) {
-        Gia_ManPrintCollect2_rec( p, Gia_ObjFanin0(pObj), vNodes ); }
-    if Gia_ObjIsAnd(pObj) {
-        Gia_ManPrintCollect2_rec( p, Gia_ObjFanin1(pObj), vNodes ); }
-    if Gia_ObjIsMux(p, pObj) {
-        Gia_ManPrintCollect2_rec( p, Gia_ObjFanin2(p, pObj), vNodes ); }
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-}
-func Gia_ManPrintCone2(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    var vNodes *Vec_Int_t;
-    var i int32;
-    vNodes = Vec_IntAlloc( 100 );
-    Gia_ManPrintCollect2_rec( p, pObj, vNodes );
-    fmt.Printf("GIA logic cone for node %d:\n", Gia_ObjId(p, pObj));
-    Gia_ManForEachObjVec( vNodes, p, pObj, i )
-        Gia_ObjPrint( p, pObj );
-    Vec_IntFree( vNodes );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Complements the constraint outputs.]
