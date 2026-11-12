@@ -114,10 +114,10 @@ func Vec_StrEqual(p, q *Vec_Str_t) int {
 	return 1
 }
 func Vec_StrSortCompare1(a, b *byte) int {
-	if *a < *b {
+	if int8(*a) < int8(*b) {
 		return -1
 	}
-	if *a > *b {
+	if int8(*a) > int8(*b) {
 		return 1
 	}
 	return 0
@@ -126,9 +126,9 @@ func Vec_StrSortCompare2(a, b *byte) int { return -Vec_StrSortCompare1(a, b) }
 func Vec_StrSort(p *Vec_Str_t, reverse int) {
 	sort.Slice(p.pArray[:p.nSize], func(i, j int) bool {
 		if reverse != 0 {
-			return p.pArray[i] > p.pArray[j]
+			return int8(p.pArray[i]) > int8(p.pArray[j])
 		}
-		return p.pArray[i] < p.pArray[j]
+		return int8(p.pArray[i]) < int8(p.pArray[j])
 	})
 }
 func Vec_StrLimit(p *Vec_Str_t) []byte            { return p.pArray[p.nSize:] }
@@ -151,7 +151,7 @@ func Vec_StrCountEntry(p *Vec_Str_t, x byte) int {
 func Vec_StrCountLarger(p *Vec_Str_t, x byte) int {
 	n := 0
 	for _, v := range Vec_StrArray(p) {
-		if v > x {
+		if int8(v) > int8(x) {
 			n++
 		}
 	}
@@ -160,7 +160,7 @@ func Vec_StrCountLarger(p *Vec_Str_t, x byte) int {
 func Vec_StrCountSmaller(p *Vec_Str_t, x byte) int {
 	n := 0
 	for _, v := range Vec_StrArray(p) {
-		if v < x {
+		if int8(v) < int8(x) {
 			n++
 		}
 	}

@@ -14,8 +14,8 @@ type Vec_Ptr_t struct {
 }
 
 func Vec_PtrAlloc(n int) *Vec_Ptr_t {
-	if n > 0 && n < 16 {
-		n = 16
+	if n > 0 && n < 8 {
+		n = 8
 	}
 	return Vec_PtrAllocExact(n)
 }
