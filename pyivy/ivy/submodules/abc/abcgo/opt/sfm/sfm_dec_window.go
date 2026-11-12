@@ -37,3 +37,50 @@ func sfmMatchAreaReplacement(window *sfmDecWindow, cnfs [][][]int, divisors int,
 	gates, fanins := Sfm_LibImplementGatesArea(library, support, id)
 	return gates, fanins, true
 }
+
+// sfmDecWindowFromNetwork converts a caller-selected topological window to SAT
+// object IDs and returns the corresponding original node IDs.
+func sfmDecWindowFromNetwork(p *Sfm_Ntk_t, order, roots []int, pivot, divisors int) (*sfmDecWindow, [][][]int) {
+	if divisors < 0 || divisors > len(order) {
+		panic("sfm: invalid divisor count")
+	}
+	local := make(map[int]int, len(order))
+	for i, id := range order {
+		if id < 0 || id >= len(p.Fanins) || p.Deleted[id] {
+			panic("sfm: invalid window node")
+		}
+		if _, exists := local[id]; exists {
+			panic("sfm: duplicate window node")
+		}
+		local[id] = i
+	}
+	pivotID, ok := local[pivot]
+	if !ok || pivotID < divisors {
+		panic("sfm: invalid window pivot")
+	}
+	window := &sfmDecWindow{gates: make([]int, len(order)), fanins: make([][]int, len(order)), pivot: pivotID}
+	var cnfs [][][]int
+	for i, id := range order {
+		if Sfm_ObjIsPi(p, id) {
+			window.gates[i] = -1
+			continue
+		}
+		for _, fan := range p.Fanins[id] {
+			index, exists := local[fan]
+			if !exists || index >= i {
+				panic("sfm: window is not topological")
+			}
+			window.fanins[i] = append(window.fanins[i], index)
+		}
+		window.gates[i] = len(cnfs)
+		cnfs = append(cnfs, Sfm_TruthToCnf(p.Truths[id][0], p.Truths[id], len(p.Fanins[id])))
+	}
+	for _, id := range roots {
+		index, exists := local[id]
+		if !exists || index < pivotID {
+			panic("sfm: invalid window root")
+		}
+		window.roots = append(window.roots, index)
+	}
+	return window, cnfs
+}

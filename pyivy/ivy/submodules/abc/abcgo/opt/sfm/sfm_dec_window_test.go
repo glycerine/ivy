@@ -78,3 +78,23 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 		t.Fatalf("gates %v fanins %v ok %v", gates, fanins, ok)
 	}
 }
+
+func TestSfmNetworkWindowDecomposition(t *testing.T) {
+	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
+	window, cnfs := sfmDecWindowFromNetwork(p, []int{0, 1, 2}, []int{2}, 2, 2)
+	truth, support, ok := sfmDecomposeWindow(window, cnfs, 2, Sfm_Par_t{VarMax: 6, UseAndOr: true}, 0, 0, []uint64{0, 0}, []int{0, 1})
+	if !ok || len(support) != 2 {
+		t.Fatalf("truth %x support %v ok %v", truth, support, ok)
+	}
+	for a := 0; a < 4; a++ {
+		index := 0
+		for i, id := range support {
+			if a&(1<<uint(id)) != 0 {
+				index |= 1 << uint(i)
+			}
+		}
+		if (truth[0]&(1<<uint(index)) != 0) != (a == 3) {
+			t.Fatalf("assignment %d", a)
+		}
+	}
+}
