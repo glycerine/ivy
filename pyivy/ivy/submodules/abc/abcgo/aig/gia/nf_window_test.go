@@ -44,6 +44,9 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 1 0
 	if vec.Vec_IntSize(&solution) != 2 || inv != library.cells[3].AreaW {
 		t.Fatal("missing mapped solution")
 	}
+	if Sbm_ManTestSat(&Nf_Man_t{matcher: matcher, refs: refs}) != 1 {
+		t.Fatal("SAT mapping diagnostic failed")
+	}
 	for _, index := range vec.Vec_IntArray(&solution) {
 		if index < 0 || int(index) >= vec.Vec_WecSize(&cuts) {
 			t.Fatalf("invalid solution index %d", index)
