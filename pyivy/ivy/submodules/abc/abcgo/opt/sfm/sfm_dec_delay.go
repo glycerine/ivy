@@ -5,11 +5,27 @@ import "github.com/glycerine/abcgo/map/mio"
 // sfmFindDelayNodeMatch searches decompositions and evaluates the library's
 // delay-profile matches against the current timing state.
 func sfmFindDelayNodeMatch(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_t, timing *Sfm_Tim_t) (gates []int32, fanins [][]int32, order, cone []int, ok bool) {
+	return sfmFindDelayNodeMatchForced(p, pivot, pars, lib, timing, -1)
+}
+
+func sfmFindDelayNodeMatchForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib_t, timing *Sfm_Tim_t, forced int) (gates []int32, fanins [][]int32, order, cone []int, ok bool) {
 	session, window, ok := sfmPrepareMappedSession(p, pivot, pars, timing)
 	if !ok {
 		return nil, nil, nil, nil, false
 	}
 	order = window.order
+	forceIndex := -1
+	if forced >= 0 {
+		for i, id := range order[:window.divisors] {
+			if id == forced {
+				forceIndex = i
+				break
+			}
+		}
+		if forceIndex < 0 {
+			return nil, nil, nil, nil, false
+		}
+	}
 	previous := 0
 	var bestSupport []int32
 	var best Sfm_LibMatch
@@ -19,7 +35,8 @@ func sfmFindDelayNodeMatch(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, lib *Sfm_Lib
 			session.history = session.history[:previous]
 		}
 		previous = len(session.history) + 1
-		truth, support, success := session.attempt(-1)
+		truth, support, success := session.attempt(forceIndex)
+		forceIndex = -1
 		if !success {
 			continue
 		}

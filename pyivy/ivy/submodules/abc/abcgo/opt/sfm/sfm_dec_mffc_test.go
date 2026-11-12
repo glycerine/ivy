@@ -100,4 +100,11 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if timing.Delay >= 10000 || !reflect.DeepEqual(coreTable(t, p), want) {
 		t.Fatalf("timing replacement: delay=%d", timing.Delay)
 	}
+	p = testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p.Mapping[2], p.Mapping[3] = slow, slow
+	timing = Sfm_TimStart(p, 6000)
+	changed, err = sfmOptimizeMappedDelay(p, pars, delayLib, handles, timing)
+	if err != nil || changed != 1 || timing.Delay >= 10000 || !reflect.DeepEqual(coreTable(t, p), want) {
+		t.Fatalf("delay driver: changed=%d delay=%d err=%v", changed, timing.Delay, err)
+	}
 }
