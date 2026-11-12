@@ -1,201 +1,93 @@
+// Package abcgo exposes ABC's library demonstration workflow.
 package abcgo
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"io"
+	"os"
+	"strings"
+	"time"
 
-  FileName    [demo.c]
+	"github.com/glycerine/abcgo/base/cmd"
+	abcmain "github.com/glycerine/abcgo/base/main"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+// DemoOptions selects the same optional stages as src/demo.c.
+type DemoOptions struct{ UseResyn2, PrintStats, Verify bool }
 
-  PackageName [ABC as a static library.]
+// DefaultDemoOptions matches the original executable's settings.
+func DefaultDemoOptions() DemoOptions { return DemoOptions{PrintStats: true, Verify: true} }
 
-  Synopsis    [A demo program illustrating the use of ABC as a static library.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: demo.c,v 1.00 2005/11/14 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-#include <stdio.h>
-#include <time.h>
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#if defined(ABC_NAMESPACE)
-namespace ABC_NAMESPACE
-{
-#elif defined(__cplusplus)
-extern "C"
-{
-#endif
-
-// procedures to start and stop the ABC framework
-// (should be called before and after the ABC procedures are called)
-void   Abc_Start();
-void   Abc_Stop();
-
-// procedures to get the ABC framework and execute commands in it
-typedef struct Abc_Frame_t_ Abc_Frame_t;
-
-Abc_Frame_t * Abc_FrameGetGlobalFrame();
-int    Cmd_CommandExecute( Abc_Frame_t * pAbc, const char * sCommand );
-
-#if defined(ABC_NAMESPACE)
-}
-//using namespace ABC_NAMESPACE;
-
-#elif defined(__cplusplus)
-}
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [The main() procedure.]
-
-  Description [This procedure compiles into a stand-alone program for 
-  DAG-aware rewriting of the AIGs. A BLIF or PLA file to be considered
-  for rewriting should be given as a command-line argument. Implementation 
-  of the rewriting is inspired by the paper: Per Bjesse, Arne Boralv, 
-  "DAG-aware circuit compression for formal verification", Proc. ICCAD 2004.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int main( int argc, char * argv[] )
-{
-    // parameters
-    int fUseResyn2  = 0;
-    int fPrintStats = 1;
-    int fVerify     = 1;
-    // variables
-    Abc_Frame_t * pAbc;
-    char * pFileName;
-    char Command[1000];
-    clock_t clkRead, clkResyn, clkVer, clk;
-
-    //////////////////////////////////////////////////////////////////////////
-    // get the input file name
-    if ( argc != 2 )
-    {
-        printf( "Wrong number of command-line arguments.\n" );
-        return 1;
-    }
-    pFileName = argv[1];
-
-    //////////////////////////////////////////////////////////////////////////
-    // start the ABC framework
-    Abc_Start();
-    pAbc = Abc_FrameGetGlobalFrame();
-
-clk = clock();
-    //////////////////////////////////////////////////////////////////////////
-    // read the file
-    sprintf( Command, "read %s", pFileName );
-    if ( Cmd_CommandExecute( pAbc, Command ) )
-    {
-        fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-        return 1;
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    // balance
-    sprintf( Command, "balance" );
-    if ( Cmd_CommandExecute( pAbc, Command ) )
-    {
-        fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-        return 1;
-    }
-clkRead = clock() - clk;
-
-    //////////////////////////////////////////////////////////////////////////
-    // print stats
-    if ( fPrintStats )
-    {
-        sprintf( Command, "print_stats" );
-        if ( Cmd_CommandExecute( pAbc, Command ) )
-        {
-            fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-            return 1;
-        }
-    }
-
-clk = clock();
-    //////////////////////////////////////////////////////////////////////////
-    // synthesize
-    if ( fUseResyn2 )
-    {
-        sprintf( Command, "balance; rewrite -l; refactor -l; balance; rewrite -l; rewrite -lz; balance; refactor -lz; rewrite -lz; balance" );
-        if ( Cmd_CommandExecute( pAbc, Command ) )
-        {
-            fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-            return 1;
-        }
-    }
-    else
-    {
-        sprintf( Command, "balance; rewrite -l; rewrite -lz; balance; rewrite -lz; balance" );
-        if ( Cmd_CommandExecute( pAbc, Command ) )
-        {
-            fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-            return 1;
-        }
-    }
-clkResyn = clock() - clk;
-
-    //////////////////////////////////////////////////////////////////////////
-    // print stats
-    if ( fPrintStats )
-    {
-        sprintf( Command, "print_stats" );
-        if ( Cmd_CommandExecute( pAbc, Command ) )
-        {
-            fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-            return 1;
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    // write the result in blif
-    sprintf( Command, "write_blif result.blif" );
-    if ( Cmd_CommandExecute( pAbc, Command ) )
-    {
-        fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-        return 1;
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    // perform verification
-clk = clock();
-    if ( fVerify )
-    {
-        sprintf( Command, "cec %s result.blif", pFileName );
-        if ( Cmd_CommandExecute( pAbc, Command ) )
-        {
-            fprintf( stdout, "Cannot execute command \"%s\".\n", Command );
-            return 1;
-        }
-    }
-clkVer = clock() - clk;
-
-    printf( "Reading = %6.2f sec   ",     (float)(clkRead)/(float)(CLOCKS_PER_SEC) );
-    printf( "Rewriting = %6.2f sec   ",   (float)(clkResyn)/(float)(CLOCKS_PER_SEC) );
-    printf( "Verification = %6.2f sec\n", (float)(clkVer)/(float)(CLOCKS_PER_SEC) );
-
-    //////////////////////////////////////////////////////////////////////////
-    // stop the ABC framework
-    Abc_Stop();
-    return 0;
+// RunDemo runs the original read/balance/rewrite/write/verify command sequence.
+// The caller owns frame and must initialize its command modules and close it.
+// Synthesis and file-format modules must register their actual commands; missing
+// commands are reported by the interpreter rather than simulated here.
+func RunDemo(frame *abcmain.Frame, filename string, options DemoOptions) int {
+	run := func(command string) bool {
+		if cmd.Cmd_CommandExecute(frame, command) == 0 {
+			return true
+		}
+		fmt.Fprintf(frame.Out, "Cannot execute command \"%s\".\n", command)
+		return false
+	}
+	input := demoQuote(filename)
+	start := time.Now()
+	if !run("read "+input) || !run("balance") {
+		return 1
+	}
+	reading := time.Since(start)
+	if options.PrintStats && !run("print_stats") {
+		return 1
+	}
+	start = time.Now()
+	sequence := "balance; rewrite -l; rewrite -lz; balance; rewrite -lz; balance"
+	if options.UseResyn2 {
+		sequence = "balance; rewrite -l; refactor -l; balance; rewrite -l; rewrite -lz; balance; refactor -lz; rewrite -lz; balance"
+	}
+	if !run(sequence) {
+		return 1
+	}
+	rewriting := time.Since(start)
+	if options.PrintStats && !run("print_stats") {
+		return 1
+	}
+	if !run("write_blif result.blif") {
+		return 1
+	}
+	start = time.Now()
+	if options.Verify && !run("cec "+input+" result.blif") {
+		return 1
+	}
+	verification := time.Since(start)
+	fmt.Fprintf(frame.Out, "Reading = %6.2f sec   Rewriting = %6.2f sec   Verification = %6.2f sec\n", reading.Seconds(), rewriting.Seconds(), verification.Seconds())
+	return 0
 }
 
+// DemoMain is the CLI entry path. Args excludes the executable name. Unlike the
+// C demo's early error returns, every started framework is shut down on failure.
+func DemoMain(args []string, out, errOut io.Writer) int {
+	if out == nil {
+		out = os.Stdout
+	}
+	if errOut == nil {
+		errOut = os.Stderr
+	}
+	if len(args) != 1 {
+		fmt.Fprintln(out, "Wrong number of command-line arguments.")
+		return 1
+	}
+	abcmain.Abc_Start()
+	defer abcmain.Abc_Stop()
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	frame.Out, frame.Err = out, errOut
+	cmd.Cmd_Init(frame)
+	return RunDemo(frame, args[0], DefaultDemoOptions())
+}
+
+// Quote for ABC's command parser, not for an operating-system shell.
+func demoQuote(value string) string {
+	if value != "" && !strings.ContainsAny(value, " \t\r\n;#\\'\"") {
+		return value
+	}
+	return "'" + strings.ReplaceAll(value, "'", "'\\''") + "'"
+}

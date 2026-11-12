@@ -1,109 +1,27 @@
 package abcgo
 
-/**CFile****************************************************************
+// Xyz_ParTry_t is the example operation's parameter record from src/template.c.
+type Xyz_ParTry_t struct{ Par int32 }
 
-  FileName    [.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName []
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: .c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig/aig/aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// parameter structure 
-   
-type Xyz_ParTry_t struct {
-    Par                int32;
-}
- 
-// operation manager
-   
+// Xyz_ManTry_t borrows the caller's parameters and AIG without modifying either.
+// The source template never accesses the AIG. Keeping this unused borrowed handle
+// opaque avoids coupling the example to a particular AIG representation.
 type Xyz_ManTry_t struct {
-    pPar      *Xyz_ParTry_t;           // parameters
-    pAig         *Aig_Man_t;           // user's AIG 
+	pPar *Xyz_ParTry_t
+	pAig any
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Xyz_ManTryAlloc(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) *Xyz_ManTry_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Xyz_ManTry_t{};
-    p.pAig    = pAig;
-    p.pPar    = pPar;
-    return p;
+func Xyz_ManTryAlloc(aig any, parameters *Xyz_ParTry_t) *Xyz_ManTry_t {
+	return &Xyz_ManTry_t{pPar: parameters, pAig: aig}
 }
 
-/**Function*************************************************************
+// Xyz_ManTryFree releases the example manager to Go's garbage collector. Borrowed
+// parameters and AIG remain owned by the caller, matching the C free operation.
+func Xyz_ManTryFree(_ *Xyz_ManTry_t) {}
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Xyz_ManTryFree(p *Xyz_ManTry_t) {
-    p = nil;
+// Xyz_ManPerform preserves the original template's successful no-op operation.
+func Xyz_ManPerform(aig any, parameters *Xyz_ParTry_t) int32 {
+	manager := Xyz_ManTryAlloc(aig, parameters)
+	defer Xyz_ManTryFree(manager)
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Xyz_ManPerform(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) int32 {
-    var p *Xyz_ManTry_t;
-    var RetValue int32;
-    p = Xyz_ManTryAlloc( pAig, pPar );
-    RetValue = 1;
-    Xyz_ManTryFree( p );
-    return RetValue;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

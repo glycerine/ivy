@@ -1,70 +1,12 @@
+// Package test contains ABC's empty test-package extension hooks.
 package test
 
-/**CFile****************************************************************
+import abcmain "github.com/glycerine/abcgo/base/main"
 
-  FileName    [test.c]
+// Test_Init faithfully preserves the empty initialization hook in
+// src/base/test/test.c. The original hook registers no commands or state.
+func Test_Init(_ *abcmain.Frame) {}
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Template package.]
-
-  Synopsis    []
-
-  Author      []
-  
-  Affiliation []
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: test.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Test_Init(pAbc *Abc_Frame_t) {
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Test_End(pAbc *Abc_Frame_t) {
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Test_End faithfully preserves the empty shutdown hook in the same source.
+// Both hooks accept nil because the original implementations never use pAbc.
+func Test_End(_ *abcmain.Frame) {}
