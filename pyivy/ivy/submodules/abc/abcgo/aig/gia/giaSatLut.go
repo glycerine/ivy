@@ -620,81 +620,8 @@ func Sbl_ManUpdateMapping(p *Sbl_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManPrintCut(CutI1 word, CutI2 word, CutN1 word, CutN2 word) int32 {
-    var b, Count int32; 
-    fmt.Printf("{ ");
-    for  b = 0; b < 64; b++  {
-        if (CutI1 >> b) & 1 {
-            fmt.Printf("i%d ", b);
-Count++; }
-    }
-    for  b = 0; b < 64; b++  {
-        if (CutI2 >> b) & 1 {
-            fmt.Printf("i%d ", 64+b);
-Count++; }
-    }
-    fmt.Printf(" ");
-    for  b = 0; b < 64; b++  {
-        if (CutN1 >> b) & 1 {
-            fmt.Printf("n%d ", b);
-Count++; }
-    }
-    for  b = 0; b < 64; b++  {
-        if (CutN2 >> b) & 1 {
-            fmt.Printf("n%d ", 64+b);
-Count++; }
-    }
-    fmt.Printf("};\n");
-    return Count;
-}
 func Sbl_ManFindAndPrintCut(p *Sbl_Man_t, c int32) int32 {
     return Sbl_ManPrintCut( Vec_WrdEntry(p.vCutsI1, c), Vec_WrdEntry(p.vCutsI2, c), Vec_WrdEntry(p.vCutsN1, c), Vec_WrdEntry(p.vCutsN2, c) );
-}
-func Sbl_CutIsFeasible(CutI1 word, CutI2 word, CutN1 word, CutN2 word, LutSize int32) int32 {
-    var Count int32  = (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);
-    assert(LutSize <= 6, "LutSize <= 6");
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);  
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);
-    if LutSize <= 4 {
-        return Count <= 4; }
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);  
-    CutI1 &= CutI1-1; CutI2 &= CutI2-1;   CutN1 &= CutN1-1; CutN2 &= CutN2-1;   Count += (CutI1 != 0) + (CutI2 != 0) + (CutN1 != 0) + (CutN2 != 0);
-    return Count <= 6;
-}
-func Sbl_CutPushUncontained(vCutsI1 *Vec_Wrd_t, vCutsI2 *Vec_Wrd_t, vCutsN1 *Vec_Wrd_t, vCutsN2 *Vec_Wrd_t, CutI1 word, CutI2 word, CutN1 word, CutN2 word) int32 {
-    var i, k int32;
-    assert(vCutsI1.nSize == vCutsN1.nSize, "vCutsI1.nSize == vCutsN1.nSize");
-    assert(vCutsI2.nSize == vCutsN2.nSize, "vCutsI2.nSize == vCutsN2.nSize");
-    for  i = 0; i < vCutsI1.nSize; i++  {
-        if (vCutsI1.pArray[i] & CutI1) == vCutsI1.pArray[i] && 
-             (vCutsI2.pArray[i] & CutI2) == vCutsI2.pArray[i] && 
-             (vCutsN1.pArray[i] & CutN1) == vCutsN1.pArray[i] && 
-             (vCutsN2.pArray[i] & CutN2) == vCutsN2.pArray[i] {
-            return 1; }
-    }
-    for  i = 0; i < vCutsI1.nSize; i++  {
-        if (vCutsI1.pArray[i] & CutI1) != CutI1 ||
-             (vCutsI2.pArray[i] & CutI2) != CutI2 || 
-             (vCutsN1.pArray[i] & CutN1) != CutN1 || 
-             (vCutsN2.pArray[i] & CutN2) != CutN2 {
-            Vec_WrdWriteEntry( vCutsI1, k, vCutsI1.pArray[i] );
-            Vec_WrdWriteEntry( vCutsI2, k, vCutsI2.pArray[i] );
-            Vec_WrdWriteEntry( vCutsN1, k, vCutsN1.pArray[i] );
-            Vec_WrdWriteEntry( vCutsN2, k, vCutsN2.pArray[i] );
-            k++;
-        }
-    }
-    Vec_WrdShrink( vCutsI1, k );
-    Vec_WrdShrink( vCutsI2, k );
-    Vec_WrdShrink( vCutsN1, k );
-    Vec_WrdShrink( vCutsN2, k );
-    Vec_WrdPush( vCutsI1, CutI1 );
-    Vec_WrdPush( vCutsI2, CutI2 );
-    Vec_WrdPush( vCutsN1, CutN1 );
-    Vec_WrdPush( vCutsN2, CutN2 );
-    return 0;
 }
 func Sbl_ManComputeCutsOne(p *Sbl_Man_t, Fan0 int32, Fan1 int32, Obj int32) {
     var pCutsI1 *word  = Vec_WrdArray(p.vCutsI1);
