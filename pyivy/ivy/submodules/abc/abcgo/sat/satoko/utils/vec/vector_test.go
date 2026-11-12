@@ -7,18 +7,18 @@ import (
 
 func TestUintVectorLifecycle(t *testing.T) {
 	p := vec_uint_alloc(1)
-	if p.cap != 16 || p.size != 0 {
+	if uint32(cap(p.data)) != 16 || uint32(len(p.data)) != 0 {
 		t.Fatal(p)
 	}
 	for i := uint32(0); i < 40; i++ {
 		vec_uint_push_back(p, i)
 	}
-	if p.size != 40 || p.cap != 64 {
+	if uint32(len(p.data)) != 40 || uint32(cap(p.data)) != 64 {
 		t.Fatal(p)
 	}
 	vec_uint_insert(p, 38, 99)
-	if !reflect.DeepEqual(p.data[38:p.size], []uint32{99, 38, 39}) {
-		t.Fatal(p.data[:p.size])
+	if !reflect.DeepEqual(p.data[38:uint32(len(p.data))], []uint32{99, 38, 39}) {
+		t.Fatal(p.data[:uint32(len(p.data))])
 	}
 	vec_uint_drop(p, 38)
 	if vec_uint_pop_back(p) != 39 {
@@ -30,7 +30,7 @@ func TestUintVectorLifecycle(t *testing.T) {
 	}
 	clone := vec_uint_alloc(0)
 	vec_uint_duplicate(clone, p)
-	if clone.cap != p.cap || clone.size != p.size {
+	if uint32(cap(clone.data)) != uint32(cap(p.data)) || uint32(len(clone.data)) != uint32(len(p.data)) {
 		t.Fatal("duplicate capacity")
 	}
 	clone.data[0] = 88
@@ -39,18 +39,18 @@ func TestUintVectorLifecycle(t *testing.T) {
 	}
 	vec_uint_sort(p, 0)
 	if p.data[0] != 38 {
-		t.Fatal(p.data[:p.size])
+		t.Fatal(p.data[:uint32(len(p.data))])
 	}
 	vec_uint_sort(p, 1)
 	if p.data[0] != 1 {
-		t.Fatal(p.data[:p.size])
+		t.Fatal(p.data[:uint32(len(p.data))])
 	}
 	vec_uint_clear(p)
-	if vec_uint_empty(p) != 1 || p.cap == 0 {
+	if vec_uint_empty(p) != 1 || uint32(cap(p.data)) == 0 {
 		t.Fatal("clear")
 	}
 	vec_uint_erase(p)
-	if p.data != nil || p.cap != 0 {
+	if p.data != nil || uint32(cap(p.data)) != 0 {
 		t.Fatal("erase")
 	}
 }
@@ -76,7 +76,7 @@ func TestScalarVectorValues(t *testing.T) {
 		t.Fatal(d)
 	}
 	vec_int_free(i)
-	if i.data != nil || i.size != 0 {
+	if i.data != nil || uint32(len(i.data)) != 0 {
 		t.Fatal(i)
 	}
 }
@@ -90,5 +90,49 @@ func TestVectorBounds(t *testing.T) {
 			}()
 			f()
 		}()
+	}
+}
+
+func TestLengthAndCapacityFollowSlice(t *testing.T) {
+	p := vec_int_alloc_exact(4)
+	if len(p.data) != 0 || cap(p.data) != 4 || p.Len() != 0 || p.Cap() != 4 {
+		t.Fatal(p)
+	}
+	p.Push(7)
+	p.Push(9)
+	if len(p.Data()) != 2 || p.Len() != 2 {
+		t.Fatal(p)
+	}
+	p.data = p.data[:1]
+	if p.Len() != 1 || vec_int_size(p) != 1 {
+		t.Fatal("stale length metadata")
+	}
+	p.Reserve(20)
+	if len(p.data) != 1 || cap(p.data) != 20 || p.At(0) != 7 {
+		t.Fatal(p)
+	}
+	p.Resize(3)
+	if len(p.data) != 3 || p.Len() != 3 {
+		t.Fatal(p)
+	}
+	p.Clear()
+	if len(p.data) != 0 || cap(p.data) != 20 {
+		t.Fatal(p)
+	}
+	vec_int_free(p)
+	if p.Len() != 0 || p.Cap() != 0 || p.Data() != nil {
+		t.Fatal(p)
+	}
+}
+func TestDuplicateRetainsLargerDestinationCapacity(t *testing.T) {
+	src := vec_int_init(2, 4)
+	dst := vec_int_alloc_exact(32)
+	vec_int_duplicate(dst, src)
+	if len(dst.data) != 2 || cap(dst.data) != 32 || dst.At(1) != 4 {
+		t.Fatal(dst)
+	}
+	src.data[0] = 8
+	if dst.At(0) != 4 {
+		t.Fatal("duplicate aliased source")
 	}
 }
