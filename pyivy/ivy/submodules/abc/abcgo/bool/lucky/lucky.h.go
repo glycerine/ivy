@@ -1,54 +1,12 @@
 package lucky
 
-/**CFile****************************************************************
-
-  FileName    [lucky.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Semi-canonical form computation package.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Jake]
-
-  Date        [Started - August 2012]
-
-***********************************************************************/
-
-
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-typedef struct
-{
-    int varN;
-    int* swapArray;
-    int swapCtr;
-    int totalSwaps;
-    int* flipArray;
-    int flipCtr;
-    int totalFlips; 
+type permInfo struct {
+	varN                int32
+	swapArray           []int32
+	swapCtr, totalSwaps int32
+	flipArray           []int32
+	flipCtr, totalFlips int32
 }
-permInfo;
+type PermInfo = permInfo
 
-// extern unsigned Kit_TruthSemiCanonicize_new( unsigned * pInOut, unsigned * pAux, int nVars, char * pCanonPerm );
-
-// extern unsigned luckyCanonicizer_final_fast( word * pInOut, int nVars, char * pCanonPerm );
-
-// extern unsigned luckyCanonicizer_final_fast1( word * pInOut, int nVars, char * pCanonPerm );
-
-// extern void resetPCanonPermArray(char* x, int nVars);
- 
-// extern permInfo* setPermInfoPtr(int var);
-
-// extern void freePermInfoPtr(permInfo* x);
-
-// extern void simpleMinimal(word* x, word* pAux,word* minimal, permInfo* pi, int nVars);
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
+func NewPermInfo(variables int32) *PermInfo { return setPermInfoPtr(variables) }
